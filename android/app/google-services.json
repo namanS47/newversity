@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "186919330891",
+    "project_id": "newversity-56827",
+    "storage_bucket": "newversity-56827.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:186919330891:android:6e677ddc0fe3d2f6cb99ce",
+        "android_client_info": {
+          "package_name": "com.newversity.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "186919330891-d8kb83va52mvbs5prsp3d5a14s2nbl8n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3J6kvy2B_7wvnfaQqA8lVgjsWqJBWWVA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "186919330891-d8kb83va52mvbs5prsp3d5a14s2nbl8n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
