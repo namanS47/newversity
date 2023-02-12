@@ -1,0 +1,27 @@
+{
+  "@@locale": "en_US",
+  "inclusiveTax": "Inclusive of all taxes",
+  "selectShades": "Select Shades: ",
+  "selectSize": "Select Size: ",
+  "descriptionText": "Enter your phone number to get started",
+  "mobileDescription": "Mobile Number",
+  "hello": "Hello !",
+  "proceed": "PROCEED",
+  "verificationDescription":"Verify using OTP",
+  "justSendCode": "send to ",
+  "resendCode": "Resend OTP",
+  "createAccount": "Create an account",
+  "name": "Name",
+  "email": "Email Id",
+  "whatIsFieldOfIntrest":"What is your field Of interest ?",
+  "whichClass": "Which class you are in ?",
+  "tellUsMore": "Tell us more about yourself",
+  "createAcc": "Create Account",
+  "enterName": "please enter Name",
+  "invalidName": "Please enter valid name",
+  "enterEmail": "Please enter email",
+  "invalidEmail": "Please enter valid email",
+  "enterClass": "Please enter class",
+  "invalidClass": "Please enter valid class"
+
+}

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "186919330891-omkephplk3ra6nag2m7g7hvf6t7v6qdt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.newversity.android",
+            "certificate_hash": "64f02d70778a17a9f6559fe9ca9c2ac6466fd7ee"
+          }
+        },
+        {
           "client_id": "186919330891-d8kb83va52mvbs5prsp3d5a14s2nbl8n.apps.googleusercontent.com",
           "client_type": 3
         }

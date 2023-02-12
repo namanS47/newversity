@@ -21,10 +21,10 @@ class AppRouter {
 
   _navigation(route, {dynamic params}) {
     if(route.toString() == AppRoutes.loginRoute) {
-      return const LoginScreen();
+      return const LoginPage();
     }
     if(route.toString() == AppRoutes.otpRoute) {
-      return OtpRoute(loginArguments: params as LoginArguments,);
+      return OtpVerificationScreen(loginArguments: params as LoginArguments,);
     }
     if(route.toString() == AppRoutes.homeScreen) {
       return const HomeScreen();
