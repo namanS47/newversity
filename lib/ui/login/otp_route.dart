@@ -136,11 +136,9 @@ class _OtpRouteState extends State<OtpRoute> {
   verifyOtp(BuildContext context) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: widget.loginArguments.verificationCode, smsCode: currentText);
-    await DI.inject<FireStoreRepository>().addUserToFireStore(UserData(userId: "IGiEzbtcMiWlbJ4s2yj7UaqsSTi2", name: "naman", phoneNumber: "", profileUrl: ""));
     try{
-      // final result = await auth.signInWithCredential(credential);
-      // await DI.inject<FireStoreRepository>().addUserToFireStore(UserData(userId: "IGiEzbtcMiWlbJ4s2yj7UaqsSTi2", name: "naman", phoneNumber: widget.loginArguments.mobileNumber));
-      // await DI.inject<FireStoreRepository>().addUserToFireStore(UserData(userId: result.user?.uid ?? "", name: "naman", phoneNumber: widget.loginArguments.mobileNumber));
+      final result = await auth.signInWithCredential(credential);
+      await DI.inject<FireStoreRepository>().addUserToFireStore(UserData(userId: result.user?.uid ?? "", name: "naman", phoneNumber: widget.loginArguments.mobileNumber));
       Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.homeScreen, (route) => false);
     } catch(e) {
       print("Please enter corrent otp");

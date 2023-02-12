@@ -5,6 +5,10 @@ import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/ui/login/login_arguments.dart';
 import 'package:newversity/utils/validaters.dart';
 
+import '../../di/di_initializer.dart';
+import '../../firestore/data/firestore_repository.dart';
+import '../../firestore/model/user.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -99,8 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 onTap: () async {
                   if(!_fetchingOtp) {
                     setState(() {
-                      // fetchOtp();
-                      Navigator.of(context).pushNamed(AppRoutes.otpRoute, arguments: LoginArguments(verificationCode: "", mobileNumber: _phoneNumber));
+                      fetchOtp();
                     });
                   }
                 },
@@ -129,6 +132,10 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  addCollection() async {
+    await DI.inject<FireStoreRepository>().addUserToFireStore(UserData(userId: "IGiEzbtcMiWlbJ4s2yj7UaqsSTi2", name: "naman", phoneNumber: "", profileUrl: ""));
+  }
+
   fetchOtp() async {
     if(_phoneNumber.length != 10) {
       _phoneNumberValid = false;
@@ -136,7 +143,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     _phoneNumberValid = true;
-    print("naman1");
 
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: '+91' + _phoneNumber,
