@@ -1,15 +1,11 @@
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:newversity/firestore/data/firestore_repository.dart';
-import 'package:newversity/common/common_utils.dart';
-import 'package:newversity/storage/preferences.dart';
 
 class DI {
   DI();
 
   factory DI.initializeDependencies() {
     addDependency<FireStoreRepository>(FireStoreRepository(), true);
-    addDependency<Preferences>(PreferencesImpl(), true);
-
     return DI();
   }
 

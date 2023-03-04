@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -103,7 +101,11 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: GestureDetector(
                 onTap: () async {
-                  onButtonTap();
+                  if(!_fetchingOtp) {
+                    setState(() {
+                      fetchOtp();
+                    });
+                  }
                 },
                 child: Container(
                   height: 42,
@@ -130,18 +132,17 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  onButtonTap() {
-    if(isPhoneNumberValid()) {
-      fetchOtp();
-    }
-  }
-
   addCollection() async {
     await DI.inject<FireStoreRepository>().addUserToFireStore(UserData(userId: "IGiEzbtcMiWlbJ4s2yj7UaqsSTi2", name: "naman", phoneNumber: "", profileUrl: ""));
   }
 
   fetchOtp() async {
-    _fetchingOtp = true;
+    if(_phoneNumber.length != 10) {
+      _phoneNumberValid = false;
+      return;
+    }
+
+    _phoneNumberValid = true;
 
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: '+91' + _phoneNumber,
@@ -158,10 +159,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
       },
     );
-  }
-
-  bool isPhoneNumberValid() {
-    return _phoneNumber.length == 10;
   }
 
   String? getErrorText() {
