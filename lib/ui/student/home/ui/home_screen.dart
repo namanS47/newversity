@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:newversity/ui/webinar/ui/webinar_route.dart';
+import 'package:newversity/ui/student/webinar/ui/webinar_route.dart';
 
 import '../../campus/ui/campus_route.dart';
 
