@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CampusTab extends StatefulWidget {
@@ -66,8 +67,18 @@ class _CampusTabState extends State<CampusTab> {
           Divider(color: Colors.red,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              Text("Like"),
+            children: [
+              GestureDetector(
+                  onTap: () async {
+
+                  final user = FirebaseAuth.instance.currentUser;
+                  if(user!= null){
+                    final idToken = await user.getIdToken();
+                    print("naman ${idToken}");
+                    print(user.uid);
+                  }
+
+              }, child: Text("Like")),
               Text("Comment"),
               Text("Share")
             ],

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:newversity/navigation/app_routes.dart';
-import 'package:newversity/ui/home/ui/home_screen.dart';
 import 'package:newversity/ui/login/login_arguments.dart';
 import 'package:newversity/ui/login/login_screen.dart';
 import 'package:newversity/ui/login/otp_route.dart';
+
+import '../ui/student/home/ui/home_screen.dart';
 
 class AppRouter {
   Route route(RouteSettings routeSettings) {
