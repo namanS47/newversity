@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:newversity/ui/student/webinar/ui/webinar_route.dart';
 
 import '../../campus/ui/campus_route.dart';
+import '../../webinar/ui/webinar_route.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

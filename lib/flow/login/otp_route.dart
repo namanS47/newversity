@@ -4,8 +4,9 @@ import 'package:newversity/di/di_initializer.dart';
 import 'package:newversity/firestore/data/firestore_repository.dart';
 import 'package:newversity/firestore/model/user.dart';
 import 'package:newversity/navigation/app_routes.dart';
-import 'package:newversity/ui/login/login_arguments.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+
+import 'login_arguments.dart';
 
 class OtpRoute extends StatefulWidget {
   const OtpRoute({Key? key, required this.loginArguments}) : super(key: key);

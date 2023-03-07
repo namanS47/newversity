@@ -17,11 +17,11 @@ class AppException implements Exception {
   AppException.allArgs(this.statusCode, this.message, this.errorBody);
 
   // ignore: sort_constructors_first
-  AppException(Response response, [String? message])
-      : this.allArgs(response.statusCode, message, response.data);
+  AppException(Response? response, [String? message])
+      : this.allArgs(response?.statusCode, message, response?.data);
 
-  static AppException forResponse(Response response, [String? message]) {
-    int? statusCode = response.statusCode;
+  static AppException forException(Response? response, [String? message]) {
+    int? statusCode = response?.statusCode ?? 0;
     switch (statusCode) {
       case 400:
         return BadRequestException(response, message ?? 'Bad Request');
@@ -51,17 +51,16 @@ class AppException implements Exception {
 /*====== Custom Exceptions =======*/
 
 class BadRequestException extends AppException {
-  BadRequestException(Response response, String message)
+  BadRequestException(Response? response, String message)
       : super(response, message) {
-    ResponseStatusModel responseStatus = ResponseStatusModel.fromJson(
-        jsonDecode(response.data) as Map<String, dynamic>);
-    this.message = responseStatus.responseStatus?.messages?.first.message ?? '';
-    statusCode = responseStatus.responseStatus?.statusCode!;
+    final responseStatus = response?.data as Map<String, dynamic>?;
+    this.message = responseStatus?[0] ?? "";
+    statusCode = response?.statusCode;
   }
 }
 
 class UnauthorizedException extends AppException {
-  UnauthorizedException(Response response, String message)
+  UnauthorizedException(Response? response, String message)
       : super(response, message);
 }
 
@@ -71,23 +70,20 @@ class InvalidGrantException extends AppException {
 }
 
 class DisplayMessageException extends AppException {
-  DisplayMessageException(Response response, String message)
+  DisplayMessageException(Response? response, String message)
       : super(response, message) {
-    ResponseStatusModel responseStatus = ResponseStatusModel.fromJson(
-        jsonDecode(response.data) as Map<String, dynamic>);
-    message = responseStatus.responseStatus?.messages?.first.message ?? '';
-    statusCode = responseStatus.responseStatus?.statusCode!;
+    final responseStatus = response?.data as Map<String, dynamic>?;
+    this.message = responseStatus?[0] ?? "";
+    statusCode = response?.statusCode;
   }
 }
 
 class InternalServerException extends AppException {
-  InternalServerException(Response response, String message)
+  InternalServerException(Response? response, String message)
       : super(response, message) {
-    if (response.statusCode != 502) {
-      final ResponseStatusModel responseStatus = ResponseStatusModel.fromJson(
-          jsonDecode(response.data) as Map<String, dynamic>);
-      this.message = responseStatus.responseStatus?.messages?.first.message ??
-          'Internal Server error';
+    if (response?.statusCode != 502) {
+      final responseStatus = response?.data as Map<String, dynamic>?;
+      this.message = responseStatus?[0] ?? 'Internal Server error';
     }
   }
 }

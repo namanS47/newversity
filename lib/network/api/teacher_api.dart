@@ -1,15 +1,16 @@
 import 'package:dio/dio.dart';
+import 'package:newversity/config/app_config.dart';
 import 'package:retrofit/http.dart';
 
-import '../../ui/teacher/model/teacher_details/teacher_details.dart';
+import '../../flow/teacher/data/model/teacher_details/teacher_details.dart';
 part 'teacher_api.g.dart';
 
-@RestApi(baseUrl: "http://localhost:8080/" "/teacher/")
+@RestApi(baseUrl: EnvironmentValues.newversityStagingUrl)
 abstract class TeacherApi {
   factory TeacherApi(Dio dio, {String? baseUrl}) {
     return _TeacherApi(
         dio,
-        baseUrl: baseUrl ?? "/"
+        baseUrl: baseUrl ?? AppConfig.instance.config.newversityAPIBaseUrl
     );
   }
   
@@ -20,6 +21,7 @@ abstract class TeacherApi {
 
   @POST("/addTeacher")
   Future<TeacherDetails> sendTeacherDetails(
-      @Body() TeacherDetails teacherDetails
+      @Body() TeacherDetails teacherDetails,
+      @Header("teacherId") String teacherId
       );
 }

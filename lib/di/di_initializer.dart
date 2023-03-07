@@ -1,6 +1,11 @@
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:newversity/firestore/data/firestore_repository.dart';
 import 'package:newversity/common/common_utils.dart';
+import 'package:newversity/flow/teacher/webservice/teacher_base_repository.dart';
+import 'package:newversity/network/api/common_api.dart';
+import 'package:newversity/network/api/dio_client.dart';
+import 'package:newversity/network/api/student_api.dart';
+import 'package:newversity/network/api/teacher_api.dart';
 import 'package:newversity/storage/preferences.dart';
 
 class DI {
@@ -9,6 +14,10 @@ class DI {
   factory DI.initializeDependencies() {
     addDependency<FireStoreRepository>(FireStoreRepository(), true);
     addDependency<Preferences>(PreferencesImpl(), true);
+    addDependency(CommonApi(DioClient.getDio()), true);
+    addDependency(TeacherApi(DioClient.getDio()), true);
+    addDependency(StudentApi(DioClient.getDio()), true);
+    addDependency(TeacherBaseRepository(), true);
 
     return DI();
   }

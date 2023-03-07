@@ -4,12 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:newversity/navigation/app_routes.dart';
-import 'package:newversity/ui/login/login_arguments.dart';
 import 'package:newversity/utils/validaters.dart';
 
 import '../../di/di_initializer.dart';
 import '../../firestore/data/firestore_repository.dart';
 import '../../firestore/model/user.dart';
+import 'login_arguments.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
