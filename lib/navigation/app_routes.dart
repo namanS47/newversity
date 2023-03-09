@@ -10,4 +10,7 @@ class AppRoutes {
   static const String teachingExperienceRoute = "teaching_experience_route";
   static const String expertiseRoute = "expertise_route";
   static const String teacherHomePageRoute = "teacher_home_page_route";
+
+  //Room
+  static const String roomPageRoute = "room_page_route";
 }

@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const LoginScreen(),
       onGenerateRoute: AppRouter().route,
-      initialRoute: AppRoutes.teacherPersonalInformationRoute,
+      initialRoute: AppRoutes.roomPageRoute,
     );
   }
 }

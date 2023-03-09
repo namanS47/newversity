@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
 import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_personal_information_route.dart';
 import 'package:newversity/navigation/app_routes.dart';
+import 'package:newversity/room/room.dart';
 
 import '../flow/login/login_arguments.dart';
 import '../flow/login/login_screen.dart';
@@ -36,6 +37,9 @@ class AppRouter {
     }
     if(route.toString() == AppRoutes.teacherPersonalInformationRoute) {
       return BlocProvider<TeacherDetailsBloc>(create: (context) => TeacherDetailsBloc(), child: TeacherPersonalInfoRoute(),);
+    }
+    if(route.toString() == AppRoutes.roomPageRoute) {
+      return const RoomPage();
     }
   }
 }
