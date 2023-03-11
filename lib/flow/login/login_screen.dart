@@ -211,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         Navigator.of(context).pushNamed(AppRoutes.otpRoute,
             arguments: LoginArguments(
-                verificationCode: verificationId, mobileNumber: _phoneNumber));
+                verificationCode: verificationId, mobileNumber: _phoneNumber, resendToken: resendToken));
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         setState(() {

@@ -12,4 +12,6 @@ class AppStrings {
   static const notStudent = "Not a Student? Get started as ";
   static const mentor = "Mentor";
   static const student = "Student";
+  static const verifyOtp = "Verify OTP";
+  static const enterOtp = "Please enter the 4-digit code sent to";
 }

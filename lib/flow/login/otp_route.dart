@@ -1,9 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:newversity/di/di_initializer.dart';
 import 'package:newversity/firestore/data/firestore_repository.dart';
 import 'package:newversity/firestore/model/user.dart';
 import 'package:newversity/navigation/app_routes.dart';
+import 'package:newversity/resources/images.dart';
+import 'package:newversity/themes/colors.dart';
+import 'package:newversity/themes/strings.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import 'login_arguments.dart';
@@ -32,29 +36,64 @@ class _OtpRouteState extends State<OtpRoute> {
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
-                'Phone Number Verification',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                AppStrings.verifyOtp,
+                style: TextStyle(fontWeight: FontWeight.bold,
+                    fontSize: 27,
+                    color: AppColors.blackRussian),
                 textAlign: TextAlign.center,
               ),
             ),
+            // Padding(
+            //   padding:
+            //   const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8),
+            //   child: RichText(
+            //     text: TextSpan(
+            //         text: AppStrings.enterOtp,
+            //         children: [
+            //           TextSpan(
+            //               text: " +91 ${widget.loginArguments.mobileNumber}",
+            //               style: const TextStyle(
+            //                   color: Colors.black,
+            //                   fontWeight: FontWeight.bold,
+            //                   fontSize: 15)),
+            //         ],
+            //         style:
+            //         const TextStyle(color: Colors.black54, fontSize: 15)),
+            //     textAlign: TextAlign.center,
+            //   ),
+            // ),
             Padding(
-              padding:
-              const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8),
-              child: RichText(
-                text: TextSpan(
-                    text: "Enter the code sent to ",
-                    children: [
-                      TextSpan(
-                          // text: "${widget.phoneNumber}",
-                        text: "8949704799",
+              padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 8),
+              child:Wrap(
+                alignment: WrapAlignment.center,
+                children: [
+                  const Text(
+                    AppStrings.enterOtp,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.blackMerlin
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          " +91 ${widget.loginArguments.mobileNumber}",
                           style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15)),
-                    ],
-                    style:
-                    const TextStyle(color: Colors.black54, fontSize: 15)),
-                textAlign: TextAlign.center,
+                              fontSize: 12,
+                              color: AppColors.blackMerlin
+                          ),
+                        ),
+                        const SizedBox(width: 4,),
+                        SvgPicture.asset(ImageAsset.editIcon)
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
             getPinCodeField()
@@ -90,15 +129,15 @@ class _OtpRouteState extends State<OtpRoute> {
                 }
               },
               pinTheme: PinTheme(
-                activeColor: Colors.black,
-                selectedColor: Colors.black,
-                shape: PinCodeFieldShape.box,
-                borderRadius: BorderRadius.circular(5),
-                fieldHeight: 50,
-                fieldWidth: 40,
-                activeFillColor: Colors.green,
-                selectedFillColor: Colors.blue,
-                inactiveFillColor: Colors.green
+                  activeColor: Colors.black,
+                  selectedColor: Colors.black,
+                  shape: PinCodeFieldShape.box,
+                  borderRadius: BorderRadius.circular(5),
+                  fieldHeight: 50,
+                  fieldWidth: 40,
+                  activeFillColor: Colors.green,
+                  selectedFillColor: Colors.blue,
+                  inactiveFillColor: Colors.green
               ),
               cursorColor: Colors.black,
               controller: textEditingController,
@@ -136,12 +175,18 @@ class _OtpRouteState extends State<OtpRoute> {
 
   verifyOtp(BuildContext context) async {
     FirebaseAuth auth = FirebaseAuth.instance;
-    PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: widget.loginArguments.verificationCode, smsCode: currentText);
-    try{
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: widget.loginArguments.verificationCode,
+        smsCode: currentText);
+    try {
       final result = await auth.signInWithCredential(credential);
-      await DI.inject<FireStoreRepository>().addUserToFireStore(UserData(userId: result.user?.uid ?? "", name: "naman", phoneNumber: widget.loginArguments.mobileNumber));
-      Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.homeScreen, (route) => false);
-    } catch(e) {
+      await DI.inject<FireStoreRepository>().addUserToFireStore(UserData(
+          userId: result.user?.uid ?? "",
+          name: "naman",
+          phoneNumber: widget.loginArguments.mobileNumber));
+      Navigator.of(context).pushNamedAndRemoveUntil(
+          AppRoutes.homeScreen, (route) => false);
+    } catch (e) {
       print("Please enter corrent otp");
     }
   }
