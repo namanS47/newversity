@@ -3,7 +3,11 @@ import 'dart:ffi';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/navigation/app_routes.dart';
+import 'package:newversity/themes/colors.dart';
+import 'package:newversity/themes/strings.dart';
+import 'package:newversity/utils/enums.dart';
 import 'package:newversity/utils/validaters.dart';
 
 import '../../di/di_initializer.dart';
@@ -23,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String _phoneNumber = "";
   bool _fetchingOtp = false;
   bool? _phoneNumberValid;
+  UserType userType = UserType.teacher;
 
   @override
   void initState() {
@@ -33,131 +38,281 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        shadowColor: Colors.transparent,
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: double.infinity,
-              child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "NewVersity",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 26),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "A Platform build for new way of learning",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                ],
+      resizeToAvoidBottomInset: false,
+      body: getScreeContent(),
+    );
+  }
+
+  Widget getScreeContent() {
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverToBoxAdapter(
+          child: Column(
+            children: [
+              getTopBanner(),
+              const SizedBox(
+                height: 31,
               ),
-            ),
-            SizedBox(
-              height: 40,
-            ),
-            Text(
-              "Your mobile number",
-              style: TextStyle(fontWeight: FontWeight.w500),
-            ),
-            TextFormField(
-              keyboardType: TextInputType.phone,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              validator: PhoneNumberValidator(isOptional: false),
-              onChanged: (value) {
-                _phoneNumber = value;
-                if(_phoneNumber.length == 10){
-                  setState(() {
-                    _phoneNumberValid = true;
-                  });
-                }
-              },
-              decoration: InputDecoration(
-                hintText: "Please enter your mobile number",
-                hintStyle: TextStyle(fontSize: 12),
-                isDense: true,
-                errorText: getErrorText(),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                // disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
-                // focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
-                errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(color: Colors.redAccent)),
-                // focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.redAccent)),
-                // enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: GestureDetector(
-                onTap: () async {
-                  onButtonTap();
-                },
-                child: Container(
-                  height: 42,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.green,
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Submit",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white
-                      ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if(userType == UserType.student) studentNameAndIntroWidget(),
+                    if(userType == UserType.teacher) teacherNameAndIntroWidget(),
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
+                    getMobileNumberWidget(),
+                    getConfirmCta(),
+                    getTAndC(),
+                  ],
                 ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
+        SliverFillRemaining(
+            hasScrollBody: false, child: changeUserTypeBottomWidget())
+      ],
+    );
+  }
+
+  Widget getTopBanner() {
+    return Container(
+      height: 300,
+      decoration: const BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20))),
+    );
+  }
+
+  Widget studentNameAndIntroWidget() {
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Text(
+            AppStrings.hiStudent,
+            style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 24,
+                color: AppColors.blackRussian),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+            AppStrings.empoweringYou,
+            style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: AppColors.blackRussian),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget teacherNameAndIntroWidget() {
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Text(
+            AppStrings.hiMentor,
+            style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 24,
+                color: AppColors.blackRussian),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+            AppStrings.breakBarrier,
+            style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: AppColors.blackRussian),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget getMobileNumberWidget() {
+    return AppTextFormField(
+      keyboardType: TextInputType.phone,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      validator: PhoneNumberValidator(isOptional: false),
+      onChange: (value) {
+        _phoneNumber = value;
+        if (_phoneNumber.length == 10) {
+          setState(() {
+            _phoneNumberValid = true;
+          });
+        }
+      },
+      fillColor: AppColors.grey35,
+      hintText: AppStrings.mobileNumber,
+      hintTextStyle: const TextStyle(
+          fontSize: 14,
+          color: AppColors.blackRussian,
+          fontWeight: FontWeight.normal),
+      isDense: true,
+      errorText: getErrorText(),
+    );
+  }
+
+  Widget getConfirmCta() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 24),
+      child: AppCta(
+        onTap: onButtonTap,
+        isLoading: _fetchingOtp,
       ),
     );
   }
 
   onButtonTap() {
-    if(isPhoneNumberValid()) {
+    if (isPhoneNumberValid()) {
       fetchOtp();
+    } else {
+      setState(() {
+        _phoneNumberValid = false;
+      });
     }
   }
 
-  addCollection() async {
-    await DI.inject<FireStoreRepository>().addUserToFireStore(UserData(userId: "IGiEzbtcMiWlbJ4s2yj7UaqsSTi2", name: "naman", phoneNumber: "", profileUrl: ""));
-  }
-
   fetchOtp() async {
-    _fetchingOtp = true;
-
+    setState(() {
+      _fetchingOtp = true;
+    });
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: '+91' + _phoneNumber,
       verificationCompleted: (PhoneAuthCredential credential) {
-
+        setState(() {
+          _fetchingOtp = false;
+        });
       },
       verificationFailed: (FirebaseAuthException e) {
-
+        setState(() {
+          _fetchingOtp = false;
+        });
       },
       codeSent: (String verificationId, int? resendToken) {
-        Navigator.of(context).pushNamed(AppRoutes.otpRoute, arguments: LoginArguments(verificationCode: verificationId, mobileNumber: _phoneNumber));
+        setState(() {
+          _fetchingOtp = false;
+        });
+        Navigator.of(context).pushNamed(AppRoutes.otpRoute,
+            arguments: LoginArguments(
+                verificationCode: verificationId, mobileNumber: _phoneNumber));
       },
       codeAutoRetrievalTimeout: (String verificationId) {
-
+        setState(() {
+          _fetchingOtp = false;
+        });
       },
     );
+  }
+
+  Widget getTAndC() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: const [
+        Text(
+          AppStrings.clickOnProceed,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: AppColors.blackMerlin,
+          ),
+        ),
+        Text(
+          AppStrings.termsAndConditions,
+          style: TextStyle(
+            color: AppColors.blackRussian,
+            fontWeight: FontWeight.bold,
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget changeUserTypeBottomWidget() {
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: GestureDetector(
+            onTap: () {},
+            child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if(userType == UserType.teacher) {
+                        userType = UserType.student;
+                      } else {
+                        userType = UserType.teacher;
+                      }
+                    });
+                  },
+                  child: changeUserTypeWidget(),
+                )),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget changeUserTypeWidget() {
+    if (userType == UserType.teacher) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Text(
+            AppStrings.notMentor,
+            style: TextStyle(
+              color: AppColors.blackRussian,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            AppStrings.student,
+            style: TextStyle(
+              color: AppColors.strongCyan,
+              fontWeight: FontWeight.bold,
+            ),
+          )
+        ],
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Text(
+            AppStrings.notStudent,
+            style: TextStyle(
+              color: AppColors.blackRussian,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            AppStrings.mentor,
+            style: TextStyle(
+              color: AppColors.strongCyan,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      );
+    }
   }
 
   bool isPhoneNumberValid() {
@@ -165,10 +320,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String? getErrorText() {
-    if(_phoneNumberValid == null || _phoneNumberValid == true) {
+    print("naman---2");
+    if (_phoneNumberValid == null || _phoneNumberValid == true) {
       return null;
     }
-
+    print("naman---");
     return "Invalid phone number";
   }
 }

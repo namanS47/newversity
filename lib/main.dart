@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:newversity/navigation/app_router.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/common/common_utils.dart';
+import 'package:newversity/themes/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -22,62 +23,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        // primarySwatch: Colors.blue,
-        fontFamily: 'Poppins',
-      ),
+      theme: AppTheme.lightTheme,
       home: const LoginScreen(),
       onGenerateRoute: AppRouter().route,
-      initialRoute: AppRoutes.roomPageRoute,
+      initialRoute: AppRoutes.loginRoute,
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  final Uri _url = Uri.parse('whatsapp://chat?code=KjmBB9x8ayzDSfPqYRe2NY');
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _launchUrl();
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-
-  Future<void> _launchUrl() async {
-    if (!await launchUrl(_url)) {
-      throw 'Could not launch $_url';
-    }
   }
 }

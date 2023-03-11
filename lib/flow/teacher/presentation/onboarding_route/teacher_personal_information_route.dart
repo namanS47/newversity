@@ -4,6 +4,7 @@ import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_detail
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/navigation/app_routes.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../common/common_widgets.dart';
 import '../../../../utils/enums.dart';
@@ -33,29 +34,27 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
     return SafeArea(
       child: Scaffold(
         body: BlocConsumer<TeacherDetailsBloc, TeacherDetailsState>(
-          builder: (BuildContext context, TeacherDetailsState state) {
-            if(state is TeacherDetailsInitial) {
-              return getContentWidget(false);
-            }
-            if(state is TeacherDetailsSavingState) {
-              return getContentWidget(true);
-            }
+            builder: (BuildContext context, TeacherDetailsState state) {
+          if (state is TeacherDetailsInitial) {
             return getContentWidget(false);
-          },
-          listener: (BuildContext context, TeacherDetailsState state) {
-            if(state is TeacherDetailsSavingSuccessState) {
-              Navigator.of(context).pushNamed(AppRoutes.homeScreen);
-            } else if(state is TeacherDetailsSavingFailureState) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    "Something went wrong",
-                  ),
-                ),
-              );
-            }
           }
-         ),
+          if (state is TeacherDetailsSavingState) {
+            return getContentWidget(true);
+          }
+          return getContentWidget(false);
+        }, listener: (BuildContext context, TeacherDetailsState state) {
+          if (state is TeacherDetailsSavingSuccessState) {
+            Navigator.of(context).pushNamed(AppRoutes.homeScreen);
+          } else if (state is TeacherDetailsSavingFailureState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  "Something went wrong",
+                ),
+              ),
+            );
+          }
+        }),
       ),
     );
   }
@@ -81,7 +80,19 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
               SizedBox(
                 height: 30,
               ),
-              Text("Upload profile picture"),
+              GestureDetector(
+                onTap: () async {
+                  bool isCameraPermissionGranted = await askCameraPermission();
+                  if(isCameraPermissionGranted) {
+
+                  } else {
+
+                  }
+                },
+                child: Text(
+                  "Upload profile picture",
+                ),
+              ),
               GestureDetector(
                 onTap: () {},
                 child: CommonWidgets.getRoundedBoxWithText(
@@ -160,7 +171,12 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
           child: GestureDetector(
             onTap: () {
               print("naman");
-              BlocProvider.of<TeacherDetailsBloc>(context).add(SaveTeacherDetailsEvent(teacherDetails: TeacherDetails(teacherId: "namannaman", name: "himanshu", mobileNumber: "894832")));
+              BlocProvider.of<TeacherDetailsBloc>(context).add(
+                  SaveTeacherDetailsEvent(
+                      teacherDetails: TeacherDetails(
+                          teacherId: "namannaman",
+                          name: "himanshu",
+                          mobileNumber: "894832")));
             },
             child: Container(
               height: 50,
@@ -171,5 +187,14 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
         ),
       ],
     );
+  }
+
+  Future<bool> askCameraPermission() async {
+    await Permission.camera.request();
+    while ((await Permission.camera.isDenied)) {
+      await Permission.camera.request();
+    }
+
+    return await Permission.camera.isGranted;
   }
 }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../themes/colors.dart';
+import '../themes/strings.dart';
+
 class AppTextFormField extends StatefulWidget {
   const AppTextFormField({
     Key? key,
@@ -13,6 +16,9 @@ class AppTextFormField extends StatefulWidget {
     this.errorText,
     this.isDense,
     this.maxLines,
+    this.onChange,
+    this.hintTextStyle,
+    this.fillColor,
   }) : super(key: key);
 
   final TextEditingController? textEditingController;
@@ -24,6 +30,9 @@ class AppTextFormField extends StatefulWidget {
   final String? errorText;
   final bool? isDense;
   final int? maxLines;
+  final Function? onChange;
+  final TextStyle? hintTextStyle;
+  final Color? fillColor;
 
   @override
   State<AppTextFormField> createState() => _AppTextFormFieldState();
@@ -52,39 +61,97 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
             }
           : null,
       maxLines: widget.maxLines,
-      decoration: widget.decoration ?? InputDecoration(
-        hintText: widget.hintText,
-        hintStyle: TextStyle(fontSize: 12),
-        isDense: widget.isDense,
-        errorText: widget.errorText,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+      onChanged: (v) {
+        widget.onChange?.call(v);
+      },
+      decoration: widget.decoration ??
+          InputDecoration(
+            filled: true,
+            fillColor: widget.fillColor ?? AppColors.grey35,
+            hintText: widget.hintText,
+            hintStyle: widget.hintTextStyle ??
+                const TextStyle(
+                    fontSize: 14,
+                    color: AppColors.blackRussian,
+                    fontWeight: FontWeight.normal),
+            isDense: widget.isDense,
+            errorText: widget.errorText,
+            border: OutlineInputBorder(
+              borderSide: const BorderSide(color: AppColors.grey32),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: AppColors.grey32),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: AppColors.grey32),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.redAccent)),
+          ),
+    );
+  }
+}
+
+class AppCta extends StatelessWidget {
+  const AppCta({
+    Key? key,
+    this.onTap,
+    this.isLoading = false
+  }) : super(key: key);
+
+  final void Function()? onTap;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 24),
+      child: GestureDetector(
+        onTap: !isLoading ? onTap : null,
+        child: Container(
+          height: 50,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            color: AppColors.cyanBlue,
+          ),
+          child: !isLoading ? const Center(
+            child: Text(
+              AppStrings.proceed,
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600),
+            ),
+          ) : CommonWidgets.getCircularProgressIndicator(),
         ),
-        // disabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
-        // focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
-        errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide(color: Colors.redAccent)),
-        // focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: Colors.redAccent)),
-        // enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20),),
       ),
     );
   }
 }
 
 class CommonWidgets {
-  static Container getRoundedBoxWithText({bool isSelected = false, Color? selectedColor, Color? color, required String text}) {
+  static Container getRoundedBoxWithText(
+      {bool isSelected = false,
+      Color? selectedColor,
+      Color? color,
+      required String text}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
-          color: isSelected?  selectedColor ?? Colors.grey : color ?? Colors.grey.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(20)
-      ),
+          color: isSelected
+              ? selectedColor ?? Colors.grey
+              : color ?? Colors.grey.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(20)),
       child: Text(text),
     );
   }
 
-  // static Widget getAppCta() {
-  //
-  // }
+  static Widget getCircularProgressIndicator() {
+    return const Center(child: SizedBox(height: 20, width:20, child: CircularProgressIndicator(color: AppColors.whiteColor,strokeWidth: 2,)),);
+  }
 }
