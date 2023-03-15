@@ -174,6 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
       padding: const EdgeInsets.symmetric(vertical: 24),
       child: AppCta(
         onTap: onButtonTap,
+        text: AppStrings.proceed,
         isLoading: _fetchingOtp,
       ),
     );

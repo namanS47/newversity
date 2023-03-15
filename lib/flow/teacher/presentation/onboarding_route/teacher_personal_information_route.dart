@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:newversity/common/common_utils.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/navigation/app_routes.dart';
+import 'package:newversity/themes/colors.dart';
+import 'package:newversity/themes/strings.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../common/common_widgets.dart';
+import '../../../../resources/images.dart';
 import '../../../../utils/enums.dart';
+import '../../../../utils/utils.dart';
 
 class TeacherPersonalInfoRoute extends StatefulWidget {
   const TeacherPersonalInfoRoute({Key? key}) : super(key: key);
@@ -82,12 +88,19 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
               ),
               GestureDetector(
                 onTap: () async {
+
                   bool isCameraPermissionGranted = await askCameraPermission();
-                  if(isCameraPermissionGranted) {
+                  if (isCameraPermissionGranted) {
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return ProfilePhotoPopUp(
+                            blocContext: context,
+                            profileUrl:"",
+                          );
+                        });
 
-                  } else {
-
-                  }
+                  } else {}
                 },
                 child: Text(
                   "Upload profile picture",
@@ -196,5 +209,128 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
     }
 
     return await Permission.camera.isGranted;
+  }
+}
+
+class ProfilePhotoPopUp extends StatelessWidget {
+  ProfilePhotoPopUp(
+      {Key? key,
+      required this.blocContext,
+      required this.profileUrl,})
+      : super(key: key);
+
+  final BuildContext blocContext;
+  final String profileUrl;
+  final ImagePicker _picker = ImagePicker();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(left: 12, bottom: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  icon: SvgPicture.asset(ImageAsset.cancel),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: isNullOrEmpty(profileUrl)
+                    ? CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 50,
+                        child: SvgPicture.asset(
+                          ImageAsset.blueAvatar,
+                          width: 100,
+                          height: 100,
+                        ),
+                      )
+                    : CircleAvatar(
+                        radius: 50,
+                        foregroundImage: NetworkImage(
+                          profileUrl,
+                        ),
+                        backgroundColor: Colors.white,
+                        child: const CircularProgressIndicator(),
+                      ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Text(
+                  AppStrings.profilePhoto,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: GestureDetector(
+                  onTap: () async {
+                    final _pickedFile = await _picker.pickImage(
+                        source: ImageSource.camera, imageQuality: 50);
+                    Navigator.pop(context);
+                    if (_pickedFile != null) {
+                      // BlocProvider.of<ProfileBloc>(blocContext).add(
+                      //   UploadToCloudinaryEvent(
+                      //     pickedFile: File(_pickedFile.path),
+                      //   ),
+                      // );
+                    }
+                  },
+                  child: Row(
+                    children: const [
+                      Icon(
+                        Icons.camera_alt,
+                        color: AppColors.grey32,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8),
+                        child: Text(
+                          AppStrings.clickFromCamera,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  final _pickedFile =
+                      await _picker.pickImage(source: ImageSource.gallery);
+                  Navigator.pop(context);
+                  if (_pickedFile != null) {
+                    // BlocProvider.of<ProfileBloc>(blocContext).add(
+                    //   UploadToCloudinaryEvent(
+                    //     pickedFile: File(_pickedFile.path),
+                    //   ),
+                    // );
+                  }
+                },
+                child: Row(
+                  children: const [
+                    Icon(
+                      Icons.movie,
+                      color: AppColors.grey32,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8),
+                      child: Text(
+                        AppStrings.clickFromGallery,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        )
+      ],
+    );
   }
 }

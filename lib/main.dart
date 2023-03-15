@@ -7,12 +7,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'di/di_initializer.dart';
+import 'firebase_options.dart';
 import 'flow/login/login_screen.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DI.initializeDependencies();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const MyApp());
 }
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       home: const LoginScreen(),
       onGenerateRoute: AppRouter().route,
-      initialRoute: AppRoutes.loginRoute,
+      initialRoute: AppRoutes.bookSession,
     );
   }
 }
