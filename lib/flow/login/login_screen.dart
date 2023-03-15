@@ -58,8 +58,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if(userType == UserType.student) studentNameAndIntroWidget(),
-                    if(userType == UserType.teacher) teacherNameAndIntroWidget(),
+                    if (userType == UserType.student)
+                      studentNameAndIntroWidget(),
+                    if (userType == UserType.teacher)
+                      teacherNameAndIntroWidget(),
                     const SizedBox(
                       height: 20,
                     ),
@@ -194,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _fetchingOtp = true;
     });
     await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: '+91' + _phoneNumber,
+      phoneNumber: '+91$_phoneNumber',
       verificationCompleted: (PhoneAuthCredential credential) {
         setState(() {
           _fetchingOtp = false;
@@ -211,7 +213,9 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         Navigator.of(context).pushNamed(AppRoutes.otpRoute,
             arguments: LoginArguments(
-                verificationCode: verificationId, mobileNumber: _phoneNumber, resendToken: resendToken));
+                verificationCode: verificationId,
+                mobileNumber: _phoneNumber,
+                resendToken: resendToken));
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         setState(() {
@@ -256,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      if(userType == UserType.teacher) {
+                      if (userType == UserType.teacher) {
                         userType = UserType.student;
                       } else {
                         userType = UserType.teacher;
@@ -320,11 +324,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String? getErrorText() {
-    print("naman---2");
     if (_phoneNumberValid == null || _phoneNumberValid == true) {
       return null;
     }
-    print("naman---");
     return "Invalid phone number";
   }
 }

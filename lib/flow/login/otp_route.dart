@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -63,7 +65,7 @@ class _OtpRouteState extends State<OtpRoute> {
             //   ),
             // ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8),
               child:Wrap(
                 alignment: WrapAlignment.center,
                 children: [
@@ -96,7 +98,9 @@ class _OtpRouteState extends State<OtpRoute> {
                 ],
               ),
             ),
-            getPinCodeField()
+            getPinCodeField(),
+            SizedBox(height: 24,),
+            ResendOtpWidget(loginArguments: widget.loginArguments,),
           ],
         ),
       ),
@@ -191,3 +195,109 @@ class _OtpRouteState extends State<OtpRoute> {
     }
   }
 }
+
+class ResendOtpWidget extends StatefulWidget {
+  const ResendOtpWidget({Key? key, required this.loginArguments}) : super(key: key);
+
+  final LoginArguments loginArguments;
+
+  @override
+  State<ResendOtpWidget> createState() => _ResendOtpWidgetState();
+}
+
+class _ResendOtpWidgetState extends State<ResendOtpWidget>
+    with SingleTickerProviderStateMixin {
+  late Timer _timer;
+  int _resendOtpDuration = 30;
+
+  @override
+  void initState() {
+    startTimer();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: _resendOtpDuration == 0 ? resendOtpWidget() : resendOtpTimer(),
+    );
+  }
+
+  Widget resendOtpTimer() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          "Resend Otp in ",
+          style: TextStyle(
+            color: AppColors.strongCyan,
+          ),
+        ),
+        Text(
+          '00:${(_resendOtpDuration < 10) ? '0$_resendOtpDuration' : "$_resendOtpDuration"}',
+          style: TextStyle(
+              color: AppColors.blackMerlin, fontWeight: FontWeight.w600),
+        )
+      ],
+    );
+  }
+
+  Widget resendOtpWidget() {
+    return GestureDetector(
+      onTap: () {
+        resendOtp();
+      },
+      child: const Text(
+        "Resend Otp",
+        style: TextStyle(
+          color: AppColors.strongCyan,
+          fontWeight: FontWeight.w600,
+          decoration: TextDecoration.underline,
+          decorationThickness: 4
+        ),
+      ),
+    );
+  }
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+          (Timer timer) {
+        if (_resendOtpDuration == 0) {
+          timer.cancel();
+        } else {
+          setState(() {
+            _resendOtpDuration--;
+          });
+        }
+      },
+    );
+  }
+
+  void resendOtp() async {
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      phoneNumber: '+91${widget.loginArguments.mobileNumber}',
+      verificationCompleted: (PhoneAuthCredential credential) {
+
+      },
+      verificationFailed: (FirebaseAuthException e) {
+
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        _resendOtpDuration = 30;
+        startTimer();
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+}
+

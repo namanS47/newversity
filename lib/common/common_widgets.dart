@@ -97,11 +97,8 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
 }
 
 class AppCta extends StatelessWidget {
-  const AppCta({
-    Key? key,
-    this.onTap,
-    this.isLoading = false
-  }) : super(key: key);
+  const AppCta({Key? key, this.onTap, this.isLoading = false})
+      : super(key: key);
 
   final void Function()? onTap;
   final bool isLoading;
@@ -119,15 +116,17 @@ class AppCta extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             color: AppColors.cyanBlue,
           ),
-          child: !isLoading ? const Center(
-            child: Text(
-              AppStrings.proceed,
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600),
-            ),
-          ) : CommonWidgets.getCircularProgressIndicator(),
+          child: !isLoading
+              ? const Center(
+                  child: Text(
+                    AppStrings.proceed,
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600),
+                  ),
+                )
+              : CommonWidgets.getCircularProgressIndicator(),
         ),
       ),
     );
@@ -152,6 +151,14 @@ class CommonWidgets {
   }
 
   static Widget getCircularProgressIndicator() {
-    return const Center(child: SizedBox(height: 20, width:20, child: CircularProgressIndicator(color: AppColors.whiteColor,strokeWidth: 2,)),);
+    return const Center(
+      child: SizedBox(
+          height: 20,
+          width: 20,
+          child: CircularProgressIndicator(
+            color: AppColors.whiteColor,
+            strokeWidth: 2,
+          )),
+    );
   }
 }
