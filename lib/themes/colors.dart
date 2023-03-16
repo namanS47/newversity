@@ -11,4 +11,6 @@ class AppColors {
   static const lightCyan = Color(0xff9BD6D4);
   static const whiteColor = Color(0xffFFFFFF);
   static const primaryColor = Color(0xff079893);
+  static const strongGreen = Color(0xff34C759);
+  static const strongRed = Color(0xffFF3B30);
 }

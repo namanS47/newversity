@@ -49,11 +49,17 @@ class AboutSession extends StatelessWidget {
           height: 10,
         ),
         getExperienceLayout(),
-        const SizedBox(height: 20,),
+        const SizedBox(
+          height: 20,
+        ),
         getEducationHeader(),
-        const SizedBox(height: 10,),
+        const SizedBox(
+          height: 10,
+        ),
         getEducationLayout(),
-        const SizedBox(height: 150,),
+        const SizedBox(
+          height: 150,
+        ),
       ],
     );
   }
@@ -107,7 +113,7 @@ class AboutSession extends StatelessWidget {
               color: AppColors.strongCyan,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
@@ -129,7 +135,7 @@ class AboutSession extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           getMode(index),
@@ -182,21 +188,21 @@ class AboutSession extends StatelessWidget {
     );
   }
 
-  Widget getStream(int index){
+  Widget getStream(int index) {
     return Text(
       "${educationData[index].stream}",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
 
-  Widget getEducationalDuration(int index){
+  Widget getEducationalDuration(int index) {
     return Text(
       "${educationData[index].duration}",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
 
-  Widget getEducationalInstitute(int index){
+  Widget getEducationalInstitute(int index) {
     return Text(
       "${educationData[index].institution}",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
@@ -325,7 +331,7 @@ class AboutSession extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(ImageAsset.location),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             const Text(

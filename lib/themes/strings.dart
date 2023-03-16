@@ -21,6 +21,15 @@ class AppStrings {
   static const clickFromGallery = "Click from Gallery";
   static const aboutSession = "Hello, my name is Mahesh, and I am a 12 grade student. I have always been curious about the world around me and enjoy learning new things. I also enjoy exploring different areas of knowledge";
   static const about = "About";
+  static const availableSlot = "Available slots";
+  static const availableTime = "Available times";
+  static const perSession = "Per session";
+  static const twoFifty = " 250 /-";
+  static const nextAvailable = "Next Available in 30 M:00 S";
+  static const notificationChecker = "Notify me when new slots are added";
+  static const seeAll = "See all";
+  static const fifteenMin = "15 mins";
+  static const thirtyMin = "30 mins";
   static const location = "Location";
   static const experience = "Experience";
   static const education = "Education";

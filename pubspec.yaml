@@ -37,6 +37,7 @@ dependencies:
   firebase_auth: ^4.2.4
   pin_code_fields: ^7.4.0
   json_annotation: ^4.7.0
+  intl: 0.17.0-nullsafety.2
   json_serializable: ^6.5.4
   dio: ^5.0.1
   image_picker: ^0.8.4+7
@@ -54,7 +55,6 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  syncfusion_flutter_calendar: ^20.4.53
 
 dev_dependencies:
   flutter_test:
