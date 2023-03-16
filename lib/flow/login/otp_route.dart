@@ -3,15 +3,13 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:newversity/di/di_initializer.dart';
-import 'package:newversity/firestore/data/firestore_repository.dart';
-import 'package:newversity/firestore/model/user.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
+import '../../common/common_widgets.dart';
 import 'login_arguments.dart';
 
 class OtpRoute extends StatefulWidget {
@@ -25,7 +23,9 @@ class OtpRoute extends StatefulWidget {
 
 class _OtpRouteState extends State<OtpRoute> {
   TextEditingController textEditingController = TextEditingController();
-  String currentText = "";
+  bool _isLoading = false;
+  int pinCodeFieldLength = 6;
+  bool showErrorText = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,42 +39,23 @@ class _OtpRouteState extends State<OtpRoute> {
               padding: EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
                 AppStrings.verifyOtp,
-                style: TextStyle(fontWeight: FontWeight.bold,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
                     fontSize: 27,
                     color: AppColors.blackRussian),
                 textAlign: TextAlign.center,
               ),
             ),
-            // Padding(
-            //   padding:
-            //   const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8),
-            //   child: RichText(
-            //     text: TextSpan(
-            //         text: AppStrings.enterOtp,
-            //         children: [
-            //           TextSpan(
-            //               text: " +91 ${widget.loginArguments.mobileNumber}",
-            //               style: const TextStyle(
-            //                   color: Colors.black,
-            //                   fontWeight: FontWeight.bold,
-            //                   fontSize: 15)),
-            //         ],
-            //         style:
-            //         const TextStyle(color: Colors.black54, fontSize: 15)),
-            //     textAlign: TextAlign.center,
-            //   ),
-            // ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8),
-              child:Wrap(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8),
+              child: Wrap(
                 alignment: WrapAlignment.center,
                 children: [
                   const Text(
                     AppStrings.enterOtp,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.blackMerlin
-                    ),
+                    style:
+                        TextStyle(fontSize: 12, color: AppColors.blackMerlin),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -86,11 +67,11 @@ class _OtpRouteState extends State<OtpRoute> {
                         Text(
                           " +91 ${widget.loginArguments.mobileNumber}",
                           style: const TextStyle(
-                              fontSize: 12,
-                              color: AppColors.blackMerlin
-                          ),
+                              fontSize: 12, color: AppColors.blackMerlin),
                         ),
-                        const SizedBox(width: 4,),
+                        const SizedBox(
+                          width: 4,
+                        ),
                         SvgPicture.asset(ImageAsset.editIcon)
                       ],
                     ),
@@ -99,8 +80,14 @@ class _OtpRouteState extends State<OtpRoute> {
               ),
             ),
             getPinCodeField(),
-            SizedBox(height: 24,),
-            ResendOtpWidget(loginArguments: widget.loginArguments,),
+            SizedBox(
+              height: 24,
+            ),
+            ResendOtpWidget(
+              loginArguments: widget.loginArguments,
+            ),
+            getConfirmCta(),
+            if (showErrorText) getErrorText()
           ],
         ),
       ),
@@ -114,90 +101,99 @@ class _OtpRouteState extends State<OtpRoute> {
           height: 20,
         ),
         Padding(
-            padding: const EdgeInsets.symmetric(
-                vertical: 8.0, horizontal: 30),
-            child: PinCodeTextField(
-              appContext: context,
-              pastedTextStyle: TextStyle(
-                color: Colors.green.shade600,
-                fontWeight: FontWeight.bold,
-              ),
-              length: 6,
-              blinkWhenObscuring: true,
-              animationType: AnimationType.fade,
-              validator: (v) {
-                if (v!.length < 6) {
-                  return "Please fill otp";
-                } else {
-                  return null;
-                }
-              },
-              pinTheme: PinTheme(
-                  activeColor: Colors.black,
-                  selectedColor: Colors.black,
-                  shape: PinCodeFieldShape.box,
-                  borderRadius: BorderRadius.circular(5),
-                  fieldHeight: 50,
-                  fieldWidth: 40,
-                  activeFillColor: Colors.green,
-                  selectedFillColor: Colors.blue,
-                  inactiveFillColor: Colors.green
-              ),
-              cursorColor: Colors.black,
-              controller: textEditingController,
-              keyboardType: TextInputType.number,
-              boxShadows: const [
-                BoxShadow(
-                  offset: Offset(0, 1),
-                  color: Colors.white,
-                  blurRadius: 10,
-                )
-              ],
-              onCompleted: (v) {
-                // Navigator.of(context).pushNamed(AppRoutes.homeScreen);
-                verifyOtp(context);
-              },
-              // onTap: () {
-              //   print("Pressed");
-              // },
-              onChanged: (value) {
-                debugPrint(value);
-                setState(() {
-                  currentText = value;
-                });
-              },
-              beforeTextPaste: (text) {
-                debugPrint("Allowing to paste $text");
-                //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                return true;
-              },
-            )),
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 30),
+          child: PinCodeTextField(
+            controller: textEditingController,
+            appContext: context,
+            length: pinCodeFieldLength,
+            blinkWhenObscuring: true,
+            animationType: AnimationType.fade,
+            pinTheme: PinTheme(
+                borderWidth: 1,
+                inactiveColor: AppColors.grey32,
+                activeColor: AppColors.grey32,
+                selectedColor: AppColors.grey32,
+                shape: PinCodeFieldShape.box,
+                borderRadius: BorderRadius.circular(5),
+                fieldHeight: 50,
+                fieldWidth: 40,
+                activeFillColor: AppColors.grey32,
+                selectedFillColor: AppColors.grey32,
+                inactiveFillColor: AppColors.grey32),
+            cursorColor: Colors.black,
+            keyboardType: TextInputType.number,
+            onCompleted: (v) {
+              verifyOtp(context);
+            },
+            beforeTextPaste: (text) {
+              //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+              //but you can show anything you want here, like your pop up saying wrong paste format or etc
+              return true;
+            },
+            onChanged: (String value) {},
+          ),
+        ),
       ],
     );
   }
 
+  Widget getConfirmCta() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+      child: AppCta(
+        onTap: onButtonTap,
+        isLoading: _isLoading,
+      ),
+    );
+  }
+
+  onButtonTap() {
+    if (_isLoading) {
+      return;
+    }
+    if (textEditingController.value.text.length == pinCodeFieldLength) {
+      showErrorText = false;
+      verifyOtp(context);
+    } else {
+      setState(() {
+        showErrorText = true;
+      });
+    }
+  }
+
   verifyOtp(BuildContext context) async {
+    setState(() {
+      _isLoading = true;
+    });
     FirebaseAuth auth = FirebaseAuth.instance;
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: widget.loginArguments.verificationCode,
-        smsCode: currentText);
+        smsCode: textEditingController.value.text);
     try {
       final result = await auth.signInWithCredential(credential);
-      await DI.inject<FireStoreRepository>().addUserToFireStore(UserData(
-          userId: result.user?.uid ?? "",
-          name: "naman",
-          phoneNumber: widget.loginArguments.mobileNumber));
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          AppRoutes.homeScreen, (route) => false);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(AppRoutes.homeScreen, (route) => false);
     } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
       print("Please enter corrent otp");
     }
+  }
+
+  Widget getErrorText() {
+    return const Text(
+      AppStrings.correctOtp,
+      style: TextStyle(
+        color: AppColors.redColorShadow400,
+      ),
+    );
   }
 }
 
 class ResendOtpWidget extends StatefulWidget {
-  const ResendOtpWidget({Key? key, required this.loginArguments}) : super(key: key);
+  const ResendOtpWidget({Key? key, required this.loginArguments})
+      : super(key: key);
 
   final LoginArguments loginArguments;
 
@@ -250,11 +246,10 @@ class _ResendOtpWidgetState extends State<ResendOtpWidget>
       child: const Text(
         "Resend Otp",
         style: TextStyle(
-          color: AppColors.strongCyan,
-          fontWeight: FontWeight.w600,
-          decoration: TextDecoration.underline,
-          decorationThickness: 4
-        ),
+            color: AppColors.strongCyan,
+            fontWeight: FontWeight.w600,
+            decoration: TextDecoration.underline,
+            decorationThickness: 4),
       ),
     );
   }
@@ -263,7 +258,7 @@ class _ResendOtpWidgetState extends State<ResendOtpWidget>
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(
       oneSec,
-          (Timer timer) {
+      (Timer timer) {
         if (_resendOtpDuration == 0) {
           timer.cancel();
         } else {
@@ -278,19 +273,13 @@ class _ResendOtpWidgetState extends State<ResendOtpWidget>
   void resendOtp() async {
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: '+91${widget.loginArguments.mobileNumber}',
-      verificationCompleted: (PhoneAuthCredential credential) {
-
-      },
-      verificationFailed: (FirebaseAuthException e) {
-
-      },
+      verificationCompleted: (PhoneAuthCredential credential) {},
+      verificationFailed: (FirebaseAuthException e) {},
       codeSent: (String verificationId, int? resendToken) {
         _resendOtpDuration = 30;
         startTimer();
       },
-      codeAutoRetrievalTimeout: (String verificationId) {
-
-      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
     );
   }
 
@@ -300,4 +289,3 @@ class _ResendOtpWidgetState extends State<ResendOtpWidget>
     super.dispose();
   }
 }
-

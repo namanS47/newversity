@@ -23,7 +23,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _controller = TextEditingController();
   String _phoneNumber = "";
   bool _fetchingOtp = false;
   bool? _phoneNumberValid;
@@ -181,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  onButtonTap() {
+  void onButtonTap() {
     if (isPhoneNumberValid()) {
       fetchOtp();
     } else {
@@ -218,9 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 resendToken: resendToken));
       },
       codeAutoRetrievalTimeout: (String verificationId) {
-        setState(() {
-          _fetchingOtp = false;
-        });
+        _fetchingOtp = false;
       },
     );
   }

@@ -14,4 +14,5 @@ class AppStrings {
   static const student = "Student";
   static const verifyOtp = "Verify OTP";
   static const enterOtp = "Please enter the 6-digit code sent to";
+  static const correctOtp = "Please enter correct otp";
 }
