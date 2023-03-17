@@ -3,14 +3,18 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:newversity/di/di_initializer.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
+import 'package:newversity/storage/preferences.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
+import 'package:newversity/utils/enums.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import '../../common/common_widgets.dart';
-import 'login_arguments.dart';
+import '../../../common/common_widgets.dart';
+import '../login_arguments.dart';
 
 class OtpRoute extends StatefulWidget {
   const OtpRoute({Key? key, required this.loginArguments}) : super(key: key);
@@ -30,6 +34,7 @@ class _OtpRouteState extends State<OtpRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: Center(
         child: Column(
@@ -171,6 +176,9 @@ class _OtpRouteState extends State<OtpRoute> {
         smsCode: textEditingController.value.text);
     try {
       final result = await auth.signInWithCredential(credential);
+      final preferences = DI.inject<Preferences>();
+      preferences.setMobileNumber(widget.loginArguments.mobileNumber);
+      preferences.setUserType(widget.loginArguments.userType);
       Navigator.of(context)
           .pushNamedAndRemoveUntil(AppRoutes.homeScreen, (route) => false);
     } catch (e) {

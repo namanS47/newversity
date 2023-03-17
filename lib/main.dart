@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'di/di_initializer.dart';
-import 'flow/login/login_screen.dart';
+import 'flow/login/presentation/login_screen.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

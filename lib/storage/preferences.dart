@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/utils/enums.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,6 +38,23 @@ abstract class Preferences {
       ..clear();
   }
 
+  resetFlow() async {
+    SharedPreferences preferences = await _getPreferences();
+    for (String key in preferences.getKeys()) {
+      if (!PreferencesKey.persistentKeys.contains(key)) {
+        preferences.remove(key);
+      }
+    }
+  }
+
+  Future<TeacherDetails> getTeacherDetails();
+
+  Future<void> setTeacherDetails(TeacherDetails teacherDetails);
+
+  Future<String> getMobileNumber();
+
+  Future<void> setMobileNumber(String mobileNumber);
+
   Future<UserType?> getUserType();
 
   Future<void> setUserType(UserType userType);
@@ -57,8 +75,32 @@ class PreferencesImpl extends Preferences {
   Future<void> setUserType(UserType userType) {
     return setObjectPreference(PreferencesKey.userType, userType);
   }
+
+  @override
+  Future<TeacherDetails> getTeacherDetails() async {
+    return await getObjectPreference(PreferencesKey.teacherDetails);
+  }
+
+  @override
+  Future<void> setTeacherDetails(TeacherDetails teacherDetails) async {
+    return setObjectPreference(PreferencesKey.teacherDetails, teacherDetails);
+  }
+
+  @override
+  Future<String> getMobileNumber() {
+    return getObjectPreference(PreferencesKey.mobileNumber);
+  }
+
+  @override
+  Future<void> setMobileNumber(String mobileNumber) {
+    return setObjectPreference(PreferencesKey.mobileNumber, mobileNumber);
+  }
 }
 
 abstract class PreferencesKey {
   static const String userType = "userType";
+  static const String teacherDetails = "teacherDetails";
+  static const String mobileNumber = "mobileNumber";
+
+  static List<String> persistentKeys = [];
 }

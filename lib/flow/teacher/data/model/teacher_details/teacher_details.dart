@@ -13,6 +13,7 @@ class TeacherDetails {
   String? gender;
   String? title;
   String? info;
+  List<String>? uploadedDocuments;
   List<String>? tags;
   String? education;
   String? designation;
@@ -20,6 +21,7 @@ class TeacherDetails {
   String? profilePictureUrl;
   Map<String, double>? sessionPricing;
   String? language;
+  bool? isNew;
 
   TeacherDetails({
     this.teacherId,
@@ -31,6 +33,7 @@ class TeacherDetails {
     this.gender,
     this.title,
     this.info,
+    this.uploadedDocuments,
     this.tags,
     this.education,
     this.designation,
@@ -38,6 +41,7 @@ class TeacherDetails {
     this.profilePictureUrl,
     this.sessionPricing,
     this.language,
+    this.isNew
   });
 
   factory TeacherDetails.fromJson(Map<String, dynamic> json) => _$TeacherDetailsFromJson(json);

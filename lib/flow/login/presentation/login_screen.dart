@@ -10,10 +10,10 @@ import 'package:newversity/themes/strings.dart';
 import 'package:newversity/utils/enums.dart';
 import 'package:newversity/utils/validaters.dart';
 
-import '../../di/di_initializer.dart';
-import '../../firestore/data/firestore_repository.dart';
-import '../../firestore/model/user.dart';
-import 'login_arguments.dart';
+import '../../../di/di_initializer.dart';
+import '../../../firestore/data/firestore_repository.dart';
+import '../../../firestore/model/user.dart';
+import '../login_arguments.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -212,6 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         Navigator.of(context).pushNamed(AppRoutes.otpRoute,
             arguments: LoginArguments(
+              userType: userType ,
                 verificationCode: verificationId,
                 mobileNumber: _phoneNumber,
                 resendToken: resendToken));

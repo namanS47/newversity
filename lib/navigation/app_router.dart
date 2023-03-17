@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newversity/flow/initial_route/app_bloc/app_bloc.dart';
+import 'package:newversity/flow/initial_route/ui/initial_route.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
 import 'package:newversity/flow/teacher/presentation/calender.dart';
 import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_personal_information_route.dart';
@@ -7,8 +9,8 @@ import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/room/room.dart';
 
 import '../flow/login/login_arguments.dart';
-import '../flow/login/login_screen.dart';
-import '../flow/login/otp_route.dart';
+import '../flow/login/presentation/login_screen.dart';
+import '../flow/login/presentation/otp_route.dart';
 import '../flow/student/home/ui/home_screen.dart';
 
 
@@ -27,6 +29,9 @@ class AppRouter {
   }
 
   _navigation(route, {dynamic params}) {
+    if(route.toString() == AppRoutes.initialRoute){
+      return BlocProvider<AppBloc>(create: (context) => AppBloc(), child: const InitialRoute(),);
+    }
     if(route.toString() == AppRoutes.loginRoute) {
       return const LoginScreen();
     }
