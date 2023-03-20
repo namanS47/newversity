@@ -34,11 +34,12 @@ dependencies:
   cloud_firestore: ^4.3.1
   form_field_validator: ^1.1.0
   firebase_core: ^2.4.1
+  step_progress_indicator: ^1.0.2
   firebase_auth: ^4.2.4
   pin_code_fields: ^7.4.0
   json_annotation: ^4.7.0
-  intl: 0.17.0-nullsafety.2
   json_serializable: ^6.5.4
+  intl: ^0.17.0
   dio: ^5.0.1
   image_picker: ^0.8.4+7
   retrofit: ^4.0.1
