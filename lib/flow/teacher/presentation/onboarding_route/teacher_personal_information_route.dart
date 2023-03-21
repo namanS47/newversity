@@ -43,7 +43,7 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
           return getContentWidget(false);
         }, listener: (BuildContext context, TeacherDetailsState state) {
           if (state is TeacherDetailsSavingSuccessState) {
-            Navigator.of(context).pushNamed(AppRoutes.studentHome);
+            Navigator.of(context).pushNamed(AppRoutes.teacherExperienceAndQualificationRoute);
           } else if (state is TeacherDetailsSavingFailureState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
