@@ -343,6 +343,14 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
     );
   }
 
+  tapOnSeeAll(){
+    showDialog(
+        context: context,
+        builder: (_) {
+          return const ShowSfCalenderWidget();
+        });
+  }
+
   Widget getAvailableSlotHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -351,11 +359,28 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
           AppStrings.availableSlot,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
-        Text(
-          AppStrings.seeAll,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        InkWell(
+          child: Text(
+            AppStrings.seeAll,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          ),
         ),
       ],
     );
   }
 }
+
+class ShowSfCalenderWidget extends StatefulWidget {
+  const ShowSfCalenderWidget({Key? key}) : super(key: key);
+
+  @override
+  State<ShowSfCalenderWidget> createState() => _ShowSfCalenderWidgetState();
+}
+
+class _ShowSfCalenderWidgetState extends State<ShowSfCalenderWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
