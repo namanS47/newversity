@@ -10,6 +10,8 @@ class AppRoutes {
   static const String studentHome = "student_home";
 
 
+  // Book Session
+  static const String bookSession = "book_session";
 
   //Teacher Flow
   static const String teacherPersonalInformationRoute = "teacher_personal_information_route";

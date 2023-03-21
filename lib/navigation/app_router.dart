@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/error_routes/error_route.dart';
 import 'package:newversity/flow/initial_route/app_bloc/app_bloc.dart';
 import 'package:newversity/flow/initial_route/ui/initial_route.dart';
+import 'package:newversity/flow/student/seesion/book_session.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
 import 'package:newversity/flow/teacher/presentation/TeacherHome.dart';
 import 'package:newversity/flow/teacher/presentation/calender.dart';
@@ -56,6 +57,14 @@ class AppRouter {
     }
     if (route.toString() == AppRoutes.teacherHomePageRoute) {
       return const TeacherHome();
+    if (route.toString() == AppRoutes.bookSession) {
+      return const BookSession();
+    }
+    if (route.toString() == AppRoutes.teacherPersonalInformationRoute) {
+      return BlocProvider<TeacherDetailsBloc>(
+        create: (context) => TeacherDetailsBloc(),
+        child: TeacherPersonalInfoRoute(),
+      );
     }
     if (route.toString() == AppRoutes.teacherExperienceAndQualificationRoute) {
       return const TeacherExperienceAndQualificationRoute();

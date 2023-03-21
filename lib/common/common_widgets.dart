@@ -101,11 +101,14 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
 }
 
 class AppCta extends StatelessWidget {
+  const AppCta({Key? key, this.onTap, this.text = "", this.isLoading = false})
+      : super(key: key);
   const AppCta({Key? key, this.onTap, this.isLoading = false, this.padding})
       : super(key: key);
 
   final void Function()? onTap;
   final bool isLoading;
+  final String? text;
   final EdgeInsetsGeometry? padding;
 
   @override
