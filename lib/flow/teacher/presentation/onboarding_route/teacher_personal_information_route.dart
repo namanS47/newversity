@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:newversity/common/common_utils.dart';
+import 'package:newversity/di/di_initializer.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/navigation/app_routes.dart';
+import 'package:newversity/storage/preferences.dart';
+import 'package:newversity/themes/colors.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../common/common_widgets.dart';
@@ -18,16 +21,12 @@ class TeacherPersonalInfoRoute extends StatefulWidget {
 }
 
 class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
-  final TextEditingController _controller = TextEditingController();
-  Gender? selectedGender;
-  String? selectedAgeGroup;
-  List<String> ageGroupString = [
-    "18-22 yrs",
-    "22-25 yrs",
-    "25-30 yrs",
-    "30-40 yrs",
-    "40+yrs"
-  ];
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _infoController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+
+  bool showErrorText = false;
 
   @override
   Widget build(BuildContext context) {
@@ -63,103 +62,94 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
     return CustomScrollView(
       slivers: <Widget>[
         SliverToBoxAdapter(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Update your personal information"),
-              Text(
-                  "Complete the following steps for reviewing your registration"),
-              SizedBox(
-                height: 20,
-              ),
-              Text("Your Name"),
-              AppTextFormField(
-                textEditingController: _controller,
-                isDense: true,
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              GestureDetector(
-                onTap: () async {
-                  bool isCameraPermissionGranted = await askCameraPermission();
-                  if(isCameraPermissionGranted) {
-
-                  } else {
-
-                  }
-                },
-                child: Text(
-                  "Upload profile picture",
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Update your personal information"),
+                Text(
+                    "Complete the following steps for reviewing your registration"),
+                SizedBox(
+                  height: 20,
                 ),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: CommonWidgets.getRoundedBoxWithText(
-                    text: "upload", isSelected: false),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Text("About Yourself"),
-              AppTextFormField(
-                maxLines: 3,
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Text("Your gender"),
-              Row(
-                children: [
-                  getGenderWidget(Gender.male),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: getGenderWidget(Gender.female),
+                Text("Your Name"),
+                AppTextFormField(
+                  hintText: "Name",
+                  controller: _nameController,
+                  isDense: true,
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    bool isCameraPermissionGranted =
+                        await askCameraPermission();
+                    if (isCameraPermissionGranted) {
+                    } else {}
+                  },
+                  child: Text(
+                    "Upload profile picture",
                   ),
-                  getGenderWidget(Gender.other)
-                ],
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Wrap(
-                children: ageGroupString
-                    .map((ageGroup) => getAgeSelectionWidget(ageGroup))
-                    .toList(),
-              ),
-            ],
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: CommonWidgets.getRoundedBoxWithText(
+                      text: "upload", isSelected: false),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Text("Title"),
+                AppTextFormField(
+                  controller: _titleController,
+                  hintText: "Your designation",
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Text("About Yourself"),
+                AppTextFormField(
+                  controller: _infoController,
+                  hintText: "Enter here",
+                  maxLines: 3,
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Text("Hometown"),
+                AppTextFormField(
+                  controller: _locationController,
+                  hintText: "Enter your home town",
+                )
+              ],
+            ),
           ),
         ),
         SliverFillRemaining(
           hasScrollBody: false,
-          child: getConfirmCta(),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 24, bottom: 16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                getConfirmCta(),
+                SizedBox(height: 8,),
+                Visibility(
+                  visible: showErrorText,
+                  child: Text(
+                    "Please fill all the details",
+                    style: TextStyle(
+                      color: AppColors.redColorShadow400
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         )
       ],
-    );
-  }
-
-  Widget getGenderWidget(Gender gender) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedGender = gender;
-        });
-      },
-      child: CommonWidgets.getRoundedBoxWithText(
-          text: CommonUtils().getGenderString(gender),
-          isSelected: gender == selectedGender),
-    );
-  }
-
-  Widget getAgeSelectionWidget(String ageGroup) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedAgeGroup = ageGroup;
-        });
-      },
-      child: CommonWidgets.getRoundedBoxWithText(
-          text: ageGroup, isSelected: ageGroup == selectedAgeGroup),
     );
   }
 
@@ -168,25 +158,47 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
       children: [
         Align(
           alignment: Alignment.bottomCenter,
-          child: GestureDetector(
-            onTap: () {
+          child: AppCta(
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+            onTap: () async {
               print("naman");
-              BlocProvider.of<TeacherDetailsBloc>(context).add(
+              if (isFormValid()) {
+                showErrorText = false;
+                // setState(() {
+                //   showErrorText = false;
+                // });
+                final mobileNumber = await DI.inject<Preferences>().getMobileNumber();
+                BlocProvider.of<TeacherDetailsBloc>(context).add(
                   SaveTeacherDetailsEvent(
-                      teacherDetails: TeacherDetails(
-                          teacherId: "namannaman",
-                          name: "himanshu",
-                          mobileNumber: "894832")));
+                    teacherDetails: TeacherDetails(
+                      teacherId: CommonUtils().getLoggedInUser(),
+                      name: _nameController.text,
+                      mobileNumber: mobileNumber,
+                      location: _locationController.text,
+                      title: _titleController.text,
+                      info: _infoController.text,
+                      profilePictureUrl: "yet to be added"
+                    ),
+                  ),
+                );
+              } else {
+                setState(() {
+                  showErrorText = true;
+                });
+              }
             },
-            child: Container(
-              height: 50,
-              color: Colors.red,
-              child: Center(child: Text("Confirm")),
-            ),
           ),
-        ),
+        )
       ],
     );
+  }
+
+  bool isFormValid() {
+    print(_nameController.text);
+    return _nameController.text.isNotEmpty &&
+        _titleController.text.isNotEmpty &&
+        _infoController.text.isNotEmpty &&
+        _locationController.text.isNotEmpty;
   }
 
   Future<bool> askCameraPermission() async {
@@ -196,5 +208,14 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
     }
 
     return await Permission.camera.isGranted;
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _titleController.dispose();
+    _infoController.dispose();
+    _locationController.dispose();
+    super.dispose();
   }
 }

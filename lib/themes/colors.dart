@@ -11,4 +11,5 @@ class AppColors {
   static const strongCyan = Color(0xff079893);
   static const whiteColor = Color(0xffFFFFFF);
   static const redColorShadow400 = Color(0xffef5350);
+  static Color grey50 = const Color(0xff777777).withOpacity(0.5);
 }

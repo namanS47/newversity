@@ -5,23 +5,24 @@ import '../themes/colors.dart';
 import '../themes/strings.dart';
 
 class AppTextFormField extends StatefulWidget {
-  const AppTextFormField({
-    Key? key,
-    this.textEditingController,
-    this.keyboardType,
-    this.inputFormatters,
-    this.validator,
-    this.decoration,
-    this.hintText,
-    this.errorText,
-    this.isDense,
-    this.maxLines,
-    this.onChange,
-    this.hintTextStyle,
-    this.fillColor,
-  }) : super(key: key);
+  const AppTextFormField(
+      {Key? key,
+      this.controller,
+      this.keyboardType,
+      this.inputFormatters,
+      this.validator,
+      this.decoration,
+      this.hintText,
+      this.errorText,
+      this.isDense,
+      this.maxLines,
+      this.onChange,
+      this.hintTextStyle,
+      this.fillColor,
+      this.contentPadding})
+      : super(key: key);
 
-  final TextEditingController? textEditingController;
+  final TextEditingController? controller;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
@@ -33,6 +34,7 @@ class AppTextFormField extends StatefulWidget {
   final Function? onChange;
   final TextStyle? hintTextStyle;
   final Color? fillColor;
+  final EdgeInsetsGeometry? contentPadding;
 
   @override
   State<AppTextFormField> createState() => _AppTextFormFieldState();
@@ -43,7 +45,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
 
   @override
   void initState() {
-    _controller = widget.textEditingController ?? TextEditingController();
+    _controller = widget.controller ?? TextEditingController();
     super.initState();
   }
 
@@ -66,13 +68,15 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       },
       decoration: widget.decoration ??
           InputDecoration(
+            contentPadding: widget.contentPadding ??
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             filled: true,
             fillColor: widget.fillColor ?? AppColors.grey35,
             hintText: widget.hintText,
             hintStyle: widget.hintTextStyle ??
-                const TextStyle(
+                TextStyle(
                     fontSize: 14,
-                    color: AppColors.blackRussian,
+                    color: AppColors.grey50,
                     fontWeight: FontWeight.normal),
             isDense: widget.isDense,
             errorText: widget.errorText,
@@ -97,16 +101,17 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
 }
 
 class AppCta extends StatelessWidget {
-  const AppCta({Key? key, this.onTap, this.isLoading = false})
+  const AppCta({Key? key, this.onTap, this.isLoading = false, this.padding})
       : super(key: key);
 
   final void Function()? onTap;
   final bool isLoading;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24),
+      padding: padding ?? const EdgeInsets.symmetric(vertical: 24),
       child: GestureDetector(
         onTap: !isLoading ? onTap : null,
         child: Container(
