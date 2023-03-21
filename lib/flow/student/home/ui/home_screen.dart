@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import '../../campus/ui/campus_route.dart';
 import '../../webinar/ui/webinar_route.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class StudentHome extends StatefulWidget {
+  const StudentHome({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<StudentHome> createState() => _StudentHomeState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _StudentHomeState extends State<StudentHome> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

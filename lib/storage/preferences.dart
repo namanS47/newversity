@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/utils/enums.dart';
+import 'package:newversity/utils/string_extensions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class Preferences {
@@ -64,16 +65,19 @@ abstract class Preferences {
 class PreferencesImpl extends Preferences {
   @override
   Future<UserType?> getUserType() async {
-    return await getObjectPreference(PreferencesKey.userType);
-    // if(userType != null) {
-    //   return userType as UserType;
-    // }
-    // return userType as UserType?;
+    final userType =  await getObjectPreference(PreferencesKey.userType);
+    if(userType == "teacher"){
+      return UserType.teacher;
+    }
+    if(userType == "student") {
+      return UserType.student;
+    }
+    return null;
   }
 
   @override
   Future<void> setUserType(UserType userType) {
-    return setObjectPreference(PreferencesKey.userType, userType);
+    return setObjectPreference(PreferencesKey.userType, userType.toShortString());
   }
 
   @override

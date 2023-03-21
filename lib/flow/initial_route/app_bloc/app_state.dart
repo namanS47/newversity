@@ -14,4 +14,14 @@ class FetchingInitialRouteSuccessState extends AppInitial {
   final String routeName;
 }
 
+class RedirectToLoginRoute extends AppInitial {}
+
+class RedirectToStudentHome extends AppInitial {}
+
+class RedirectToTeacherPersonalInformationRoute extends AppInitial {}
+
+class RedirectToTeacherHomeRoute extends AppInitial {}
+
+class SomethingWentWrongState extends AppInitial {}
+
 

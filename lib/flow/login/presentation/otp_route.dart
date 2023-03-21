@@ -180,7 +180,7 @@ class _OtpRouteState extends State<OtpRoute> {
       preferences.setMobileNumber(widget.loginArguments.mobileNumber);
       preferences.setUserType(widget.loginArguments.userType);
       Navigator.of(context)
-          .pushNamedAndRemoveUntil(AppRoutes.homeScreen, (route) => false);
+          .pushNamedAndRemoveUntil(AppRoutes.initialRoute, (route) => false);
     } catch (e) {
       setState(() {
         _isLoading = false;

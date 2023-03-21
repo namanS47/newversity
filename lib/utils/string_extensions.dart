@@ -1,3 +1,5 @@
+import 'package:newversity/utils/enums.dart';
+
 extension StringExtensions on String {
   bool get isValidEmail {
     final emailRegExp = RegExp(
@@ -34,6 +36,12 @@ extension StringExtensions on String {
 
   String get getStringFromEnum {
     return split('.').last;
+  }
+}
+
+extension ParseToString on UserType {
+  String toShortString() {
+    return toString().split('.').last;
   }
 }
 

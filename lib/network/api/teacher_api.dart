@@ -14,13 +14,13 @@ abstract class TeacherApi {
     );
   }
   
-  @GET("/getTeacher")
-  Future<TeacherDetails> getTeacherDetails(
-      @Path("teacherId") String teacherId
+  @GET("/teacher")
+  Future<TeacherDetails?> getTeacherDetails(
+      @Header("teacherId") String teacherId
       );
 
   @POST("/addTeacher")
-  Future<TeacherDetails> sendTeacherDetails(
+  Future<TeacherDetails?> sendTeacherDetails(
       @Body() TeacherDetails teacherDetails,
       @Header("teacherId") String teacherId
       );

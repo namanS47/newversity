@@ -35,7 +35,7 @@ class CommonUtils {
     }
 
     final isStudent =  isUserStudent();
-    return AppRoutes.homeScreen;
+    return AppRoutes.studentHome;
   }
 
   Future<bool> isUserStudent() async {
