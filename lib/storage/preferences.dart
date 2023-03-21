@@ -91,8 +91,8 @@ class PreferencesImpl extends Preferences {
   }
 
   @override
-  Future<String> getMobileNumber() {
-    return getObjectPreference(PreferencesKey.mobileNumber);
+  Future<String> getMobileNumber() async {
+    return await getObjectPreference(PreferencesKey.mobileNumber);
   }
 
   @override
