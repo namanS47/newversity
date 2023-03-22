@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newversity/firebase_options.dart';
 import 'package:newversity/navigation/app_router.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/common/common_utils.dart';
@@ -12,7 +13,7 @@ import 'flow/login/presentation/login_screen.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DI.initializeDependencies();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const MyApp());
 }
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       home: const LoginScreen(),
       onGenerateRoute: AppRouter().route,
-      initialRoute: AppRoutes.initialRoute,
+      initialRoute: AppRoutes.teacherProfileDashBoard,
     );
   }
 }

@@ -52,7 +52,7 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
             Navigator.of(context).pushNamed(AppRoutes.studentHome);
           } else if (state is TeacherDetailsSavingFailureState) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+              const SnackBar(
                 content: Text(
                   "Something went wrong",
                 ),
@@ -74,18 +74,18 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Update your personal information"),
-                Text(
+                const Text(
                     "Complete the following steps for reviewing your registration"),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
-                Text("Your Name"),
+                const Text("Your Name"),
                 AppTextFormField(
                   hintText: "Name",
                   controller: _nameController,
                   isDense: true,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 GestureDetector(
@@ -95,7 +95,7 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
                     if (isCameraPermissionGranted) {
                     } else {}
                   },
-                  child: Text(
+                  child: const Text(
                     "Upload profile picture",
                   ),
                 ),
@@ -104,7 +104,7 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
                   child: CommonWidgets.getRoundedBoxWithText(
                       text: "upload", isSelected: false),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 Text("Title"),
@@ -112,7 +112,7 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
                   controller: _titleController,
                   hintText: "Your designation",
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 Text("About Yourself"),
@@ -141,14 +141,14 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 getConfirmCta(),
-                SizedBox(height: 8,),
+                SizedBox(
+                  height: 8,
+                ),
                 Visibility(
                   visible: showErrorText,
                   child: Text(
                     "Please fill all the details",
-                    style: TextStyle(
-                      color: AppColors.redColorShadow400
-                    ),
+                    style: TextStyle(color: AppColors.redColorShadow400),
                   ),
                 )
               ],
@@ -173,18 +173,18 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
                 // setState(() {
                 //   showErrorText = false;
                 // });
-                final mobileNumber = await DI.inject<Preferences>().getMobileNumber();
+                final mobileNumber =
+                    await DI.inject<Preferences>().getMobileNumber();
                 BlocProvider.of<TeacherDetailsBloc>(context).add(
                   SaveTeacherDetailsEvent(
                     teacherDetails: TeacherDetails(
-                      teacherId: CommonUtils().getLoggedInUser(),
-                      name: _nameController.text,
-                      mobileNumber: mobileNumber,
-                      location: _locationController.text,
-                      title: _titleController.text,
-                      info: _infoController.text,
-                      profilePictureUrl: "yet to be added"
-                    ),
+                        teacherId: CommonUtils().getLoggedInUser(),
+                        name: _nameController.text,
+                        mobileNumber: mobileNumber,
+                        location: _locationController.text,
+                        title: _titleController.text,
+                        info: _infoController.text,
+                        profilePictureUrl: "yet to be added"),
                   ),
                 );
               } else {
@@ -216,6 +216,8 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
     return await Permission.camera.isGranted;
   }
 
+
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -227,11 +229,11 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
 }
 
 class ProfilePhotoPopUp extends StatelessWidget {
-  ProfilePhotoPopUp(
-      {Key? key,
-      required this.blocContext,
-      required this.profileUrl,})
-      : super(key: key);
+  ProfilePhotoPopUp({
+    Key? key,
+    required this.blocContext,
+    required this.profileUrl,
+  }) : super(key: key);
 
   final BuildContext blocContext;
   final String profileUrl;

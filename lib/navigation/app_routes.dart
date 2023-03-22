@@ -18,6 +18,9 @@ class AppRoutes {
   static const String teacherExperienceAndQualificationRoute = "teacher_experience_and_qualification_route";
   static const String expertiseRoute = "expertise_route";
   static const String teacherHomePageRoute = "teacher_home_page_route";
+  static const String teacherProfileDashBoard = "teacher_profile_dashboard";
+  static const String addExperience = "add_experience";
+  static const String addEducation = "add_education";
 
   //Room
   static const String roomPageRoute = "room_page_route";

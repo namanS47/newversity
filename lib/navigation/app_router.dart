@@ -9,6 +9,10 @@ import 'package:newversity/flow/teacher/presentation/TeacherHome.dart';
 import 'package:newversity/flow/teacher/presentation/calender.dart';
 import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_experience_and_qualification_route.dart';
 import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_personal_information_route.dart';
+import 'package:newversity/flow/teacher/profile/add_education.dart';
+import 'package:newversity/flow/teacher/profile/add_experience.dart';
+import 'package:newversity/flow/teacher/profile/profiel_dashboard.dart';
+import 'package:newversity/flow/teacher/profile/profile_bloc/profile_bloc.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/room/room.dart';
 
@@ -57,9 +61,26 @@ class AppRouter {
     }
     if (route.toString() == AppRoutes.teacherHomePageRoute) {
       return const TeacherHome();
+    }
     if (route.toString() == AppRoutes.bookSession) {
       return const BookSession();
     }
+
+    if (route.toString() == AppRoutes.teacherProfileDashBoard) {
+      return BlocProvider<ProfileBloc>(
+          create: (context) => ProfileBloc(), child: const ProfileDashboard());
+    }
+
+    if (route.toString() == AppRoutes.addExperience) {
+      return BlocProvider<ProfileBloc>(
+          create: (context) => ProfileBloc(), child:  AddExperience());
+    }
+
+    if (route.toString() == AppRoutes.addEducation) {
+      return BlocProvider<ProfileBloc>(
+          create: (context) => ProfileBloc(), child:  AddEducation());
+    }
+
     if (route.toString() == AppRoutes.teacherPersonalInformationRoute) {
       return BlocProvider<TeacherDetailsBloc>(
         create: (context) => TeacherDetailsBloc(),
@@ -76,7 +97,7 @@ class AppRouter {
     if (route.toString() == AppRoutes.calender) {
       return const Calender();
     }
-    if(route.toString() == AppRoutes.somethingWentWrongRoute) {
+    if (route.toString() == AppRoutes.somethingWentWrongRoute) {
       return const SomethingWentWrongRoute();
     }
   }

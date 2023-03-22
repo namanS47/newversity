@@ -11,16 +11,19 @@ class InitialRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<AppBloc, AppState>(
       listener: (context, AppState state) {
-        if(state is RedirectToLoginRoute) {
+        if (state is RedirectToLoginRoute) {
           Navigator.of(context).pushReplacementNamed(AppRoutes.loginRoute);
-        } else if(state is RedirectToTeacherHomeRoute){
-          Navigator.pushReplacementNamed(context, AppRoutes.teacherHomePageRoute);
-        } else if(state is RedirectToTeacherPersonalInformationRoute) {
-          Navigator.pushReplacementNamed(context, AppRoutes.teacherPersonalInformationRoute);
-        } else if(state is RedirectToStudentHome) {
+        } else if (state is RedirectToTeacherHomeRoute) {
+          Navigator.pushReplacementNamed(
+              context, AppRoutes.teacherHomePageRoute);
+        } else if (state is RedirectToTeacherPersonalInformationRoute) {
+          Navigator.pushReplacementNamed(
+              context, AppRoutes.teacherProfileDashBoard);
+        } else if (state is RedirectToStudentHome) {
           Navigator.pushReplacementNamed(context, AppRoutes.studentHome);
-        } else if(state is SomethingWentWrongState) {
-          Navigator.pushReplacementNamed(context, AppRoutes.somethingWentWrongRoute);
+        } else if (state is SomethingWentWrongState) {
+          Navigator.pushReplacementNamed(
+              context, AppRoutes.somethingWentWrongRoute);
         }
       },
       child: const Scaffold(

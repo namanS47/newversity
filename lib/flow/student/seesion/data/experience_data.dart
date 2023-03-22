@@ -76,6 +76,7 @@ class SessionData {
   ];
 }
 
+
 class SlotData {
   String? slotDay;
   String? slotDate;
