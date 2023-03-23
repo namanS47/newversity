@@ -35,4 +35,9 @@ class DateTimeUtils {
     final DateFormat formatter = DateFormat('dd/MM/yyyy');
     return formatter.format(dateTime).toLowerCase();
   }
+
+  static String getEmploymentDurationDateTime(DateTime dateTime) {
+    final DateFormat formatter = DateFormat('MMM yyyy');
+    return formatter.format(dateTime);
+  }
 }

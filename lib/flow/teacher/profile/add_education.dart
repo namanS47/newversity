@@ -415,6 +415,7 @@ class _AddEducationState extends State<AddEducation> {
       hintText: "Grade in CGPA or Percentage",
       controller: _gradeController,
       isDense: true,
+      keyboardType: TextInputType.number,
     );
   }
 

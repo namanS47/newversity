@@ -165,6 +165,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
       controller: _infoController,
       hintText: "Enter here",
       maxLines: 5,
+      textInputAction: TextInputAction.newline,
     );
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_response_model.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/themes/colors.dart';
+import 'package:newversity/utils/date_time_utils.dart';
 
 import '../../../common/common_widgets.dart';
 import '../../../themes/strings.dart';
@@ -149,17 +150,19 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
               const SizedBox(
                 height: 5,
               ),
-              getEducationalDuration(index),
+              Row(
+                children: [
+                  getEducationalDuration(index),
+                  const Spacer(),
+                  getCGPA(index),
+                ],
+              ),
               const SizedBox(
                 height: 5,
               ),
             ],
           ),
         ),
-        const SizedBox(
-          width: 10,
-        ),
-        getCGPA(index),
       ],
     );
   }
@@ -209,17 +212,19 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
               const SizedBox(
                 height: 5,
               ),
-              getDuration(index),
+              Row(
+                children: [
+                  getDuration(index),
+                  const Spacer(),
+                  getMode(index),
+                ],
+              ),
               const SizedBox(
                 height: 5,
               ),
             ],
           ),
         ),
-        const SizedBox(
-          width: 10,
-        ),
-        getMode(index),
       ],
     );
   }
@@ -232,8 +237,15 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
   }
 
   Widget getEducationalDuration(int index) {
+    String duraionString = DateTimeUtils.getEmploymentDurationDateTime(listOfEducationModel[index].startDate!);
+    duraionString += "-";
+    if(listOfEducationModel[index].currentlyWorkingHere == true) {
+      duraionString += "Present";
+    } else {
+      duraionString += DateTimeUtils.getEmploymentDurationDateTime(listOfEducationModel[index].endDate!);
+    }
     return Text(
-      "${listOfEducationModel[index].startDate} - ${listOfEducationModel[index].endDate}",
+      duraionString,
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
@@ -262,7 +274,7 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Text(
-        "${listOfEducationModel[index].grade}",
+        "CGPA-${listOfEducationModel[index].grade}",
         style: const TextStyle(
             color: AppColors.secColor,
             fontSize: 12,
@@ -272,8 +284,16 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
   }
 
   Widget getDuration(int index) {
+    String duraionString = DateTimeUtils.getEmploymentDurationDateTime(lisOfExperienceModel[index].startDate!);
+    duraionString += "-";
+    if(lisOfExperienceModel[index].currentlyWorkingHere == true) {
+      duraionString += "Present";
+    } else {
+      duraionString += DateTimeUtils.getEmploymentDurationDateTime(lisOfExperienceModel[index].endDate!);
+    }
+
     return Text(
-      "${lisOfExperienceModel[index].startDate} - ${lisOfExperienceModel[index].endDate}",
+      duraionString,
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
@@ -375,8 +395,6 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
   }
 
   onTapContinueButton(BuildContext context) async {
-    await context
-        .read<ProfileBloc>()
-        .changeIndex();
+    BlocProvider.of<ProfileBloc>(context).add(ChangeProfileCardIndexEvent());
   }
 }

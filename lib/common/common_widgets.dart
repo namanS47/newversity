@@ -143,22 +143,23 @@ class AppDropdownButton extends StatelessWidget {
 }
 
 class AppTextFormField extends StatefulWidget {
-  const AppTextFormField(
-      {Key? key,
-      this.controller,
-      this.keyboardType,
-      this.inputFormatters,
-      this.validator,
-      this.decoration,
-      this.hintText,
-      this.errorText,
-      this.isDense,
-      this.maxLines,
-      this.onChange,
-      this.hintTextStyle,
-      this.fillColor,
-      this.contentPadding})
-      : super(key: key);
+  const AppTextFormField({
+    Key? key,
+    this.controller,
+    this.keyboardType,
+    this.inputFormatters,
+    this.validator,
+    this.decoration,
+    this.hintText,
+    this.errorText,
+    this.isDense,
+    this.maxLines,
+    this.onChange,
+    this.hintTextStyle,
+    this.fillColor,
+    this.contentPadding,
+    this.textInputAction
+  }) : super(key: key);
 
   final TextEditingController? controller;
   final TextInputType? keyboardType;
@@ -173,6 +174,7 @@ class AppTextFormField extends StatefulWidget {
   final TextStyle? hintTextStyle;
   final Color? fillColor;
   final EdgeInsetsGeometry? contentPadding;
+  final TextInputAction? textInputAction;
 
   @override
   State<AppTextFormField> createState() => _AppTextFormFieldState();
@@ -194,6 +196,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
     return TextFormField(
       controller: _controller,
       keyboardType: widget.keyboardType,
+      textInputAction: widget.textInputAction ?? TextInputAction.done,
       inputFormatters: formatters,
       textCapitalization: TextCapitalization.words,
       validator: widget.validator != null
@@ -269,6 +272,7 @@ class AppText extends StatelessWidget {
     this.decoration = TextDecoration.none,
     this.letterSpacing,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Text(
