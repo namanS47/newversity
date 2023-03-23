@@ -1,8 +1,13 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newversity/navigation/app_routes.dart';
 
 import '../../../common/common_widgets.dart';
 import '../../../themes/colors.dart';
 import '../../../themes/strings.dart';
+import 'bloc/profile_bloc/profile_bloc.dart';
+import 'model/tags_response_model.dart';
+import 'model/tags_with_teacher_id_request_model.dart';
 
 class SelectionDetails extends StatefulWidget {
   const SelectionDetails({Key? key}) : super(key: key);
@@ -12,30 +17,120 @@ class SelectionDetails extends StatefulWidget {
 }
 
 class _SelectionDetailsState extends State<SelectionDetails> {
+  final _specifyController = TextEditingController();
+  List<TagsResponseModel> allMentorsTags = [];
+
+  List<TagsResponseModel> allSelectedTags = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    BlocProvider.of<ProfileBloc>(context)
+        .add(FetchMentorshipTag(tagCat: "guidance"));
+  }
+
+  bool isRebuildWidgetState(ProfileStates state) {
+    return state is FetchingTagsState ||
+        state is FetchedMentorshipTagsState ||
+        state is FetchingTagsFailure ||
+        state is SavedTagsState;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(18.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          getSelectionHeader(),
-          const SizedBox(
-            height: 20,
+    return BlocConsumer<ProfileBloc, ProfileStates>(
+      buildWhen: (previous, current) => isRebuildWidgetState(current),
+      listenWhen: (previous, current) => isRebuildWidgetState(current),
+      listener: (context, state) {
+        if (state is FetchedMentorshipTagsState) {
+          allMentorsTags = state.listOfMentorshipTags;
+        }
+        if (state is SavedTagsState) {
+          Navigator.of(context).pushNamed(AppRoutes.teacherHomePageRoute);
+        }
+        // TODO: implement listener
+      },
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              getSelectionHeader(),
+              const SizedBox(
+                height: 20,
+              ),
+              selectExamNames(),
+              const SizedBox(
+                height: 20,
+              ),
+              allMentorsTags.isNotEmpty
+                  ? getSelectedComptetiveExams()
+                  : Container(),
+              const SizedBox(
+                height: 20,
+              ),
+              showSpecify ? getTitleHeader() : Container(),
+              const SizedBox(
+                height: 10,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              showSpecify ? getYourDesignation() : Container(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AppCta(
+                  onTap: () => onProceedTap(context),
+                  text: "Proceed",
+                ),
+              )
+            ],
           ),
-          selectExamNames(),
-          const SizedBox(
-            height: 20,
-          ),
-          getSelectedComptetiveExams(),
-          const SizedBox(
-            height: 20,
-          ),
-          const AppCta(
-            text: "Proceed",
-          )
-        ],
-      ),
+        );
+      },
+    );
+  }
+
+  onProceedTap(BuildContext context) {
+    List<TagsWithTeacherIdRequestModel> allRequestedTags = [];
+    for (TagsResponseModel x in allSelectedTags) {
+      allRequestedTags.add(TagsWithTeacherIdRequestModel(
+          tagCategory: x.tagCategory, tagName: x.tagName));
+    }
+    if (_specifyController.text.isNotEmpty) {
+      allRequestedTags.add(TagsWithTeacherIdRequestModel(
+          tagCategory: "guidance", tagName: _specifyController.text));
+    }
+    BlocProvider.of<ProfileBloc>(context)
+        .add(SaveTagsEvents(listOfTags: allRequestedTags));
+  }
+
+  bool showSpecify = false;
+  onSelectedSession(int index) {
+    if (index == allMentorsTags.length - 1) {
+      showSpecify = !showSpecify;
+    } else if (allSelectedTags.contains(allMentorsTags[index])) {
+      allSelectedTags.remove(allMentorsTags[index]);
+    } else {
+      allSelectedTags.add(allMentorsTags[index]);
+    }
+    setState(() {});
+  }
+
+  Widget getTitleHeader() {
+    return const Text(
+      AppStrings.specify,
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+    );
+  }
+
+  Widget getYourDesignation() {
+    return AppTextFormField(
+      hintText: "PSC",
+      controller: _specifyController,
+      isDense: true,
     );
   }
 
@@ -58,19 +153,13 @@ class _SelectionDetailsState extends State<SelectionDetails> {
         spacing: 15,
         runSpacing: 12,
         children: List.generate(
-          examsCracked.length,
+          allMentorsTags.length,
           (curIndex) {
             return examsView(curIndex);
           },
         ),
       ),
     );
-  }
-
-  int selectedExams = -1;
-  onSelectedSession(int index) {
-    selectedExams = index;
-    setState(() {});
   }
 
   Widget examsView(int curIndex) {
@@ -83,7 +172,7 @@ class _SelectionDetailsState extends State<SelectionDetails> {
             width: 150,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
-                color: selectedExams == curIndex
+                color: allSelectedTags.contains(allMentorsTags[curIndex])
                     ? AppColors.lightCyan
                     : AppColors.grey35,
                 border: Border.all(width: 0.3, color: AppColors.grey32)),
@@ -91,7 +180,7 @@ class _SelectionDetailsState extends State<SelectionDetails> {
                 child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                examsCracked[curIndex],
+                allMentorsTags[curIndex].tagName ?? "",
                 style:
                     const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
               ),

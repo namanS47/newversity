@@ -1,7 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:newversity/flow/teacher/profile/bloc/profile_bloc/profile_bloc.dart';
+import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
 
+import '../../../common/common_utils.dart';
 import '../../../common/common_widgets.dart';
 import '../../../resources/images.dart';
 import '../../../themes/colors.dart';
@@ -9,7 +12,7 @@ import '../../../themes/strings.dart';
 import '../../../utils/date_time_utils.dart';
 
 class AddEducation extends StatefulWidget {
-  AddEducation({Key? key}) : super(key: key);
+  const AddEducation({Key? key}) : super(key: key);
 
   @override
   State<AddEducation> createState() => _AddEducationState();
@@ -26,92 +29,154 @@ class _AddEducationState extends State<AddEducation> {
 
   final TextEditingController _gradeController = TextEditingController();
 
+  bool isRebuildWidgetState(ProfileStates state) {
+    return state is SavingTeacherEducationState ||
+        state is SavedTeacherEducationState ||
+        state is SavingFailureTeacherEducationState;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                    child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      getEducationLayout(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      getSchoolHeader(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      getYourSchool(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      getDegreeNameHeader(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      getYourDegreeName(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      getStartDateHeader(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      getStartDate(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      getEndDateHeader(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      getEndDate(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      getCurrentlyWorkingLayout(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      getCgpaHeader(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      getGradeTextField(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                )),
-              ],
+    return BlocConsumer<ProfileBloc, ProfileStates>(
+      listenWhen: (previous, current) => isRebuildWidgetState(current),
+      listener: (context, state) {
+        if (state is SavedTeacherEducationState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Education Details Added",
+              ),
             ),
-            Column(
+          );
+          Navigator.pop(context);
+          // Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard);
+        }
+        // TODO: implement listener
+      },
+      builder: (context, state) {
+        return Scaffold(
+          body: SafeArea(
+            child: Stack(
               children: [
-                Expanded(child: Container()),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: AppCta(
-                    text: AppStrings.addEducation,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: [
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          getEducationLayout(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          getSchoolHeader(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getYourSchool(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          getDegreeNameHeader(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getYourDegreeName(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          getStartDateHeader(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getStartDate(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          getEndDateHeader(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getEndDate(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          getCurrentlyWorkingLayout(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          getCgpaHeader(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getGradeTextField(),
+                          const SizedBox(
+                            height: 120,
+                          ),
+                          getErrorText(),
+                        ],
+                      ),
+                    )),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Expanded(child: Container()),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AppCta(
+                        onTap: () => onAddingEducation(context),
+                        text: AppStrings.addEducation,
+                      ),
+                    )
+                  ],
                 )
               ],
-            )
-          ],
-        ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget getErrorText() {
+    return Visibility(
+      visible: showErrorText,
+      child: const Text(
+        "Please fill all the details",
+        style: TextStyle(color: AppColors.redColorShadow400),
       ),
     );
+  }
+
+  bool showErrorText = false;
+
+  onAddingEducation(BuildContext context) async {
+    if (isFormValid()) {
+      showErrorText = false;
+      BlocProvider.of<ProfileBloc>(context).add(
+        SaveTeacherEducationEvents(
+          educationRequestModel: EducationRequestModel(
+              teacherId: CommonUtils().getLoggedInUser(),
+              name: _schoolController.text,
+              degree: _degreeController.text),
+        ),
+      );
+    } else {
+      setState(() {
+        showErrorText = true;
+      });
+    }
+  }
+
+  bool isFormValid() {
+    return _schoolController.text.isNotEmpty &&
+        _degreeController.text.isNotEmpty;
   }
 
   bool isCurrentlyWorkingHere = false;
@@ -188,7 +253,7 @@ class _AddEducationState extends State<AddEducation> {
               children: [
                 Expanded(
                   child: TextFormField(
-                    controller: _startDateController,
+                    controller: _endDateController,
                     readOnly: true,
                     decoration: InputDecoration(
                         contentPadding: const EdgeInsets.only(

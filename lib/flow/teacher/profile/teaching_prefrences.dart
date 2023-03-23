@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:newversity/flow/teacher/profile/profile_bloc/profile_bloc.dart';
 
 import '../../../common/common_widgets.dart';
+import 'bloc/profile_bloc/profile_bloc.dart';
 
 class TeachingPreferences extends StatelessWidget {
   TeachingPreferences({Key? key}) : super(key: key);

@@ -13,7 +13,7 @@ part 'teacher_details_event.dart';
 part 'teacher_details_state.dart';
 
 class TeacherDetailsBloc extends Bloc<TeacherDetailsEvent, TeacherDetailsState> {
-  TeacherBaseRepository _teacherBaseRepository = DI.inject<TeacherBaseRepository>();
+  final TeacherBaseRepository _teacherBaseRepository = DI.inject<TeacherBaseRepository>();
   String teacherId = "";
 
   TeacherDetailsBloc() : super(TeacherDetailsInitial()) {

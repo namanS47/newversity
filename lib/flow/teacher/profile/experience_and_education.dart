@@ -1,19 +1,64 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:newversity/flow/teacher/profile/profile_bloc/profile_bloc.dart';
+import 'package:newversity/flow/teacher/profile/model/experience_response_model.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/themes/colors.dart';
 
 import '../../../common/common_widgets.dart';
 import '../../../themes/strings.dart';
 import '../../student/seesion/data/experience_data.dart';
+import 'bloc/profile_bloc/profile_bloc.dart';
+import 'model/education_response_model.dart';
 
-class ExpereinceAndEducation extends StatelessWidget {
+class ExpereinceAndEducation extends StatefulWidget {
   ExpereinceAndEducation({Key? key}) : super(key: key);
 
   @override
+  State<ExpereinceAndEducation> createState() => _ExpereinceAndEducationState();
+}
+
+class _ExpereinceAndEducationState extends State<ExpereinceAndEducation> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    BlocProvider.of<ProfileBloc>(context).add(FetchTeachersExperienceEvent());
+    BlocProvider.of<ProfileBloc>(context).add(FetchTeachersEducationEvents());
+  }
+
+  bool isRebuildWidgetState(ProfileStates state) {
+    return state is FetchingTeachersExperiencesState ||
+        state is FetchingTeachersEducationState ||
+        state is FetchedTeachersExperiencesState ||
+        state is FetchedTeacherEducationState ||
+        state is FetchingTeacherExperienceFailureState ||
+        state is FetchingTeacherEducationFailureState;
+  }
+
+  List<ExperienceResponseModel> lisOfExperienceModel = [];
+  List<EducationResponseModel> listOfEducationModel = [];
+
+  @override
   Widget build(BuildContext context) {
+    return BlocConsumer<ProfileBloc, ProfileStates>(
+      buildWhen: (previous, current) => isRebuildWidgetState(current),
+      listenWhen: (previous, current) => isRebuildWidgetState(current),
+      listener: (context, state) {
+        if (state is FetchedTeachersExperiencesState) {
+          lisOfExperienceModel = state.listOfTeacherExperience;
+        }
+        if (state is FetchedTeacherEducationState) {
+          listOfEducationModel = state.listOfTeacherEducation;
+        }
+        // TODO: implement listener
+      },
+      builder: (context, state) {
+        return getExperienceAndQualificationContent();
+      },
+    );
+  }
+
+  Widget getExperienceAndQualificationContent() {
     return Column(
       children: [
         Padding(
@@ -24,12 +69,13 @@ class ExpereinceAndEducation extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              getContainerHeaderLayout(
-                  AppStrings.experience, context),
+              getContainerHeaderLayout(AppStrings.experience, context),
               const SizedBox(
                 height: 10,
               ),
-              getExperienceLayout(),
+              lisOfExperienceModel.isNotEmpty
+                  ? getExperienceLayout()
+                  : Container(),
               const SizedBox(
                 height: 20,
               ),
@@ -37,16 +83,23 @@ class ExpereinceAndEducation extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              getEducationLayout(),
+              listOfEducationModel.isNotEmpty
+                  ? getEducationLayout()
+                  : Container(),
             ],
           ),
         ),
         Container(),
-        const SizedBox(height: 100,),
-        AppCta(
-          text: "Proceed",
-          isLoading: false,
-          onTap: () => onTapContinueButton(context),
+        const SizedBox(
+          height: 100,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: AppCta(
+            text: "Proceed",
+            isLoading: false,
+            onTap: () => onTapContinueButton(context),
+          ),
         )
       ],
     );
@@ -55,144 +108,140 @@ class ExpereinceAndEducation extends StatelessWidget {
   List<EducationData> educationData = EducationData.educationData;
 
   Widget getEducationLayout() {
-    return SizedBox(
-      height: 100,
-      child: ListView.separated(
-        padding: const EdgeInsets.only(right: 16, top: 5),
-        physics: const ClampingScrollPhysics(),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        itemCount: educationData.length,
-        itemBuilder: (context, index) => getEducationView(index),
-        separatorBuilder: (BuildContext context, int index) =>
-            const SizedBox(width: 24),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Wrap(
+        spacing: 30,
+        runSpacing: 12,
+        children: List.generate(
+          listOfEducationModel.length,
+              (curIndex) {
+            return getEducationView(curIndex);
+          },
+        ),
       ),
     );
   }
 
   Widget getEducationView(int index) {
-    return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const CircleAvatar(
-            radius: 25,
-            backgroundColor: AppColors.lightCyan,
-            child: Icon(
-              Icons.add_business_outlined,
-              color: AppColors.strongCyan,
-            ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const CircleAvatar(
+          radius: 25,
+          backgroundColor: AppColors.lightCyan,
+          child: Icon(
+            Icons.add_business_outlined,
+            color: AppColors.strongCyan,
           ),
-          const SizedBox(
-            width: 10,
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              getEducationalInstitute(index),
+              const SizedBox(
+                height: 5,
+              ),
+              getStream(index),
+              const SizedBox(
+                height: 5,
+              ),
+              getEducationalDuration(index),
+              const SizedBox(
+                height: 5,
+              ),
+            ],
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                getEducationalInstitute(index),
-                const SizedBox(
-                  height: 5,
-                ),
-                getStream(index),
-                const SizedBox(
-                  height: 5,
-                ),
-                getEducationalDuration(index),
-                const SizedBox(
-                  height: 5,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          getCGPA(index),
-        ],
-      ),
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        getCGPA(index),
+      ],
     );
   }
 
   List<ExperienceData> experienceData = ExperienceData.experienceData;
 
   Widget getExperienceLayout() {
-    return SizedBox(
-      height: 100,
-      child: ListView.separated(
-        padding: const EdgeInsets.only(right: 16, top: 5),
-        physics: const ClampingScrollPhysics(),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        itemCount: experienceData.length,
-        itemBuilder: (context, index) => getExperienceView(index),
-        separatorBuilder: (BuildContext context, int index) =>
-            const SizedBox(width: 24),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Wrap(
+        spacing: 30,
+        runSpacing: 12,
+        children: List.generate(
+          lisOfExperienceModel.length,
+              (curIndex) {
+            return getExperienceView(curIndex);
+          },
+        ),
       ),
     );
   }
 
   Widget getExperienceView(int index) {
-    return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const CircleAvatar(
-            radius: 25,
-            backgroundColor: AppColors.lightCyan,
-            child: Icon(
-              Icons.card_travel,
-              color: AppColors.strongCyan,
-            ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const CircleAvatar(
+          radius: 25,
+          backgroundColor: AppColors.lightCyan,
+          child: Icon(
+            Icons.card_travel,
+            color: AppColors.strongCyan,
           ),
-          const SizedBox(
-            width: 10,
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              getDesignation(index),
+              const SizedBox(
+                height: 5,
+              ),
+              getInstitute(index),
+              const SizedBox(
+                height: 5,
+              ),
+              getDuration(index),
+              const SizedBox(
+                height: 5,
+              ),
+            ],
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                getDesignation(index),
-                const SizedBox(
-                  height: 5,
-                ),
-                getInstitute(index),
-                const SizedBox(
-                  height: 5,
-                ),
-                getDuration(index),
-                const SizedBox(
-                  height: 5,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          getMode(index),
-        ],
-      ),
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        getMode(index),
+      ],
     );
   }
 
   Widget getStream(int index) {
     return Text(
-      "${educationData[index].stream}",
+      "${listOfEducationModel[index].degree}",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
 
   Widget getEducationalDuration(int index) {
     return Text(
-      "${educationData[index].duration}",
+      "${listOfEducationModel[index].startDate} - ${listOfEducationModel[index].endDate}",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
 
   Widget getEducationalInstitute(int index) {
     return Text(
-      "${educationData[index].institution}",
+      "${listOfEducationModel[index].name}",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
     );
   }
@@ -201,7 +250,7 @@ class ExpereinceAndEducation extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Text(
-        "${experienceData[index].mode}",
+        "${lisOfExperienceModel[index].employmentType}",
         style: const TextStyle(
             color: AppColors.secColor,
             fontSize: 12,
@@ -214,7 +263,7 @@ class ExpereinceAndEducation extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Text(
-        "${educationData[index].cgpa}",
+        "${listOfEducationModel[index].grade}",
         style: const TextStyle(
             color: AppColors.secColor,
             fontSize: 12,
@@ -225,21 +274,21 @@ class ExpereinceAndEducation extends StatelessWidget {
 
   Widget getDuration(int index) {
     return Text(
-      "${experienceData[index].duration}",
+      "${lisOfExperienceModel[index].startDate} - ${lisOfExperienceModel[index].endDate}",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
 
   Widget getDesignation(int index) {
     return Text(
-      "${experienceData[index].designation}",
+      "${lisOfExperienceModel[index].title}",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
     );
   }
 
   Widget getInstitute(int index) {
     return Text(
-      "${experienceData[index].institution}",
+      "${lisOfExperienceModel[index].companyName}",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
@@ -252,7 +301,7 @@ class ExpereinceAndEducation extends StatelessWidget {
     Navigator.of(context).pushNamed(AppRoutes.addExperience);
   }
 
-  Widget getContainerHeaderLayout(String headerName,context) {
+  Widget getContainerHeaderLayout(String headerName, context) {
     return Container(
       height: 50,
       decoration: BoxDecoration(
@@ -280,7 +329,7 @@ class ExpereinceAndEducation extends StatelessWidget {
     );
   }
 
-  Widget getEducationContainerLayout(String headerName,context) {
+  Widget getEducationContainerLayout(String headerName, context) {
     return Container(
       height: 50,
       decoration: BoxDecoration(

@@ -12,7 +12,6 @@ import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_pe
 import 'package:newversity/flow/teacher/profile/add_education.dart';
 import 'package:newversity/flow/teacher/profile/add_experience.dart';
 import 'package:newversity/flow/teacher/profile/profiel_dashboard.dart';
-import 'package:newversity/flow/teacher/profile/profile_bloc/profile_bloc.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/room/room.dart';
 
@@ -20,6 +19,7 @@ import '../flow/login/login_arguments.dart';
 import '../flow/login/presentation/login_screen.dart';
 import '../flow/login/presentation/otp_route.dart';
 import '../flow/student/home/ui/home_screen.dart';
+import '../flow/teacher/profile/bloc/profile_bloc/profile_bloc.dart';
 
 class AppRouter {
   Route route(RouteSettings routeSettings) {
@@ -78,7 +78,7 @@ class AppRouter {
 
     if (route.toString() == AppRoutes.addEducation) {
       return BlocProvider<ProfileBloc>(
-          create: (context) => ProfileBloc(), child:  AddEducation());
+          create: (context) => ProfileBloc(), child:  const AddEducation());
     }
 
     if (route.toString() == AppRoutes.teacherPersonalInformationRoute) {

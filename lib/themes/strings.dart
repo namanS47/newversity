@@ -33,6 +33,7 @@ class AppStrings {
   static const examsSelectionHeader = "Talk to me about";
   static const experienceAndEducation = "Experience & Qualification";
   static const title = "Title";
+  static const specify = "Specify";
   static const school = "School";
   static const employmentType = "Employment Type";
   static const locationType = "Location Type";

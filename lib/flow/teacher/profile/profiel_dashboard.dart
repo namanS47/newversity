@@ -6,13 +6,14 @@ import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_detail
 import 'package:newversity/flow/teacher/profile/experience_and_education.dart';
 import 'package:newversity/flow/teacher/profile/personal_info.dart';
 import 'package:newversity/flow/teacher/profile/exam_cracked.dart';
-import 'package:newversity/flow/teacher/profile/profile_bloc/profile_bloc.dart';
 import 'package:newversity/flow/teacher/profile/selection_details.dart';
 import 'package:newversity/flow/teacher/profile/teaching_prefrences.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+
+import 'bloc/profile_bloc/profile_bloc.dart';
 
 class ProfileDashboard extends StatefulWidget {
   const ProfileDashboard({Key? key}) : super(key: key);
@@ -35,7 +36,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
             context.read<ProfileBloc>().profileCardList = [
               BlocProvider<TeacherDetailsBloc>(
                   create: (context) => TeacherDetailsBloc(),
-                  child: PersonalInformation()),
+                  child: const PersonalInformation()),
               ExpereinceAndEducation(),
               const ExamsCracked(),
               const SelectionDetails(),

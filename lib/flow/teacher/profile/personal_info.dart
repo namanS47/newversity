@@ -1,25 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:newversity/flow/teacher/profile/profile_bloc/profile_bloc.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/common_utils.dart';
 import '../../../common/common_widgets.dart';
-import '../../../di/di_initializer.dart';
 import '../../../navigation/app_routes.dart';
 import '../../../resources/images.dart';
-import '../../../storage/preferences.dart';
 import '../../../themes/strings.dart';
 import '../../../utils/utils.dart';
 import '../data/bloc/teacher_details/teacher_details_bloc.dart';
 import '../data/model/teacher_details/teacher_details.dart';
+import 'bloc/profile_bloc/profile_bloc.dart';
 
 class PersonalInformation extends StatefulWidget {
-  PersonalInformation({Key? key}) : super(key: key);
+  const PersonalInformation({Key? key}) : super(key: key);
 
   @override
   State<PersonalInformation> createState() => _PersonalInformationState();

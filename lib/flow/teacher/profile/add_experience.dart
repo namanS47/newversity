@@ -1,9 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:newversity/flow/teacher/profile/bloc/profile_bloc/profile_bloc.dart';
+import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/utils/date_time_utils.dart';
 
+import '../../../common/common_utils.dart';
 import '../../../common/common_widgets.dart';
 import '../../../resources/images.dart';
 import '../../../themes/strings.dart';
@@ -29,96 +32,164 @@ class _AddExperienceState extends State<AddExperience> {
 
   late String locationTypeValue = "-Select-";
 
+  bool isRebuildWidgetState(ProfileStates state) {
+    return state is SavingTeacherExperienceState ||
+        state is SavedTeacherExperienceState ||
+        state is SavingFailureTeacherExperienceState;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-                child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getExperienceLayout(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getTitleHeader(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  getYourDesignation(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getEmploymentTypeHeader(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  getEmploymentDropDownLayout(
-                      employmentTypeValue, employmentTypeList),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getCompanyNameHeader(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  getYourCompanyName(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getLocationHeader(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  getLocationDropDownLayout(
-                      locationTypeValue, locationTypeList),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getStartDateHeader(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  getStartDate(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getEndDateHeader(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  getEndDate(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getCurrentlyWorkingLayout(),
-                  const SizedBox(
-                    height: 20,
-                  )
-                ],
+    return BlocConsumer<ProfileBloc, ProfileStates>(
+      listenWhen: (previous, current) => isRebuildWidgetState(current),
+      listener: (context, state) {
+        if (state is SavedTeacherExperienceState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Experience Details Added",
               ),
-            )),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: AppCta(
-                text: AppStrings.addExperience,
-              ),
-            )
-          ],
-        ),
+            ),
+          );
+          Navigator.pop(context);
+          // Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard);
+        }
+        // TODO: implement listener
+      },
+      builder: (context, state) {
+        return Scaffold(
+          body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      getExperienceLayout(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      getTitleHeader(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      getYourDesignation(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      getEmploymentTypeHeader(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      getEmploymentDropDownLayout(
+                          employmentTypeValue, employmentTypeList),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      getCompanyNameHeader(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      getYourCompanyName(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      getLocationHeader(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      getLocationDropDownLayout(
+                          locationTypeValue, locationTypeList),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      getStartDateHeader(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      getStartDate(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      getEndDateHeader(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      getEndDate(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      getCurrentlyWorkingLayout(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      getErrorText(),
+                    ],
+                  ),
+                )),
+                 Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AppCta(
+                    onTap: () => onAddingExperiences(context),
+                    text: AppStrings.addExperience,
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  bool showErrorText = false;
+
+  Widget getErrorText() {
+    return Visibility(
+      visible: showErrorText,
+      child: const Text(
+        "Please fill all the details",
+        style: TextStyle(color: AppColors.redColorShadow400),
       ),
     );
   }
 
+  onAddingExperiences(BuildContext context) async {
+    if (isFormValid()) {
+      showErrorText = false;
+      BlocProvider.of<ProfileBloc>(context).add(
+        SaveTeacherExperienceEvent(
+          experienceRequestModel: ExperienceRequestModel(
+              teacherId: CommonUtils().getLoggedInUser(),
+              title: _titleController.text,
+              employmentType: employmentTypeValue,
+              companyName: _companyController.text),
+        ),
+      );
+      await context.read<ProfileBloc>().changeIndex(
+            context.read<ProfileBloc>().currentProfileStep,
+          );
+    } else {
+      setState(() {
+        showErrorText = true;
+      });
+    }
+  }
+
+  bool isFormValid() {
+    return _titleController.text.isNotEmpty &&
+        employmentTypeValue.isNotEmpty &&
+        _companyController.text.isNotEmpty;
+  }
+
   bool isCurrentlyWorkingHere = false;
+
   Widget getCurrentlyWorkingLayout() {
     return Row(
       children: [
@@ -268,6 +339,7 @@ class _AddExperienceState extends State<AddExperience> {
 
   DateTime? selectedStartDate;
   DateTime? selectedEndDate;
+
   Future<void> selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
