@@ -37,7 +37,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
               BlocProvider<TeacherDetailsBloc>(
                   create: (context) => TeacherDetailsBloc(),
                   child: const PersonalInformation()),
-              ExpereinceAndEducation(),
+              ExperienceAndEducation(),
               const ExamsCracked(),
               const SelectionDetails(),
             ];

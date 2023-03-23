@@ -31,6 +31,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
 
   final TextEditingController _locationController = TextEditingController();
 
+  bool showErrorText = false;
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<TeacherDetailsBloc, TeacherDetailsState>(
@@ -44,7 +47,10 @@ class _PersonalInformationState extends State<PersonalInformation> {
       return getContentWidget(context);
     }, listener: (BuildContext context, TeacherDetailsState state) {
       if (state is TeacherDetailsSavingSuccessState) {
-        Navigator.of(context).pushNamed(AppRoutes.studentHome);
+        isLoading = false;
+        context.read<ProfileBloc>().changeIndex(
+          context.read<ProfileBloc>().currentProfileStep,
+        );
       } else if (state is TeacherDetailsSavingFailureState) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -152,6 +158,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     return AppCta(
       onTap: () => onTapContinueButton(context),
       text: AppStrings.proceed,
+      isLoading: isLoading,
     );
   }
 
@@ -311,14 +318,12 @@ class _PersonalInformationState extends State<PersonalInformation> {
     );
   }
 
-  bool showErrorText = false;
-
   onTapContinueButton(BuildContext context) async {
     if (isFormValid()) {
-      showErrorText = false;
-      // setState(() {
-      //   showErrorText = false;
-      // });
+      setState(() {
+        isLoading = true;
+        showErrorText = false;
+      });
       BlocProvider.of<TeacherDetailsBloc>(context).add(
         SaveTeacherDetailsEvent(
           teacherDetails: TeacherDetails(
@@ -330,9 +335,6 @@ class _PersonalInformationState extends State<PersonalInformation> {
               profilePictureUrl: "yet to be added"),
         ),
       );
-      await context.read<ProfileBloc>().changeIndex(
-            context.read<ProfileBloc>().currentProfileStep,
-          );
     } else {
       setState(() {
         showErrorText = true;

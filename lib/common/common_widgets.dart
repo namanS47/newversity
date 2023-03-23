@@ -80,7 +80,7 @@ class AppDropdownButton extends StatelessWidget {
               maxLines: 1,
               fontSize: 15,
               fontWeight: FontWeight.w500,
-              color: AppColors.grey35,
+              color: AppColors.grey50,
             ),
           ),
           value: value,
@@ -195,6 +195,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       controller: _controller,
       keyboardType: widget.keyboardType,
       inputFormatters: formatters,
+      textCapitalization: TextCapitalization.words,
       validator: widget.validator != null
           ? (value) {
               return widget.validator!(value);

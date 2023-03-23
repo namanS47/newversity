@@ -8,9 +8,21 @@ class ExperienceRequestModel {
   String? title;
   String? employmentType;
   String? companyName;
+  String? location;
+  DateTime? startDate;
+  DateTime? endDate;
+  bool? currentlyWorkingHere;
 
-  ExperienceRequestModel(
-      {this.teacherId, this.title, this.employmentType, this.companyName});
+  ExperienceRequestModel({
+    this.teacherId,
+    this.title,
+    this.employmentType,
+    this.companyName,
+    this.location,
+    this.startDate,
+    this.endDate,
+    this.currentlyWorkingHere,
+  });
 
   factory ExperienceRequestModel.fromJson(Map<String, dynamic> json) =>
       _$ExperienceRequestModelFromJson(json);
