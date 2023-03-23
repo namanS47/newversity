@@ -147,47 +147,38 @@ class _SelectionDetailsState extends State<SelectionDetails> {
   ];
 
   Widget getSelectedComptetiveExams() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Wrap(
-        spacing: 15,
-        runSpacing: 12,
-        children: List.generate(
-          allMentorsTags.length,
-          (curIndex) {
-            return examsView(curIndex);
-          },
-        ),
+    return Wrap(
+      spacing: 15,
+      runSpacing: 12,
+      children: List.generate(
+        allMentorsTags.length,
+        (curIndex) {
+          return examsView(curIndex);
+        },
       ),
     );
   }
 
   Widget examsView(int curIndex) {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: () => onSelectedSession(curIndex),
-          child: Container(
-            height: 55,
-            width: 150,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: allSelectedTags.contains(allMentorsTags[curIndex])
-                    ? AppColors.lightCyan
-                    : AppColors.grey35,
-                border: Border.all(width: 0.3, color: AppColors.grey32)),
-            child: Center(
-                child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                allMentorsTags[curIndex].tagName ?? "",
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-              ),
-            )),
+    return GestureDetector(
+      onTap: () => onSelectedSession(curIndex),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: allSelectedTags.contains(allMentorsTags[curIndex])
+                ? AppColors.lightCyan
+                : AppColors.grey35,
+            border: Border.all(width: 0.3, color: AppColors.grey32)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+        allMentorsTags[curIndex].tagName ?? "",
+        style:
+            const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
           ),
         ),
-      ],
+      ),
     );
   }
 

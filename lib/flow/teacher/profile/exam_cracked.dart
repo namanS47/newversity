@@ -154,31 +154,25 @@ class _ExamsCrackedState extends State<ExamsCracked> {
   }
 
   Widget examsView(int curIndex) {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: () => onSelectedSession(curIndex),
-          child: Container(
-            height: 55,
-            width: 150,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: allSelectedTags.contains(allExamsTags[curIndex])
-                    ? AppColors.lightCyan
-                    : AppColors.grey35,
-                border: Border.all(width: 0.3, color: AppColors.grey32)),
-            child: Center(
-                child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                allExamsTags[curIndex].tagName ?? "",
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-              ),
-            )),
+    return GestureDetector(
+      onTap: () => onSelectedSession(curIndex),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: allSelectedTags.contains(allExamsTags[curIndex])
+                ? AppColors.lightCyan
+                : AppColors.grey35,
+            border: Border.all(width: 0.3, color: AppColors.grey32)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+        allExamsTags[curIndex].tagName ?? "",
+        style:
+            const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
           ),
         ),
-      ],
+      ),
     );
   }
 
