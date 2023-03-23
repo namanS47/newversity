@@ -292,8 +292,10 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
     );
   }
 
-  onAddingEducation(BuildContext context) {
-    Navigator.of(context).pushNamed(AppRoutes.addEducation);
+  onAddingEducation(BuildContext context) async {
+    await Navigator.of(context).pushNamed(AppRoutes.addEducation);
+    BlocProvider.of<ProfileBloc>(context).add(FetchTeachersExperienceEvent());
+    BlocProvider.of<ProfileBloc>(context).add(FetchTeachersEducationEvents());
   }
 
   onAddingExperience(BuildContext context) async {

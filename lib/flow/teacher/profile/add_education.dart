@@ -29,6 +29,8 @@ class _AddEducationState extends State<AddEducation> {
 
   final TextEditingController _gradeController = TextEditingController();
 
+  bool isLoading = false;
+
   bool isRebuildWidgetState(ProfileStates state) {
     return state is SavingTeacherEducationState ||
         state is SavedTeacherEducationState ||
@@ -98,13 +100,21 @@ class _AddEducationState extends State<AddEducation> {
                           const SizedBox(
                             height: 20,
                           ),
-                          getEndDateHeader(),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          getEndDate(),
-                          const SizedBox(
-                            height: 20,
+                          Visibility(
+                            visible: !(isCurrentlyWorkingHere),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                getEndDateHeader(),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                getEndDate(),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ),
                           ),
                           getCurrentlyWorkingLayout(),
                           const SizedBox(
@@ -132,6 +142,7 @@ class _AddEducationState extends State<AddEducation> {
                       child: AppCta(
                         onTap: () => onAddingEducation(context),
                         text: AppStrings.addEducation,
+                        isLoading: isLoading,
                       ),
                     )
                   ],
@@ -158,13 +169,20 @@ class _AddEducationState extends State<AddEducation> {
 
   onAddingEducation(BuildContext context) async {
     if (isFormValid()) {
-      showErrorText = false;
+      setState(() {
+        showErrorText = false;
+        isLoading = true;
+      });
       BlocProvider.of<ProfileBloc>(context).add(
         SaveTeacherEducationEvents(
           educationRequestModel: EducationRequestModel(
               teacherId: CommonUtils().getLoggedInUser(),
               name: _schoolController.text,
-              degree: _degreeController.text),
+              degree: _degreeController.text,
+              startDate: selectedStartDate,
+              endDate: selectedEndDate,
+              currentlyWorkingHere: isCurrentlyWorkingHere,
+              grade: _gradeController.text),
         ),
       );
     } else {
@@ -176,7 +194,10 @@ class _AddEducationState extends State<AddEducation> {
 
   bool isFormValid() {
     return _schoolController.text.isNotEmpty &&
-        _degreeController.text.isNotEmpty;
+        _degreeController.text.isNotEmpty &&
+        _gradeController.text.isNotEmpty &&
+        _startDateController.text.isNotEmpty &&
+        (_endDateController.text.isNotEmpty || isCurrentlyWorkingHere);
   }
 
   bool isCurrentlyWorkingHere = false;

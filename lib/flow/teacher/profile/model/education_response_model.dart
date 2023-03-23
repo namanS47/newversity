@@ -8,9 +8,9 @@ class EducationResponseModel {
   String? teacherId;
   String? name;
   String? degree;
-  String? startDate;
-  String? endDate;
-  String? currentlyWorkingHere;
+  DateTime? startDate;
+  DateTime? endDate;
+  bool? currentlyWorkingHere;
   String? grade;
 
   EducationResponseModel(

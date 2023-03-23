@@ -7,8 +7,19 @@ class EducationRequestModel {
   String? teacherId;
   String? name;
   String? degree;
+  DateTime? startDate;
+  DateTime? endDate;
+  bool? currentlyWorkingHere;
+  String? grade;
 
-  EducationRequestModel({this.teacherId, this.name, this.degree});
+  EducationRequestModel(
+      {this.teacherId,
+      this.name,
+      this.degree,
+      this.startDate,
+      this.endDate,
+      this.currentlyWorkingHere,
+      this.grade});
 
   factory EducationRequestModel.fromJson(Map<String, dynamic> json) =>
       _$EducationRequestModelFromJson(json);
