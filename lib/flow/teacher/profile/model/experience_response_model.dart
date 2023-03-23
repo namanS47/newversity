@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'experience_response_model.g.dart';
@@ -10,9 +12,9 @@ class ExperienceResponseModel {
   String? employmentType;
   String? companyName;
   String? location;
-  String? startDate;
-  String? endDate;
-  String? currentlyWorkingHere;
+  DateTime? startDate;
+  DateTime? endDate;
+  bool? currentlyWorkingHere;
 
   ExperienceResponseModel(
       {this.id,

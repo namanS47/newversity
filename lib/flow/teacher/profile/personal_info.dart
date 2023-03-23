@@ -48,9 +48,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     }, listener: (BuildContext context, TeacherDetailsState state) {
       if (state is TeacherDetailsSavingSuccessState) {
         isLoading = false;
-        context.read<ProfileBloc>().changeIndex(
-          context.read<ProfileBloc>().currentProfileStep,
-        );
+        context.read<ProfileBloc>().add(ChangeProfileCardIndexEvent());
       } else if (state is TeacherDetailsSavingFailureState) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

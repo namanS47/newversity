@@ -10,17 +10,16 @@ import '../../student/seesion/data/experience_data.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 import 'model/education_response_model.dart';
 
-class ExpereinceAndEducation extends StatefulWidget {
-  ExpereinceAndEducation({Key? key}) : super(key: key);
+class ExperienceAndEducation extends StatefulWidget {
+  const ExperienceAndEducation({Key? key}) : super(key: key);
 
   @override
-  State<ExpereinceAndEducation> createState() => _ExpereinceAndEducationState();
+  State<ExperienceAndEducation> createState() => _ExperienceAndEducationState();
 }
 
-class _ExpereinceAndEducationState extends State<ExpereinceAndEducation> {
+class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<ProfileBloc>(context).add(FetchTeachersExperienceEvent());
     BlocProvider.of<ProfileBloc>(context).add(FetchTeachersEducationEvents());
@@ -297,8 +296,10 @@ class _ExpereinceAndEducationState extends State<ExpereinceAndEducation> {
     Navigator.of(context).pushNamed(AppRoutes.addEducation);
   }
 
-  onAddingExperience(BuildContext context) {
-    Navigator.of(context).pushNamed(AppRoutes.addExperience);
+  onAddingExperience(BuildContext context) async {
+    await Navigator.of(context).pushNamed(AppRoutes.addExperience);
+    BlocProvider.of<ProfileBloc>(context).add(FetchTeachersExperienceEvent());
+    BlocProvider.of<ProfileBloc>(context).add(FetchTeachersEducationEvents());
   }
 
   Widget getContainerHeaderLayout(String headerName, context) {
@@ -374,6 +375,6 @@ class _ExpereinceAndEducationState extends State<ExpereinceAndEducation> {
   onTapContinueButton(BuildContext context) async {
     await context
         .read<ProfileBloc>()
-        .changeIndex(context.read<ProfileBloc>().currentProfileStep);
+        .changeIndex();
   }
 }

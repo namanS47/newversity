@@ -34,6 +34,6 @@ class TeachingPreferences extends StatelessWidget {
   onTapContinueButton(BuildContext context) async{
     await context
         .read<ProfileBloc>()
-        .changeIndex(context.read<ProfileBloc>().currentProfileStep);
+        .changeIndex();
   }
 }

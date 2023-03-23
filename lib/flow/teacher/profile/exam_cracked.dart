@@ -46,9 +46,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
           allExamsTags = state.listOfTags;
         }
         if (state is SavedTagsState) {
-          context.read<ProfileBloc>().changeIndex(
-                context.read<ProfileBloc>().currentProfileStep,
-              );
+          context.read<ProfileBloc>().changeIndex();
         }
       },
       builder: (context, state) {

@@ -18,7 +18,7 @@ part 'profile_events.dart';
 part 'profile_states.dart';
 
 class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
-  int currentProfileStep = 0;
+  int currentProfileStep = 1;
   double sliderWidth = 195.0;
   double sliderPadding = 0.0;
   String teacherId = "";
@@ -29,7 +29,9 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
 
   ProfileBloc() : super(ProfileInitial()) {
     on<ChangeProfileCardIndexEvent>((event, emit) async {
-      await changeIndex(event.index, isBack: event.isBack);
+      changeIndex(isBack: event.isBack);
+      print("naman1---");
+      emit(ProfileCardChangedState());
     });
 
     on<FetchTeachersExperienceEvent>((event, emit) async {
@@ -73,7 +75,6 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
     try {
       emit(FetchingTagsState());
       final response = await _teacherBaseRepository.fetchAllTags();
-      print("what is output is ouy $response");
       if (response != null) {
         if (event is FetchExamTagsEvent) {
           for (TagsResponseModel x in response) {
@@ -86,7 +87,6 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
             tagName: "others",
             tagCategory: "exams"
           ));
-          print("what is output $allTags");
           emit(FetchedExamTagsState(listOfTags: allTags));
         } else if (event is FetchMentorshipTag) {
           for (TagsResponseModel x in response) {
@@ -125,14 +125,11 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
       emit(FetchingTeachersExperiencesState());
       final response = await _teacherBaseRepository
           .fetchAllExperiencesWithTeacherId(teacherId);
-      print(response);
       if (response != null) {
-        print("Its Coming -- $response");
         emit(
             FetchedTeachersExperiencesState(listOfTeacherExperience: response));
       }
     } on SocketException catch (e) {
-      print("Error --- ${e.message}");
       emit(FetchingTagsFailure());
     }
   }
@@ -176,11 +173,9 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
     }
   }
 
-  Future<void> changeIndex(int index, {bool isBack = false}) async {
-    emit(ProfileLoading());
+  changeIndex({bool isBack = false}) {
     double singlePart = sliderWidth / (profileCardList.length - 1);
     isBack ? sliderPadding -= singlePart : sliderPadding += singlePart;
     isBack ? currentProfileStep -= 1 : currentProfileStep += 1;
-    emit(ProfileCardChangedState());
   }
 }

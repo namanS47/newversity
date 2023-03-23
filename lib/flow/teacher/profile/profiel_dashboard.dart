@@ -29,7 +29,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
       resizeToAvoidBottomInset: true,
       body: BlocConsumer<ProfileBloc, ProfileStates>(
         listener: (context, state) {
-          // TODO: implement listener
+
         },
         builder: (context, state) {
           if (state is ProfileInitial) {
@@ -37,7 +37,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
               BlocProvider<TeacherDetailsBloc>(
                   create: (context) => TeacherDetailsBloc(),
                   child: const PersonalInformation()),
-              ExperienceAndEducation(),
+              const ExperienceAndEducation(),
               const ExamsCracked(),
               const SelectionDetails(),
             ];
@@ -54,18 +54,17 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      GestureDetector(
-                        onTap: () async {
-                          context.read<ProfileBloc>().currentProfileStep == 0
-                              ? Navigator.pop(context)
-                              : await context.read<ProfileBloc>().changeIndex(
-                                  context.read<ProfileBloc>().currentProfileStep,
-                                  isBack: true);
-                        },
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          padding: const EdgeInsets.only(left: 33),
-                          child: SvgPicture.asset(ImageAsset.arrowBack),
+                      Visibility(
+                        visible: !(context.read<ProfileBloc>().currentProfileStep == 1),
+                        child: GestureDetector(
+                          onTap: () async {
+                            context.read<ProfileBloc>().add(ChangeProfileCardIndexEvent(isBack: true));
+                          },
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.only(left: 33),
+                            child: SvgPicture.asset(ImageAsset.arrowBack),
+                          ),
                         ),
                       ),
                       Stack(
@@ -81,8 +80,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                                 totalSteps: context
                                         .read<ProfileBloc>()
                                         .profileCardList
-                                        .length -
-                                    1,
+                                        .length,
                                 currentStep: context
                                     .read<ProfileBloc>()
                                     .currentProfileStep,
@@ -93,17 +91,6 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                               ),
                             ),
                           ],
-                          Padding(
-                            padding: EdgeInsets.only(
-                                left: context.read<ProfileBloc>().sliderPadding),
-                            child: Transform.rotate(
-                              angle: 0.2,
-                              child: SvgPicture.asset(
-                                ImageAsset.purplePlumIcon,
-                                height: 26,
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                       Padding(
@@ -121,7 +108,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                 const SizedBox(height: 10),
                 if (context.read<ProfileBloc>().profileCardList.isNotEmpty) ...[
                   context.read<ProfileBloc>().profileCardList.elementAt(
-                      context.read<ProfileBloc>().currentProfileStep),
+                      context.read<ProfileBloc>().currentProfileStep-1),
                 ],
               ],
             ),

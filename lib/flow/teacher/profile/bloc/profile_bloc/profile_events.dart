@@ -4,10 +4,9 @@ part of 'profile_bloc.dart';
 abstract class ProfileEvents {}
 
 class ChangeProfileCardIndexEvent extends ProfileEvents {
-  final int index;
-  bool isBack;
+  final bool isBack;
 
-  ChangeProfileCardIndexEvent(this.index, {this.isBack = false});
+  ChangeProfileCardIndexEvent({this.isBack = false});
 }
 
 class FetchTeachersExperienceEvent extends ProfileEvents {

@@ -5,6 +5,7 @@ import 'package:newversity/flow/teacher/profile/bloc/profile_bloc/profile_bloc.d
 import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/utils/date_time_utils.dart';
+import 'package:newversity/utils/string_extensions.dart';
 
 import '../../../common/common_utils.dart';
 import '../../../common/common_widgets.dart';
@@ -27,10 +28,15 @@ class _AddExperienceState extends State<AddExperience> {
 
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
-
-  final List<String> locationTypeList = ["-Select-", 'Home', 'Work', 'Office'];
-
-  late String locationTypeValue = "-Select-";
+  final List<String> locationTypeList = ['Home', 'Office'];
+  String? locationTypeValue;
+  final List<String> employmentTypeList = ['Salaried', 'Self Employed'];
+  String? employmentTypeValue;
+  bool showErrorText = false;
+  bool isLoading = false;
+  bool isCurrentlyWorkingHere = false;
+  DateTime? selectedStartDate;
+  DateTime? selectedEndDate;
 
   bool isRebuildWidgetState(ProfileStates state) {
     return state is SavingTeacherExperienceState ||
@@ -44,15 +50,8 @@ class _AddExperienceState extends State<AddExperience> {
       listenWhen: (previous, current) => isRebuildWidgetState(current),
       listener: (context, state) {
         if (state is SavedTeacherExperienceState) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                "Experience Details Added",
-              ),
-            ),
-          );
+          isLoading = false;
           Navigator.pop(context);
-          // Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard);
         }
         // TODO: implement listener
       },
@@ -87,8 +86,7 @@ class _AddExperienceState extends State<AddExperience> {
                       const SizedBox(
                         height: 10,
                       ),
-                      getEmploymentDropDownLayout(
-                          employmentTypeValue, employmentTypeList),
+                      getEmploymentDropDownLayout(employmentTypeList),
                       const SizedBox(
                         height: 20,
                       ),
@@ -104,8 +102,7 @@ class _AddExperienceState extends State<AddExperience> {
                       const SizedBox(
                         height: 10,
                       ),
-                      getLocationDropDownLayout(
-                          locationTypeValue, locationTypeList),
+                      getLocationDropDownLayout(locationTypeList),
                       const SizedBox(
                         height: 20,
                       ),
@@ -117,13 +114,21 @@ class _AddExperienceState extends State<AddExperience> {
                       const SizedBox(
                         height: 20,
                       ),
-                      getEndDateHeader(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      getEndDate(),
-                      const SizedBox(
-                        height: 20,
+                      Visibility(
+                        visible: !isCurrentlyWorkingHere,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            getEndDateHeader(),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            getEndDate(),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
                       ),
                       getCurrentlyWorkingLayout(),
                       const SizedBox(
@@ -133,11 +138,12 @@ class _AddExperienceState extends State<AddExperience> {
                     ],
                   ),
                 )),
-                 Padding(
+                Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: AppCta(
                     onTap: () => onAddingExperiences(context),
                     text: AppStrings.addExperience,
+                    isLoading: isLoading
                   ),
                 )
               ],
@@ -147,8 +153,6 @@ class _AddExperienceState extends State<AddExperience> {
       },
     );
   }
-
-  bool showErrorText = false;
 
   Widget getErrorText() {
     return Visibility(
@@ -162,19 +166,24 @@ class _AddExperienceState extends State<AddExperience> {
 
   onAddingExperiences(BuildContext context) async {
     if (isFormValid()) {
-      showErrorText = false;
+      setState(() {
+        showErrorText = false;
+        isLoading = true;
+      });
       BlocProvider.of<ProfileBloc>(context).add(
         SaveTeacherExperienceEvent(
           experienceRequestModel: ExperienceRequestModel(
-              teacherId: CommonUtils().getLoggedInUser(),
-              title: _titleController.text,
-              employmentType: employmentTypeValue,
-              companyName: _companyController.text),
+            teacherId: CommonUtils().getLoggedInUser(),
+            title: _titleController.text,
+            employmentType: employmentTypeValue,
+            companyName: _companyController.text,
+            location: locationTypeValue,
+            startDate: selectedStartDate,
+            endDate: selectedEndDate,
+            currentlyWorkingHere: isCurrentlyWorkingHere,
+          ),
         ),
       );
-      await context.read<ProfileBloc>().changeIndex(
-            context.read<ProfileBloc>().currentProfileStep,
-          );
     } else {
       setState(() {
         showErrorText = true;
@@ -184,11 +193,12 @@ class _AddExperienceState extends State<AddExperience> {
 
   bool isFormValid() {
     return _titleController.text.isNotEmpty &&
-        employmentTypeValue.isNotEmpty &&
-        _companyController.text.isNotEmpty;
+        employmentTypeValue.isValid &&
+        _companyController.text.isNotEmpty &&
+        locationTypeValue.isValid &&
+        _startDateController.text.isNotEmpty &&
+        (_endDateController.text.isValid || isCurrentlyWorkingHere);
   }
-
-  bool isCurrentlyWorkingHere = false;
 
   Widget getCurrentlyWorkingLayout() {
     return Row(
@@ -262,7 +272,7 @@ class _AddExperienceState extends State<AddExperience> {
               children: [
                 Expanded(
                   child: TextFormField(
-                    controller: _startDateController,
+                    controller: _endDateController,
                     readOnly: true,
                     decoration: InputDecoration(
                         contentPadding: const EdgeInsets.only(
@@ -281,7 +291,7 @@ class _AddExperienceState extends State<AddExperience> {
     );
   }
 
-  Widget getLocationDropDownLayout(String name, List<String> nameList) {
+  Widget getLocationDropDownLayout(List<String> nameList) {
     return Container(
       height: 50,
       decoration: BoxDecoration(
@@ -293,7 +303,7 @@ class _AddExperienceState extends State<AddExperience> {
           padding: const EdgeInsets.all(8.0),
           child: AppDropdownButton(
             hint: '-Select-',
-            value: name,
+            value: locationTypeValue,
             dropdownItems: nameList,
             onChanged: (value) => changeLocationType(value!),
           ),
@@ -302,7 +312,7 @@ class _AddExperienceState extends State<AddExperience> {
     );
   }
 
-  Widget getEmploymentDropDownLayout(String name, List<String> nameList) {
+  Widget getEmploymentDropDownLayout(List<String> nameList) {
     return Container(
       height: 50,
       decoration: BoxDecoration(
@@ -314,7 +324,7 @@ class _AddExperienceState extends State<AddExperience> {
           padding: const EdgeInsets.all(8.0),
           child: AppDropdownButton(
             hint: '-Select-',
-            value: name,
+            value: employmentTypeValue,
             dropdownItems: nameList,
             onChanged: (value) => changeEmploymentType(value!),
           ),
@@ -322,10 +332,6 @@ class _AddExperienceState extends State<AddExperience> {
       ),
     );
   }
-
-  final List<String> employmentTypeList = ["-Select-", 'Teaching', 'Business'];
-
-  late String employmentTypeValue = "-Select-";
 
   void changeEmploymentType(String value) {
     employmentTypeValue = value;
@@ -337,16 +343,13 @@ class _AddExperienceState extends State<AddExperience> {
     setState(() {});
   }
 
-  DateTime? selectedStartDate;
-  DateTime? selectedEndDate;
-
   Future<void> selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       firstDate: DateTime(DateTime.now().year - 100, 1),
       lastDate: DateTime.now().subtract(const Duration(days: 6570)),
       initialDate: DateTime.now().subtract(const Duration(days: 6570)),
-      helpText: "Date of Birthdate",
+      // helpText: "Date of Birthdate",
       confirmText: "Okay",
       cancelText: "Cancel",
       builder: (context, child) {
