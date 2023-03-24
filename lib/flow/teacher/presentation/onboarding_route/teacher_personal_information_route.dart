@@ -167,24 +167,20 @@ class _TeacherPersonalInfoRouteState extends State<TeacherPersonalInfoRoute> {
           child: AppCta(
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
             onTap: () async {
-              print("naman");
               if (isFormValid()) {
-                showErrorText = false;
-                // setState(() {
-                //   showErrorText = false;
-                // });
-                final mobileNumber =
-                    await DI.inject<Preferences>().getMobileNumber();
+                setState(() {
+                  showErrorText = false;
+                });
                 BlocProvider.of<TeacherDetailsBloc>(context).add(
                   SaveTeacherDetailsEvent(
                     teacherDetails: TeacherDetails(
-                        teacherId: CommonUtils().getLoggedInUser(),
-                        name: _nameController.text,
-                        mobileNumber: mobileNumber,
-                        location: _locationController.text,
-                        title: _titleController.text,
-                        info: _infoController.text,
-                        profilePictureUrl: "yet to be added"),
+                      teacherId: CommonUtils().getLoggedInUser(),
+                      name: _nameController.text,
+                      location: _locationController.text,
+                      title: _titleController.text,
+                      info: _infoController.text,
+                      profilePictureUrl: "yet to be added"
+                    ),
                   ),
                 );
               } else {
