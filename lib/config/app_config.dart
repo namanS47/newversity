@@ -64,10 +64,10 @@ class AppConfig {
 
 class EnvironmentValues {
   //Staging
-  static const String newversityStagingUrl = "http://192.168.1.11:8080/";
+  static const String newversityStagingUrl = "http://newversity-env.eba-ih8qdftv.us-east-2.elasticbeanstalk.com/";
   // static const String newversityStagingUrl = "http://10.154.22.161:8080/";
 
 
   // Production
-  static const String newversityProductionUrl = "http://192.168.1.11:8080/";
+  static const String newversityProductionUrl = "http://newversity-env.eba-ih8qdftv.us-east-2.elasticbeanstalk.com/";
 }
