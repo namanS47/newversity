@@ -81,12 +81,6 @@ class AppRouter {
           create: (context) => ProfileBloc(), child:  const AddEducation());
     }
 
-    if (route.toString() == AppRoutes.teacherPersonalInformationRoute) {
-      return BlocProvider<TeacherDetailsBloc>(
-        create: (context) => TeacherDetailsBloc(),
-        child: TeacherPersonalInfoRoute(),
-      );
-    }
     if (route.toString() == AppRoutes.teacherExperienceAndQualificationRoute) {
       return const TeacherExperienceAndQualificationRoute();
     }
