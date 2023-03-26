@@ -38,11 +38,11 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
-      body: getScreeContent(),
+      body: getScreenContent(),
     );
   }
 
-  Widget getScreeContent() {
+  Widget getScreenContent() {
     return CustomScrollView(
       slivers: <Widget>[
         SliverToBoxAdapter(

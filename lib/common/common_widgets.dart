@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../themes/colors.dart';
-import '../themes/strings.dart';
 
 class AppDropdownButton extends StatelessWidget {
   final String hint;
@@ -142,24 +144,161 @@ class AppDropdownButton extends StatelessWidget {
   }
 }
 
-class AppTextFormField extends StatefulWidget {
-  const AppTextFormField({
+class AppAnimatedBottomSheet extends StatelessWidget {
+  final bool showDivider;
+  final Widget bottomSheetWidget;
+  final Widget? bottomNavBarWidget;
+
+  const AppAnimatedBottomSheet(
+      {Key? key,
+      required this.bottomSheetWidget,
+      this.bottomNavBarWidget,
+      this.showDivider = true})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+            color: AppColors.whiteColor,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (showDivider)
+                const Divider(
+                  color: AppColors.grey32,
+                  thickness: 1,
+                  height: 0,
+                ),
+              bottomSheetWidget,
+              if (bottomNavBarWidget != null) bottomNavBarWidget!,
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class AppImage extends StatelessWidget {
+  final String? image;
+  final double? height;
+  final double? webHeight;
+  final double? width;
+  final double? webWidth;
+  final Color? color;
+  final BoxFit? fit;
+  final BoxFit? webFit;
+
+  const AppImage({
     Key? key,
-    this.controller,
-    this.keyboardType,
-    this.inputFormatters,
-    this.validator,
-    this.decoration,
-    this.hintText,
-    this.errorText,
-    this.isDense,
-    this.maxLines,
-    this.onChange,
-    this.hintTextStyle,
-    this.fillColor,
-    this.contentPadding,
-    this.textInputAction
+    @required this.image,
+    this.webFit,
+    this.fit,
+    this.height,
+    this.webHeight,
+    this.width,
+    this.webWidth,
+    this.color,
   }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return image!.contains('http')
+        ? CachedNetworkImage(
+            imageUrl: '$image',
+            height: webHeight,
+            width: webWidth,
+            fit: webFit ?? BoxFit.cover,
+            placeholder: (context, url) => ShimmerEffectView(
+                height: webHeight ?? double.maxFinite,
+                width: webWidth ?? double.maxFinite),
+            errorWidget: (context, url, error) =>
+                const Icon(Icons.error, color: Colors.red),
+          )
+        : image!.contains('product/') || image!.contains('public/')
+            ? CachedNetworkImage(
+                imageUrl: 'https://d3df8f1z9cx8fl.cloudfront.net/$image',
+                height: webHeight,
+                width: webWidth,
+                fit: webFit ?? BoxFit.cover,
+                placeholder: (context, url) => ShimmerEffectView(
+                    height: webHeight ?? double.maxFinite,
+                    width: webWidth ?? double.maxFinite),
+                errorWidget: (context, url, error) =>
+                    const Icon(Icons.error, color: Colors.red),
+              )
+            : image!.split('.').last != 'svg'
+                ? Image.asset(
+                    image!,
+                    fit: fit,
+                    height: height,
+                    width: width,
+                    color: color,
+                  )
+                : SvgPicture.asset(
+                    image!,
+                    height: height,
+                    width: width,
+                    color: color,
+                  );
+  }
+}
+
+class ShimmerEffectView extends StatelessWidget {
+  final double? height;
+  final double? width;
+  final double? borderRadius;
+
+  const ShimmerEffectView(
+      {Key? key, this.height, this.width, this.borderRadius})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: AppColors.redColorShadow400,
+      highlightColor: AppColors.primaryColor,
+      child: Container(
+        height: height ?? 30,
+        width: width ?? 50,
+        decoration: BoxDecoration(
+          color: AppColors.redColorShadow400,
+          borderRadius: BorderRadius.circular(borderRadius ?? 4),
+        ),
+      ),
+    );
+  }
+}
+
+class AppTextFormField extends StatefulWidget {
+  const AppTextFormField(
+      {Key? key,
+      this.controller,
+      this.keyboardType,
+      this.inputFormatters,
+      this.validator,
+      this.decoration,
+      this.hintText,
+      this.errorText,
+      this.isDense,
+      this.maxLines,
+      this.onChange,
+      this.hintTextStyle,
+      this.fillColor,
+      this.contentPadding,
+      this.textInputAction})
+      : super(key: key);
 
   final TextEditingController? controller;
   final TextInputType? keyboardType;
@@ -375,6 +514,7 @@ class AppCta extends StatelessWidget {
   const AppCta(
       {Key? key,
       this.onTap,
+      this.isEnable = true,
       this.text = "",
       this.isLoading = false,
       this.padding})
@@ -383,6 +523,7 @@ class AppCta extends StatelessWidget {
   final void Function()? onTap;
   final bool isLoading;
   final String text;
+  final bool isEnable;
 
   final EdgeInsetsGeometry? padding;
 
@@ -397,7 +538,7 @@ class AppCta extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: AppColors.cyanBlue,
+            color: isEnable ? AppColors.cyanBlue : AppColors.grey50,
           ),
           child: !isLoading
               ? Center(

@@ -30,7 +30,6 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
   ProfileBloc() : super(ProfileInitial()) {
     on<ChangeProfileCardIndexEvent>((event, emit) async {
       changeIndex(isBack: event.isBack);
-      print("naman1---");
       emit(ProfileCardChangedState());
     });
 

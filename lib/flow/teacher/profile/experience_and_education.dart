@@ -115,7 +115,7 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
         runSpacing: 12,
         children: List.generate(
           listOfEducationModel.length,
-              (curIndex) {
+          (curIndex) {
             return getEducationView(curIndex);
           },
         ),
@@ -163,6 +163,10 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
             ],
           ),
         ),
+        const SizedBox(
+          width: 10,
+        ),
+        getCGPA(index),
       ],
     );
   }
@@ -177,7 +181,7 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
         runSpacing: 12,
         children: List.generate(
           lisOfExperienceModel.length,
-              (curIndex) {
+          (curIndex) {
             return getExperienceView(curIndex);
           },
         ),
@@ -237,12 +241,14 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
   }
 
   Widget getEducationalDuration(int index) {
-    String duraionString = DateTimeUtils.getEmploymentDurationDateTime(listOfEducationModel[index].startDate!);
+    String duraionString = DateTimeUtils.getEmploymentDurationDateTime(
+        listOfEducationModel[index].startDate!);
     duraionString += "-";
-    if(listOfEducationModel[index].currentlyWorkingHere == true) {
+    if (listOfEducationModel[index].currentlyWorkingHere == true) {
       duraionString += "Present";
     } else {
-      duraionString += DateTimeUtils.getEmploymentDurationDateTime(listOfEducationModel[index].endDate!);
+      duraionString += DateTimeUtils.getEmploymentDurationDateTime(
+          listOfEducationModel[index].endDate!);
     }
     return Text(
       duraionString,
@@ -261,7 +267,7 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Text(
-        "${lisOfExperienceModel[index].employmentType}",
+        "${lisOfExperienceModel[index].location}",
         style: const TextStyle(
             color: AppColors.secColor,
             fontSize: 12,
@@ -284,12 +290,14 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
   }
 
   Widget getDuration(int index) {
-    String duraionString = DateTimeUtils.getEmploymentDurationDateTime(lisOfExperienceModel[index].startDate!);
+    String duraionString = DateTimeUtils.getEmploymentDurationDateTime(
+        lisOfExperienceModel[index].startDate!);
     duraionString += "-";
-    if(lisOfExperienceModel[index].currentlyWorkingHere == true) {
+    if (lisOfExperienceModel[index].currentlyWorkingHere == true) {
       duraionString += "Present";
     } else {
-      duraionString += DateTimeUtils.getEmploymentDurationDateTime(lisOfExperienceModel[index].endDate!);
+      duraionString += DateTimeUtils.getEmploymentDurationDateTime(
+          lisOfExperienceModel[index].endDate!);
     }
 
     return Text(

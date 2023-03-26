@@ -1,13 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
+import 'package:newversity/flow/teacher/profile/exam_cracked.dart';
 import 'package:newversity/flow/teacher/profile/experience_and_education.dart';
 import 'package:newversity/flow/teacher/profile/personal_info.dart';
-import 'package:newversity/flow/teacher/profile/exam_cracked.dart';
 import 'package:newversity/flow/teacher/profile/selection_details.dart';
-import 'package:newversity/flow/teacher/profile/teaching_prefrences.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
@@ -28,9 +26,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: BlocConsumer<ProfileBloc, ProfileStates>(
-        listener: (context, state) {
-
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           if (state is ProfileInitial) {
             context.read<ProfileBloc>().profileCardList = [
@@ -55,10 +51,14 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Visibility(
-                        visible: !(context.read<ProfileBloc>().currentProfileStep == 1),
+                        visible:
+                            !(context.read<ProfileBloc>().currentProfileStep ==
+                                1),
                         child: GestureDetector(
                           onTap: () async {
-                            context.read<ProfileBloc>().add(ChangeProfileCardIndexEvent(isBack: true));
+                            context
+                                .read<ProfileBloc>()
+                                .add(ChangeProfileCardIndexEvent(isBack: true));
                           },
                           child: Container(
                             alignment: Alignment.centerLeft,
@@ -78,9 +78,9 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                               width: context.read<ProfileBloc>().sliderWidth,
                               child: StepProgressIndicator(
                                 totalSteps: context
-                                        .read<ProfileBloc>()
-                                        .profileCardList
-                                        .length,
+                                    .read<ProfileBloc>()
+                                    .profileCardList
+                                    .length,
                                 currentStep: context
                                     .read<ProfileBloc>()
                                     .currentProfileStep,
@@ -96,8 +96,9 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: GestureDetector(
-                          onTap: (){
-                            Navigator.of(context).pushNamed(AppRoutes.teacherHomePageRoute);
+                          onTap: () {
+                            Navigator.of(context)
+                                .pushNamed(AppRoutes.teacherHomePageRoute);
                           },
                           child: Text("Skip"),
                         ),
@@ -108,7 +109,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                 const SizedBox(height: 10),
                 if (context.read<ProfileBloc>().profileCardList.isNotEmpty) ...[
                   context.read<ProfileBloc>().profileCardList.elementAt(
-                      context.read<ProfileBloc>().currentProfileStep-1),
+                      context.read<ProfileBloc>().currentProfileStep - 1),
                 ],
               ],
             ),

@@ -4,8 +4,11 @@ import 'package:newversity/flow/error_routes/error_route.dart';
 import 'package:newversity/flow/initial_route/app_bloc/app_bloc.dart';
 import 'package:newversity/flow/initial_route/ui/initial_route.dart';
 import 'package:newversity/flow/student/seesion/book_session.dart';
+import 'package:newversity/flow/teacher/bookings/bloc/session_details_bloc/session_details_bloc.dart';
+import 'package:newversity/flow/teacher/bookings/view/session_details.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
-import 'package:newversity/flow/teacher/presentation/TeacherHome.dart';
+import 'package:newversity/flow/teacher/index/bloc/index_bloc.dart';
+import 'package:newversity/flow/teacher/index/view/index_page.dart';
 import 'package:newversity/flow/teacher/presentation/calender.dart';
 import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_experience_and_qualification_route.dart';
 import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_personal_information_route.dart';
@@ -60,7 +63,10 @@ class AppRouter {
       );
     }
     if (route.toString() == AppRoutes.teacherHomePageRoute) {
-      return const TeacherHome();
+      return BlocProvider<IndexBloc>(
+        create: (context) => IndexBloc(),
+        child: const IndexPage(),
+      );
     }
     if (route.toString() == AppRoutes.bookSession) {
       return const BookSession();
@@ -71,14 +77,22 @@ class AppRouter {
           create: (context) => ProfileBloc(), child: const ProfileDashboard());
     }
 
+    if (route.toString() == AppRoutes.sessionDetails) {
+      return BlocProvider<SessionDetailsBloc>(
+          create: (context) => SessionDetailsBloc(),
+          child:  SessionDetails(
+            isPrevious: params as bool,
+          ));
+    }
+
     if (route.toString() == AppRoutes.addExperience) {
       return BlocProvider<ProfileBloc>(
-          create: (context) => ProfileBloc(), child:  AddExperience());
+          create: (context) => ProfileBloc(), child: AddExperience());
     }
 
     if (route.toString() == AppRoutes.addEducation) {
       return BlocProvider<ProfileBloc>(
-          create: (context) => ProfileBloc(), child:  const AddEducation());
+          create: (context) => ProfileBloc(), child: const AddEducation());
     }
 
     if (route.toString() == AppRoutes.teacherPersonalInformationRoute) {
