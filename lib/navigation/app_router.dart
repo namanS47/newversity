@@ -15,6 +15,7 @@ import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_pe
 import 'package:newversity/flow/teacher/profile/add_education.dart';
 import 'package:newversity/flow/teacher/profile/add_experience.dart';
 import 'package:newversity/flow/teacher/profile/profiel_dashboard.dart';
+import 'package:newversity/flow/teacher/profile/view/profile.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/room/room.dart';
 
@@ -71,6 +72,9 @@ class AppRouter {
     if (route.toString() == AppRoutes.bookSession) {
       return const BookSession();
     }
+    if (route.toString() == AppRoutes.profileScreen) {
+      return const ProfileScreen();
+    }
 
     if (route.toString() == AppRoutes.teacherProfileDashBoard) {
       return BlocProvider<ProfileBloc>(
@@ -80,7 +84,7 @@ class AppRouter {
     if (route.toString() == AppRoutes.sessionDetails) {
       return BlocProvider<SessionDetailsBloc>(
           create: (context) => SessionDetailsBloc(),
-          child:  SessionDetails(
+          child: SessionDetails(
             isPrevious: params as bool,
           ));
     }

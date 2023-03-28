@@ -1,11 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:newversity/firebase_options.dart';
 import 'package:newversity/navigation/app_router.dart';
 import 'package:newversity/navigation/app_routes.dart';
-import 'package:newversity/common/common_utils.dart';
 import 'package:newversity/themes/app_theme.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import 'di/di_initializer.dart';
 import 'flow/login/presentation/login_screen.dart';
