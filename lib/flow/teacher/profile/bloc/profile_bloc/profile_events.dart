@@ -18,7 +18,7 @@ class FetchTeachersEducationEvents extends ProfileEvents {
 }
 
 class SaveTagsEvents extends ProfileEvents {
-  final List<TagsWithTeacherIdRequestModel> listOfTags;
+  final List<TagModel> listOfTags;
 
   SaveTagsEvents({required this.listOfTags});
 }

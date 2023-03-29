@@ -373,7 +373,7 @@ class _AddExperienceState extends State<AddExperience> {
     );
     if (picked != null) {
       _startDateController.text =
-          DateTimeUtils.getBirthFormattedDateTime(picked);
+          DateTimeUtils.getBirthFormattedDateTime(picked).toLowerCase();
       selectedStartDate = picked;
       setState(() {});
     }
@@ -408,7 +408,7 @@ class _AddExperienceState extends State<AddExperience> {
       },
     );
     if (picked != null) {
-      _endDateController.text = DateTimeUtils.getBirthFormattedDateTime(picked);
+      _endDateController.text = DateTimeUtils.getBirthFormattedDateTime(picked).toLowerCase();
       selectedEndDate = picked;
       setState(() {});
     }

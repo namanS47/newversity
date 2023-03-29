@@ -8,6 +8,8 @@ import 'package:newversity/network/api/student_api.dart';
 import 'package:newversity/network/api/teacher_api.dart';
 import 'package:newversity/storage/preferences.dart';
 
+import '../flow/teacher/availability/data/repository/availability_repository.dart';
+
 class DI {
   DI();
 
@@ -18,6 +20,7 @@ class DI {
     addDependency(TeacherApi(DioClient.getDio()), true);
     addDependency(StudentApi(DioClient.getDio()), true);
     addDependency(TeacherBaseRepository(), true);
+    addDependency(AvailabilityRepository(), true);
 
     return DI();
   }

@@ -115,9 +115,10 @@ class AppDropdownButton extends StatelessWidget {
           buttonHeight: buttonHeight ?? 50,
           buttonWidth: buttonWidth,
           buttonPadding: buttonPadding ?? EdgeInsets.zero,
-          buttonDecoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-          ),
+          buttonDecoration: buttonDecoration ??
+              BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+              ),
           buttonElevation: buttonElevation,
           itemHeight: itemHeight ?? 52,
           itemPadding:
@@ -143,23 +144,23 @@ class AppDropdownButton extends StatelessWidget {
 }
 
 class AppTextFormField extends StatefulWidget {
-  const AppTextFormField({
-    Key? key,
-    this.controller,
-    this.keyboardType,
-    this.inputFormatters,
-    this.validator,
-    this.decoration,
-    this.hintText,
-    this.errorText,
-    this.isDense,
-    this.maxLines,
-    this.onChange,
-    this.hintTextStyle,
-    this.fillColor,
-    this.contentPadding,
-    this.textInputAction
-  }) : super(key: key);
+  const AppTextFormField(
+      {Key? key,
+      this.controller,
+      this.keyboardType,
+      this.inputFormatters,
+      this.validator,
+      this.decoration,
+      this.hintText,
+      this.errorText,
+      this.isDense,
+      this.maxLines,
+      this.onChange,
+      this.hintTextStyle,
+      this.fillColor,
+      this.contentPadding,
+      this.textInputAction})
+      : super(key: key);
 
   final TextEditingController? controller;
   final TextInputType? keyboardType;
@@ -372,17 +373,21 @@ class RoundedTextFormField extends StatelessWidget {
 }
 
 class AppCta extends StatelessWidget {
-  const AppCta(
-      {Key? key,
-      this.onTap,
-      this.text = "",
-      this.isLoading = false,
-      this.padding})
-      : super(key: key);
+  const AppCta({
+    Key? key,
+    this.onTap,
+    this.text = "",
+    this.isLoading = false,
+    this.padding,
+    this.width,
+    this.color
+  }) : super(key: key);
 
   final void Function()? onTap;
   final bool isLoading;
   final String text;
+  final double? width;
+  final Color? color;
 
   final EdgeInsetsGeometry? padding;
 
@@ -394,10 +399,10 @@ class AppCta extends StatelessWidget {
         onTap: !isLoading ? onTap : null,
         child: Container(
           height: 50,
-          width: double.infinity,
+          width: width ?? double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: AppColors.cyanBlue,
+            color: color ?? AppColors.cyanBlue,
           ),
           child: !isLoading
               ? Center(
@@ -442,6 +447,16 @@ class CommonWidgets {
             color: AppColors.whiteColor,
             strokeWidth: 2,
           )),
+    );
+  }
+
+  static snackBarWidget(BuildContext context, String text) {
+    return ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          text,
+        ),
+      ),
     );
   }
 }

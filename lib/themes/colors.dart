@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class AppColors {
+  static const Color colorBlack = Color(0xff000000);
   static const Color blackRussian = Color(0xff1C1C1E);
   static const Color blackMerlin = Color(0xff3A3A3C);
   static const Color secColor = Color(0xff525252);
@@ -17,4 +18,9 @@ class AppColors {
   static const primaryColor = Color(0xff079893);
   static const strongGreen = Color(0xff34C759);
   static const strongRed = Color(0xffFF3B30);
+  static const grey55 = Color(0xffAFB3B6);
+  static const grey60 = Color(0xffC7C7CC);
+  static const black30 = Color(0xff272727);
+  static const lightRed = Color(0xffFF6767);
+  static const colorGreen = Color(0xff66BDBA);
 }

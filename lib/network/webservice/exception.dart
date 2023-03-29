@@ -54,7 +54,7 @@ class BadRequestException extends AppException {
   BadRequestException(Response? response, String message)
       : super(response, message) {
     final responseStatus = response?.data as Map<String, dynamic>?;
-    this.message = responseStatus?[0] ?? "";
+    this.message = responseStatus?["status"] ?? "";
     statusCode = response?.statusCode;
   }
 }
