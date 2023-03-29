@@ -102,13 +102,13 @@ class _ExamsCrackedState extends State<ExamsCracked> {
   }
 
   onProceedTap(BuildContext context) {
-    List<TagsWithTeacherIdRequestModel> allRequestedTags = [];
+    List<TagModel> allRequestedTags = [];
     for (TagsResponseModel x in allSelectedTags) {
-      allRequestedTags.add(TagsWithTeacherIdRequestModel(
+      allRequestedTags.add(TagModel(
           tagCategory: x.tagCategory, tagName: x.tagName));
     }
     if (_specifyController.text.isNotEmpty) {
-      allRequestedTags.add(TagsWithTeacherIdRequestModel(
+      allRequestedTags.add(TagModel(
           tagCategory: "exams", tagName: _specifyController.text));
     }
     BlocProvider.of<ProfileBloc>(context)

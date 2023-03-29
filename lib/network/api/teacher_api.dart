@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:newversity/config/app_config.dart';
+import 'package:newversity/flow/teacher/availability/data/model/availability_model.dart';
+import 'package:newversity/flow/teacher/availability/data/model/fetch_availability_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_response_model.dart';
@@ -7,6 +9,7 @@ import 'package:newversity/flow/teacher/profile/model/tags_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_with_teacher_id_request_model.dart';
 import 'package:retrofit/http.dart';
 
+import '../../flow/teacher/availability/data/model/add_availability_request_model.dart';
 import '../../flow/teacher/data/model/teacher_details/teacher_details.dart';
 import '../../flow/teacher/profile/model/education_response_model.dart';
 
@@ -47,12 +50,27 @@ abstract class TeacherApi {
       );
   @POST("/teacher/tags")
   Future<void> saveListOfTags(
-      @Body() List<TagsWithTeacherIdRequestModel> lisOfTags,
+      @Body() TagRequestModel tagsList,
       @Header("teacherId") String teacherId
       );
 
   @GET("/teacher/education")
   Future<List<EducationResponseModel>?> getEducationsWithTeacherId(
       @Header("teacherId") String teacherId
+      );
+
+  @POST("/teacher/availability")
+  Future<void>? addAvailabilities(
+      @Body() AddAvailabilityRequestModel availabilityRequestModel
+      );
+
+  @GET("/teacher/availability")
+  Future<List<AvailabilityModel>?> fetchAvailability(
+      @Body() FetchAvailabilityRequestModel requestModel
+      );
+
+  @DELETE("/teacher/availability")
+  Future<void> removeAvailability(
+      @Header("id") String id
       );
 }

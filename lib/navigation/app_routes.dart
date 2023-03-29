@@ -25,5 +25,5 @@ class AppRoutes {
   //Room
   static const String roomPageRoute = "room_page_route";
 
-  static const String calender = "/calender";
+  static const String availabilityRoute = "/availability_route";
 }

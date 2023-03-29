@@ -5,3 +5,7 @@ enum UserType {
 enum Gender {
   male, female, other
 }
+
+enum SlotType {
+  short, long, both
+}

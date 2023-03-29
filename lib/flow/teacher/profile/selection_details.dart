@@ -94,13 +94,13 @@ class _SelectionDetailsState extends State<SelectionDetails> {
   }
 
   onProceedTap(BuildContext context) {
-    List<TagsWithTeacherIdRequestModel> allRequestedTags = [];
+    List<TagModel> allRequestedTags = [];
     for (TagsResponseModel x in allSelectedTags) {
-      allRequestedTags.add(TagsWithTeacherIdRequestModel(
+      allRequestedTags.add(TagModel(
           tagCategory: x.tagCategory, tagName: x.tagName));
     }
     if (_specifyController.text.isNotEmpty) {
-      allRequestedTags.add(TagsWithTeacherIdRequestModel(
+      allRequestedTags.add(TagModel(
           tagCategory: "guidance", tagName: _specifyController.text));
     }
     BlocProvider.of<ProfileBloc>(context)

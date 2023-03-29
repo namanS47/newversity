@@ -4,9 +4,9 @@ import 'package:newversity/flow/error_routes/error_route.dart';
 import 'package:newversity/flow/initial_route/app_bloc/app_bloc.dart';
 import 'package:newversity/flow/initial_route/ui/initial_route.dart';
 import 'package:newversity/flow/student/seesion/book_session.dart';
+import 'package:newversity/flow/teacher/availability/availability_bloc/availability_bloc.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
 import 'package:newversity/flow/teacher/presentation/TeacherHome.dart';
-import 'package:newversity/flow/teacher/presentation/calender.dart';
 import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_experience_and_qualification_route.dart';
 import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_personal_information_route.dart';
 import 'package:newversity/flow/teacher/profile/add_education.dart';
@@ -19,6 +19,7 @@ import '../flow/login/login_arguments.dart';
 import '../flow/login/presentation/login_screen.dart';
 import '../flow/login/presentation/otp_route.dart';
 import '../flow/student/home/ui/home_screen.dart';
+import '../flow/teacher/availability/availability_route.dart';
 import '../flow/teacher/profile/bloc/profile_bloc/profile_bloc.dart';
 
 class AppRouter {
@@ -73,12 +74,12 @@ class AppRouter {
 
     if (route.toString() == AppRoutes.addExperience) {
       return BlocProvider<ProfileBloc>(
-          create: (context) => ProfileBloc(), child:  AddExperience());
+          create: (context) => ProfileBloc(), child: AddExperience());
     }
 
     if (route.toString() == AppRoutes.addEducation) {
       return BlocProvider<ProfileBloc>(
-          create: (context) => ProfileBloc(), child:  const AddEducation());
+          create: (context) => ProfileBloc(), child: const AddEducation());
     }
 
     if (route.toString() == AppRoutes.teacherExperienceAndQualificationRoute) {
@@ -88,8 +89,11 @@ class AppRouter {
     if (route.toString() == AppRoutes.roomPageRoute) {
       return const RoomPage();
     }
-    if (route.toString() == AppRoutes.calender) {
-      return const Calender();
+    if (route.toString() == AppRoutes.availabilityRoute) {
+      return BlocProvider<AvailabilityBloc>(
+        create: (context) => AvailabilityBloc(),
+        child: const AvailabilityRoute(),
+      );
     }
     if (route.toString() == AppRoutes.somethingWentWrongRoute) {
       return const SomethingWentWrongRoute();
