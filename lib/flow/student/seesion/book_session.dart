@@ -190,7 +190,7 @@ class _BookSessionState extends State<BookSession> {
                     ),
                   ),
                 )
-              : Container(
+              : SizedBox(
                   height: 38,
                   child: Center(
                     child: Text(

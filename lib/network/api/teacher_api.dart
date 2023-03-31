@@ -23,7 +23,7 @@ abstract class TeacherApi {
   }
 
   @GET("/teacher")
-  Future<TeacherDetails?> getTeacherDetails(
+  Future<TeacherDetails> getTeacherDetails(
       @Header("teacherId") String teacherId);
 
   @POST("/addTeacher")
@@ -38,6 +38,9 @@ abstract class TeacherApi {
   
   @GET("/tags")
   Future<List<TagsResponseModel>?> getTags();
+
+  @GET("/teacher/tags")
+  Future<List<TagsResponseModel>?> getAllTagsByTeacherId(@Header("teacherId") String teacherId);
 
   @GET("/teacher/experience")
   Future<List<ExperienceResponseModel>?> getExperiencesWithTeacherId(

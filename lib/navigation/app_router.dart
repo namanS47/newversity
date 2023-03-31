@@ -4,14 +4,22 @@ import 'package:newversity/flow/error_routes/error_route.dart';
 import 'package:newversity/flow/initial_route/app_bloc/app_bloc.dart';
 import 'package:newversity/flow/initial_route/ui/initial_route.dart';
 import 'package:newversity/flow/student/seesion/book_session.dart';
+import 'package:newversity/flow/teacher/bookings/bloc/session_details_bloc/session_details_bloc.dart';
+import 'package:newversity/flow/teacher/bookings/view/session_details.dart';
 import 'package:newversity/flow/teacher/availability/availability_bloc/availability_bloc.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
+import 'package:newversity/flow/teacher/index/bloc/index_bloc.dart';
+import 'package:newversity/flow/teacher/index/view/index_page.dart';
+import 'package:newversity/flow/teacher/presentation/calender.dart';
 import 'package:newversity/flow/teacher/presentation/TeacherHome.dart';
 import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_experience_and_qualification_route.dart';
 import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_personal_information_route.dart';
 import 'package:newversity/flow/teacher/profile/add_education.dart';
 import 'package:newversity/flow/teacher/profile/add_experience.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
 import 'package:newversity/flow/teacher/profile/profiel_dashboard.dart';
+import 'package:newversity/flow/teacher/profile/view/profile.dart';
+import 'package:newversity/flow/teacher/profile/view/profile_edit_option.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/room/room.dart';
 
@@ -61,15 +69,37 @@ class AppRouter {
       );
     }
     if (route.toString() == AppRoutes.teacherHomePageRoute) {
-      return const TeacherHome();
+      return BlocProvider<IndexBloc>(
+        create: (context) => IndexBloc(),
+        child: const IndexPage(),
+      );
     }
     if (route.toString() == AppRoutes.bookSession) {
       return const BookSession();
     }
 
+    if (route.toString() == AppRoutes.profileEdit) {
+      return const ProfileEditOption();
+    }
+    if (route.toString() == AppRoutes.profileScreen) {
+      return BlocProvider<ProfileBloc>(
+          create: (context) => ProfileBloc(), child: const ProfileScreen());
+    }
+
     if (route.toString() == AppRoutes.teacherProfileDashBoard) {
       return BlocProvider<ProfileBloc>(
-          create: (context) => ProfileBloc(), child: const ProfileDashboard());
+          create: (context) => ProfileBloc(),
+          child: ProfileDashboard(
+            profileDashboardArguments: params as ProfileDashboardArguments,
+          ));
+    }
+
+    if (route.toString() == AppRoutes.sessionDetails) {
+      return BlocProvider<SessionDetailsBloc>(
+          create: (context) => SessionDetailsBloc(),
+          child: SessionDetails(
+            isPrevious: params as bool,
+          ));
     }
 
     if (route.toString() == AppRoutes.addExperience) {

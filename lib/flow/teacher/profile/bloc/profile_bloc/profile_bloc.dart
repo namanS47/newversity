@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
@@ -23,6 +24,8 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
   double sliderPadding = 0.0;
   String teacherId = "";
   int selectedSkinTone = 0;
+  int selctedProfileTab = 0;
+  List<String> listOfProfileSection = ["Overview", "Review"];
   List<Widget> profileCardList = <Widget>[];
   final TeacherBaseRepository _teacherBaseRepository =
       DI.inject<TeacherBaseRepository>();
@@ -30,8 +33,11 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
   ProfileBloc() : super(ProfileInitial()) {
     on<ChangeProfileCardIndexEvent>((event, emit) async {
       changeIndex(isBack: event.isBack);
-      print("naman1---");
       emit(ProfileCardChangedState());
+    });
+
+    on<ChangeProfileTab>((event, emit) async {
+      updateProfileTab(event, emit);
     });
 
     on<FetchTeachersExperienceEvent>((event, emit) async {
@@ -64,10 +70,60 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
       await getAllTags(event, emit);
     });
 
+    on<FetchTagEventByTeacherId>((event, emit) async {
+      teacherId = CommonUtils().getLoggedInUser();
+      await getAllTagsByTeacherId(event, emit);
+    });
+
     on<FetchMentorshipTag>((event, emit) async {
       teacherId = CommonUtils().getLoggedInUser();
       await getAllTags(event, emit);
     });
+
+    on<FetchTeacherDetails>((event, emit) async {
+      teacherId = CommonUtils().getLoggedInUser();
+      await getTeacherDetails(event, emit);
+    });
+  }
+
+  Future<void> updateProfileTab(event, emit) async {
+    if (event is ChangeProfileTab) {
+      selctedProfileTab = event.index;
+      emit(UpdateProfileState());
+    }
+  }
+
+  Future<void> getAllTagsByTeacherId(event, emit) async {
+    List<TagsResponseModel> listOfExperties = [];
+    List<TagsResponseModel> listOfMentorship = [];
+    try {
+      emit(FetchingTagsWithTeacherId());
+      final response =
+          await _teacherBaseRepository.fetchAllTagsWithTeacherId(teacherId);
+      if (response != null) {
+        for (TagsResponseModel x in response) {
+          if (x.tagCategory == "exam") {
+            listOfExperties.add(x);
+          } else {
+            listOfMentorship.add(x);
+          }
+        }
+        emit(FetchedExpertiesState(listOfTags: listOfExperties));
+        emit(FetchedMentorsipState(listOfTags: listOfMentorship));
+      }
+    } on SocketException catch (e) {
+      emit(FetchingTagsWithTeacherIdFailure());
+    }
+  }
+
+  Future<void> getTeacherDetails(event, emit) async {
+    try {
+      final response =
+          await _teacherBaseRepository.getTeachersDetail(teacherId);
+      emit(FetchedTeachersProfile(teacherDetails: response));
+    } on SocketException {
+      emit(FetchingTeachersProfileFailure());
+    }
   }
 
   Future<void> getAllTags(event, emit) async {
@@ -83,10 +139,8 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
               allTags.add(x);
             }
           }
-          allTags.add(TagsResponseModel(
-            tagName: "others",
-            tagCategory: "exams"
-          ));
+          allTags
+              .add(TagsResponseModel(tagName: "others", tagCategory: "exams"));
           emit(FetchedExamTagsState(listOfTags: allTags));
         } else if (event is FetchMentorshipTag) {
           for (TagsResponseModel x in response) {
@@ -94,10 +148,8 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
               allTags.add(x);
             }
           }
-          allTags.add(TagsResponseModel(
-              tagName: "others",
-              tagCategory: "guidance"
-          ));
+          allTags.add(
+              TagsResponseModel(tagName: "others", tagCategory: "guidance"));
           emit(FetchedMentorshipTagsState(listOfMentorshipTags: allTags));
         }
       }
@@ -109,7 +161,7 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
   Future<void> saveTagWithTeacherId(event, emit) async {
     try {
       emit(AddingTagsState());
-      if(event is SaveTagsEvents){
+      if (event is SaveTagsEvents) {
         await _teacherBaseRepository.saveListOfTags(
             event.listOfTags, teacherId);
       }

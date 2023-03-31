@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
 import 'package:newversity/navigation/app_routes.dart';
 
 import '../../../common/common_widgets.dart';
@@ -10,7 +11,9 @@ import 'model/tags_response_model.dart';
 import 'model/tags_with_teacher_id_request_model.dart';
 
 class SelectionDetails extends StatefulWidget {
-  const SelectionDetails({Key? key}) : super(key: key);
+  ProfileDashboardArguments profileDashboardArguments;
+  SelectionDetails({Key? key, required this.profileDashboardArguments})
+      : super(key: key);
 
   @override
   State<SelectionDetails> createState() => _SelectionDetailsState();
@@ -83,7 +86,9 @@ class _SelectionDetailsState extends State<SelectionDetails> {
                 padding: const EdgeInsets.all(8.0),
                 child: AppCta(
                   onTap: () => onProceedTap(context),
-                  text: "Proceed",
+                  text: !widget.profileDashboardArguments.isNewUser
+                      ? AppStrings.update
+                      : AppStrings.proceed,
                 ),
               )
             ],
@@ -173,9 +178,8 @@ class _SelectionDetailsState extends State<SelectionDetails> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-        allMentorsTags[curIndex].tagName ?? "",
-        style:
-            const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+            allMentorsTags[curIndex].tagName ?? "",
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
           ),
         ),
       ),

@@ -7,6 +7,7 @@ class AppStrings {
   static const breakBarrier =
       "Breaking barriers and providing flexibility to your mentorship.";
   static const proceed = "Proceed";
+  static const update = "Update";
   static const bookSession = "Book  Your Session";
   static const addExperience = "Add Experience";
   static const addEducation = "Add Education";
@@ -59,8 +60,17 @@ class AppStrings {
   static const fifteenMin = "15 mins";
   static const thirtyMin = "30 mins";
   static const location = "Location";
+  static const myBookings = "My Bookings";
   static const experience = "Experience";
+  static const completeProfile = "Complete profile";
+  static const watchVideo = "Watch video";
+  static const setAvailability = "Set your availability";
+  static const howItWorks = "How it works?";
+  static const loremTex = "lorem ipsum vbsjdvb bdvn jsjkxk afh is sjksdfsuidjcbi";
   static const education = "Education";
   static const enterOtp = "Please enter the 6-digit code sent to";
   static const correctOtp = "Please enter correct otp";
+  static const emptyProfile = "Your profile is looking empty!";
+  static const addingDetailsInst =
+      "Add some details and personalize your experience. Complete it now and start enjoying our app!";
 }

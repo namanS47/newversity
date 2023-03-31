@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/common_utils.dart';
 import '../../../common/common_widgets.dart';
-import '../../../navigation/app_routes.dart';
 import '../../../resources/images.dart';
 import '../../../themes/strings.dart';
 import '../../../utils/utils.dart';
@@ -16,7 +16,10 @@ import '../data/model/teacher_details/teacher_details.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
 class PersonalInformation extends StatefulWidget {
-  const PersonalInformation({Key? key}) : super(key: key);
+  ProfileDashboardArguments profileDashboardArguments;
+
+  PersonalInformation({Key? key, required this.profileDashboardArguments})
+      : super(key: key);
 
   @override
   State<PersonalInformation> createState() => _PersonalInformationState();
@@ -155,7 +158,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
   Widget getProceedCTA(BuildContext context) {
     return AppCta(
       onTap: () => onTapContinueButton(context),
-      text: AppStrings.proceed,
+      text: !widget.profileDashboardArguments.isNewUser
+          ? AppStrings.update
+          : AppStrings.proceed,
       isLoading: isLoading,
     );
   }

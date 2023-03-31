@@ -1,16 +1,11 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:newversity/common/common_utils.dart';
 import 'package:newversity/di/di_initializer.dart';
-import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/network/webservice/exception.dart';
 import 'package:newversity/storage/preferences.dart';
-import 'package:newversity/utils/string_extensions.dart';
 
 import '../../../network/api/teacher_api.dart';
-import '../../teacher/data/model/teacher_details/teacher_details.dart';
 
 part 'app_event.dart';
 
@@ -52,7 +47,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       }
     }
   }
-
 }
 
 // String getTeacherRoute(TeacherDetails teacherDetails) {

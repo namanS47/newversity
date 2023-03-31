@@ -7,20 +7,20 @@ class TeacherDetails {
   String? teacherId;
   String? name;
   String? mobileNumber;
-  String? email;
   String? introVideoUrl;
   String? location;
-  String? gender;
   String? title;
   String? info;
+  String? profileUrl;
+  String? profilePictureUrl;
+  List<String>? language;
+  String? email;
+  String? gender;
   List<String>? uploadedDocuments;
   List<String>? tags;
   String? education;
   String? designation;
-  String? profileUrl;
-  String? profilePictureUrl;
   Map<String, double>? sessionPricing;
-  String? language;
   bool? isNew;
 
   TeacherDetails({

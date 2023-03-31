@@ -28,13 +28,16 @@ class _AddExperienceState extends State<AddExperience> {
 
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
+
   final List<String> locationTypeList = ['Home', 'Office'];
   String? locationTypeValue;
   final List<String> employmentTypeList = ['Salaried', 'Self Employed'];
+
   String? employmentTypeValue;
   bool showErrorText = false;
   bool isLoading = false;
   bool isCurrentlyWorkingHere = false;
+
   DateTime? selectedStartDate;
   DateTime? selectedEndDate;
 
@@ -177,9 +180,9 @@ class _AddExperienceState extends State<AddExperience> {
             title: _titleController.text,
             employmentType: employmentTypeValue,
             companyName: _companyController.text,
+            endDate: selectedEndDate,
             location: locationTypeValue,
             startDate: selectedStartDate,
-            endDate: selectedEndDate,
             currentlyWorkingHere: isCurrentlyWorkingHere,
           ),
         ),
