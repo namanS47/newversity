@@ -668,7 +668,7 @@ class HomeAppBar extends PreferredSize {
           height: 70,
           child: Row(
             children: [
-              getProfileImage(),
+              getProfileImage(context),
               const SizedBox(
                 width: 10,
               ),
@@ -702,11 +702,18 @@ class HomeAppBar extends PreferredSize {
     return const AppImage(image: ImageAsset.notification);
   }
 
-  Widget getProfileImage() {
-    return const CircleAvatar(
-      radius: 25,
-      child: AppImage(
-        image: ImageAsset.blueAvatar,
+  navigateToProfileScreen(BuildContext context) {
+    Navigator.of(context).pushNamed(AppRoutes.profileScreen);
+  }
+
+  Widget getProfileImage(BuildContext context) {
+    return GestureDetector(
+      onTap: () => navigateToProfileScreen(context),
+      child: const CircleAvatar(
+        radius: 25,
+        child: AppImage(
+          image: ImageAsset.blueAvatar,
+        ),
       ),
     );
   }

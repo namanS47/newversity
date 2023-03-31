@@ -15,6 +15,7 @@ class AppColors {
   static const strongCyan = Color(0xff079893);
   static const lightCyan = Color(0xff9BD6D4);
   static const availCyan = Color(0xff56CEFF);
+  static const ligCyan = Color(0xffDAF0EF);
   static const worksColor = Color(0xffDBFDF5);
   static const whiteColor = Color(0xffFFFFFF);
   static const redColorShadow400 = Color(0xffef5350);

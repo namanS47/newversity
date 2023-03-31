@@ -14,8 +14,10 @@ import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_ex
 import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_personal_information_route.dart';
 import 'package:newversity/flow/teacher/profile/add_education.dart';
 import 'package:newversity/flow/teacher/profile/add_experience.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
 import 'package:newversity/flow/teacher/profile/profiel_dashboard.dart';
 import 'package:newversity/flow/teacher/profile/view/profile.dart';
+import 'package:newversity/flow/teacher/profile/view/profile_edit_option.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/room/room.dart';
 
@@ -72,13 +74,21 @@ class AppRouter {
     if (route.toString() == AppRoutes.bookSession) {
       return const BookSession();
     }
+
+    if (route.toString() == AppRoutes.profileEdit) {
+      return const ProfileEditOption();
+    }
     if (route.toString() == AppRoutes.profileScreen) {
-      return const ProfileScreen();
+      return BlocProvider<ProfileBloc>(
+          create: (context) => ProfileBloc(), child: const ProfileScreen());
     }
 
     if (route.toString() == AppRoutes.teacherProfileDashBoard) {
       return BlocProvider<ProfileBloc>(
-          create: (context) => ProfileBloc(), child: const ProfileDashboard());
+          create: (context) => ProfileBloc(),
+          child: ProfileDashboard(
+            profileDashboardArguments: params as ProfileDashboardArguments,
+          ));
     }
 
     if (route.toString() == AppRoutes.sessionDetails) {

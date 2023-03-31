@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
 import 'package:newversity/flow/teacher/profile/exam_cracked.dart';
 import 'package:newversity/flow/teacher/profile/experience_and_education.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
 import 'package:newversity/flow/teacher/profile/personal_info.dart';
 import 'package:newversity/flow/teacher/profile/selection_details.dart';
 import 'package:newversity/navigation/app_routes.dart';
@@ -14,13 +15,23 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
 class ProfileDashboard extends StatefulWidget {
-  const ProfileDashboard({Key? key}) : super(key: key);
+  ProfileDashboardArguments profileDashboardArguments;
+  ProfileDashboard({Key? key, required this.profileDashboardArguments})
+      : super(key: key);
 
   @override
   State<ProfileDashboard> createState() => _ProfileDashboardState();
 }
 
 class _ProfileDashboardState extends State<ProfileDashboard> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<ProfileBloc>().currentProfileStep =
+        widget.profileDashboardArguments.directedIndex;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,10 +43,16 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
             context.read<ProfileBloc>().profileCardList = [
               BlocProvider<TeacherDetailsBloc>(
                   create: (context) => TeacherDetailsBloc(),
-                  child: const PersonalInformation()),
-              const ExperienceAndEducation(),
+                  child: PersonalInformation(
+                    profileDashboardArguments: widget.profileDashboardArguments,
+                  )),
+              ExperienceAndEducation(
+                profileDashboardArguments: widget.profileDashboardArguments,
+              ),
               const ExamsCracked(),
-              const SelectionDetails(),
+              SelectionDetails(
+                profileDashboardArguments: widget.profileDashboardArguments,
+              ),
             ];
           }
           return SafeArea(
@@ -51,7 +68,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Visibility(
-                        visible:
+                        visible: !widget.profileDashboardArguments.isNewUser ||
                             !(context.read<ProfileBloc>().currentProfileStep ==
                                 1),
                         child: GestureDetector(

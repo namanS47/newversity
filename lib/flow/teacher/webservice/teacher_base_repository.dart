@@ -60,7 +60,17 @@ class TeacherBaseRepository extends BaseRepository {
     } on DioError catch (exception) {
       AppException.forException(exception.response);
     }
-    print("getting output -- $listOfTags");
+    return listOfTags;
+  }
+
+  Future<List<TagsResponseModel>?> fetchAllTagsWithTeacherId(
+      String teacherId) async {
+    List<TagsResponseModel>? listOfTags = [];
+    try {
+      listOfTags = await _teacherApi.getAllTagsByTeacherId(teacherId);
+    } on DioError catch (exception) {
+      AppException.forException(exception.response);
+    }
     return listOfTags;
   }
 
@@ -86,5 +96,15 @@ class TeacherBaseRepository extends BaseRepository {
       AppException.forException(exception.response);
     }
     return listOfEducation;
+  }
+
+  Future<TeacherDetails> getTeachersDetail(String teacherId) async {
+    TeacherDetails response = TeacherDetails();
+    try {
+      response = await _teacherApi.getTeacherDetails(teacherId);
+    } on DioError catch (exception) {
+      AppException.forException(exception.response);
+    }
+    return response;
   }
 }

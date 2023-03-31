@@ -7,6 +7,7 @@ class AppStrings {
   static const breakBarrier =
       "Breaking barriers and providing flexibility to your mentorship.";
   static const proceed = "Proceed";
+  static const update = "Update";
   static const bookSession = "Book  Your Session";
   static const addExperience = "Add Experience";
   static const addEducation = "Add Education";

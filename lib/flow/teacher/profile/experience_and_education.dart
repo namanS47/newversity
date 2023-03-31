@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_response_model.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
 import 'package:newversity/navigation/app_routes.dart';
+import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/utils/date_time_utils.dart';
 
@@ -12,7 +14,8 @@ import 'bloc/profile_bloc/profile_bloc.dart';
 import 'model/education_response_model.dart';
 
 class ExperienceAndEducation extends StatefulWidget {
-  const ExperienceAndEducation({Key? key}) : super(key: key);
+  ProfileDashboardArguments profileDashboardArguments;
+   ExperienceAndEducation({Key? key,required this.profileDashboardArguments}) : super(key: key);
 
   @override
   State<ExperienceAndEducation> createState() => _ExperienceAndEducationState();
@@ -96,7 +99,9 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: AppCta(
-            text: "Proceed",
+            text: !widget.profileDashboardArguments.isNewUser
+                ? AppStrings.update
+                : AppStrings.proceed,
             isLoading: false,
             onTap: () => onTapContinueButton(context),
           ),
@@ -130,10 +135,7 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
         const CircleAvatar(
           radius: 25,
           backgroundColor: AppColors.lightCyan,
-          child: Icon(
-            Icons.add_business_outlined,
-            color: AppColors.strongCyan,
-          ),
+          child: AppImage(image: ImageAsset.education),
         ),
         const SizedBox(
           width: 10,
@@ -196,10 +198,7 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
         const CircleAvatar(
           radius: 25,
           backgroundColor: AppColors.lightCyan,
-          child: Icon(
-            Icons.card_travel,
-            color: AppColors.strongCyan,
-          ),
+          child: AppImage(image: ImageAsset.experience),
         ),
         const SizedBox(
           width: 10,
