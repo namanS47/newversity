@@ -4,14 +4,18 @@ import 'package:newversity/flow/error_routes/error_route.dart';
 import 'package:newversity/flow/initial_route/app_bloc/app_bloc.dart';
 import 'package:newversity/flow/initial_route/ui/initial_route.dart';
 import 'package:newversity/flow/student/seesion/book_session.dart';
+import 'package:newversity/flow/teacher/availability/availability_bloc/availability_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/bloc/session_details_bloc/session_details_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/view/session_details.dart';
-import 'package:newversity/flow/teacher/availability/availability_bloc/availability_bloc.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
 import 'package:newversity/flow/teacher/index/bloc/index_bloc.dart';
+import 'package:newversity/flow/teacher/index/view/bank_screen.dart';
+import 'package:newversity/flow/teacher/index/view/faqs.dart';
+import 'package:newversity/flow/teacher/index/view/help_and_support.dart';
 import 'package:newversity/flow/teacher/index/view/index_page.dart';
-import 'package:newversity/flow/teacher/presentation/calender.dart';
-import 'package:newversity/flow/teacher/presentation/TeacherHome.dart';
+import 'package:newversity/flow/teacher/index/view/privacy_and_policy.dart';
+import 'package:newversity/flow/teacher/index/view/share.dart';
+import 'package:newversity/flow/teacher/index/view/terms_and_condition.dart';
 import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_experience_and_qualification_route.dart';
 import 'package:newversity/flow/teacher/presentation/onboarding_route/teacher_personal_information_route.dart';
 import 'package:newversity/flow/teacher/profile/add_education.dart';
@@ -28,6 +32,7 @@ import '../flow/login/presentation/login_screen.dart';
 import '../flow/login/presentation/otp_route.dart';
 import '../flow/student/home/ui/home_screen.dart';
 import '../flow/teacher/availability/availability_route.dart';
+import '../flow/teacher/index/view/settings.dart';
 import '../flow/teacher/profile/bloc/profile_bloc/profile_bloc.dart';
 
 class AppRouter {
@@ -76,6 +81,27 @@ class AppRouter {
     }
     if (route.toString() == AppRoutes.bookSession) {
       return const BookSession();
+    }
+    if (route.toString() == AppRoutes.share) {
+      return const ShareScreen();
+    }
+    if (route.toString() == AppRoutes.bank) {
+      return const BankScreen();
+    }
+    if (route.toString() == AppRoutes.settings) {
+      return const Settings();
+    }
+    if (route.toString() == AppRoutes.privacyPolicy) {
+      return const PrivacyAndPolicy();
+    }
+    if (route.toString() == AppRoutes.termsAndCondition) {
+      return const TermsAndCondition();
+    }
+    if (route.toString() == AppRoutes.helpAndSupport) {
+      return const HelpAndSupportScreen();
+    }
+    if (route.toString() == AppRoutes.faqs) {
+      return const FaqsScreen();
     }
 
     if (route.toString() == AppRoutes.profileEdit) {

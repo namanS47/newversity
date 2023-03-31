@@ -15,7 +15,8 @@ import 'model/education_response_model.dart';
 
 class ExperienceAndEducation extends StatefulWidget {
   ProfileDashboardArguments profileDashboardArguments;
-   ExperienceAndEducation({Key? key,required this.profileDashboardArguments}) : super(key: key);
+  ExperienceAndEducation({Key? key, required this.profileDashboardArguments})
+      : super(key: key);
 
   @override
   State<ExperienceAndEducation> createState() => _ExperienceAndEducationState();
@@ -240,14 +241,18 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
   }
 
   Widget getEducationalDuration(int index) {
-    String duraionString = DateTimeUtils.getEmploymentDurationDateTime(
-        listOfEducationModel[index].startDate!);
+    String duraionString = listOfEducationModel[index].startDate != null
+        ? DateTimeUtils.getEmploymentDurationDateTime(
+            listOfEducationModel[index].startDate!)
+        : "";
     duraionString += "-";
     if (listOfEducationModel[index].currentlyWorkingHere == true) {
       duraionString += "Present";
     } else {
-      duraionString += DateTimeUtils.getEmploymentDurationDateTime(
-          listOfEducationModel[index].endDate!);
+      duraionString += listOfEducationModel[index].endDate != null
+          ? DateTimeUtils.getEmploymentDurationDateTime(
+              listOfEducationModel[index].endDate!)
+          : "";
     }
     return Text(
       duraionString,

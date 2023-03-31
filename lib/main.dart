@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       home: const LoginScreen(),
       onGenerateRoute: AppRouter().route,
-      initialRoute: AppRoutes.profileScreen,
+      initialRoute: AppRoutes.initialRoute,
     );
   }
 }

@@ -30,6 +30,15 @@ class ImageAsset {
   static const String bookings = '${_svgPath}bookings.svg';
   static const String star = '${_svgPath}star.svg';
 
+  // Drawer strings
+  static const user = "${_svgPath}user.svg";
+  static const bank = "${_svgPath}bank.svg";
+  static const settings = "${_svgPath}settings.svg";
+  static const privacyPolicy = "${_svgPath}privacy.svg";
+  static const termsAndCondition = "${_svgPath}documents.svg";
+  static const helpAndSupport = "${_svgPath}help.svg";
+  static const faqs = "FAQ";
+
   //PNG Path
   static const mentor = "${_pngPath}mentor.jpeg";
 }

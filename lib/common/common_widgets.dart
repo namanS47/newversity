@@ -519,7 +519,8 @@ class AppCta extends StatelessWidget {
     this.isLoading = false,
     this.padding,
     this.width,
-    this.color
+    this.color,
+    this.isEnable = true,
   }) : super(key: key);
 
   final void Function()? onTap;
@@ -527,6 +528,7 @@ class AppCta extends StatelessWidget {
   final String text;
   final double? width;
   final Color? color;
+  final bool isEnable;
 
   final EdgeInsetsGeometry? padding;
 
@@ -541,7 +543,7 @@ class AppCta extends StatelessWidget {
           width: width ?? double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: color ?? AppColors.cyanBlue,
+            color: isEnable ? color ?? AppColors.cyanBlue : AppColors.grey32,
           ),
           child: !isLoading
               ? Center(

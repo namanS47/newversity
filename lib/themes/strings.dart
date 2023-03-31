@@ -66,11 +66,21 @@ class AppStrings {
   static const watchVideo = "Watch video";
   static const setAvailability = "Set your availability";
   static const howItWorks = "How it works?";
-  static const loremTex = "lorem ipsum vbsjdvb bdvn jsjkxk afh is sjksdfsuidjcbi";
+  static const loremTex =
+      "lorem ipsum vbsjdvb bdvn jsjkxk afh is sjksdfsuidjcbi";
   static const education = "Education";
   static const enterOtp = "Please enter the 6-digit code sent to";
   static const correctOtp = "Please enter correct otp";
   static const emptyProfile = "Your profile is looking empty!";
   static const addingDetailsInst =
       "Add some details and personalize your experience. Complete it now and start enjoying our app!";
+
+  // Drawer strings
+  static const share = "Share your profile";
+  static const bank = "Bank account";
+  static const settings = "Settings";
+  static const privacyPolicy = "Privacy Policy";
+  static const termsAndCondition = "Terms & Conditions";
+  static const helpAndSupport = "Help & support";
+  static const faqs = "FAQ";
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:newversity/flow/teacher/availability/availabality.dart';
+import 'package:newversity/flow/teacher/availability/availability_route.dart';
 import 'package:newversity/flow/teacher/bookings/bloc/teacher_bookings_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/view/bookings.dart';
 import 'package:newversity/resources/images.dart';
 
+import '../../availability/availability_bloc/availability_bloc.dart';
 import '../../home/home.dart';
 
 part 'index_event.dart';
@@ -19,7 +20,20 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
       create: (context) => TeacherBookingsBloc(),
       child: const Bookings(),
     ),
-    const Availability()
+    BlocProvider<AvailabilityBloc>(
+      create: (context) => AvailabilityBloc(),
+      child: const AvailabilityRoute(),
+    )
+  ];
+
+  List<String> drawerOptions = <String>[
+    ImageAsset.share,
+    ImageAsset.bank,
+    ImageAsset.settings,
+    ImageAsset.privacyPolicy,
+    ImageAsset.termsAndCondition,
+    ImageAsset.helpAndSupport,
+    ImageAsset.faqs,
   ];
 
   List<Map<String, String>> pagesNameWithImageIcon = <Map<String, String>>[

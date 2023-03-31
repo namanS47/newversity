@@ -28,22 +28,28 @@ class _ProfileEditOptionState extends State<ProfileEditOption> {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    AppImage(
-                      image: ImageAsset.arrowBack,
+                  children: [
+                    const SizedBox(
+                      height: 10,
                     ),
-                    SizedBox(
+                    GestureDetector(
+                      onTap: () => {Navigator.pop(context)},
+                      child: const AppImage(
+                        image: ImageAsset.arrowBack,
+                      ),
+                    ),
+                    const SizedBox(
                       height: 20,
                     ),
-                    AppText(
+                    const AppText(
                       "Hi Akshat Kamesara",
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    AppText(
+                    const AppText(
                       "You can edit your personal details here by step wise",
                       fontSize: 12,
                       fontWeight: FontWeight.w400,

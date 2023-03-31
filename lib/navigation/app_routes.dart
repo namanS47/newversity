@@ -25,6 +25,15 @@ class AppRoutes {
   static const String addExperience = "add_experience";
   static const String addEducation = "add_education";
 
+  // Drawer screen constant
+  static const share = "share_profile";
+  static const bank = "bank_account";
+  static const settings = "settings";
+  static const privacyPolicy = "privacy_policy";
+  static const termsAndCondition = "terms_condition";
+  static const helpAndSupport = "help_support";
+  static const faqs = "faqs";
+
   //Room
   static const String roomPageRoute = "room_page_route";
 

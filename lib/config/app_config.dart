@@ -1,4 +1,3 @@
-
 import 'package:firebase_core/firebase_core.dart';
 
 import 'environment/base_app_config.dart';
@@ -6,6 +5,7 @@ import 'environment/prod_app_config.dart';
 import 'environment/stage_app_config.dart';
 
 enum Environment { stag, prod }
+
 enum BuildType { release, debug, profile }
 
 class AppConfig {
@@ -27,9 +27,7 @@ class AppConfig {
     AppConfig.environment = environment;
   }
 
-  static initAnalytics() {
-
-  }
+  static initAnalytics() {}
 
   static setUserPropertiesForSession(String authToken) {
     AppConfig.authToken = authToken;
@@ -61,13 +59,14 @@ class AppConfig {
   }
 }
 
-
 class EnvironmentValues {
   //Staging
-  static const String newversityStagingUrl = "http://newversity-env.eba-ih8qdftv.us-east-2.elasticbeanstalk.com/";
+  static const String newversityStagingUrl =
+      "http://newversityupdated-env.eba-dqvzpbuf.us-east-2.elasticbeanstalk.com/";
+
   // static const String newversityStagingUrl = "http://10.154.22.161:8080/";
 
-
   // Production
-  static const String newversityProductionUrl = "http://newversity-env.eba-ih8qdftv.us-east-2.elasticbeanstalk.com/";
+  static const String newversityProductionUrl =
+      "http://newversityupdated-env.eba-dqvzpbuf.us-east-2.elasticbeanstalk.com/";
 }

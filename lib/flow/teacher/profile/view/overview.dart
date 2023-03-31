@@ -205,7 +205,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getExperienceAndEducation() {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      height: 200,
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(20),
@@ -228,6 +228,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getEducationLayout() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         getHeader("Education"),
         const SizedBox(
@@ -239,60 +240,57 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getEducationView(int index) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const CircleAvatar(
-          radius: 25,
-          backgroundColor: AppColors.lightCyan,
-          child: AppImage(image: ImageAsset.education),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              getEducationalInstitute(index),
-              const SizedBox(
-                height: 5,
-              ),
-              getStream(index),
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
-                children: [
-                  getEducationalDuration(index),
-                  const Spacer(),
-                  getCGPA(index),
-                ],
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-            ],
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const CircleAvatar(
+            radius: 25,
+            backgroundColor: AppColors.lightCyan,
+            child: AppImage(image: ImageAsset.education),
           ),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        getCGPA(index),
-      ],
+          const SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                getEducationalInstitute(index),
+                const SizedBox(
+                  height: 5,
+                ),
+                getStream(index),
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    getEducationalDuration(index),
+                    getCGPA(index),
+                  ],
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 60,
+          ),
+        ],
+      ),
     );
   }
 
   Widget getCGPA(int index) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Text(
-        "CGPA-${listOfEducationModel[index].grade}",
-        style: const TextStyle(
-            color: AppColors.secColor,
-            fontSize: 12,
-            fontWeight: FontWeight.w400),
-      ),
+    return AppText(
+      "CGPA-${listOfEducationModel[index].grade}",
+      fontSize: 12,
+      fontWeight: FontWeight.w400,
     );
   }
 
@@ -304,14 +302,18 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getEducationalDuration(int index) {
-    String duraionString = DateTimeUtils.getEmploymentDurationDateTime(
-        listOfEducationModel[index].startDate!);
+    String duraionString = listOfEducationModel[index].startDate != null
+        ? DateTimeUtils.getEmploymentDurationDateTime(
+            listOfEducationModel[index].startDate!)
+        : "";
     duraionString += "-";
     if (listOfEducationModel[index].currentlyWorkingHere == true) {
       duraionString += "Present";
     } else {
-      duraionString += DateTimeUtils.getEmploymentDurationDateTime(
-          listOfEducationModel[index].endDate!);
+      duraionString += listOfEducationModel[index].endDate != null
+          ? DateTimeUtils.getEmploymentDurationDateTime(
+              listOfEducationModel[index].endDate!)
+          : "";
     }
     return Text(
       duraionString,
@@ -327,6 +329,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getEducation() {
+    print("nskjns - ${listOfEducationModel.length}");
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Wrap(
@@ -403,48 +406,52 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getExperienceView(int index) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const CircleAvatar(
-          radius: 25,
-          backgroundColor: AppColors.lightCyan,
-          child: AppImage(image: ImageAsset.experience),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              getDesignation(index),
-              const SizedBox(
-                height: 5,
-              ),
-              getInstitute(index),
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
-                children: [
-                  getDuration(index),
-                  const Spacer(),
-                  getMode(index),
-                ],
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-            ],
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const CircleAvatar(
+            radius: 25,
+            backgroundColor: AppColors.lightCyan,
+            child: AppImage(image: ImageAsset.experience),
           ),
-        ),
-      ],
+          const SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                getDesignation(index),
+                const SizedBox(
+                  height: 5,
+                ),
+                getInstitute(index),
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    getDuration(index),
+                    getMode(index),
+                  ],
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget getExperienceLayout() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         getHeader("Experience"),
         const SizedBox(
