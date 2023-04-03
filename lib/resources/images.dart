@@ -37,7 +37,14 @@ class ImageAsset {
   static const privacyPolicy = "${_svgPath}privacy.svg";
   static const termsAndCondition = "${_svgPath}documents.svg";
   static const helpAndSupport = "${_svgPath}help.svg";
-  static const faqs = "FAQ";
+  static const faqs = "${_svgPath}faqs.svg";
+  static const close = "${_svgPath}close.svg";
+  static const arrowForward = "${_svgPath}arrow_forward.svg";
+  static const chat = "${_svgPath}chat.svg";
+  static const call = "${_svgPath}call.svg";
+  static const mail = "${_svgPath}mail.svg";
+  static const attach = "${_svgPath}attach.svg";
+  static const editCheck = "${_svgPath}edit_check.svg";
 
   //PNG Path
   static const mentor = "${_pngPath}mentor.jpeg";

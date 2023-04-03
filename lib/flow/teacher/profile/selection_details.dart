@@ -11,8 +11,8 @@ import 'model/tags_response_model.dart';
 import 'model/tags_with_teacher_id_request_model.dart';
 
 class SelectionDetails extends StatefulWidget {
-  ProfileDashboardArguments profileDashboardArguments;
-  SelectionDetails({Key? key, required this.profileDashboardArguments})
+  final ProfileDashboardArguments profileDashboardArguments;
+  const SelectionDetails({Key? key, required this.profileDashboardArguments})
       : super(key: key);
 
   @override
@@ -101,12 +101,12 @@ class _SelectionDetailsState extends State<SelectionDetails> {
   onProceedTap(BuildContext context) {
     List<TagModel> allRequestedTags = [];
     for (TagsResponseModel x in allSelectedTags) {
-      allRequestedTags.add(TagModel(
-          tagCategory: x.tagCategory, tagName: x.tagName));
+      allRequestedTags
+          .add(TagModel(tagCategory: x.tagCategory, tagName: x.tagName));
     }
     if (_specifyController.text.isNotEmpty) {
-      allRequestedTags.add(TagModel(
-          tagCategory: "guidance", tagName: _specifyController.text));
+      allRequestedTags.add(
+          TagModel(tagCategory: "guidance", tagName: _specifyController.text));
     }
     BlocProvider.of<ProfileBloc>(context)
         .add(SaveTagsEvents(listOfTags: allRequestedTags));

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/index/bloc/index_bloc.dart';
 import 'package:newversity/flow/teacher/profile/view/overview.dart';
 import 'package:newversity/flow/teacher/profile/view/review.dart';
 import 'package:newversity/navigation/app_routes.dart';
@@ -25,6 +26,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // TODO: implement initState
     super.initState();
     BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetails());
+  }
+
+  onDrawerTap() {
+    if (context.read<IndexBloc>().scaffoldKey.currentState != null) {
+      context.read<IndexBloc>().scaffoldKey.currentState!.openDrawer();
+    } else {}
   }
 
   @override
@@ -53,19 +60,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
-                            children: const [
-                              AppImage(image: ImageAsset.arrowBack),
-                              SizedBox(
+                            children: [
+                              InkWell(
+                                  onTap: () => {Navigator.pop(context)},
+                                  child: AppImage(image: ImageAsset.arrowBack)),
+                              const SizedBox(
                                 width: 10,
                               ),
-                              AppText(
+                              const AppText(
                                 "Profile",
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
                               ),
                             ],
                           ),
-                          const AppImage(image: ImageAsset.drawer),
+                          InkWell(
+                              onTap: () => onDrawerTap(),
+                              child: const AppImage(image: ImageAsset.drawer)),
                         ],
                       ),
                     ),
@@ -121,7 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       context.read<ProfileBloc>().selctedProfileTab == 0
                           ? BlocProvider<ProfileBloc>(
                               create: (context) => ProfileBloc(),
-                              child: ProfileOverview())
+                              child: const ProfileOverview())
                           : BlocProvider<ProfileBloc>(
                               create: (context) => ProfileBloc(),
                               child: const ProfileReview()),

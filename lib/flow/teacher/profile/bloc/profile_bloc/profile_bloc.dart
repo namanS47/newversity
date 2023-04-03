@@ -118,8 +118,10 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
 
   Future<void> getTeacherDetails(event, emit) async {
     try {
+      emit(FetchingTeacherProfile());
       final response =
           await _teacherBaseRepository.getTeachersDetail(teacherId);
+      print("About teacher $response");
       emit(FetchedTeachersProfile(teacherDetails: response));
     } on SocketException {
       emit(FetchingTeachersProfileFailure());

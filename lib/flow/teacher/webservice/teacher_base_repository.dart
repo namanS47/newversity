@@ -98,8 +98,8 @@ class TeacherBaseRepository extends BaseRepository {
     return listOfEducation;
   }
 
-  Future<TeacherDetails> getTeachersDetail(String teacherId) async {
-    TeacherDetails response = TeacherDetails();
+  Future<TeacherDetails?> getTeachersDetail(String teacherId) async {
+    TeacherDetails? response = TeacherDetails();
     try {
       response = await _teacherApi.getTeacherDetails(teacherId);
     } on DioError catch (exception) {

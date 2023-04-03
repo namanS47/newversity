@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:newversity/common/common_widgets.dart';
+import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/flow/teacher/profile/view/bootom_sheet_view/profile_set_session_rate.dart';
 import 'package:newversity/resources/images.dart';
@@ -14,7 +15,7 @@ import '../model/experience_response_model.dart';
 import '../model/tags_response_model.dart';
 
 class ProfileOverview extends StatefulWidget {
-  ProfileOverview({Key? key}) : super(key: key);
+  const ProfileOverview({Key? key}) : super(key: key);
 
   @override
   State<ProfileOverview> createState() => _ProfileOverviewState();
@@ -34,6 +35,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
     BlocProvider.of<ProfileBloc>(context).add(FetchTagEventByTeacherId());
     BlocProvider.of<ProfileBloc>(context).add(FetchTeachersExperienceEvent());
     BlocProvider.of<ProfileBloc>(context).add(FetchTeachersEducationEvents());
+    BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetails());
   }
 
   @override
@@ -54,9 +56,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
         }
         if (state is FetchedTeachersProfile) {
           teacherDetails = state.teacherDetails;
-          // TODO: implement listener
         }
-        // TODO: implement listener
       },
       builder: (context, state) {
         return Expanded(
@@ -123,7 +123,11 @@ class _ProfileOverviewState extends State<ProfileOverview> {
               const SizedBox(
                 height: 10,
               ),
-              getPerSessionRate(),
+              teacherDetails != null
+                  ? teacherDetails?.sessionPricing != null
+                      ? getPerSessionRate()
+                      : setYourFee()
+                  : noDataFound(40),
             ],
           ),
         ));
@@ -142,31 +146,47 @@ class _ProfileOverviewState extends State<ProfileOverview> {
           return Padding(
             padding: MediaQuery.of(context).viewInsets,
             child: AppAnimatedBottomSheet(
-                bottomSheetWidget: BlocProvider<ProfileBloc>(
-                    create: (context) => ProfileBloc(),
+                bottomSheetWidget: BlocProvider<TeacherDetailsBloc>(
+                    create: (context) => TeacherDetailsBloc(),
                     child: const ProfileEditSessionRate())),
           );
           // your stateful widget
-        });
+        }).whenComplete(() {
+      BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetails());
+    });
+  }
+
+  Widget setYourFee() {
+    return GestureDetector(
+        onTap: () => onAmountEditTap(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: const [
+            AppImage(
+              image: ImageAsset.edit,
+              color: AppColors.blackMerlin,
+            ),
+            AppText("Set Your Fee"),
+          ],
+        ));
   }
 
   Widget getPerSessionRate() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
-            onTap: () => onAmountEditTap(),
-            child: const AppImage(
-              image: ImageAsset.edit,
-              color: AppColors.blackMerlin,
-            )),
+        setYourFee(),
         Row(
           children: [
-            Expanded(child: getSessionContainer(150, 15)),
+            Expanded(
+                child: getSessionContainer(
+                    teacherDetails!.sessionPricing!["session_type_a"]!, 15)),
             const SizedBox(
               width: 10,
             ),
-            Expanded(child: getSessionContainer(250, 30))
+            Expanded(
+                child: getSessionContainer(
+                    teacherDetails!.sessionPricing!["session_type_b"]!, 30)),
           ],
         ),
       ],
@@ -205,15 +225,13 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getExperienceAndEducation() {
     return Container(
-      height: 200,
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
-        child: Wrap(
-          direction: Axis.vertical,
+        child: Column(
           children: [
             getExperienceLayout(),
             const SizedBox(
@@ -240,49 +258,43 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getEducationView(int index) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const CircleAvatar(
-            radius: 25,
-            backgroundColor: AppColors.lightCyan,
-            child: AppImage(image: ImageAsset.education),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const CircleAvatar(
+          radius: 25,
+          backgroundColor: AppColors.lightCyan,
+          child: AppImage(image: ImageAsset.education),
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              getEducationalInstitute(index),
+              const SizedBox(
+                height: 5,
+              ),
+              getStream(index),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  getEducationalDuration(index),
+                  getCGPA(index),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+            ],
           ),
-          const SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                getEducationalInstitute(index),
-                const SizedBox(
-                  height: 5,
-                ),
-                getStream(index),
-                const SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    getEducationalDuration(index),
-                    getCGPA(index),
-                  ],
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 60,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -329,9 +341,8 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getEducation() {
-    print("nskjns - ${listOfEducationModel.length}");
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       child: Wrap(
         spacing: 30,
         runSpacing: 12,
@@ -347,7 +358,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getExperience() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       child: Wrap(
         spacing: 30,
         runSpacing: 12,
@@ -375,18 +386,18 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getDuration(int index) {
-    String duraionString = DateTimeUtils.getEmploymentDurationDateTime(
+    String durationString = DateTimeUtils.getEmploymentDurationDateTime(
         lisOfExperienceModel[index].startDate!);
-    duraionString += "-";
+    durationString += "-";
     if (lisOfExperienceModel[index].currentlyWorkingHere == true) {
-      duraionString += "Present";
+      durationString += "Present";
     } else {
-      duraionString += DateTimeUtils.getEmploymentDurationDateTime(
+      durationString += DateTimeUtils.getEmploymentDurationDateTime(
           lisOfExperienceModel[index].endDate!);
     }
 
     return Text(
-      duraionString,
+      durationString,
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
@@ -406,46 +417,43 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getExperienceView(int index) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const CircleAvatar(
-            radius: 25,
-            backgroundColor: AppColors.lightCyan,
-            child: AppImage(image: ImageAsset.experience),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const CircleAvatar(
+          radius: 25,
+          backgroundColor: AppColors.lightCyan,
+          child: AppImage(image: ImageAsset.experience),
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              getDesignation(index),
+              const SizedBox(
+                height: 5,
+              ),
+              getInstitute(index),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  getDuration(index),
+                  getMode(index),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+            ],
           ),
-          const SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                getDesignation(index),
-                const SizedBox(
-                  height: 5,
-                ),
-                getInstitute(index),
-                const SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    getDuration(index),
-                    getMode(index),
-                  ],
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -480,8 +488,12 @@ class _ProfileOverviewState extends State<ProfileOverview> {
             const SizedBox(
               height: 5,
             ),
-            languagePreferences.isNotEmpty
-                ? getLanguagePreferenceList()
+            teacherDetails != null
+                ? teacherDetails!.language != null
+                    ? teacherDetails!.language!.isNotEmpty
+                        ? getLanguagePreferenceList()
+                        : noDataFound(40)
+                    : noDataFound(40)
                 : noDataFound(40),
           ],
         ),
@@ -494,9 +506,9 @@ class _ProfileOverviewState extends State<ProfileOverview> {
       spacing: 15,
       runSpacing: 12,
       children: List.generate(
-        languagePreferences.length,
+        teacherDetails!.language!.length,
         (curIndex) {
-          return getTagView(languagePreferences[curIndex]);
+          return getTagView(teacherDetails!.language![curIndex]);
         },
       ),
     );
@@ -504,6 +516,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getTalkingPoints() {
     return Container(
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(20),
@@ -533,7 +546,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
       children: List.generate(
         allMentorship.length,
         (curIndex) {
-          return getTagView(allMentorship[curIndex].tagName.toString());
+          return getTagView(allMentorship[curIndex].tagCategory.toString());
         },
       ),
     );
@@ -555,7 +568,8 @@ class _ProfileOverviewState extends State<ProfileOverview> {
             const SizedBox(
               height: 5,
             ),
-            getLocationTagView("Mumbai"),
+            getLocationTagView(
+                teacherDetails != null ? teacherDetails!.location ?? "" : ""),
           ],
         ),
       ),
@@ -564,6 +578,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getExperties() {
     return Container(
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(20),
@@ -615,7 +630,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        getTagView(allExperties[index].tagName.toString()),
+        getTagView(allExperties[index].tagCategory.toString()),
         Row(
           children: [
             SvgPicture.asset(ImageAsset.uploadProfilePic),
@@ -687,6 +702,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getAboutMe() {
     return Container(
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(20),
@@ -700,8 +716,8 @@ class _ProfileOverviewState extends State<ProfileOverview> {
             const SizedBox(
               height: 5,
             ),
-            const AppText(
-              "odio In dui. porta consectetur elementum Sed quis commodo in faucibus lacus efficitur. Praesent non odio non placerat nonestibulum elit. luctus orci urna Morbi non, lacus, tincidunt non In tincunt sit ex Nhv.",
+            AppText(
+              teacherDetails != null ? teacherDetails!.info! : "",
               fontSize: 12,
               fontWeight: FontWeight.w400,
             )

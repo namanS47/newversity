@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/navigation/app_routes.dart';
+import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
 
@@ -25,62 +26,85 @@ class _ProfileDrawerScreenState extends State<ProfileDrawerScreen> {
         return Container(
           width: MediaQuery.of(context).size.width * 0.8,
           decoration: const BoxDecoration(color: AppColors.whiteColor),
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: ListView(
-                    primary: true,
-                    padding: EdgeInsets.only(left: 16, right: 16, top: 15),
-                    children: [
-                      ListView.separated(
-                        shrinkWrap: true,
-                        primary: false,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        itemCount:
-                            context.read<IndexBloc>().drawerOptions.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 26),
-                        itemBuilder: (context, index) {
-                          return Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Row(
+                  children: [
+                    Expanded(child: Container()),
+                    InkWell(
+                        onTap: () => {Navigator.pop(context)},
+                        child: const AppImage(image: ImageAsset.close)),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: ListView(
+                  primary: true,
+                  padding: const EdgeInsets.only(left: 16, right: 16, top: 15),
+                  children: [
+                    ListView.separated(
+                      shrinkWrap: true,
+                      primary: false,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.zero,
+                      itemCount: context.read<IndexBloc>().drawerOptions.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 26),
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () => getDrawerScreen(index),
+                          child: Row(
                             children: [
-                              Container(
-                                width: 26,
-                                padding: const EdgeInsets.all(6),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: AppColors.cyanBlue.withOpacity(0.1),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: AppImage(
-                                  image: context
-                                      .read<IndexBloc>()
-                                      .drawerOptions[index],
-                                  height: 18,
-                                  width: 18,
-                                ),
+                              AppImage(
+                                image: context
+                                    .read<IndexBloc>()
+                                    .drawerOptions[index],
+                                height: 24,
+                                width: 24,
                               ),
-                              SizedBox(width: 18),
-                              InkWell(
-                                onTap: () => getDrawerScreen(index),
-                                child: AppText(
-                                  getDrawerOptionTitle(context, index),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                ),
+                              const SizedBox(width: 18),
+                              AppText(
+                                getDrawerOptionTitle(context, index),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
                               ),
                             ],
-                          );
-                        },
-                      ),
-                      SizedBox(height: 40),
-                    ],
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 40),
+                  ],
+                ),
+              ),
+              Container(
+                height: 71,
+                width: MediaQuery.of(context).size.width,
+                decoration: const BoxDecoration(
+                  color: AppColors.primaryColor,
+                ),
+                child: const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: AppText(
+                      "LOGOUT",
+                      color: AppColors.whiteColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-              ],
-            ),
+              )
+            ],
           ),
         );
       },

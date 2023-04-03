@@ -17,6 +17,12 @@ class TeacherDetails {
   String? email;
   String? gender;
   List<String>? uploadedDocuments;
+
+  @override
+  String toString() {
+    return 'TeacherDetails{teacherId: $teacherId, name: $name, mobileNumber: $mobileNumber, introVideoUrl: $introVideoUrl, location: $location, title: $title, info: $info, profileUrl: $profileUrl, profilePictureUrl: $profilePictureUrl, language: $language, email: $email, gender: $gender, uploadedDocuments: $uploadedDocuments, tags: $tags, education: $education, designation: $designation, sessionPricing: $sessionPricing, isNew: $isNew}';
+  }
+
   List<String>? tags;
   String? education;
   String? designation;

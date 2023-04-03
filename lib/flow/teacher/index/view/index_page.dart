@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
-import 'package:newversity/resources/images.dart';
+import 'package:newversity/flow/teacher/index/view/profile_drawer_screen.dart';
 import 'package:newversity/themes/colors.dart';
 
 import '../bloc/index_bloc.dart';
@@ -22,7 +22,10 @@ class _IndexPageState extends State<IndexPage> {
       },
       builder: (context, state) {
         return Scaffold(
+          key: context.read<IndexBloc>().scaffoldKey,
           resizeToAvoidBottomInset: false,
+          endDrawer: const SizedBox(width: 240, child: ProfileDrawerScreen()),
+          drawerEnableOpenDragGesture: true,
           bottomNavigationBar: Row(
             children: List.generate(
               context.read<IndexBloc>().indexPages.length,
@@ -106,5 +109,3 @@ class _IndexPageState extends State<IndexPage> {
     );
   }
 }
-
-

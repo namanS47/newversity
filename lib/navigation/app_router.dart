@@ -83,7 +83,13 @@ class AppRouter {
       return const BookSession();
     }
     if (route.toString() == AppRoutes.share) {
-      return const ShareScreen();
+      return BlocProvider<TeacherDetailsBloc>(
+        create: (context) => TeacherDetailsBloc(),
+        child: BlocProvider<ProfileBloc>(
+          create: (context) => ProfileBloc(),
+          child: const ShareScreen(),
+        ),
+      );
     }
     if (route.toString() == AppRoutes.bank) {
       return const BankScreen();
@@ -108,8 +114,11 @@ class AppRouter {
       return const ProfileEditOption();
     }
     if (route.toString() == AppRoutes.profileScreen) {
-      return BlocProvider<ProfileBloc>(
-          create: (context) => ProfileBloc(), child: const ProfileScreen());
+      return BlocProvider<IndexBloc>(
+        create: (context) => IndexBloc(),
+        child: BlocProvider<ProfileBloc>(
+            create: (context) => ProfileBloc(), child: const ProfileScreen()),
+      );
     }
 
     if (route.toString() == AppRoutes.teacherProfileDashBoard) {

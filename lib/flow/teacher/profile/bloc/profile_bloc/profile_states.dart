@@ -10,7 +10,7 @@ class ProfileLoading extends ProfileStates {}
 class FetchingTeacherProfile extends ProfileStates {}
 
 class FetchedTeachersProfile extends ProfileStates {
-  TeacherDetails teacherDetails;
+  final TeacherDetails? teacherDetails;
   FetchedTeachersProfile({required this.teacherDetails});
 }
 

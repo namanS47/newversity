@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:newversity/common/common_widgets.dart';
 
 class FaqsScreen extends StatefulWidget {
   const FaqsScreen({Key? key}) : super(key: key);
@@ -10,6 +11,14 @@ class FaqsScreen extends StatefulWidget {
 class _FaqsScreenState extends State<FaqsScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: const [
+          AppText("Coming soon"),
+        ],
+      ),
+    );
   }
 }
