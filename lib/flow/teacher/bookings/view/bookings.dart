@@ -18,7 +18,7 @@ class Bookings extends StatefulWidget {
 
 Widget getTopBanner() {
   return Container(
-    height: 300,
+    height: 200,
     decoration: const BoxDecoration(
         color: AppColors.lightCyan,
         borderRadius: BorderRadius.only(

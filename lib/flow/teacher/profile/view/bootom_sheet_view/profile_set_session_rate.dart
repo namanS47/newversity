@@ -40,42 +40,52 @@ class _ProfileEditSessionRateState extends State<ProfileEditSessionRate> {
         // TODO: implement listener
       },
       builder: (context, state) {
-        return Container(
-          color: Colors.transparent,
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
           child: Container(
-            decoration: const BoxDecoration(
-                color: AppColors.whiteColor,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10),
-                  topLeft: Radius.circular(10),
-                )),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const AppText(
-                    "Set your fee",
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getListOfSessionLayout(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  showErrorText
-                      ? const AppText(
-                          "Amount cannot be empty!",
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.redColorShadow400,
-                        )
-                      : Container(),
-                  getUpdateCTA(),
-                ],
+            height: 400,
+            color: Colors.transparent,
+            child: Container(
+              decoration: const BoxDecoration(
+                  color: AppColors.whiteColor,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    topLeft: Radius.circular(10),
+                  )),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const AppText(
+                            "Set your fee",
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          getListOfSessionLayout(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          showErrorText
+                              ? const AppText(
+                                  "Amount cannot be empty!",
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.redColorShadow400,
+                                )
+                              : Container(),
+                        ],
+                      ),
+                    ),
+                    getUpdateCTA(),
+                  ],
+                ),
               ),
             ),
           ),

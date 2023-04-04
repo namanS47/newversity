@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
 import 'package:newversity/navigation/app_routes.dart';
+import 'package:newversity/utils/enums.dart';
 
 import '../../../common/common_widgets.dart';
 import '../../../themes/colors.dart';
@@ -12,6 +13,7 @@ import 'model/tags_with_teacher_id_request_model.dart';
 
 class SelectionDetails extends StatefulWidget {
   final ProfileDashboardArguments profileDashboardArguments;
+
   const SelectionDetails({Key? key, required this.profileDashboardArguments})
       : super(key: key);
 
@@ -25,12 +27,15 @@ class _SelectionDetailsState extends State<SelectionDetails> {
 
   List<TagsResponseModel> allSelectedTags = [];
 
+  bool isLoading = false;
+  bool showErrorText = false;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     BlocProvider.of<ProfileBloc>(context)
-        .add(FetchMentorshipTag(tagCat: "guidance"));
+        .add(FetchMentorshipTag(tagCat: getTagCategory(TagCategory.guidance)));
   }
 
   bool isRebuildWidgetState(ProfileStates state) {
@@ -50,6 +55,7 @@ class _SelectionDetailsState extends State<SelectionDetails> {
           allMentorsTags = state.listOfMentorshipTags;
         }
         if (state is SavedTagsState) {
+          isLoading = false;
           Navigator.of(context).pushNamed(AppRoutes.teacherHomePageRoute);
         }
         // TODO: implement listener
@@ -82,9 +88,24 @@ class _SelectionDetailsState extends State<SelectionDetails> {
                 height: 20,
               ),
               showSpecify ? getYourDesignation() : Container(),
+              const SizedBox(
+                height: 10,
+              ),
+              showErrorText
+                  ? const AppText(
+                      "Please select at least one",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.redColorShadow400,
+                    )
+                  : Container(),
+              const SizedBox(
+                height: 10,
+              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: AppCta(
+                  isLoading: isLoading,
                   onTap: () => onProceedTap(context),
                   text: !widget.profileDashboardArguments.isNewUser
                       ? AppStrings.update
@@ -108,11 +129,18 @@ class _SelectionDetailsState extends State<SelectionDetails> {
       allRequestedTags.add(
           TagModel(tagCategory: "guidance", tagName: _specifyController.text));
     }
-    BlocProvider.of<ProfileBloc>(context)
-        .add(SaveTagsEvents(listOfTags: allRequestedTags));
+    if (allRequestedTags.isNotEmpty) {
+      isLoading = true;
+      BlocProvider.of<ProfileBloc>(context).add(
+          SaveTagsEvents(category: "guidance", listOfTags: allRequestedTags));
+    } else {
+      showErrorText = true;
+      setState(() {});
+    }
   }
 
   bool showSpecify = false;
+
   onSelectedSession(int index) {
     if (index == allMentorsTags.length - 1) {
       showSpecify = !showSpecify;

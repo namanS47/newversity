@@ -16,3 +16,8 @@ class OnChangeSortByIndexEvent extends UpcomingSessionEvent {
 class OnSortByResetButtonClickedEvent extends UpcomingSessionEvent {}
 
 class OnSortByApplyButtonClicked extends UpcomingSessionEvent {}
+
+class FetchAllUpcomingSessionsEvent extends UpcomingSessionEvent {
+  String type;
+  FetchAllUpcomingSessionsEvent({required this.type});
+}

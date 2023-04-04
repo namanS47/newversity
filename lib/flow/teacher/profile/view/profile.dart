@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/flow/teacher/index/bloc/index_bloc.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/flow/teacher/profile/view/overview.dart';
 import 'package:newversity/flow/teacher/profile/view/review.dart';
 import 'package:newversity/navigation/app_routes.dart';
@@ -21,30 +22,35 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   TeacherDetails? teacherDetails;
+  ProfileCompletionPercentageResponse? profileCompletionPercentageResponse;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetails());
+    BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetailsEvent());
+    BlocProvider.of<ProfileBloc>(context).add(FetchProfileCompletionInfoEvent());
   }
 
   onDrawerTap() {
     if (context.read<IndexBloc>().scaffoldKey.currentState != null) {
       context.read<IndexBloc>().scaffoldKey.currentState!.openDrawer();
-    } else {}
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ProfileBloc, ProfileStates>(
       listener: (context, state) {
-        if (state is FetchedTeachersProfile) {
+        if (state is FetchedTeachersProfileState) {
           teacherDetails = state.teacherDetails;
           // TODO: implement listener
+        }
+        if (state is FetchedProfileCompletionInfoState) {
+          profileCompletionPercentageResponse = state.percentageResponse;
         }
       },
       builder: (context, state) {
         return Scaffold(
+          resizeToAvoidBottomInset: true,
           body: Stack(
             children: [
               Column(
@@ -63,7 +69,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               InkWell(
                                   onTap: () => {Navigator.pop(context)},
-                                  child: AppImage(image: ImageAsset.arrowBack)),
+                                  child: const AppImage(
+                                      image: ImageAsset.arrowBack)),
                               const SizedBox(
                                 width: 10,
                               ),
@@ -122,7 +129,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                           ),
-                          getCompletenessLayout(),
+                          profileCompletionPercentageResponse != null
+                              ? getCompletenessLayout()
+                              : Container(),
                         ],
                       ),
                       const SizedBox(
@@ -234,11 +243,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           animationDuration: 1200,
           animation: true,
           lineWidth: 6.0,
-          percent: percentageComplete / 100,
+          percent:
+              (profileCompletionPercentageResponse!.completePercentage ?? 0) /
+                  100,
           center: Padding(
             padding: const EdgeInsets.all(3.0),
             child: AppText(
-              "$percentageComplete %",
+              "${profileCompletionPercentageResponse!.completePercentage ?? 0} %",
               fontSize: 12,
               fontWeight: FontWeight.w700,
               textAlign: TextAlign.center,

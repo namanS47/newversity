@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'tags_response_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable( fieldRename: FieldRename.none)
 class TagsResponseModel {
   String? tagName;
   List<String>? teacherIdList;

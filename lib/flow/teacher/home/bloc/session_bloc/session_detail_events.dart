@@ -13,7 +13,8 @@ class FetchStudentDetailsEvent extends SessionDetailEvents {
   FetchStudentDetailsEvent({required this.studentId});
 }
 
-class SessionAddingEvent extends SessionDetailEvents {
-  final SessionSaveRequest sessionSaveRequest;
-  SessionAddingEvent({required this.sessionSaveRequest});
+class FetchTeacherDetailEvent extends SessionDetailEvents {
+  FetchTeacherDetailEvent();
 }
+
+

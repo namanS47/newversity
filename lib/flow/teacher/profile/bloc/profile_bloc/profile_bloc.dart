@@ -7,7 +7,9 @@ import 'package:newversity/flow/teacher/profile/model/education_request_model.da
 import 'package:newversity/flow/teacher/profile/model/education_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_response_model.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_response_model.dart';
+import 'package:newversity/network/webservice/exception.dart';
 
 import '../../../../../common/common_utils.dart';
 import '../../../../../di/di_initializer.dart';
@@ -80,9 +82,14 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
       await getAllTags(event, emit);
     });
 
-    on<FetchTeacherDetails>((event, emit) async {
+    on<FetchTeacherDetailsEvent>((event, emit) async {
       teacherId = CommonUtils().getLoggedInUser();
       await getTeacherDetails(event, emit);
+    });
+
+    on<FetchProfileCompletionInfoEvent>((event, emit) async {
+      teacherId = CommonUtils().getLoggedInUser();
+      await getProfileCompletionInfo(event, emit);
     });
   }
 
@@ -94,7 +101,7 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
   }
 
   Future<void> getAllTagsByTeacherId(event, emit) async {
-    List<TagsResponseModel> listOfExperties = [];
+    List<TagsResponseModel> listOfExpertise = [];
     List<TagsResponseModel> listOfMentorship = [];
     try {
       emit(FetchingTagsWithTeacherId());
@@ -102,13 +109,13 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
           await _teacherBaseRepository.fetchAllTagsWithTeacherId(teacherId);
       if (response != null) {
         for (TagsResponseModel x in response) {
-          if (x.tagCategory == "exam") {
-            listOfExperties.add(x);
-          } else {
+          if (x.tagCategory != "exams") {
             listOfMentorship.add(x);
+          } else {
+            listOfExpertise.add(x);
           }
         }
-        emit(FetchedExpertiesState(listOfTags: listOfExperties));
+        emit(FetchedExpertiesState(listOfTags: listOfExpertise));
         emit(FetchedMentorsipState(listOfTags: listOfMentorship));
       }
     } on SocketException catch (e) {
@@ -118,13 +125,26 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
 
   Future<void> getTeacherDetails(event, emit) async {
     try {
-      emit(FetchingTeacherProfile());
+      emit(FetchingTeacherProfileState());
       final response =
           await _teacherBaseRepository.getTeachersDetail(teacherId);
-      print("About teacher $response");
-      emit(FetchedTeachersProfile(teacherDetails: response));
+      emit(FetchedTeachersProfileState(teacherDetails: response));
     } on SocketException {
-      emit(FetchingTeachersProfileFailure());
+      emit(FetchingTeachersProfileFailureState());
+    }
+  }
+
+  Future<void> getProfileCompletionInfo(event, emit) async {
+    try {
+      emit(FetchingProfileCompletionInfoState());
+      final response =
+          await _teacherBaseRepository.getProfileCompletionInfo(teacherId);
+      emit(FetchedProfileCompletionInfoState(percentageResponse: response));
+    } catch (exception) {
+      if (exception is BadRequestException) {
+        emit(FetchingProfileCompletionInfoFailureState(
+            msg: exception.message.toString()));
+      }
     }
   }
 
@@ -165,7 +185,7 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
       emit(AddingTagsState());
       if (event is SaveTagsEvents) {
         await _teacherBaseRepository.saveListOfTags(
-            event.listOfTags, teacherId);
+            event.category, event.listOfTags, teacherId);
       }
 
       emit(SavedTagsState());

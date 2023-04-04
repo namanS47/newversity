@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_with_teacher_id_request_model.dart';
 import 'package:newversity/themes/colors.dart';
+import 'package:newversity/utils/enums.dart';
 
 import '../../../themes/strings.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
@@ -20,20 +21,23 @@ class _ExamsCrackedState extends State<ExamsCracked> {
   List<TagsResponseModel> allExamsTags = [];
 
   List<TagsResponseModel> allSelectedTags = [];
+  bool isLoading = false;
+  bool showErrorText = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     BlocProvider.of<ProfileBloc>(context)
-        .add(FetchExamTagsEvent(tagCat: "exams"));
+        .add(FetchExamTagsEvent(tagCat: getTagCategory(TagCategory.exams)));
   }
 
   bool isRebuildWidgetState(ProfileStates state) {
     return state is FetchingTagsState ||
         state is FetchedExamTagsState ||
         state is FetchingTagsFailure ||
-        state is SavedTagsState;
+        state is SavedTagsState ||
+        state is AddingTagsState;
   }
 
   @override
@@ -46,6 +50,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
           allExamsTags = state.listOfTags;
         }
         if (state is SavedTagsState) {
+          isLoading = false;
           context.read<ProfileBloc>().changeIndex();
         }
       },
@@ -75,7 +80,22 @@ class _ExamsCrackedState extends State<ExamsCracked> {
                 height: 20,
               ),
               showSpecify ? getYourDesignation() : Container(),
+              const SizedBox(
+                height: 10,
+              ),
+              showErrorText
+                  ? const AppText(
+                      "Please select at least one",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.redColorShadow400,
+                    )
+                  : Container(),
+              const SizedBox(
+                height: 10,
+              ),
               AppCta(
+                isLoading: isLoading,
                 onTap: () => onProceedTap(context),
                 text: "Proceed",
               )
@@ -104,15 +124,21 @@ class _ExamsCrackedState extends State<ExamsCracked> {
   onProceedTap(BuildContext context) {
     List<TagModel> allRequestedTags = [];
     for (TagsResponseModel x in allSelectedTags) {
-      allRequestedTags.add(TagModel(
-          tagCategory: x.tagCategory, tagName: x.tagName));
+      allRequestedTags
+          .add(TagModel(tagCategory: x.tagCategory, tagName: x.tagName));
     }
     if (_specifyController.text.isNotEmpty) {
-      allRequestedTags.add(TagModel(
-          tagCategory: "exams", tagName: _specifyController.text));
+      allRequestedTags.add(
+          TagModel(tagCategory: "exams", tagName: _specifyController.text));
     }
-    BlocProvider.of<ProfileBloc>(context)
-        .add(SaveTagsEvents(listOfTags: allRequestedTags));
+    if (allRequestedTags.isNotEmpty) {
+      isLoading = true;
+      BlocProvider.of<ProfileBloc>(context)
+          .add(SaveTagsEvents(category: "exams", listOfTags: allRequestedTags));
+    } else {
+      showErrorText = true;
+      setState(() {});
+    }
   }
 
   List<String> examsCracked = [
@@ -142,6 +168,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
   }
 
   bool showSpecify = false;
+
   onSelectedSession(int index) {
     if (index == allExamsTags.length - 1) {
       showSpecify = !showSpecify;
@@ -167,9 +194,8 @@ class _ExamsCrackedState extends State<ExamsCracked> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-        allExamsTags[curIndex].tagName ?? "",
-        style:
-            const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+            allExamsTags[curIndex].tagName ?? "",
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
           ),
         ),
       ),

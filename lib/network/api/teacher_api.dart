@@ -7,6 +7,7 @@ import 'package:newversity/flow/teacher/home/model/session_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_response_model.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_with_teacher_id_request_model.dart';
 import 'package:retrofit/http.dart';
@@ -27,6 +28,10 @@ abstract class TeacherApi {
   @GET("/teacher")
   Future<TeacherDetails?> getTeacherDetails(
       @Header("teacherId") String teacherId);
+
+  @GET("/session/id")
+  Future<SessionDetailsResponse?> getSessionDetailById(
+      @Header("id") String sessionId);
 
   @POST("/addTeacher")
   Future<TeacherDetails?> sendTeacherDetails(
@@ -49,14 +54,17 @@ abstract class TeacherApi {
   Future<List<ExperienceResponseModel>?> getExperiencesWithTeacherId(
       @Header("teacherId") String teacherId);
 
+  @GET("/teacher/completion")
+  Future<ProfileCompletionPercentageResponse?> getProfileCompletionInfo(
+      @Header("teacherId") String teacherId);
+
   @POST("/teacher/education")
   Future<void> saveTeacherEducation(
     @Body() EducationRequestModel educationRequestModel,
   );
 
   @POST("/teacher/tags")
-  Future<void> saveListOfTags(
-      @Query("category") String category,
+  Future<void> saveListOfTags(@Query("category") String category,
       @Body() TagRequestModel tagsList, @Header("teacherId") String teacherId);
 
   @GET("/teacher/education")
@@ -79,5 +87,5 @@ abstract class TeacherApi {
 
   @GET("/session/teacher")
   Future<List<SessionDetailsResponse>?> getSessionDetails(
-      @Query("type") String type);
+      @Header("teacherId") String teacherId, @Query("type") String type);
 }

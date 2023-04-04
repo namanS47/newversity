@@ -1,98 +1,189 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
+import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
 import 'package:newversity/flow/teacher/bookings/view/bottom_sheets/profile_bottom_sheet.dart';
+import 'package:newversity/flow/teacher/home/model/session_request_model.dart';
+import 'package:newversity/flow/teacher/home/model/session_response_model.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
+import 'package:newversity/utils/date_time_utils.dart';
+import 'package:slide_countdown/slide_countdown.dart';
 
 import '../bloc/session_details_bloc/session_details_bloc.dart';
 import 'bottom_sheets/cancel_bottom_sheet.dart';
 
-class SessionDetails extends StatefulWidget {
-  final bool isPrevious;
-  const SessionDetails({Key? key, required this.isPrevious}) : super(key: key);
+class SessionDetailsScreen extends StatefulWidget {
+  final SessionDetailArguments sessionDetailArguments;
+
+  const SessionDetailsScreen({Key? key, required this.sessionDetailArguments})
+      : super(key: key);
 
   @override
-  State<SessionDetails> createState() => _SessionDetailsState();
+  State<SessionDetailsScreen> createState() => _SessionDetailsScreenState();
 }
 
-class _SessionDetailsState extends State<SessionDetails> {
+class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
+  SessionDetailsResponse? sessionDetailsResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<SessionDetailsBloc>(context)
+        .add(FetchSessionDetailByIdEvent(id: widget.sessionDetailArguments.id));
+  }
+
+  bool showError = false;
+  bool isSendLoading = false;
+  bool toReset = false;
+  final _noteSenderController = TextEditingController();
+  bool hasSent = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: const AppImage(image: ImageAsset.arrowBack)),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const AppText(
-                          "Session Details",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        Visibility(
-                          visible: !widget.isPrevious,
-                          child: GestureDetector(
-                            onTap: () => onTapCancel(),
-                            child: const AppText(
-                              "Cancel booking",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.underline,
+          child: BlocConsumer<SessionDetailsBloc, SessionDetailsStates>(
+            listener: (context, state) {
+              if (state is FetchedSessionDetailByIdState) {
+                sessionDetailsResponse = state.sessionDetails;
+              }
+              if (state is SavedSessionDetails) {
+                isSendLoading = false;
+                toReset = true;
+                hasSent = true;
+              }
+            },
+            builder: (context, state) {
+              return sessionDetailsResponse != null
+                  ? Padding(
+                      padding: MediaQuery.of(context).viewInsets,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: SingleChildScrollView(
+                              physics: ClampingScrollPhysics(),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  GestureDetector(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const AppImage(
+                                          image: ImageAsset.arrowBack)),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: const [
+                                      AppText(
+                                        "Session Details",
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      // Visibility(
+                                      //   visible: !widget.isPrevious,
+                                      //   child: GestureDetector(
+                                      //     onTap: () => onTapCancel(),
+                                      //     child: const AppText(
+                                      //       "Cancel booking",
+                                      //       fontSize: 14,
+                                      //       fontWeight: FontWeight.w500,
+                                      //       decoration: TextDecoration.underline,
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  getDateTimeOfSession(),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  getSessionStudentProfileView(),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  getAgendaView(),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  getFeedBackView(),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  getRateContainer(),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  getNoteForStudentLayout(),
+                                  const SizedBox(
+                                    height: 40,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
+                          getJoinNowBeforeThreshHold(),
+                          getJoinNowAfterThreshHold(),
+                          getPaymentInitiated(),
+                          getPaymentCompleted(),
+                        ],
+                      ),
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Center(
+                          child: CircularProgressIndicator(),
+                        )
                       ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    getDateTimeOfSession(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    getSessionStudentProfileView(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    getAgendaView(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    getFeedBackView(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    getRateContainer(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    getNoteForStudentLayout(),
-                  ],
-                ),
-              ),
-              getJoinNowBeforeThreshHold(),
-              getJoinNowAfterThreshHold(),
-              getPaymentInitiated(),
-              getPaymentCompleted(),
-            ],
+                    );
+            },
           ),
         ),
+      ),
+    );
+  }
+
+  int getLeftTimeInSeconds(DateTime dateTime) {
+    return (dateTime.difference(DateTime.now()).inSeconds);
+  }
+
+  Widget getScheduleLeftTime() {
+    int timeLeftInSeconds =
+        getLeftTimeInSeconds(sessionDetailsResponse!.startDate!);
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SlideCountdown(
+            duration: Duration(seconds: timeLeftInSeconds),
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
+            ),
+            slideDirection: SlideDirection.down,
+            durationTitle: DurationTitle.id(),
+            separator: ":",
+            onDone: () {},
+            textStyle: const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w400,
+                color: AppColors.cyanBlue),
+            separatorStyle:
+                const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+          ),
+        ],
       ),
     );
   }
@@ -101,7 +192,8 @@ class _SessionDetailsState extends State<SessionDetails> {
 
   Widget getPaymentCompleted() {
     return Visibility(
-      visible: widget.isPrevious && isPaymentCompleted,
+      visible: widget.sessionDetailArguments.isPrevious &&
+          sessionDetailsResponse!.paymentId != null,
       child: SizedBox(
         height: 50,
         child: Row(
@@ -113,9 +205,9 @@ class _SessionDetailsState extends State<SessionDetails> {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10),
                       bottomLeft: Radius.circular(10))),
-              child: const Center(
+              child: Center(
                 child: AppText(
-                  "₹300",
+                  sessionDetailsResponse!.amount!.toString(),
                   fontSize: 16,
                   color: AppColors.whiteColor,
                   fontWeight: FontWeight.w600,
@@ -146,7 +238,8 @@ class _SessionDetailsState extends State<SessionDetails> {
 
   Widget getPaymentInitiated() {
     return Visibility(
-      visible: widget.isPrevious && !isPaymentCompleted,
+      visible: widget.sessionDetailArguments.isPrevious &&
+          sessionDetailsResponse!.paymentId == null,
       child: SizedBox(
         height: 50,
         child: Row(
@@ -158,9 +251,9 @@ class _SessionDetailsState extends State<SessionDetails> {
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10),
                       bottomLeft: Radius.circular(10))),
-              child: const Center(
+              child: Center(
                 child: AppText(
-                  "₹300",
+                  sessionDetailsResponse!.amount!.toString(),
                   fontSize: 16,
                   color: AppColors.whiteColor,
                   fontWeight: FontWeight.w600,
@@ -191,7 +284,7 @@ class _SessionDetailsState extends State<SessionDetails> {
 
   Widget getNoteForStudentLayout() {
     return Visibility(
-      visible: widget.isPrevious,
+      visible: widget.sessionDetailArguments.isPrevious,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -203,7 +296,8 @@ class _SessionDetailsState extends State<SessionDetails> {
           const SizedBox(
             height: 10,
           ),
-          const AppTextFormField(
+          AppTextFormField(
+            controller: _noteSenderController,
             maxLines: 5,
             hintText: "Give a note",
           ),
@@ -211,19 +305,47 @@ class _SessionDetailsState extends State<SessionDetails> {
             height: 5,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              AppText(
-                "SEND",
-                color: AppColors.strongGreen,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              isSendLoading
+                  ? const SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: CircularProgressIndicator(
+                            color: AppColors.cyanBlue,
+                          ),
+                        ),
+                      ),
+                    )
+                  : InkWell(
+                      onTap: () => !hasSent ? onSendNote() : null,
+                      child: AppText(
+                        hasSent ? "SENT!" : "SEND",
+                        color: hasSent
+                            ? AppColors.appYellow
+                            : AppColors.strongGreen,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+              const SizedBox(
+                width: 10,
               ),
-              AppText(
-                "00/3000",
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-              ),
+              Visibility(
+                visible: toReset,
+                child: InkWell(
+                  onTap: () => onResendNote(),
+                  child: const AppText(
+                    "RESET",
+                    color: AppColors.strongGreen,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              )
             ],
           )
         ],
@@ -231,9 +353,42 @@ class _SessionDetailsState extends State<SessionDetails> {
     );
   }
 
+  onResendNote() {
+    _noteSenderController.text = "";
+    toReset = false;
+    hasSent = false;
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+  }
+
+  bool isFormIsValid() {
+    return _noteSenderController.text.isNotEmpty;
+  }
+
+  onSendNote() {
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    if (isFormIsValid()) {
+      isSendLoading = true;
+      BlocProvider.of<SessionDetailsBloc>(context).add(SessionAddingEvent(
+          sessionSaveRequest: SessionSaveRequest(
+              id: sessionDetailsResponse!.id,
+              teacherId: sessionDetailsResponse!.teacherId,
+              studentId: sessionDetailsResponse!.studentId,
+              mentorNote: _noteSenderController.text)));
+    } else {
+      showError = true;
+      setState(() {});
+    }
+  }
+
   Widget getFeedBackView() {
     return Visibility(
-      visible: widget.isPrevious,
+      visible: widget.sessionDetailArguments.isPrevious,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -283,8 +438,9 @@ class _SessionDetailsState extends State<SessionDetails> {
           const SizedBox(
             height: 10,
           ),
-          const AppText(
-            "Språkplikt repobel. Plar antivävis. Eurolere plakavis. Reasa ling ör. Toktiga. Mobil-tv talibanisering. Antengar. Karade. Re asyl. Laboligen talibanisering.",
+          AppText(
+            sessionDetailsResponse!.studentFeedback ??
+                "This is Feedback Section",
             fontSize: 12,
             fontWeight: FontWeight.w400,
           ),
@@ -313,13 +469,17 @@ class _SessionDetailsState extends State<SessionDetails> {
 
   Widget getJoinNowAfterThreshHold() {
     return Visibility(
-      visible: !widget.isPrevious && isCrossedThreshold,
-      child: const AppCta(
+      visible: !widget.sessionDetailArguments.isPrevious &&
+          getLeftTimeInSeconds(sessionDetailsResponse!.startDate!) < 1501,
+      child: AppCta(
+        onTap: () => joinRoom(),
         text: "Join now",
         isLoading: false,
       ),
     );
   }
+
+  joinRoom() {}
 
   Widget getStartingTime(int hour, int min, int sec) {
     return Row(
@@ -366,7 +526,8 @@ class _SessionDetailsState extends State<SessionDetails> {
 
   Widget getJoinNowBeforeThreshHold() {
     return Visibility(
-      visible: !widget.isPrevious && !isCrossedThreshold,
+      visible: !widget.sessionDetailArguments.isPrevious &&
+          getLeftTimeInSeconds(sessionDetailsResponse!.startDate!) > 1501,
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.creamColor,
@@ -386,7 +547,7 @@ class _SessionDetailsState extends State<SessionDetails> {
                 const SizedBox(
                   height: 5,
                 ),
-                getStartingTime(05, 30, 19)
+                getScheduleLeftTime()
               ],
             ),
           ),
@@ -408,23 +569,25 @@ class _SessionDetailsState extends State<SessionDetails> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
-                children: const [
-                  AppText(
+                children: [
+                  const AppText(
                     "Per Session",
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 5,
                   ),
                   AppText(
-                    "(30 min)",
+                    sessionDetailsResponse!.sessionType! == "short"
+                        ? "(15 min)"
+                        : "(30 min)",
                     fontSize: 14,
                   ),
                 ],
               ),
-              const AppText(
-                "₹150",
+              AppText(
+                sessionDetailsResponse!.amount.toString(),
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),
@@ -437,47 +600,61 @@ class _SessionDetailsState extends State<SessionDetails> {
 
   Widget getAgendaView() {
     return Container(
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: AppColors.grey35,
         border: Border.all(width: 0.9, color: AppColors.grey32),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const AppText(
-                "Agenda",
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AppText(
+              "Agenda",
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: AppText(
+                sessionDetailsResponse!.agenda ?? "This is Agenda Section",
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: AppColors.grey50,
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 15.0),
-                child: AppText(
-                  "How to bifurcate time for each questions for NEET exam?",
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.grey50,
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
   }
 
   Widget getDateTimeOfSession() {
-    return const AppText(
-      "10 March, 02:15 PM -03:00 PM",
+    String timeText = getTimeText();
+    return AppText(
+      timeText,
       fontSize: 14,
       fontWeight: FontWeight.w400,
     );
+  }
+
+  String getTimeText() {
+    String text = "";
+    if (widget.sessionDetailArguments.isPrevious) {
+      text = DateTimeUtils.getBirthFormattedDateTime(
+              sessionDetailsResponse!.endDate ?? DateTime.now()) +
+          DateTimeUtils.getTimeInAMOrPM(
+              sessionDetailsResponse!.endDate ?? DateTime.now());
+    } else {
+      text =
+          "${DateTimeUtils.getBirthFormattedDateTime(sessionDetailsResponse!.startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(sessionDetailsResponse!.startDate ?? DateTime.now())} - ${DateTimeUtils.getTimeInAMOrPM(sessionDetailsResponse!.endDate ?? DateTime.now())}";
+    }
+    return text;
   }
 
   onProfileTap() {
@@ -528,29 +705,30 @@ class _SessionDetailsState extends State<SessionDetails> {
                   child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   AppText(
-                    "Ikshit Anand",
+                    sessionDetailsResponse!.studentId ?? "",
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 7,
                   ),
                   AppText(
-                    "JEE main",
+                    sessionDetailsResponse?.agenda ?? "JEE main",
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   AppText(
-                    "+2 passed",
+                    sessionDetailsResponse?.paymentId ??
+                        "This is Qualification Section",
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 11,
                   ),
                 ],

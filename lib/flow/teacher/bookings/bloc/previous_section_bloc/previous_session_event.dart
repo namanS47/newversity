@@ -17,3 +17,7 @@ class OnSortByResetButtonClickedEvent extends PreviousSessionEvents {}
 
 class OnSortByApplyButtonClicked extends PreviousSessionEvents {}
 
+class FetchAllPreviousSessionsEvent extends PreviousSessionEvents {
+  String type;
+  FetchAllPreviousSessionsEvent({required this.type});
+}

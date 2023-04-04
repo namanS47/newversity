@@ -227,7 +227,7 @@ class AppImage extends StatelessWidget {
             errorWidget: (context, url, error) =>
                 const Icon(Icons.error, color: Colors.red),
           )
-        : image!.contains('product/') || image!.contains('public/')
+        : image!.contains('kanhfhjjj') || image!.contains('public/')
             ? CachedNetworkImage(
                 imageUrl: 'https://d3df8f1z9cx8fl.cloudfront.net/$image',
                 height: webHeight,

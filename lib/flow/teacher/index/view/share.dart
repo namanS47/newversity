@@ -26,7 +26,7 @@ class _ShareScreenState extends State<ShareScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetails());
+    BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetailsEvent());
   }
 
   Future<void> share() async {
@@ -38,9 +38,9 @@ class _ShareScreenState extends State<ShareScreen> {
   }
 
   bool isRebuildWidgetState(ProfileStates state) {
-    return state is FetchingTeacherProfile ||
-        state is FetchedTeachersProfile ||
-        state is FetchingTeachersProfileFailure;
+    return state is FetchingTeacherProfileState ||
+        state is FetchedTeachersProfileState ||
+        state is FetchingTeachersProfileFailureState;
   }
 
   @override
@@ -49,7 +49,7 @@ class _ShareScreenState extends State<ShareScreen> {
       buildWhen: (previous, current) => isRebuildWidgetState(current),
       listenWhen: (previous, current) => isRebuildWidgetState(current),
       listener: (context, state) {
-        if (state is FetchedTeachersProfile) {
+        if (state is FetchedTeachersProfileState) {
           teacherDetails = state.teacherDetails;
         }
       },
@@ -184,7 +184,7 @@ class _ShareScreenState extends State<ShareScreen> {
         showErrorText = true;
       });
     }
-    BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetails());
+    BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetailsEvent());
   }
 
   Widget getAttachAndShareView() {

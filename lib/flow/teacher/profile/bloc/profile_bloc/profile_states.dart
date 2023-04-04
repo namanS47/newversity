@@ -7,16 +7,28 @@ class ProfileInitial extends ProfileStates {}
 
 class ProfileLoading extends ProfileStates {}
 
-class FetchingTeacherProfile extends ProfileStates {}
+class FetchingTeacherProfileState extends ProfileStates {}
 
-class FetchedTeachersProfile extends ProfileStates {
+class FetchedTeachersProfileState extends ProfileStates {
   final TeacherDetails? teacherDetails;
-  FetchedTeachersProfile({required this.teacherDetails});
+  FetchedTeachersProfileState({required this.teacherDetails});
+}
+
+class FetchingProfileCompletionInfoState extends ProfileStates {}
+
+class FetchedProfileCompletionInfoState extends ProfileStates {
+  final ProfileCompletionPercentageResponse? percentageResponse;
+  FetchedProfileCompletionInfoState({required this.percentageResponse});
+}
+
+class FetchingProfileCompletionInfoFailureState extends ProfileStates {
+  final String msg;
+  FetchingProfileCompletionInfoFailureState({required this.msg});
 }
 
 class UpdateProfileState extends ProfileStates {}
 
-class FetchingTeachersProfileFailure extends ProfileStates {}
+class FetchingTeachersProfileFailureState extends ProfileStates {}
 
 class ProfileCardChangedState extends ProfileStates {}
 
@@ -65,10 +77,9 @@ class FetchedExamTagsState extends ProfileStates {
   FetchedExamTagsState({required this.listOfTags});
 }
 
-class FetchingTagsWithTeacherId extends ProfileStates{
-}
+class FetchingTagsWithTeacherId extends ProfileStates {}
 
-class FetchingTagsWithTeacherIdFailure extends ProfileStates{}
+class FetchingTagsWithTeacherIdFailure extends ProfileStates {}
 
 class FetchedExpertiesState extends ProfileStates {
   final List<TagsResponseModel> listOfTags;

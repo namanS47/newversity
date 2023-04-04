@@ -18,14 +18,15 @@ class FetchTeachersEducationEvents extends ProfileEvents {
 }
 
 class ChangeProfileTab extends ProfileEvents {
-  int index;
+  final int index;
   ChangeProfileTab({required this.index});
 }
 
 class SaveTagsEvents extends ProfileEvents {
+  final String category;
   final List<TagModel> listOfTags;
 
-  SaveTagsEvents({required this.listOfTags});
+  SaveTagsEvents({required this.category, required this.listOfTags});
 }
 
 class FetchExamTagsEvent extends ProfileEvents {
@@ -33,8 +34,7 @@ class FetchExamTagsEvent extends ProfileEvents {
   FetchExamTagsEvent({required this.tagCat});
 }
 
-class FetchTagEventByTeacherId extends ProfileEvents {
-}
+class FetchTagEventByTeacherId extends ProfileEvents {}
 
 class FetchMentorshipTag extends ProfileEvents {
   final String tagCat;
@@ -51,4 +51,6 @@ class SaveTeacherEducationEvents extends ProfileEvents {
   SaveTeacherEducationEvents({required this.educationRequestModel});
 }
 
-class FetchTeacherDetails extends ProfileEvents {}
+class FetchTeacherDetailsEvent extends ProfileEvents {}
+
+class FetchProfileCompletionInfoEvent extends ProfileEvents {}

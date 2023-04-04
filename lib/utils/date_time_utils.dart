@@ -17,6 +17,10 @@ class DateTimeUtils {
     return formatter.format(dateTime).toLowerCase();
   }
 
+  static String getTimeInAMOrPM(DateTime dateTime){
+    return DateFormat('hh:mm a').format(dateTime);
+  }
+
   static String getBankAmtFormattedDateTime(DateTime dateTime) {
     final DateFormat formatter = DateFormat('EE, dd MMM');
     return formatter.format(dateTime).toLowerCase();
