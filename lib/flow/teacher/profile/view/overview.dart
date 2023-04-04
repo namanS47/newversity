@@ -23,14 +23,13 @@ class ProfileOverview extends StatefulWidget {
 }
 
 class _ProfileOverviewState extends State<ProfileOverview> {
-  List<TagsResponseModel>? allExperties;
 
+  List<TagsResponseModel>? allExpertise;
   List<TagsResponseModel>? allMentorship;
-
   List<ExperienceResponseModel>? lisOfExperienceModel;
-
   List<EducationResponseModel>? listOfEducationModel;
   TeacherDetails? teacherDetails;
+
 
   @override
   void initState() {
@@ -46,7 +45,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
     return BlocConsumer<ProfileBloc, ProfileStates>(
       listener: (context, state) {
         if (state is FetchedExpertiesState) {
-          allExperties = state.listOfTags;
+          allExpertise = state.listOfTags;
         }
         if (state is FetchedMentorsipState) {
           allMentorship = state.listOfTags;
@@ -76,7 +75,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
                     const SizedBox(
                       height: 10,
                     ),
-                    getExperties(),
+                    getExpertise(),
                     const SizedBox(
                       height: 10,
                     ),
@@ -118,8 +117,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Padding(
-          padding:
-          const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -129,8 +127,8 @@ class _ProfileOverviewState extends State<ProfileOverview> {
               ),
               teacherDetails != null
                   ? teacherDetails?.sessionPricing != null
-                  ? getPerSessionRate()
-                  : setYourFee()
+                      ? getPerSessionRate()
+                      : setYourFee()
                   : getProgressIndicator(40),
             ],
           ),
@@ -587,7 +585,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
     );
   }
 
-  Widget getExperties() {
+  Widget getExpertise() {
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
@@ -603,8 +601,8 @@ class _ProfileOverviewState extends State<ProfileOverview> {
             const SizedBox(
               height: 5,
             ),
-            allExperties != null
-                ? allExperties!.isNotEmpty
+            allExpertise != null
+                ? allExpertise!.isNotEmpty
                     ? getListOfExperties()
                     : noDataFound(40)
                 : getProgressIndicator(40),
@@ -643,20 +641,20 @@ class _ProfileOverviewState extends State<ProfileOverview> {
       spacing: 15,
       runSpacing: 12,
       children: List.generate(
-        allExperties!.length,
+        allExpertise!.length,
         (curIndex) {
-          return getExpertiesView(curIndex);
+          return getExpertiseView(curIndex);
         },
       ),
     );
   }
 
-  Widget getExpertiesView(int index) {
+  Widget getExpertiseView(int index) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        getTagView(allExperties[index].tagName.toString()),
-        uploadDocumentWidget(allExperties[index])
+        getTagView(allExpertise![index].tagName.toString()),
+        uploadDocumentWidget(allExpertise![index])
       ],
     );
   }
@@ -667,15 +665,12 @@ class _ProfileOverviewState extends State<ProfileOverview> {
           TagStatus.Verified.toString().split('.').first),
       child: GestureDetector(
         onTap: () async {
-          final result = await showModalBottomSheet(
+          await showModalBottomSheet(
             context: context,
             builder: (context) {
-              return ImagePickerOptionBottomSheet(
-
-              );
+              return const ImagePickerOptionBottomSheet();
             },
           );
-          print("naman--- ${result}");
         },
         child: Row(
           children: [

@@ -25,7 +25,13 @@ class SessionDetailsScreen extends StatefulWidget {
 }
 
 class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
+
   SessionDetailsResponse? sessionDetailsResponse;
+  bool showError = false;
+  bool isSendLoading = false;
+  bool toReset = false;
+  final _noteSenderController = TextEditingController();
+  bool hasSent = false;
 
   @override
   void initState() {
@@ -33,12 +39,6 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
     BlocProvider.of<SessionDetailsBloc>(context)
         .add(FetchSessionDetailByIdEvent(id: widget.sessionDetailArguments.id));
   }
-
-  bool showError = false;
-  bool isSendLoading = false;
-  bool toReset = false;
-  final _noteSenderController = TextEditingController();
-  bool hasSent = false;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
                         children: [
                           Expanded(
                             child: SingleChildScrollView(
-                              physics: ClampingScrollPhysics(),
+                              physics: const ClampingScrollPhysics(),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -187,8 +187,6 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
       ),
     );
   }
-
-  bool isPaymentCompleted = true;
 
   Widget getPaymentCompleted() {
     return Visibility(
@@ -521,8 +519,6 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
       ],
     );
   }
-
-  bool isCrossedThreshold = false;
 
   Widget getJoinNowBeforeThreshHold() {
     return Visibility(

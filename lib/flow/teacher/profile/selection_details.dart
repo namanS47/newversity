@@ -24,11 +24,22 @@ class SelectionDetails extends StatefulWidget {
 class _SelectionDetailsState extends State<SelectionDetails> {
   final _specifyController = TextEditingController();
   List<TagsResponseModel> allMentorsTags = [];
-
   List<TagsResponseModel> allSelectedTags = [];
-
   bool isLoading = false;
   bool showErrorText = false;
+  bool showSpecify = false;
+
+  List<String> examsCracked = [
+    "Personal Mentorship",
+    "Exam prep strategy",
+    "Career/Market/Industry insights/Future Trends",
+    "College Planning",
+    "Course/Stream Planning",
+    "Interview prep",
+    "Job preparation",
+    "Professional life experience",
+    "Others",
+  ];
 
   @override
   void initState() {
@@ -139,8 +150,6 @@ class _SelectionDetailsState extends State<SelectionDetails> {
     }
   }
 
-  bool showSpecify = false;
-
   onSelectedSession(int index) {
     if (index == allMentorsTags.length - 1) {
       showSpecify = !showSpecify;
@@ -166,18 +175,6 @@ class _SelectionDetailsState extends State<SelectionDetails> {
       isDense: true,
     );
   }
-
-  List<String> examsCracked = [
-    "Personal Mentorship",
-    "Exam prep strategy",
-    "Career/Market/Industry insights/Future Trends",
-    "College Planning",
-    "Course/Stream Planning",
-    "Interview prep",
-    "Job preparation",
-    "Professional life experience",
-    "Others",
-  ];
 
   Widget getSelectedComptetiveExams() {
     return Wrap(

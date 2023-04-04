@@ -17,4 +17,6 @@ class FetchTeacherDetailEvent extends SessionDetailEvents {
   FetchTeacherDetailEvent();
 }
 
+class FetchProfilePercentageInfoEvent extends SessionDetailEvents {}
+
 

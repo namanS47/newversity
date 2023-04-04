@@ -14,8 +14,8 @@ import 'bloc/profile_bloc/profile_bloc.dart';
 import 'model/education_response_model.dart';
 
 class ExperienceAndEducation extends StatefulWidget {
-  ProfileDashboardArguments profileDashboardArguments;
-  ExperienceAndEducation({Key? key, required this.profileDashboardArguments})
+  final ProfileDashboardArguments profileDashboardArguments;
+  const ExperienceAndEducation({Key? key, required this.profileDashboardArguments})
       : super(key: key);
 
   @override

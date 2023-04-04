@@ -21,13 +21,16 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
   TeacherDetails? teacherDetails;
   ProfileCompletionPercentageResponse? profileCompletionPercentageResponse;
+
   @override
   void initState() {
     super.initState();
     BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetailsEvent());
-    BlocProvider.of<ProfileBloc>(context).add(FetchProfileCompletionInfoEvent());
+    BlocProvider.of<ProfileBloc>(context)
+        .add(FetchProfileCompletionInfoEvent());
   }
 
   onDrawerTap() {

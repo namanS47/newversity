@@ -110,7 +110,7 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
       if (response != null) {
         for (TagsResponseModel x in response) {
           if (x.tagCategory == "exams") {
-            listOfExperties.add(x);
+            listOfExpertise.add(x);
           } else {
             listOfMentorship.add(x);
           }
@@ -118,7 +118,7 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
         emit(FetchedExpertiesState(listOfTags: listOfExpertise));
         emit(FetchedMentorsipState(listOfTags: listOfMentorship));
       }
-    } on SocketException catch (e) {
+    } on SocketException {
       emit(FetchingTagsWithTeacherIdFailure());
     }
   }

@@ -14,6 +14,9 @@ class ProfileReview extends StatefulWidget {
 }
 
 class _ProfileReviewState extends State<ProfileReview> {
+
+  final double _userRating = 4.1;
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -139,7 +142,7 @@ class _ProfileReviewState extends State<ProfileReview> {
         ));
   }
 
-  double _userRating = 4.1;
+
 
   Widget getRatingContainer() {
     return Container(

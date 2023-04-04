@@ -18,6 +18,18 @@ class FetchingSessionDetailFailureState extends SessionStates {
   final String message;
 }
 
+class FetchingProfileCompletionInfoState extends SessionStates {}
+
+class FetchedProfileCompletionInfoState extends SessionStates {
+  final ProfileCompletionPercentageResponse? percentageResponse;
+  FetchedProfileCompletionInfoState({required this.percentageResponse});
+}
+
+class FetchingProfileCompletionInfoFailureState extends SessionStates {
+  final String msg;
+  FetchingProfileCompletionInfoFailureState({required this.msg});
+}
+
 class FetchingStudentDetailsState extends SessionStates {}
 
 class FetchedStudentDetailState extends SessionStates {

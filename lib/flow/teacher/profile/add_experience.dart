@@ -20,24 +20,20 @@ class AddExperience extends StatefulWidget {
 }
 
 class _AddExperienceState extends State<AddExperience> {
-  final TextEditingController _employmentController = TextEditingController();
 
   final TextEditingController _titleController = TextEditingController();
-
   final TextEditingController _companyController = TextEditingController();
-
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
 
   final List<String> locationTypeList = ['Home', 'Office'];
   String? locationTypeValue;
   final List<String> employmentTypeList = ['Salaried', 'Self Employed'];
-
   String? employmentTypeValue;
+
   bool showErrorText = false;
   bool isLoading = false;
   bool isCurrentlyWorkingHere = false;
-
   DateTime? selectedStartDate;
   DateTime? selectedEndDate;
 

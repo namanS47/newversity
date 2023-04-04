@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/bloc/upcoming_session_bloc/upcoming_session_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
-import 'package:newversity/flow/teacher/bookings/model/upcoming_session_data.dart';
 import 'package:newversity/flow/teacher/bookings/view/bottom_sheets/sort_by_bottom_sheet_upcoming_session.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
@@ -21,9 +20,10 @@ class UpcomingSessions extends StatefulWidget {
 }
 
 class _UpcomingSessionsState extends State<UpcomingSessions> {
+  List<SessionDetailsResponse>? listOfSessionDetailResponse;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<UpcomingSessionBloc>(context).add(
         FetchAllUpcomingSessionsEvent(
@@ -46,11 +46,6 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
       ],
     );
   }
-
-  List<UpComingSessionData> listOfUpComingSessionData =
-      UpComingSessionData.listOfUpComingData;
-
-  List<SessionDetailsResponse>? listOfSessionDetailResponse;
 
   Widget getListOfUpcomingSessions() {
     return BlocConsumer<UpcomingSessionBloc, UpcomingSessionStates>(
@@ -203,10 +198,12 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
-                  AppText("Starts at : ${getTimeText(index)}",
-                  fontSize: 10,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.cyanBlue,)
+                  AppText(
+                    "Starts at : ${getTimeText(index)}",
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.cyanBlue,
+                  )
                   // getStartingTime(01, 20, 17,
                   //     listOfUpComingSessionData[index].crossedThresholdTime),
                 ],

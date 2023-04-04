@@ -6,6 +6,7 @@ import 'package:newversity/network/webservice/exception.dart';
 
 import '../../../../../common/common_utils.dart';
 import '../../../../../di/di_initializer.dart';
+import '../../../profile/model/profile_completion_percentage_response.dart';
 import '../../../webservice/teacher_base_repository.dart';
 
 part 'session_detail_events.dart';
@@ -31,6 +32,25 @@ class SessionBloc extends Bloc<SessionDetailEvents, SessionStates> {
       teacherId = CommonUtils().getLoggedInUser();
       await fetchTeacherDetail(event, emit);
     });
+
+    on<FetchProfilePercentageInfoEvent>((event, emit) async {
+      teacherId = CommonUtils().getLoggedInUser();
+      await getProfileCompletionInfo(event, emit);
+    });
+  }
+
+  Future<void> getProfileCompletionInfo(event, emit) async {
+    try {
+      emit(FetchingProfileCompletionInfoState());
+      final response =
+          await _teacherBaseRepository.getProfileCompletionInfo(teacherId);
+      emit(FetchedProfileCompletionInfoState(percentageResponse: response));
+    } catch (exception) {
+      if (exception is BadRequestException) {
+        emit(FetchingProfileCompletionInfoFailureState(
+            msg: exception.message.toString()));
+      }
+    }
   }
 
   Future<void> fetchSessionDetails(event, emit) async {

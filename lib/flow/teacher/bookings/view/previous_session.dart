@@ -20,16 +20,18 @@ class PreviousSessions extends StatefulWidget {
 }
 
 class _PreviousSessionsState extends State<PreviousSessions> {
+
+  List<SessionDetailsResponse>? listOfSessionDetailResponse;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<PreviousSessionBloc>(context).add(
         FetchAllPreviousSessionsEvent(
             type: getSessionType(SessionType.previous)));
   }
 
-  List<SessionDetailsResponse>? listOfSessionDetailResponse;
+
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +81,7 @@ class _PreviousSessionsState extends State<PreviousSessions> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Center(
-                    child: Container(
+                    child: SizedBox(
                       height: MediaQuery.of(context).size.height - 300,
                       width: MediaQuery.of(context).size.width,
                       child: const Center(

@@ -14,6 +14,7 @@ class SortByForUpcomingSessionBottomSheet extends StatefulWidget {
 
 class _SortByForUpcomingSessionBottomSheetState
     extends State<SortByForUpcomingSessionBottomSheet> {
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<UpcomingSessionBloc, UpcomingSessionStates>(

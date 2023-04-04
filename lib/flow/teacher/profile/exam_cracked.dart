@@ -17,9 +17,9 @@ class ExamsCracked extends StatefulWidget {
 }
 
 class _ExamsCrackedState extends State<ExamsCracked> {
+
   final _specifyController = TextEditingController();
   List<TagsResponseModel> allExamsTags = [];
-
   List<TagsResponseModel> allSelectedTags = [];
   bool isLoading = false;
   bool showErrorText = false;

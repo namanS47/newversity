@@ -16,9 +16,9 @@ import '../data/model/teacher_details/teacher_details.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
 class PersonalInformation extends StatefulWidget {
-  ProfileDashboardArguments profileDashboardArguments;
+  final ProfileDashboardArguments profileDashboardArguments;
 
-  PersonalInformation({Key? key, required this.profileDashboardArguments})
+  const PersonalInformation({Key? key, required this.profileDashboardArguments})
       : super(key: key);
 
   @override

@@ -4,6 +4,7 @@ import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/flow/teacher/home/model/session_data.dart';
 import 'package:newversity/flow/teacher/home/model/session_response_model.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
@@ -12,6 +13,7 @@ import 'package:newversity/utils/date_time_utils.dart';
 import 'package:newversity/utils/enums.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
+import '../profile/model/profile_dashboard_arguments.dart';
 import 'bloc/session_bloc/session_details_bloc.dart';
 
 class Home extends StatefulWidget {
@@ -24,16 +26,18 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   bool isSessionBooked = true;
   bool isProfileEmpty = false;
-
   TeacherDetails? teacherDetails;
   TeacherDetails? studentDetails;
   List<SessionDetailsResponse>? listOfSessionDetailResponse = [];
   SessionDetailsResponse? nearestStartSession;
+  ProfileCompletionPercentageResponse? profileCompletionPercentageResponse;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    BlocProvider.of<SessionBloc>(context)
+        .add(FetchProfilePercentageInfoEvent());
     BlocProvider.of<SessionBloc>(context).add(FetchTeacherDetailEvent());
     BlocProvider.of<SessionBloc>(context).add(
         FetchSessionDetailEvent(type: getSessionType(SessionType.upcoming)));
@@ -71,6 +75,9 @@ class _HomeState extends State<Home> {
           listOfSessionDetailResponse = state.sessionDetailResponse;
           assignNearestSessionDetail();
         }
+        if (state is FetchedProfileCompletionInfoState) {
+          profileCompletionPercentageResponse = state.percentageResponse;
+        }
         // TODO: implement listener
       },
       builder: (context, state) {
@@ -90,8 +97,11 @@ class _HomeState extends State<Home> {
                               horizontal: 16.0, vertical: 5),
                           child: Column(
                             children: [
-                              getCompleteProfileContainer(),
-                              listOfSessionDetailResponse != null &&
+                              profileCompletionPercentageResponse != null
+                                  ? getCompleteProfileContainer()
+                                  : Container(),
+                              profileCompletionPercentageResponse != null &&
+                                      listOfSessionDetailResponse != null &&
                                       nearestStartSession != null
                                   ? getNextSessionDetailsContainer()
                                   : Container(),
@@ -106,10 +116,17 @@ class _HomeState extends State<Home> {
                               const SizedBox(
                                 height: 20,
                               ),
-                              listOfSessionDetailResponse != null
-                                  ? getScheduleList()
-                                  : const SizedBox(
-                                      height: 200, child: ShimmerEffectView())
+                              profileCompletionPercentageResponse != null &&
+                                      profileCompletionPercentageResponse!
+                                              .completePercentage ==
+                                          100.0
+                                  ? listOfSessionDetailResponse != null
+                                      ? getScheduleList()
+                                      : const SizedBox(
+                                          width: double.infinity,
+                                          height: 200,
+                                          child: ShimmerEffectView())
+                                  : Container()
                             ],
                           ),
                         )
@@ -648,7 +665,8 @@ class _HomeState extends State<Home> {
 
   Widget getNextSessionDetailsContainer() {
     return Visibility(
-      visible: listOfSessionDetailResponse!.isNotEmpty && !isProfileEmpty,
+      visible: listOfSessionDetailResponse!.isNotEmpty &&
+          profileCompletionPercentageResponse!.completePercentage == 100.0,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -744,7 +762,7 @@ class _HomeState extends State<Home> {
 
   Widget getCompleteProfileContainer() {
     return Visibility(
-      visible: isProfileEmpty,
+      visible: profileCompletionPercentageResponse!.completePercentage != 100,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
@@ -790,7 +808,9 @@ class _HomeState extends State<Home> {
   }
 
   onTapCompleteProfileCTA() {
-    Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard);
+    Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
+        arguments:
+            ProfileDashboardArguments(directedIndex: 1, isNewUser: false));
   }
 
   Widget getCompleteProfileCTA() {
