@@ -56,7 +56,6 @@ abstract class TeacherApi {
 
   @POST("/teacher/tags")
   Future<void> saveListOfTags(
-      @Query("category") String category,
       @Body() TagRequestModel tagsList, @Header("teacherId") String teacherId);
 
   @GET("/teacher/education")
