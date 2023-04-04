@@ -2,37 +2,34 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'tags_response_model.g.dart';
 
-@JsonSerializable( fieldRename: FieldRename.none)
+@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
 class TagsResponseModel {
   String? tagName;
-  List<String>? teacherIdList;
   String? tagCategory;
-  String? id;
 
-  @override
-  String toString() {
-    return 'TagsResponseModel{tagName: $tagName, teacherIdList: $teacherIdList, tagCategory: $tagCategory, id: $id, createdAt: $createdAt, modifiedAt: $modifiedAt, createdBy: $createdBy, modifiedBy: $modifiedBy, isDeleted: $isDeleted}';
-  }
+  Map<String, TeacherTagDetails>? teacherTagDetailList;
+  TeacherTagDetails? teacherTagDetails;
 
-  String? createdAt;
-  String? modifiedAt;
-  String? createdBy;
-  String? modifiedBy;
-  bool? isDeleted;
-
-  TagsResponseModel(
-      {this.tagName,
-      this.teacherIdList,
-      this.tagCategory,
-      this.id,
-      this.createdAt,
-      this.modifiedAt,
-      this.createdBy,
-      this.modifiedBy,
-      this.isDeleted});
+  TagsResponseModel({
+    this.tagName,
+    this.tagCategory,
+    this.teacherTagDetailList,
+    this.teacherTagDetails,
+  });
 
   factory TagsResponseModel.fromJson(Map<String, dynamic> json) =>
       _$TagsResponseModelFromJson(json);
+}
 
-  Map<String, dynamic> toJson() => _$TagsResponseModelToJson(this);
+@JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
+class TeacherTagDetails {
+  String? tagStatus;
+  List<String>? documents;
+  String? reason;
+  String? suggestion;
+
+  TeacherTagDetails(
+      {this.tagStatus, this.documents, this.reason, this.suggestion});
+
+  factory TeacherTagDetails.fromJson(Map<String, dynamic> json) => _$TeacherTagDetailsFromJson(json);
 }

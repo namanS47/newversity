@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:newversity/resources/images.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../themes/colors.dart';
@@ -557,6 +561,74 @@ class AppCta extends StatelessWidget {
                 )
               : CommonWidgets.getCircularProgressIndicator(),
         ),
+      ),
+    );
+  }
+}
+
+class ImagePickerOptionBottomSheet extends StatefulWidget {
+  const ImagePickerOptionBottomSheet({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<ImagePickerOptionBottomSheet> createState() => _ImagePickerOptionBottomSheetState();
+}
+
+class _ImagePickerOptionBottomSheetState extends State<ImagePickerOptionBottomSheet> {
+  File? file;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      height: 150,
+      // color: Colors.red,
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              onPressed: () {
+                Navigator.pop(context, file);
+              },
+              icon: const Icon(Icons.cancel),
+            ),
+          ),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: () async {
+                    final image = await ImagePicker().pickImage(source: ImageSource.camera);
+                    if(image != null) {
+                      file = File(image.path);
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text(
+                    "Camera",
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: () async {
+                    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                    if(image != null) {
+                      file = File(image.path);
+                    }
+                  },
+                  child: const Text(
+                    "Gallery",
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

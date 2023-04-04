@@ -6,6 +6,7 @@ import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_detail
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/flow/teacher/profile/view/bootom_sheet_view/profile_set_session_rate.dart';
 import 'package:newversity/resources/images.dart';
+import 'package:newversity/utils/enums.dart';
 
 import '../../../../themes/colors.dart';
 import '../../../../utils/date_time_utils.dart';
@@ -654,8 +655,29 @@ class _ProfileOverviewState extends State<ProfileOverview> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        getTagView(allExperties![index].tagName.toString()),
-        Row(
+        getTagView(allExperties[index].tagName.toString()),
+        uploadDocumentWidget(allExperties[index])
+      ],
+    );
+  }
+
+  Widget uploadDocumentWidget(TagsResponseModel tag) {
+    return Visibility(
+      visible: !(tag.teacherTagDetails?.tagStatus ==
+          TagStatus.Verified.toString().split('.').first),
+      child: GestureDetector(
+        onTap: () async {
+          final result = await showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return ImagePickerOptionBottomSheet(
+
+              );
+            },
+          );
+          print("naman--- ${result}");
+        },
+        child: Row(
           children: [
             SvgPicture.asset(ImageAsset.uploadProfilePic),
             const AppText(
@@ -664,8 +686,8 @@ class _ProfileOverviewState extends State<ProfileOverview> {
               fontWeight: FontWeight.w400,
             ),
           ],
-        )
-      ],
+        ),
+      ),
     );
   }
 
@@ -741,7 +763,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
               height: 5,
             ),
             AppText(
-              teacherDetails != null ? teacherDetails!.info! : "",
+              teacherDetails?.info ?? "",
               fontSize: 12,
               fontWeight: FontWeight.w400,
             )
