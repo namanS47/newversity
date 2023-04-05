@@ -36,6 +36,7 @@ class _ProfileEditSessionRateState extends State<ProfileEditSessionRate> {
       listener: (context, state) {
         if (state is TeacherDetailsSavingSuccessState) {
           isLoading = false;
+          Navigator.pop(context);
         }
       },
       builder: (context, state) {
@@ -108,7 +109,6 @@ class _ProfileEditSessionRateState extends State<ProfileEditSessionRate> {
           teacherDetails: TeacherDetails(sessionPricing: sessionPrice),
         ),
       );
-      Navigator.pop(context);
     } else {
       setState(() {
         showErrorText = true;
