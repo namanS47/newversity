@@ -23,13 +23,11 @@ class ProfileOverview extends StatefulWidget {
 }
 
 class _ProfileOverviewState extends State<ProfileOverview> {
-
   List<TagsResponseModel>? allExpertise;
   List<TagsResponseModel>? allMentorship;
   List<ExperienceResponseModel>? lisOfExperienceModel;
   List<EducationResponseModel>? listOfEducationModel;
   TeacherDetails? teacherDetails;
-
 
   @override
   void initState() {
@@ -44,10 +42,10 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   Widget build(BuildContext context) {
     return BlocConsumer<ProfileBloc, ProfileStates>(
       listener: (context, state) {
-        if (state is FetchedExpertiesState) {
+        if (state is FetchedExpertiseState) {
           allExpertise = state.listOfTags;
         }
-        if (state is FetchedMentorsipState) {
+        if (state is FetchedMentorshipState) {
           allMentorship = state.listOfTags;
         }
         if (state is FetchedTeachersExperiencesState) {
@@ -135,8 +133,8 @@ class _ProfileOverviewState extends State<ProfileOverview> {
         ));
   }
 
-  onAmountEditTap() {
-    showModalBottomSheet<dynamic>(
+  onAmountEditTap() async {
+    await showModalBottomSheet<dynamic>(
         context: context,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -156,7 +154,6 @@ class _ProfileOverviewState extends State<ProfileOverview> {
           // your stateful widget
         }).whenComplete(() {
       BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetailsEvent());
-      setState(() {});
     });
   }
 
@@ -184,13 +181,15 @@ class _ProfileOverviewState extends State<ProfileOverview> {
           children: [
             Expanded(
                 child: getSessionContainer(
-                    teacherDetails!.sessionPricing!["session_type_a"]!, 15)),
+                    teacherDetails?.sessionPricing?["session_type_a"] ?? 0,
+                    15)),
             const SizedBox(
               width: 10,
             ),
             Expanded(
                 child: getSessionContainer(
-                    teacherDetails!.sessionPricing!["session_type_b"]!, 30)),
+                    teacherDetails?.sessionPricing?["session_type_b"] ?? 0,
+                    30)),
           ],
         ),
       ],
@@ -308,7 +307,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getCGPA(int index) {
     return AppText(
-      "CGPA-${listOfEducationModel![index].grade ?? ""}",
+      "CGPA-${listOfEducationModel?[index].grade ?? ""}",
       fontSize: 12,
       fontWeight: FontWeight.w400,
     );
@@ -316,20 +315,20 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getStream(int index) {
     return Text(
-      listOfEducationModel![index].degree ?? "",
+      listOfEducationModel?[index].degree ?? "",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
 
   Widget getEducationalDuration(int index) {
     String duraionString = DateTimeUtils.getEmploymentDurationDateTime(
-        listOfEducationModel![index].startDate ?? DateTime.now());
+        listOfEducationModel?[index].startDate ?? DateTime.now());
     duraionString += "-";
-    if (listOfEducationModel![index].currentlyWorkingHere == true) {
+    if (listOfEducationModel?[index].currentlyWorkingHere == true) {
       duraionString += "Present";
     } else {
       duraionString += DateTimeUtils.getEmploymentDurationDateTime(
-          listOfEducationModel![index].endDate ?? DateTime.now());
+          listOfEducationModel?[index].endDate ?? DateTime.now());
     }
     return Text(
       duraionString,
@@ -339,7 +338,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getEducationalInstitute(int index) {
     return Text(
-      listOfEducationModel![index].name ?? "",
+      listOfEducationModel?[index].name ?? "",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
     );
   }
@@ -380,7 +379,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Text(
-        lisOfExperienceModel![index].location ?? "",
+        lisOfExperienceModel?[index].location ?? "",
         style: const TextStyle(
             color: AppColors.secColor,
             fontSize: 12,
@@ -391,13 +390,13 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getDuration(int index) {
     String durationString = DateTimeUtils.getEmploymentDurationDateTime(
-        lisOfExperienceModel![index].startDate ?? DateTime.now());
+        lisOfExperienceModel?[index].startDate ?? DateTime.now());
     durationString += "-";
-    if (lisOfExperienceModel![index].currentlyWorkingHere == true) {
+    if (lisOfExperienceModel?[index].currentlyWorkingHere == true) {
       durationString += "Present";
     } else {
       durationString += DateTimeUtils.getEmploymentDurationDateTime(
-          lisOfExperienceModel![index].endDate ?? DateTime.now());
+          lisOfExperienceModel?[index].endDate ?? DateTime.now());
     }
 
     return Text(
@@ -408,14 +407,14 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getDesignation(int index) {
     return Text(
-      lisOfExperienceModel![index].title ?? "",
+      lisOfExperienceModel?[index].title ?? "",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
     );
   }
 
   Widget getInstitute(int index) {
     return Text(
-      lisOfExperienceModel![index].companyName ?? "",
+      lisOfExperienceModel?[index].companyName ?? "",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
@@ -512,9 +511,9 @@ class _ProfileOverviewState extends State<ProfileOverview> {
       spacing: 15,
       runSpacing: 12,
       children: List.generate(
-        teacherDetails!.language!.length,
+        teacherDetails?.language?.length ?? 0,
         (curIndex) {
-          return getTagView(teacherDetails!.language![curIndex]);
+          return getTagView(teacherDetails?.language?[curIndex] ?? "");
         },
       ),
     );
@@ -554,7 +553,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
       children: List.generate(
         allMentorship!.length,
         (curIndex) {
-          return getTagView(allMentorship![curIndex].tagName.toString());
+          return getTagView(allMentorship?[curIndex].tagName ?? "");
         },
       ),
     );
@@ -577,7 +576,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
               height: 5,
             ),
             getLocationTagView(teacherDetails != null
-                ? teacherDetails!.location ?? ""
+                ? teacherDetails?.location ?? ""
                 : "Invalid Teacher Data"),
           ],
         ),
@@ -653,8 +652,8 @@ class _ProfileOverviewState extends State<ProfileOverview> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        getTagView(allExpertise![index].tagName.toString()),
-        uploadDocumentWidget(allExpertise![index])
+        getTagView(allExpertise?[index].tagName ?? ""),
+        uploadDocumentWidget(allExpertise?[index] ?? TagsResponseModel())
       ],
     );
   }

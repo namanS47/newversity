@@ -26,7 +26,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
 
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
     BlocProvider.of<ProfileBloc>(context)
         .add(FetchExamTagsEvent(tagCat: getTagCategory(TagCategory.exams)));

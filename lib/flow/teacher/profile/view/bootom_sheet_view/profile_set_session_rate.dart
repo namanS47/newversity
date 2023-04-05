@@ -37,7 +37,6 @@ class _ProfileEditSessionRateState extends State<ProfileEditSessionRate> {
         if (state is TeacherDetailsSavingSuccessState) {
           isLoading = false;
         }
-        // TODO: implement listener
       },
       builder: (context, state) {
         return Padding(

@@ -29,21 +29,9 @@ class _SelectionDetailsState extends State<SelectionDetails> {
   bool showErrorText = false;
   bool showSpecify = false;
 
-  List<String> examsCracked = [
-    "Personal Mentorship",
-    "Exam prep strategy",
-    "Career/Market/Industry insights/Future Trends",
-    "College Planning",
-    "Course/Stream Planning",
-    "Interview prep",
-    "Job preparation",
-    "Professional life experience",
-    "Others",
-  ];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<ProfileBloc>(context)
         .add(FetchMentorshipTag(tagCat: getTagCategory(TagCategory.guidance)));
@@ -69,7 +57,6 @@ class _SelectionDetailsState extends State<SelectionDetails> {
           isLoading = false;
           Navigator.of(context).pushNamed(AppRoutes.teacherHomePageRoute);
         }
-        // TODO: implement listener
       },
       builder: (context, state) {
         return Padding(

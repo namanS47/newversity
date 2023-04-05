@@ -23,6 +23,9 @@ class ExperienceAndEducation extends StatefulWidget {
 }
 
 class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
+  List<ExperienceResponseModel> lisOfExperienceModel = [];
+  List<EducationResponseModel> listOfEducationModel = [];
+
   @override
   void initState() {
     super.initState();
@@ -39,9 +42,6 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
         state is FetchingTeacherEducationFailureState;
   }
 
-  List<ExperienceResponseModel> lisOfExperienceModel = [];
-  List<EducationResponseModel> listOfEducationModel = [];
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ProfileBloc, ProfileStates>(
@@ -54,7 +54,6 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
         if (state is FetchedTeacherEducationState) {
           listOfEducationModel = state.listOfTeacherEducation;
         }
-        // TODO: implement listener
       },
       builder: (context, state) {
         return getExperienceAndQualificationContent();
@@ -243,7 +242,7 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
   Widget getEducationalDuration(int index) {
     String duraionString = listOfEducationModel[index].startDate != null
         ? DateTimeUtils.getEmploymentDurationDateTime(
-            listOfEducationModel[index].startDate!)
+            listOfEducationModel[index].startDate ?? DateTime.now())
         : "";
     duraionString += "-";
     if (listOfEducationModel[index].currentlyWorkingHere == true) {
@@ -251,7 +250,7 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
     } else {
       duraionString += listOfEducationModel[index].endDate != null
           ? DateTimeUtils.getEmploymentDurationDateTime(
-              listOfEducationModel[index].endDate!)
+              listOfEducationModel[index].endDate ?? DateTime.now())
           : "";
     }
     return Text(
@@ -295,13 +294,13 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
 
   Widget getDuration(int index) {
     String duraionString = DateTimeUtils.getEmploymentDurationDateTime(
-        lisOfExperienceModel[index].startDate!);
+        lisOfExperienceModel[index].startDate ?? DateTime.now());
     duraionString += "-";
     if (lisOfExperienceModel[index].currentlyWorkingHere == true) {
       duraionString += "Present";
     } else {
       duraionString += DateTimeUtils.getEmploymentDurationDateTime(
-          lisOfExperienceModel[index].endDate!);
+          lisOfExperienceModel[index].endDate ?? DateTime.now());
     }
 
     return Text(

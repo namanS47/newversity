@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,9 +8,6 @@ import 'package:newversity/themes/strings.dart';
 import 'package:newversity/utils/enums.dart';
 import 'package:newversity/utils/validaters.dart';
 
-import '../../../di/di_initializer.dart';
-import '../../../firestore/data/firestore_repository.dart';
-import '../../../firestore/model/user.dart';
 import '../login_arguments.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -213,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         Navigator.of(context).pushNamed(AppRoutes.otpRoute,
             arguments: LoginArguments(
-              userType: userType ,
+                userType: userType,
                 verificationCode: verificationId,
                 mobileNumber: _phoneNumber,
                 resendToken: resendToken));

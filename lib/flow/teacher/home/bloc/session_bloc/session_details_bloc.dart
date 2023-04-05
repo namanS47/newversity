@@ -49,6 +49,9 @@ class SessionBloc extends Bloc<SessionDetailEvents, SessionStates> {
       if (exception is BadRequestException) {
         emit(FetchingProfileCompletionInfoFailureState(
             msg: exception.message.toString()));
+      } else {
+        emit(FetchingProfileCompletionInfoFailureState(
+            msg: "Something went wrong"));
       }
     }
   }

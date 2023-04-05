@@ -13,9 +13,8 @@ class FetchedSessionDetailState extends SessionStates {
 }
 
 class FetchingSessionDetailFailureState extends SessionStates {
-  FetchingSessionDetailFailureState({required this.message});
-
   final String message;
+  FetchingSessionDetailFailureState({required this.message});
 }
 
 class FetchingProfileCompletionInfoState extends SessionStates {}

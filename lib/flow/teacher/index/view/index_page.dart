@@ -18,7 +18,6 @@ class _IndexPageState extends State<IndexPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<IndexBloc, IndexState>(
       listener: (context, state) {
-        // TODO: implement listener
       },
       builder: (context, state) {
         return Scaffold(
@@ -89,7 +88,8 @@ class _IndexPageState extends State<IndexPage> {
                   const SizedBox(height: 6),
                   AppText(
                     context.read<IndexBloc>().pagesNameWithImageIcon[index]
-                        ['name']!,
+                            ['name'] ??
+                        "",
                     color: context.read<IndexBloc>().selectedIndex == index
                         ? AppColors.primaryColor
                         : AppColors.cyanBlue,

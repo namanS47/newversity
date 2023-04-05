@@ -53,7 +53,6 @@ class _AddEducationState extends State<AddEducation> {
           Navigator.pop(context);
           // Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard);
         }
-        // TODO: implement listener
       },
       builder: (context, state) {
         return Scaffold(

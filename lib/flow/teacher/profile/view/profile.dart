@@ -35,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   onDrawerTap() {
     if (context.read<IndexBloc>().scaffoldKey.currentState != null) {
-      context.read<IndexBloc>().scaffoldKey.currentState!.openDrawer();
+      context.read<IndexBloc>().scaffoldKey.currentState?.openDrawer();
     }
   }
 
@@ -45,7 +45,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       listener: (context, state) {
         if (state is FetchedTeachersProfileState) {
           teacherDetails = state.teacherDetails;
-          // TODO: implement listener
         }
         if (state is FetchedProfileCompletionInfoState) {
           profileCompletionPercentageResponse = state.percentageResponse;
@@ -70,12 +69,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: [
                           Row(
                             children: [
-                              InkWell(
+                              GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
                                   onTap: () => {Navigator.pop(context)},
                                   child: const AppImage(
                                       image: ImageAsset.arrowBack)),
                               const SizedBox(
-                                width: 10,
+                                width: 20,
                               ),
                               const AppText(
                                 "Profile",
@@ -84,7 +84,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ],
                           ),
-                          InkWell(
+                          GestureDetector(
+                              behavior: HitTestBehavior.translucent,
                               onTap: () => onDrawerTap(),
                               child: const AppImage(image: ImageAsset.drawer)),
                         ],
@@ -141,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 10,
                       ),
                       getProfileTab(),
-                      context.read<ProfileBloc>().selctedProfileTab == 0
+                      context.read<ProfileBloc>().selectedProfileTab == 0
                           ? BlocProvider<ProfileBloc>(
                               create: (context) => ProfileBloc(),
                               child: const ProfileOverview())
@@ -158,8 +159,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
     );
   }
-
-  int percentageComplete = 20;
 
   Widget getProfileTab() {
     return Container(
@@ -198,7 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onTap: () {
             onTabTap(index);
           },
-          child: context.read<ProfileBloc>().selctedProfileTab == index
+          child: context.read<ProfileBloc>().selectedProfileTab == index
               ? Container(
                   height: 38,
                   decoration: BoxDecoration(
@@ -247,12 +246,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           animation: true,
           lineWidth: 6.0,
           percent:
-              (profileCompletionPercentageResponse!.completePercentage ?? 0) /
+              (profileCompletionPercentageResponse?.completePercentage ?? 0) /
                   100,
           center: Padding(
             padding: const EdgeInsets.all(3.0),
             child: AppText(
-              "${profileCompletionPercentageResponse!.completePercentage ?? 0} %",
+              "${profileCompletionPercentageResponse?.completePercentage ?? 0} %",
               fontSize: 12,
               fontWeight: FontWeight.w700,
               textAlign: TextAlign.center,

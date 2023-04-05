@@ -25,7 +25,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool isSessionBooked = true;
-  bool isProfileEmpty = false;
   TeacherDetails? teacherDetails;
   TeacherDetails? studentDetails;
   List<SessionDetailsResponse>? listOfSessionDetailResponse = [];
@@ -34,7 +33,6 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<SessionBloc>(context)
         .add(FetchProfilePercentageInfoEvent());
@@ -46,15 +44,17 @@ class _HomeState extends State<Home> {
   Future<void> assignNearestSessionDetail() async {
     if (listOfSessionDetailResponse != null) {
       int minSecond = getLeftTimeInSeconds(
-          listOfSessionDetailResponse![0].startDate ?? DateTime.now());
+          listOfSessionDetailResponse?[0].startDate ?? DateTime.now());
       for (SessionDetailsResponse? sessionDetailsResponse
           in listOfSessionDetailResponse!) {
-        if (getLeftTimeInSeconds(sessionDetailsResponse!.startDate!) <
+        if (getLeftTimeInSeconds(
+                sessionDetailsResponse?.startDate ?? DateTime.now()) <
             minSecond) {
-          minSecond = getLeftTimeInSeconds(sessionDetailsResponse.startDate!);
+          minSecond = getLeftTimeInSeconds(
+              sessionDetailsResponse?.startDate ?? DateTime.now());
           nearestStartSession = sessionDetailsResponse;
         } else {
-          nearestStartSession = listOfSessionDetailResponse![0];
+          nearestStartSession = listOfSessionDetailResponse?[0];
           continue;
         }
       }
@@ -78,7 +78,6 @@ class _HomeState extends State<Home> {
         if (state is FetchedProfileCompletionInfoState) {
           profileCompletionPercentageResponse = state.percentageResponse;
         }
-        // TODO: implement listener
       },
       builder: (context, state) {
         return teacherDetails != null
@@ -117,8 +116,8 @@ class _HomeState extends State<Home> {
                                 height: 20,
                               ),
                               profileCompletionPercentageResponse != null &&
-                                      profileCompletionPercentageResponse!
-                                              .completePercentage ==
+                                      profileCompletionPercentageResponse
+                                              ?.completePercentage ==
                                           100.0
                                   ? listOfSessionDetailResponse != null
                                       ? getScheduleList()
@@ -169,7 +168,7 @@ class _HomeState extends State<Home> {
               spacing: 15,
               runSpacing: 12,
               children: List.generate(
-                listOfSessionDetailResponse!.length,
+                listOfSessionDetailResponse?.length ?? 0,
                 (curIndex) {
                   return scheduleView(curIndex);
                 },
@@ -198,7 +197,7 @@ class _HomeState extends State<Home> {
               height: 5,
             ),
             AppText(
-              listOfSessionDetailResponse![curIndex].agenda ??
+              listOfSessionDetailResponse?[curIndex].agenda ??
                   "This is agenda section",
               fontSize: 12,
               color: AppColors.primaryColor,
@@ -230,7 +229,7 @@ class _HomeState extends State<Home> {
 
   Widget getScheduleDateAndTime(int index) {
     String dateTime =
-        "${DateTimeUtils.getBirthFormattedDateTime(listOfSessionDetailResponse![index].startDate!)} ${DateTimeUtils.getTimeInAMOrPM(listOfSessionDetailResponse![index].startDate!)}";
+        "${DateTimeUtils.getBirthFormattedDateTime(listOfSessionDetailResponse?[index].startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(listOfSessionDetailResponse?[index].startDate ?? DateTime.now())}";
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -239,7 +238,8 @@ class _HomeState extends State<Home> {
           fontSize: 12,
           fontWeight: FontWeight.w600,
         ),
-        getLeftTimeInSeconds(listOfSessionDetailResponse![index].startDate!) <
+        getLeftTimeInSeconds(listOfSessionDetailResponse?[index].startDate ??
+                    DateTime.now()) <
                 1801
             ? getScheduleLeftTime(index)
             : Container()
@@ -249,7 +249,7 @@ class _HomeState extends State<Home> {
 
   Widget getNearestSessionLeftTime() {
     int timeLeftInSeconds =
-        getLeftTimeInSeconds(nearestStartSession!.startDate!);
+        getLeftTimeInSeconds(nearestStartSession?.startDate ?? DateTime.now());
     return Container(
       decoration: BoxDecoration(
         color: AppColors.whiteColor.withOpacity(0.24),
@@ -296,8 +296,8 @@ class _HomeState extends State<Home> {
   bool isTimeUp = false;
 
   Widget getScheduleLeftTime(int index) {
-    int timeLeftInSeconds =
-        getLeftTimeInSeconds(listOfSessionDetailResponse![index].startDate!);
+    int timeLeftInSeconds = getLeftTimeInSeconds(
+        listOfSessionDetailResponse?[index].startDate ?? DateTime.now());
     return Container(
       decoration: BoxDecoration(
         color: AppColors.strongCyan.withOpacity(0.24),
@@ -474,7 +474,8 @@ class _HomeState extends State<Home> {
     return Column(
       children: [
         Visibility(
-          visible: !isProfileEmpty,
+          visible:
+              profileCompletionPercentageResponse?.completePercentage == 100.0,
           child: Container(
             height: 180,
             width: MediaQuery.of(context).size.width,
@@ -509,7 +510,8 @@ class _HomeState extends State<Home> {
           ),
         ),
         Visibility(
-            visible: isProfileEmpty,
+            visible: profileCompletionPercentageResponse?.completePercentage !=
+                100.0,
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -521,7 +523,7 @@ class _HomeState extends State<Home> {
                       BoxShadow(
                         color: AppColors.grey50,
                         blurRadius: 2.0,
-                        offset: Offset(2.0, 2.0),
+                        offset: const Offset(2.0, 2.0),
                       ),
                     ],
                     borderRadius: BorderRadius.circular(20),
@@ -564,18 +566,20 @@ class _HomeState extends State<Home> {
 
   Widget getSessionDateAndTime() {
     return Visibility(
-      visible: !isProfileEmpty && isSessionBooked,
+      visible:
+          profileCompletionPercentageResponse?.completePercentage == 100.0 &&
+              nearestStartSession != null,
       child: Column(
-        children: const [
+        children: [
           AppText(
-            "11 Mar, 4:00 PM",
+            "${DateTimeUtils.getBirthFormattedDateTime(nearestStartSession?.startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(nearestStartSession?.startDate ?? DateTime.now())}",
             fontSize: 16,
             fontWeight: FontWeight.w700,
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          AppText(
+          const AppText(
             "My next availability",
             fontSize: 12,
             fontWeight: FontWeight.w400,
@@ -587,7 +591,9 @@ class _HomeState extends State<Home> {
 
   Widget getSetAvailabilityCTA() {
     return Visibility(
-      visible: !isProfileEmpty && !isSessionBooked,
+      visible:
+          profileCompletionPercentageResponse?.completePercentage == 100.0 &&
+              listOfSessionDetailResponse != null,
       child: Padding(
         padding: const EdgeInsets.only(top: 10.0, right: 20),
         child: Container(
@@ -666,7 +672,7 @@ class _HomeState extends State<Home> {
   Widget getNextSessionDetailsContainer() {
     return Visibility(
       visible: listOfSessionDetailResponse!.isNotEmpty &&
-          profileCompletionPercentageResponse!.completePercentage == 100.0,
+          profileCompletionPercentageResponse?.completePercentage == 100.0,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -682,7 +688,7 @@ class _HomeState extends State<Home> {
                   height: 5,
                 ),
                 AppText(
-                  nearestStartSession!.agenda ?? "This is Agenda Section",
+                  nearestStartSession?.agenda ?? "This is Agenda Section",
                   fontSize: 12,
                   color: AppColors.whiteColor,
                   fontWeight: FontWeight.w500,
@@ -691,10 +697,10 @@ class _HomeState extends State<Home> {
                   height: 10,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 100.0),
+                  padding: const EdgeInsets.only(right: 100.0),
                   child: AppText(
                     "Next session with"
-                    "${nearestStartSession!.studentId ?? " "}",
+                    "${nearestStartSession?.studentId ?? " "}",
                     fontSize: 14,
                     color: AppColors.whiteColor,
                     fontWeight: FontWeight.w500,
@@ -746,7 +752,8 @@ class _HomeState extends State<Home> {
           fontWeight: FontWeight.w600,
           color: AppColors.whiteColor,
         ),
-        getLeftTimeInSeconds(nearestStartSession!.startDate!) < 1801
+        getLeftTimeInSeconds(nearestStartSession?.startDate ?? DateTime.now()) <
+                1801
             ? getNearestSessionLeftTime()
             : Container()
       ],
@@ -756,13 +763,13 @@ class _HomeState extends State<Home> {
   String getTimeText() {
     String text = "";
     text =
-        "${DateTimeUtils.getBirthFormattedDateTime(nearestStartSession!.startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(nearestStartSession!.startDate ?? DateTime.now())} - ${DateTimeUtils.getTimeInAMOrPM(nearestStartSession!.endDate ?? DateTime.now())}";
+        "${DateTimeUtils.getBirthFormattedDateTime(nearestStartSession?.startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(nearestStartSession?.startDate ?? DateTime.now())} - ${DateTimeUtils.getTimeInAMOrPM(nearestStartSession?.endDate ?? DateTime.now())}";
     return text;
   }
 
   Widget getCompleteProfileContainer() {
     return Visibility(
-      visible: profileCompletionPercentageResponse!.completePercentage != 100,
+      visible: profileCompletionPercentageResponse?.completePercentage != 100,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
@@ -839,7 +846,7 @@ class _HomeState extends State<Home> {
 }
 
 class HomeAppBar extends PreferredSize {
-  double appSizeHeight;
+  final double appSizeHeight;
   final TeacherDetails? teacherDetails;
 
   HomeAppBar(
