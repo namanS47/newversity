@@ -16,3 +16,9 @@ class TeacherImageUploadLoadingState extends TeacherDetailsState {}
 class TeacherImageUploadSuccessState extends TeacherDetailsState {}
 
 class TeacherImageUploadFailureState extends TeacherDetailsState {}
+
+class FetchTeacherDetailLoadingState extends TeacherDetailsState {}
+
+class FetchTeacherDetailSuccessState extends TeacherDetailsState {}
+
+class FetchTeacherDetailFailureState extends TeacherDetailsState {}

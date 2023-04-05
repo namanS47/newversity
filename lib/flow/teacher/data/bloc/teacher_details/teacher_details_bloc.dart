@@ -16,6 +16,7 @@ part 'teacher_details_state.dart';
 class TeacherDetailsBloc extends Bloc<TeacherDetailsEvent, TeacherDetailsState> {
   final TeacherBaseRepository _teacherBaseRepository = DI.inject<TeacherBaseRepository>();
   String teacherId = CommonUtils().getLoggedInUser();
+  TeacherDetails? teacherDetails;
 
   TeacherDetailsBloc() : super(TeacherDetailsInitial()) {
     on<SaveTeacherDetailsEvent>((event, emit) async {
@@ -38,6 +39,17 @@ class TeacherDetailsBloc extends Bloc<TeacherDetailsEvent, TeacherDetailsState> 
         emit(TeacherImageUploadSuccessState());
       } catch(exception) {
         emit(TeacherImageUploadFailureState());
+      }
+    });
+
+    on<FetchTeacherDetailEvent>((event, emit) async {
+      emit(FetchTeacherDetailLoadingState());
+      try{
+        teacherDetails =
+        await _teacherBaseRepository.getTeachersDetail(teacherId);
+        emit(FetchTeacherDetailSuccessState());
+      } catch (exception) {
+        emit(FetchTeacherDetailFailureState());
       }
     });
   }

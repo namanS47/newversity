@@ -12,3 +12,5 @@ class UploadTeacherImageEvent extends TeacherDetailsEvent {
   UploadTeacherImageEvent({required this.file});
   final XFile file;
 }
+
+class FetchTeacherDetailEvent extends TeacherDetailsEvent {}

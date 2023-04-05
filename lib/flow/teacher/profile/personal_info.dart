@@ -16,8 +16,8 @@ import '../data/model/teacher_details/teacher_details.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
 class PersonalInformation extends StatefulWidget {
-
   final ProfileDashboardArguments profileDashboardArguments;
+
   const PersonalInformation({Key? key, required this.profileDashboardArguments})
       : super(key: key);
 
@@ -38,21 +38,33 @@ class _PersonalInformationState extends State<PersonalInformation> {
   bool isLoading = false;
 
   @override
+  void initState() {
+    context.read<TeacherDetailsBloc>().add(FetchTeacherDetailEvent());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<TeacherDetailsBloc, TeacherDetailsState>(
         builder: (BuildContext context, TeacherDetailsState state) {
-          if (state is TeacherDetailsInitial) {
-            return getContentWidget(context);
-          }
-          if (state is TeacherDetailsSavingState) {
-            return getContentWidget(context);
-          }
-          return getContentWidget(context);
-        }, listener: (BuildContext context, TeacherDetailsState state) {
+      if (state is TeacherDetailsInitial) {
+        return getContentWidget(context);
+      }
+      if (state is TeacherDetailsSavingState) {
+        return getContentWidget(context);
+      }
+      return getContentWidget(context);
+    }, listener: (BuildContext context, TeacherDetailsState state) {
       if (state is TeacherDetailsSavingSuccessState) {
         isLoading = false;
         context.read<ProfileBloc>().add(ChangeProfileCardIndexEvent());
-      } else if (state is TeacherDetailsSavingFailureState) {
+      } else if(state is FetchTeacherDetailSuccessState) {
+        TeacherDetails? details = context.read<TeacherDetailsBloc>().teacherDetails;
+        _nameController.text = details?.name ?? "";
+        _titleController.text = details?.title ?? "";
+        _infoController.text = details?.info ?? "";
+        _locationController.text = details?.location ?? "";
+      }  else if (state is TeacherDetailsSavingFailureState) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
@@ -177,13 +189,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
   Widget getUploadPictureBuilder() {
     return BlocBuilder<TeacherDetailsBloc, TeacherDetailsState>(
       builder: (context, state) {
-        if(state is TeacherImageUploadLoadingState) {
+        if (state is TeacherImageUploadLoadingState) {
           return getUploadPictureLayout(context, true, "Loading");
         }
-        if(state is TeacherImageUploadSuccessState) {
+        if (state is TeacherImageUploadSuccessState) {
           return getUploadPictureLayout(context, false, "Uploaded");
         }
-        if(state is TeacherImageUploadFailureState) {
+        if (state is TeacherImageUploadFailureState) {
           return getUploadPictureLayout(context, false, "Failed");
         }
         return getUploadPictureLayout(context, false, "Upload");
@@ -191,7 +203,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
     );
   }
 
-  Widget getUploadPictureLayout(BuildContext context, bool isLoading, String ctaText) {
+  Widget getUploadPictureLayout(
+      BuildContext context, bool isLoading, String ctaText) {
     return Row(
       children: [
         Container(
@@ -222,14 +235,15 @@ class _PersonalInformationState extends State<PersonalInformation> {
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(2.0),
-                child: isLoading ? CommonWidgets.getCircularProgressIndicator() :
-                Text(
-                  ctaText,
-                  style: const TextStyle(
-                      color: AppColors.whiteColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400),
-                ),
+                child: isLoading
+                    ? CommonWidgets.getCircularProgressIndicator()
+                    : Text(
+                        ctaText,
+                        style: const TextStyle(
+                            color: AppColors.whiteColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400),
+                      ),
               ),
             ),
           ),
@@ -262,7 +276,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
         return ImagePickerOptionBottomSheet(
           onCameraClick: () async {
             final image =
-            await ImagePicker().pickImage(source: ImageSource.camera);
+                await ImagePicker().pickImage(source: ImageSource.camera);
             if (image != null) {
               file = image;
               Navigator.pop(context);
@@ -270,7 +284,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           },
           onGalleryClick: () async {
             final image =
-            await ImagePicker().pickImage(source: ImageSource.gallery);
+                await ImagePicker().pickImage(source: ImageSource.gallery);
             if (image != null) {
               file = image;
               Navigator.pop(context);
@@ -280,8 +294,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
       },
     ).whenComplete(() {
       if (file != null) {
-        context.read<TeacherDetailsBloc>().add(
-            UploadTeacherImageEvent(file: file!));
+        context
+            .read<TeacherDetailsBloc>()
+            .add(UploadTeacherImageEvent(file: file!));
       }
     });
   }
@@ -420,22 +435,22 @@ class ProfilePhotoPopUp extends StatelessWidget {
                 alignment: Alignment.center,
                 child: isNullOrEmpty(profileUrl)
                     ? CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 50,
-                  child: SvgPicture.asset(
-                    ImageAsset.blueAvatar,
-                    width: 100,
-                    height: 100,
-                  ),
-                )
+                        backgroundColor: Colors.white,
+                        radius: 50,
+                        child: SvgPicture.asset(
+                          ImageAsset.blueAvatar,
+                          width: 100,
+                          height: 100,
+                        ),
+                      )
                     : CircleAvatar(
-                  radius: 50,
-                  foregroundImage: NetworkImage(
-                    profileUrl,
-                  ),
-                  backgroundColor: Colors.white,
-                  child: const CircularProgressIndicator(),
-                ),
+                        radius: 50,
+                        foregroundImage: NetworkImage(
+                          profileUrl,
+                        ),
+                        backgroundColor: Colors.white,
+                        child: const CircularProgressIndicator(),
+                      ),
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 4),
@@ -477,7 +492,7 @@ class ProfilePhotoPopUp extends StatelessWidget {
               GestureDetector(
                 onTap: () async {
                   final _pickedFile =
-                  await _picker.pickImage(source: ImageSource.gallery);
+                      await _picker.pickImage(source: ImageSource.gallery);
                   Navigator.pop(context);
                   if (_pickedFile != null) {
                     // BlocProvider.of<ProfileBloc>(blocContext).add(
