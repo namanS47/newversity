@@ -1,12 +1,15 @@
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:newversity/di/di_initializer.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/storage/preferences.dart';
 import 'package:newversity/utils/enums.dart';
 import 'package:newversity/utils/string_extensions.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path/path.dart' as path;
 
 
 class CommonUtils {
@@ -73,5 +76,17 @@ class CommonUtils {
       case Gender.other:
         return "Other";
     }
+  }
+
+  File renameFile(XFile xFile, String id) {
+    String dir = path.dirname(xFile.path);
+    String fileName = path.basename(xFile.path);
+    String newFileName =
+        DateTime.now().toString().replaceAll(RegExp('[^A-Za-z0-9]'), "") +
+            id +
+            fileName.substring(fileName.indexOf('.'));
+    String newPath = path.join(dir, newFileName);
+    File file = File(xFile.path);
+    return file.renameSync(newPath);
   }
 }

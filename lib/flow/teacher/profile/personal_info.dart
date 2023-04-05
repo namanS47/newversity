@@ -16,8 +16,10 @@ import '../data/model/teacher_details/teacher_details.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
 class PersonalInformation extends StatefulWidget {
+  final ProfileDashboardArguments profileDashboardArguments;
 
   final ProfileDashboardArguments profileDashboardArguments;
+  const PersonalInformation({Key? key, required this.profileDashboardArguments})
   const PersonalInformation({Key? key, required this.profileDashboardArguments})
       : super(key: key);
 
@@ -41,14 +43,14 @@ class _PersonalInformationState extends State<PersonalInformation> {
   Widget build(BuildContext context) {
     return BlocConsumer<TeacherDetailsBloc, TeacherDetailsState>(
         builder: (BuildContext context, TeacherDetailsState state) {
-      if (state is TeacherDetailsInitial) {
-        return getContentWidget(context);
-      }
-      if (state is TeacherDetailsSavingState) {
-        return getContentWidget(context);
-      }
-      return getContentWidget(context);
-    }, listener: (BuildContext context, TeacherDetailsState state) {
+          if (state is TeacherDetailsInitial) {
+            return getContentWidget(context);
+          }
+          if (state is TeacherDetailsSavingState) {
+            return getContentWidget(context);
+          }
+          return getContentWidget(context);
+        }, listener: (BuildContext context, TeacherDetailsState state) {
       if (state is TeacherDetailsSavingSuccessState) {
         isLoading = false;
         context.read<ProfileBloc>().add(ChangeProfileCardIndexEvent());
@@ -96,7 +98,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   const SizedBox(
                     height: 10,
                   ),
-                  getUploadPictureLayout(context),
+                  getUploadPictureBuilder(),
                   const SizedBox(
                     height: 20,
                   ),
@@ -174,21 +176,40 @@ class _PersonalInformationState extends State<PersonalInformation> {
     );
   }
 
-  Widget getUploadPictureLayout(BuildContext context) {
+  Widget getUploadPictureBuilder() {
+    return BlocBuilder<TeacherDetailsBloc, TeacherDetailsState>(
+      builder: (context, state) {
+        if(state is TeacherImageUploadLoadingState) {
+          return getUploadPictureLayout(context, true, "Loading");
+        }
+        if(state is TeacherImageUploadSuccessState) {
+          return getUploadPictureLayout(context, false, "Uploaded");
+        }
+        if(state is TeacherImageUploadFailureState) {
+          return getUploadPictureLayout(context, false, "Failed");
+        }
+        return getUploadPictureLayout(context, false, "Upload");
+      },
+    );
+  }
+
+  Widget getUploadPictureLayout(BuildContext context, bool isLoading, String ctaText) {
     return Row(
       children: [
         Container(
-            height: 60,
-            width: 60,
-            decoration: BoxDecoration(
-              color: AppColors.grey35,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-                child: Padding(
+          height: 60,
+          width: 60,
+          decoration: BoxDecoration(
+            color: AppColors.grey35,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Center(
+            child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: SvgPicture.asset(ImageAsset.uploadProfilePic),
-            ))),
+            ),
+          ),
+        ),
         const SizedBox(
           width: 10,
         ),
@@ -200,12 +221,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: AppColors.primaryColor),
-            child: const Center(
+            child: Center(
               child: Padding(
-                padding: EdgeInsets.all(2.0),
-                child: Text(
-                  "Upload",
-                  style: TextStyle(
+                padding: const EdgeInsets.all(2.0),
+                child: isLoading ? CommonWidgets.getCircularProgressIndicator() :
+                Text(
+                  ctaText,
+                  style: const TextStyle(
                       color: AppColors.whiteColor,
                       fontSize: 12,
                       fontWeight: FontWeight.w400),
@@ -235,15 +257,35 @@ class _PersonalInformationState extends State<PersonalInformation> {
   }
 
   upLoadPic(BuildContext context) {
-    showDialog(
+    XFile? file;
+    showModalBottomSheet(
       context: context,
-      builder: (_) {
-        return ProfilePhotoPopUp(
-          blocContext: context,
-          profileUrl: "",
+      builder: (context) {
+        return ImagePickerOptionBottomSheet(
+          onCameraClick: () async {
+            final image =
+            await ImagePicker().pickImage(source: ImageSource.camera);
+            if (image != null) {
+              file = image;
+              Navigator.pop(context);
+            }
+          },
+          onGalleryClick: () async {
+            final image =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+            if (image != null) {
+              file = image;
+              Navigator.pop(context);
+            }
+          },
         );
       },
-    );
+    ).whenComplete(() {
+      if (file != null) {
+        context.read<TeacherDetailsBloc>().add(
+            UploadTeacherImageEvent(file: file!));
+      }
+    });
   }
 
   Widget getYourNameTextField() {
@@ -380,22 +422,22 @@ class ProfilePhotoPopUp extends StatelessWidget {
                 alignment: Alignment.center,
                 child: isNullOrEmpty(profileUrl)
                     ? CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 50,
-                        child: SvgPicture.asset(
-                          ImageAsset.blueAvatar,
-                          width: 100,
-                          height: 100,
-                        ),
-                      )
+                  backgroundColor: Colors.white,
+                  radius: 50,
+                  child: SvgPicture.asset(
+                    ImageAsset.blueAvatar,
+                    width: 100,
+                    height: 100,
+                  ),
+                )
                     : CircleAvatar(
-                        radius: 50,
-                        foregroundImage: NetworkImage(
-                          profileUrl,
-                        ),
-                        backgroundColor: Colors.white,
-                        child: const CircularProgressIndicator(),
-                      ),
+                  radius: 50,
+                  foregroundImage: NetworkImage(
+                    profileUrl,
+                  ),
+                  backgroundColor: Colors.white,
+                  child: const CircularProgressIndicator(),
+                ),
               ),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 4),
@@ -437,7 +479,7 @@ class ProfilePhotoPopUp extends StatelessWidget {
               GestureDetector(
                 onTap: () async {
                   final _pickedFile =
-                      await _picker.pickImage(source: ImageSource.gallery);
+                  await _picker.pickImage(source: ImageSource.gallery);
                   Navigator.pop(context);
                   if (_pickedFile != null) {
                     // BlocProvider.of<ProfileBloc>(blocContext).add(

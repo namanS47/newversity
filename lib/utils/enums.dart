@@ -4,7 +4,7 @@ enum Gender { male, female, other }
 
 enum SlotType { short, long, both }
 
-enum TagStatus { Verified, Unverified, Failed }
+enum TagStatus { Verified, Unverified, Failed, InProcess}
 
 enum SessionType { upcoming, previous }
 

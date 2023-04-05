@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_response_model.dart';
@@ -88,6 +89,19 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
     on<FetchProfileCompletionInfoEvent>((event, emit) async {
       teacherId = CommonUtils().getLoggedInUser();
       await getProfileCompletionInfo(event, emit);
+    });
+
+    on<UploadDocumentEvent>((event, emit) async {
+      emit(UploadDocumentLoadingState(tag: event.tag));
+      try{
+        File newFile = CommonUtils().renameFile(event.file, teacherId);
+        await _teacherBaseRepository.uploadTagDocument(
+            newFile, teacherId, event.tag.tagName ?? "");
+        newFile.delete();
+        emit(UploadDocumentSuccessState(tag: event.tag));
+      } catch(exception) {
+        emit(UploadDocumentFailureState(tag: event.tag));
+      }
     });
   }
 
