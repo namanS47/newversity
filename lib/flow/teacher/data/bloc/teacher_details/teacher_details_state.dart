@@ -10,3 +10,9 @@ class TeacherDetailsSavingState extends TeacherDetailsState{}
 class TeacherDetailsSavingSuccessState extends TeacherDetailsState {}
 
 class TeacherDetailsSavingFailureState extends TeacherDetailsState {}
+
+class TeacherImageUploadLoadingState extends TeacherDetailsState {}
+
+class TeacherImageUploadSuccessState extends TeacherDetailsState {}
+
+class TeacherImageUploadFailureState extends TeacherDetailsState {}

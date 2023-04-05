@@ -87,3 +87,18 @@ class FetchedMentorshipTagsState extends ProfileStates {
 }
 
 class FetchingTagsFailure extends ProfileStates {}
+
+class UploadDocumentLoadingState extends ProfileStates {
+  UploadDocumentLoadingState({required this.tag});
+  final TagsResponseModel tag;
+}
+
+class UploadDocumentSuccessState extends ProfileStates {
+  UploadDocumentSuccessState({required this.tag});
+  final TagsResponseModel tag;
+}
+
+class UploadDocumentFailureState extends ProfileStates {
+  UploadDocumentFailureState({required this.tag});
+  final TagsResponseModel tag;
+}

@@ -196,7 +196,7 @@ class AppAnimatedBottomSheet extends StatelessWidget {
 }
 
 class AppImage extends StatelessWidget {
-  final String? image;
+  final String image;
   final double? height;
   final double? webHeight;
   final double? width;
@@ -207,7 +207,7 @@ class AppImage extends StatelessWidget {
 
   const AppImage({
     Key? key,
-    @required this.image,
+    required this.image,
     this.webFit,
     this.fit,
     this.height,
@@ -219,9 +219,9 @@ class AppImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return image!.contains('http')
+    return image.contains('http')
         ? CachedNetworkImage(
-            imageUrl: '$image',
+            imageUrl: image,
             height: webHeight,
             width: webWidth,
             fit: webFit ?? BoxFit.cover,
@@ -231,7 +231,7 @@ class AppImage extends StatelessWidget {
             errorWidget: (context, url, error) =>
                 const Icon(Icons.error, color: Colors.red),
           )
-        : image!.contains('product/') || image!.contains('public/')
+        : image.contains('product/') || image.contains('public/')
             ? CachedNetworkImage(
                 imageUrl: 'https://d3df8f1z9cx8fl.cloudfront.net/$image',
                 height: webHeight,
@@ -243,16 +243,16 @@ class AppImage extends StatelessWidget {
                 errorWidget: (context, url, error) =>
                     const Icon(Icons.error, color: Colors.red),
               )
-            : image!.split('.').last != 'svg'
+            : image.split('.').last != 'svg'
                 ? Image.asset(
-                    image!,
+                    image,
                     fit: fit,
                     height: height,
                     width: width,
                     color: color,
                   )
                 : SvgPicture.asset(
-                    image!,
+                    image,
                     height: height,
                     width: width,
                     color: color,
@@ -569,14 +569,18 @@ class AppCta extends StatelessWidget {
 class ImagePickerOptionBottomSheet extends StatefulWidget {
   const ImagePickerOptionBottomSheet({
     Key? key,
+    required this.onCameraClick,
+    required this.onGalleryClick
   }) : super(key: key);
+
+  final void Function() onCameraClick;
+  final void Function() onGalleryClick;
 
   @override
   State<ImagePickerOptionBottomSheet> createState() => _ImagePickerOptionBottomSheetState();
 }
 
 class _ImagePickerOptionBottomSheetState extends State<ImagePickerOptionBottomSheet> {
-  File? file;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -589,7 +593,7 @@ class _ImagePickerOptionBottomSheetState extends State<ImagePickerOptionBottomSh
             alignment: Alignment.centerRight,
             child: IconButton(
               onPressed: () {
-                Navigator.pop(context, file);
+                Navigator.pop(context);
               },
               icon: const Icon(Icons.cancel),
             ),
@@ -600,13 +604,7 @@ class _ImagePickerOptionBottomSheetState extends State<ImagePickerOptionBottomSh
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () async {
-                    final image = await ImagePicker().pickImage(source: ImageSource.camera);
-                    if(image != null) {
-                      file = File(image.path);
-                      Navigator.pop(context);
-                    }
-                  },
+                  onTap: widget.onCameraClick,
                   child: const Text(
                     "Camera",
                     style: TextStyle(fontWeight: FontWeight.w600),
@@ -614,12 +612,7 @@ class _ImagePickerOptionBottomSheetState extends State<ImagePickerOptionBottomSh
                 ),
                 const Spacer(),
                 GestureDetector(
-                  onTap: () async {
-                    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                    if(image != null) {
-                      file = File(image.path);
-                    }
-                  },
+                  onTap: widget.onGalleryClick,
                   child: const Text(
                     "Gallery",
                     style: TextStyle(fontWeight: FontWeight.w600),

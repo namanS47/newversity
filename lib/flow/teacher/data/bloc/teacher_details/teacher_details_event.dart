@@ -7,3 +7,8 @@ class SaveTeacherDetailsEvent extends TeacherDetailsEvent {
   SaveTeacherDetailsEvent({required this.teacherDetails});
   final TeacherDetails teacherDetails;
 }
+
+class UploadTeacherImageEvent extends TeacherDetailsEvent {
+  UploadTeacherImageEvent({required this.file});
+  final XFile file;
+}

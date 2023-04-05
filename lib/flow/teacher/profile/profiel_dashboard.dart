@@ -15,8 +15,8 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
 class ProfileDashboard extends StatefulWidget {
-  ProfileDashboardArguments profileDashboardArguments;
-  ProfileDashboard({Key? key, required this.profileDashboardArguments})
+  final ProfileDashboardArguments profileDashboardArguments;
+  const ProfileDashboard({Key? key, required this.profileDashboardArguments})
       : super(key: key);
 
   @override
