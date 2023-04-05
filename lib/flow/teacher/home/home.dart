@@ -906,10 +906,19 @@ class HomeAppBar extends PreferredSize {
   Widget getProfileImage(BuildContext context) {
     return GestureDetector(
       onTap: () => navigateToProfileScreen(context),
-      child: CircleAvatar(
-        radius: 25,
-        child: AppImage(
-          image: teacherDetails?.profileUrl ?? ImageAsset.blueAvatar,
+      child: SizedBox(
+        height: 44,
+        width: 44,
+        child: CircleAvatar(
+          radius: 30.0,
+          foregroundImage: teacherDetails?.profilePictureUrl != null
+              ? NetworkImage(teacherDetails!.profilePictureUrl!)
+              : null,
+          child: teacherDetails?.profilePictureUrl == null
+              ? const AppImage(
+            image: ImageAsset.blueAvatar,
+          )
+              : CommonWidgets.getCircularProgressIndicator(),
         ),
       ),
     );
