@@ -276,7 +276,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
         return ImagePickerOptionBottomSheet(
           onCameraClick: () async {
             final image =
-                await ImagePicker().pickImage(source: ImageSource.camera);
+                await ImagePicker().pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
             if (image != null) {
               file = image;
               Navigator.pop(context);
@@ -391,7 +391,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
               location: _locationController.text,
               title: _titleController.text,
               info: _infoController.text,
-              profilePictureUrl: "yet to be added"),
+          ),
         ),
       );
     } else {

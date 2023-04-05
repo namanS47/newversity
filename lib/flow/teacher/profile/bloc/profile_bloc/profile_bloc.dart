@@ -25,13 +25,14 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
   int currentProfileStep = 1;
   double sliderWidth = 195.0;
   double sliderPadding = 0.0;
-  String teacherId = "";
+  String teacherId = CommonUtils().getLoggedInUser();
   int selectedSkinTone = 0;
   int selectedProfileTab = 0;
   List<String> listOfProfileSection = ["Overview", "Review"];
   List<Widget> profileCardList = <Widget>[];
   final TeacherBaseRepository _teacherBaseRepository =
       DI.inject<TeacherBaseRepository>();
+
 
   ProfileBloc() : super(ProfileInitial()) {
     on<ChangeProfileCardIndexEvent>((event, emit) async {

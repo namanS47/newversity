@@ -692,7 +692,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
             return ImagePickerOptionBottomSheet(
               onCameraClick: () async {
                 final image =
-                    await ImagePicker().pickImage(source: ImageSource.camera);
+                    await ImagePicker().pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
                 if (image != null) {
                   file = image;
                   Navigator.pop(context);

@@ -57,7 +57,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (context, state) {
         return Scaffold(
           key: scaffoldKey,
-          endDrawer: const SizedBox(width: 240, child: ProfileDrawerScreen()),
+          drawer: const SizedBox(width: 240, child: ProfileDrawerScreen()),
+          drawerEnableOpenDragGesture: true,
           resizeToAvoidBottomInset: true,
           body: Stack(
             children: [
