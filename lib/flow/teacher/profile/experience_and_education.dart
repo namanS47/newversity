@@ -15,7 +15,8 @@ import 'model/education_response_model.dart';
 
 class ExperienceAndEducation extends StatefulWidget {
   final ProfileDashboardArguments profileDashboardArguments;
-  const ExperienceAndEducation({Key? key, required this.profileDashboardArguments})
+  const ExperienceAndEducation(
+      {Key? key, required this.profileDashboardArguments})
       : super(key: key);
 
   @override
@@ -153,9 +154,9 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
                 height: 5,
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   getEducationalDuration(index),
-                  const Spacer(),
                   getCGPA(index),
                 ],
               ),
@@ -165,10 +166,6 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
             ],
           ),
         ),
-        const SizedBox(
-          width: 10,
-        ),
-        getCGPA(index),
       ],
     );
   }
@@ -240,21 +237,17 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
   }
 
   Widget getEducationalDuration(int index) {
-    String duraionString = listOfEducationModel[index].startDate != null
-        ? DateTimeUtils.getEmploymentDurationDateTime(
-            listOfEducationModel[index].startDate ?? DateTime.now())
-        : "";
-    duraionString += "-";
+    String durationString = DateTimeUtils.getEmploymentDurationDateTime(
+        listOfEducationModel[index].startDate ?? DateTime.now());
+    durationString += " - ";
     if (listOfEducationModel[index].currentlyWorkingHere == true) {
-      duraionString += "Present";
+      durationString += "Present";
     } else {
-      duraionString += listOfEducationModel[index].endDate != null
-          ? DateTimeUtils.getEmploymentDurationDateTime(
-              listOfEducationModel[index].endDate ?? DateTime.now())
-          : "";
+      durationString += DateTimeUtils.getEmploymentDurationDateTime(
+          listOfEducationModel[index].endDate ?? DateTime.now());
     }
     return Text(
-      duraionString,
+      durationString,
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
@@ -293,18 +286,18 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
   }
 
   Widget getDuration(int index) {
-    String duraionString = DateTimeUtils.getEmploymentDurationDateTime(
+    String durationString = DateTimeUtils.getEmploymentDurationDateTime(
         lisOfExperienceModel[index].startDate ?? DateTime.now());
-    duraionString += "-";
+    durationString += " - ";
     if (lisOfExperienceModel[index].currentlyWorkingHere == true) {
-      duraionString += "Present";
+      durationString += "Present";
     } else {
-      duraionString += DateTimeUtils.getEmploymentDurationDateTime(
+      durationString += DateTimeUtils.getEmploymentDurationDateTime(
           lisOfExperienceModel[index].endDate ?? DateTime.now());
     }
 
     return Text(
-      duraionString,
+      durationString,
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     );
   }

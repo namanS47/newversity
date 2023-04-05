@@ -255,10 +255,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
         const SizedBox(
           height: 5,
         ),
-        listOfEducationModel.isNotEmpty
-                ? getEducation()
-                : noDataFound(40)
-
+        listOfEducationModel.isNotEmpty ? getEducation() : noDataFound(40)
       ],
     );
   }
@@ -467,9 +464,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
         const SizedBox(
           height: 5,
         ),
-        lisOfExperienceModel.isNotEmpty
-                ? getExperience()
-                : noDataFound(40)
+        lisOfExperienceModel.isNotEmpty ? getExperience() : noDataFound(40)
       ],
     );
   }
@@ -532,9 +527,9 @@ class _ProfileOverviewState extends State<ProfileOverview> {
             const SizedBox(
               height: 5,
             ),
-                allMentorship.isNotEmpty
-                    ? getListOfTalkingPoints()
-                    : noDataFound(40),
+            allMentorship.isNotEmpty
+                ? getListOfTalkingPoints()
+                : noDataFound(40),
           ],
         ),
       ),
@@ -595,9 +590,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
             const SizedBox(
               height: 5,
             ),
-            allExpertise.isNotEmpty
-                    ? getListOfExperties()
-                    : noDataFound(40)
+            allExpertise.isNotEmpty ? getListOfExperties() : noDataFound(40)
           ],
         ),
       ),
