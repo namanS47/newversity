@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
-import 'package:newversity/resources/images.dart';
+import 'package:newversity/flow/teacher/index/view/profile_drawer_screen.dart';
 import 'package:newversity/themes/colors.dart';
 
 import '../bloc/index_bloc.dart';
@@ -18,11 +18,12 @@ class _IndexPageState extends State<IndexPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<IndexBloc, IndexState>(
       listener: (context, state) {
-        // TODO: implement listener
       },
       builder: (context, state) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
+          endDrawer: const SizedBox(width: 240, child: ProfileDrawerScreen()),
+          drawerEnableOpenDragGesture: true,
           bottomNavigationBar: Row(
             children: List.generate(
               context.read<IndexBloc>().indexPages.length,
@@ -75,7 +76,7 @@ class _IndexPageState extends State<IndexPage> {
                   AppImage(
                     image: context
                         .read<IndexBloc>()
-                        .pagesNameWithImageIcon[index]['image'],
+                        .pagesNameWithImageIcon[index]['image'] ?? "",
                     color: context.read<IndexBloc>().selectedIndex == index
                         ? AppColors.primaryColor
                         : AppColors.cyanBlue,
@@ -86,7 +87,8 @@ class _IndexPageState extends State<IndexPage> {
                   const SizedBox(height: 6),
                   AppText(
                     context.read<IndexBloc>().pagesNameWithImageIcon[index]
-                        ['name']!,
+                            ['name'] ??
+                        "",
                     color: context.read<IndexBloc>().selectedIndex == index
                         ? AppColors.primaryColor
                         : AppColors.cyanBlue,
@@ -106,5 +108,3 @@ class _IndexPageState extends State<IndexPage> {
     );
   }
 }
-
-

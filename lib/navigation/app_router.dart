@@ -6,6 +6,7 @@ import 'package:newversity/flow/initial_route/ui/initial_route.dart';
 import 'package:newversity/flow/student/seesion/book_session.dart';
 import 'package:newversity/flow/teacher/availability/availability_bloc/availability_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/bloc/session_details_bloc/session_details_bloc.dart';
+import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
 import 'package:newversity/flow/teacher/bookings/view/session_details.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
 import 'package:newversity/flow/teacher/index/bloc/index_bloc.dart';
@@ -83,7 +84,13 @@ class AppRouter {
       return const BookSession();
     }
     if (route.toString() == AppRoutes.share) {
-      return const ShareScreen();
+      return BlocProvider<TeacherDetailsBloc>(
+        create: (context) => TeacherDetailsBloc(),
+        child: BlocProvider<ProfileBloc>(
+          create: (context) => ProfileBloc(),
+          child: const ShareScreen(),
+        ),
+      );
     }
     if (route.toString() == AppRoutes.bank) {
       return const BankScreen();
@@ -108,8 +115,11 @@ class AppRouter {
       return const ProfileEditOption();
     }
     if (route.toString() == AppRoutes.profileScreen) {
-      return BlocProvider<ProfileBloc>(
-          create: (context) => ProfileBloc(), child: const ProfileScreen());
+      return BlocProvider<IndexBloc>(
+        create: (context) => IndexBloc(),
+        child: BlocProvider<ProfileBloc>(
+            create: (context) => ProfileBloc(), child: const ProfileScreen()),
+      );
     }
 
     if (route.toString() == AppRoutes.teacherProfileDashBoard) {
@@ -123,8 +133,8 @@ class AppRouter {
     if (route.toString() == AppRoutes.sessionDetails) {
       return BlocProvider<SessionDetailsBloc>(
           create: (context) => SessionDetailsBloc(),
-          child: SessionDetails(
-            isPrevious: params as bool,
+          child: SessionDetailsScreen(
+            sessionDetailArguments: params as SessionDetailArguments,
           ));
     }
 

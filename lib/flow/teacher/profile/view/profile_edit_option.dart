@@ -14,6 +14,7 @@ class ProfileEditOption extends StatefulWidget {
 }
 
 class _ProfileEditOptionState extends State<ProfileEditOption> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,19 +87,19 @@ class _ProfileEditOptionState extends State<ProfileEditOption> {
   onPersonalInfoTap() {
     Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
         arguments:
-            ProfileDashboardArguments(directedIndex: 1, isNewUser: false));
+            ProfileDashboardArguments(directedIndex: 1, showBackButton: false));
   }
 
   onExperienceAndEducationTap() {
     Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
         arguments:
-            ProfileDashboardArguments(directedIndex: 2, isNewUser: false));
+            ProfileDashboardArguments(directedIndex: 2, showBackButton: false));
   }
 
   onTeacherPreferenceTap() {
     Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
         arguments:
-            ProfileDashboardArguments(directedIndex: 4, isNewUser: false));
+            ProfileDashboardArguments(directedIndex: 4, showBackButton: false));
   }
 
   Widget getPersonalInfoEditLayout() {

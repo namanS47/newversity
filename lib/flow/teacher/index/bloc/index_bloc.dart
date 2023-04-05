@@ -1,8 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/teacher/availability/availability_route.dart';
+import 'package:newversity/flow/teacher/bookings/bloc/session_details_bloc/session_details_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/bloc/teacher_bookings_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/view/bookings.dart';
+import 'package:newversity/flow/teacher/home/bloc/session_bloc/session_details_bloc.dart';
 import 'package:newversity/resources/images.dart';
 
 import '../../availability/availability_bloc/availability_bloc.dart';
@@ -15,7 +17,10 @@ part 'index_state.dart';
 class IndexBloc extends Bloc<IndexEvents, IndexState> {
   int selectedIndex = 0;
   List<Widget> indexPages = <Widget>[
-    const Home(),
+    BlocProvider(
+      create: (context) => SessionBloc(),
+      child: const Home(),
+    ),
     BlocProvider(
       create: (context) => TeacherBookingsBloc(),
       child: const Bookings(),
@@ -27,7 +32,7 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
   ];
 
   List<String> drawerOptions = <String>[
-    ImageAsset.share,
+    ImageAsset.user,
     ImageAsset.bank,
     ImageAsset.settings,
     ImageAsset.privacyPolicy,

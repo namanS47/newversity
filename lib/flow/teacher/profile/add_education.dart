@@ -19,17 +19,17 @@ class AddEducation extends StatefulWidget {
 }
 
 class _AddEducationState extends State<AddEducation> {
+
   final TextEditingController _schoolController = TextEditingController();
-
   final TextEditingController _degreeController = TextEditingController();
-
   final TextEditingController _startDateController = TextEditingController();
-
   final TextEditingController _endDateController = TextEditingController();
-
   final TextEditingController _gradeController = TextEditingController();
-
   bool isLoading = false;
+  bool showErrorText = false;
+  bool isCurrentlyWorkingHere = false;
+  DateTime? selectedStartDate;
+  DateTime? selectedEndDate;
 
   bool isRebuildWidgetState(ProfileStates state) {
     return state is SavingTeacherEducationState ||
@@ -53,7 +53,6 @@ class _AddEducationState extends State<AddEducation> {
           Navigator.pop(context);
           // Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard);
         }
-        // TODO: implement listener
       },
       builder: (context, state) {
         return Scaffold(
@@ -165,7 +164,7 @@ class _AddEducationState extends State<AddEducation> {
     );
   }
 
-  bool showErrorText = false;
+
 
   onAddingEducation(BuildContext context) async {
     if (isFormValid()) {
@@ -200,7 +199,7 @@ class _AddEducationState extends State<AddEducation> {
         (_endDateController.text.isNotEmpty || isCurrentlyWorkingHere);
   }
 
-  bool isCurrentlyWorkingHere = false;
+
 
   Widget getCurrentlyWorkingLayout() {
     return Row(
@@ -293,9 +292,7 @@ class _AddEducationState extends State<AddEducation> {
     );
   }
 
-  DateTime? selectedStartDate;
 
-  DateTime? selectedEndDate;
 
   Future<void> selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(

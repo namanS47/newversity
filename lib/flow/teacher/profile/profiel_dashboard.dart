@@ -15,8 +15,8 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
 class ProfileDashboard extends StatefulWidget {
-  ProfileDashboardArguments profileDashboardArguments;
-  ProfileDashboard({Key? key, required this.profileDashboardArguments})
+  final ProfileDashboardArguments profileDashboardArguments;
+  const ProfileDashboard({Key? key, required this.profileDashboardArguments})
       : super(key: key);
 
   @override
@@ -24,9 +24,9 @@ class ProfileDashboard extends StatefulWidget {
 }
 
 class _ProfileDashboardState extends State<ProfileDashboard> {
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     context.read<ProfileBloc>().currentProfileStep =
         widget.profileDashboardArguments.directedIndex;
@@ -68,14 +68,18 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Visibility(
-                        visible: !widget.profileDashboardArguments.isNewUser ||
+                        visible: !widget.profileDashboardArguments.showBackButton ||
                             !(context.read<ProfileBloc>().currentProfileStep ==
-                                1),
+                                0),
                         child: GestureDetector(
                           onTap: () async {
-                            context
-                                .read<ProfileBloc>()
-                                .add(ChangeProfileCardIndexEvent(isBack: true));
+                            if (context.read<ProfileBloc>().currentProfileStep >
+                                1) {
+                              context.read<ProfileBloc>().add(
+                                  ChangeProfileCardIndexEvent(isBack: true));
+                            } else {
+                              Navigator.pop(context);
+                            }
                           },
                           child: Container(
                             alignment: Alignment.centerLeft,
@@ -104,7 +108,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                                 padding: 0,
                                 selectedColor: AppColors.primaryColor,
                                 unselectedColor: AppColors.grey32,
-                                roundedEdges: Radius.circular(100),
+                                roundedEdges: const Radius.circular(100),
                               ),
                             ),
                           ],
@@ -117,7 +121,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                             Navigator.of(context)
                                 .pushNamed(AppRoutes.teacherHomePageRoute);
                           },
-                          child: Text("Skip"),
+                          child: const Text("Skip"),
                         ),
                       )
                     ],

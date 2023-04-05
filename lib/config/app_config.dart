@@ -62,11 +62,11 @@ class AppConfig {
 class EnvironmentValues {
   //Staging
   static const String newversityStagingUrl =
-      "http://newversityupdated-env.eba-dqvzpbuf.us-east-2.elasticbeanstalk.com/";
+      "http://newversity-env.eba-w8mvmik7.ap-south-1.elasticbeanstalk.com/";
 
   // static const String newversityStagingUrl = "http://10.154.22.161:8080/";
 
   // Production
   static const String newversityProductionUrl =
-      "http://newversityupdated-env.eba-dqvzpbuf.us-east-2.elasticbeanstalk.com/";
+      "http://newversity-env.eba-w8mvmik7.ap-south-1.elasticbeanstalk.com/";
 }

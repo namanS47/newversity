@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/flow/teacher/home/model/session_data.dart';
+import 'package:newversity/flow/teacher/home/model/session_response_model.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
+import 'package:newversity/utils/date_time_utils.dart';
+import 'package:newversity/utils/enums.dart';
+import 'package:slide_countdown/slide_countdown.dart';
+
+import '../profile/model/profile_dashboard_arguments.dart';
+import 'bloc/session_bloc/session_details_bloc.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -15,43 +25,123 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool isSessionBooked = true;
-  bool isProfileEmpty = false;
+  TeacherDetails? teacherDetails;
+  TeacherDetails? studentDetails;
+  List<SessionDetailsResponse>? listOfSessionDetailResponse = [];
+  SessionDetailsResponse? nearestStartSession;
+  ProfileCompletionPercentageResponse? profileCompletionPercentageResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<SessionBloc>(context)
+        .add(FetchProfilePercentageInfoEvent());
+    BlocProvider.of<SessionBloc>(context).add(FetchTeacherDetailEvent());
+    BlocProvider.of<SessionBloc>(context).add(
+        FetchSessionDetailEvent(type: getSessionType(SessionType.upcoming)));
+  }
+
+  Future<void> assignNearestSessionDetail() async {
+    if (listOfSessionDetailResponse != null && listOfSessionDetailResponse?.isNotEmpty == true) {
+      int minSecond = getLeftTimeInSeconds(
+          listOfSessionDetailResponse?[0].startDate ?? DateTime.now());
+      for (SessionDetailsResponse? sessionDetailsResponse
+          in listOfSessionDetailResponse!) {
+        if (getLeftTimeInSeconds(
+                sessionDetailsResponse?.startDate ?? DateTime.now()) <
+            minSecond) {
+          minSecond = getLeftTimeInSeconds(
+              sessionDetailsResponse?.startDate ?? DateTime.now());
+          nearestStartSession = sessionDetailsResponse;
+        } else {
+          nearestStartSession = listOfSessionDetailResponse?[0];
+          continue;
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        HomeAppBar(appSizeHeight: 100),
-        Expanded(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5),
-                child: Column(
-                  children: [
-                    getCompleteProfileContainer(),
-                    getNextSessionDetailsContainer(),
-                    const SizedBox(
-                      height: 10,
+    return BlocConsumer<SessionBloc, SessionStates>(
+      listener: (context, state) {
+        if (state is FetchedStudentDetailState) {
+          studentDetails = state.studentDetails;
+        }
+        if (state is FetchedTeacherDetailState) {
+          teacherDetails = state.teacherDetails;
+        }
+        if (state is FetchedSessionDetailState) {
+          listOfSessionDetailResponse = state.sessionDetailResponse;
+          assignNearestSessionDetail();
+        }
+        if (state is FetchedProfileCompletionInfoState) {
+          profileCompletionPercentageResponse = state.percentageResponse;
+        }
+      },
+      builder: (context, state) {
+        return teacherDetails != null
+            ? Column(
+                children: [
+                  teacherDetails != null
+                      ? HomeAppBar(
+                          teacherDetails: teacherDetails, appSizeHeight: 100)
+                      : Container(),
+                  Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 5),
+                          child: Column(
+                            children: [
+                              profileCompletionPercentageResponse != null
+                                  ? getCompleteProfileContainer()
+                                  : Container(),
+                              profileCompletionPercentageResponse != null &&
+                                      listOfSessionDetailResponse != null &&
+                                      nearestStartSession != null
+                                  ? getNextSessionDetailsContainer()
+                                  : Container(),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              getDashBoardDetailContainers(),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              getHowItWorksContainer(),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              profileCompletionPercentageResponse != null &&
+                                      profileCompletionPercentageResponse
+                                              ?.completePercentage ==
+                                          100.0
+                                  ? listOfSessionDetailResponse != null
+                                      ? getScheduleList()
+                                      : const SizedBox(
+                                          width: double.infinity,
+                                          height: 200,
+                                          child: ShimmerEffectView())
+                                  : Container()
+                            ],
+                          ),
+                        )
+                      ],
                     ),
-                    getDashBoardDetailContainers(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    getHowItWorksContainer(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    getScheduleList()
-                  ],
-                ),
+                  ),
+                ],
               )
-            ],
-          ),
-        ),
-      ],
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Center(child: CircularProgressIndicator()),
+                ],
+              );
+      },
     );
   }
 
@@ -59,7 +149,7 @@ class _HomeState extends State<Home> {
 
   Widget getScheduleList() {
     return Visibility(
-      visible: !isProfileEmpty && isSessionBooked,
+      visible: listOfSessionDetailResponse!.isNotEmpty,
       child: Container(
         margin: const EdgeInsets.all(8.0),
         padding: const EdgeInsets.all(8.0),
@@ -78,7 +168,7 @@ class _HomeState extends State<Home> {
               spacing: 15,
               runSpacing: 12,
               children: List.generate(
-                listOfSessionData.length,
+                listOfSessionDetailResponse?.length ?? 0,
                 (curIndex) {
                   return scheduleView(curIndex);
                 },
@@ -107,7 +197,8 @@ class _HomeState extends State<Home> {
               height: 5,
             ),
             AppText(
-              listOfSessionData[curIndex].nextSessionTopic,
+              listOfSessionDetailResponse?[curIndex].agenda ??
+                  "This is agenda section",
               fontSize: 12,
               color: AppColors.primaryColor,
               fontWeight: FontWeight.w500,
@@ -118,7 +209,7 @@ class _HomeState extends State<Home> {
             Padding(
               padding: const EdgeInsets.only(right: 100.0),
               child: AppText(
-                "Next session with ${listOfSessionData[curIndex].mentor}",
+                "Next session with ${studentDetails?.name ?? "Mahesh"}",
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -137,23 +228,77 @@ class _HomeState extends State<Home> {
   }
 
   Widget getScheduleDateAndTime(int index) {
+    String dateTime =
+        "${DateTimeUtils.getBirthFormattedDateTime(listOfSessionDetailResponse?[index].startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(listOfSessionDetailResponse?[index].startDate ?? DateTime.now())}";
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         AppText(
-          listOfSessionData[index].dateTime,
+          dateTime,
           fontSize: 12,
           fontWeight: FontWeight.w600,
         ),
-        getScheduleLeftTime(index)
+        getLeftTimeInSeconds(listOfSessionDetailResponse?[index].startDate ??
+                    DateTime.now()) <
+                1801
+            ? getScheduleLeftTime(index)
+            : Container()
       ],
     );
   }
 
-  Widget getScheduleLeftTime(int index) {
+  Widget getNearestSessionLeftTime() {
+    int timeLeftInSeconds =
+        getLeftTimeInSeconds(nearestStartSession?.startDate ?? DateTime.now());
     return Container(
-      height: 30,
-      width: 79,
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor.withOpacity(0.24),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            children: [
+              const AppText("In "),
+              SlideCountdown(
+                duration: Duration(seconds: timeLeftInSeconds),
+                decoration: const BoxDecoration(
+                  color: Colors.transparent,
+                ),
+                slideDirection: SlideDirection.down,
+                durationTitle: DurationTitle.id(),
+                separator: ":",
+                onDone: () {
+                  isTimeUp = true;
+                },
+                textStyle: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                ),
+                separatorStyle:
+                    const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+              ),
+            ],
+          )
+
+          // AppText(
+          //   "$timeLeftInSeconds",
+          //   fontSize: 12,
+          //   fontWeight: FontWeight.w400,
+          // ),
+          ,
+        ),
+      ),
+    );
+  }
+
+  bool isTimeUp = false;
+
+  Widget getScheduleLeftTime(int index) {
+    int timeLeftInSeconds = getLeftTimeInSeconds(
+        listOfSessionDetailResponse?[index].startDate ?? DateTime.now());
+    return Container(
       decoration: BoxDecoration(
         color: AppColors.strongCyan.withOpacity(0.24),
         borderRadius: BorderRadius.circular(5),
@@ -161,14 +306,43 @@ class _HomeState extends State<Home> {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(8),
-          child: AppText(
-            listOfSessionData[index].timeLeft,
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-          ),
+          child: Row(
+            children: [
+              const AppText("In "),
+              SlideCountdown(
+                duration: Duration(seconds: timeLeftInSeconds),
+                decoration: const BoxDecoration(
+                  color: Colors.transparent,
+                ),
+                slideDirection: SlideDirection.down,
+                durationTitle: DurationTitle.id(),
+                separator: ":",
+                onDone: () {
+                  isTimeUp = true;
+                },
+                textStyle: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                ),
+                separatorStyle:
+                    const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+              ),
+            ],
+          )
+
+          // AppText(
+          //   "$timeLeftInSeconds",
+          //   fontSize: 12,
+          //   fontWeight: FontWeight.w400,
+          // ),
+          ,
         ),
       ),
     );
+  }
+
+  int getLeftTimeInSeconds(DateTime dateTime) {
+    return (dateTime.difference(DateTime.now()).inSeconds);
   }
 
   Widget getTodayScheduleHeader() {
@@ -300,7 +474,8 @@ class _HomeState extends State<Home> {
     return Column(
       children: [
         Visibility(
-          visible: !isProfileEmpty,
+          visible:
+              profileCompletionPercentageResponse?.completePercentage == 100.0,
           child: Container(
             height: 180,
             width: MediaQuery.of(context).size.width,
@@ -335,7 +510,8 @@ class _HomeState extends State<Home> {
           ),
         ),
         Visibility(
-            visible: isProfileEmpty,
+            visible: profileCompletionPercentageResponse?.completePercentage !=
+                100.0,
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -347,7 +523,7 @@ class _HomeState extends State<Home> {
                       BoxShadow(
                         color: AppColors.grey50,
                         blurRadius: 2.0,
-                        offset: Offset(2.0, 2.0),
+                        offset: const Offset(2.0, 2.0),
                       ),
                     ],
                     borderRadius: BorderRadius.circular(20),
@@ -390,18 +566,20 @@ class _HomeState extends State<Home> {
 
   Widget getSessionDateAndTime() {
     return Visibility(
-      visible: !isProfileEmpty && isSessionBooked,
+      visible:
+          profileCompletionPercentageResponse?.completePercentage == 100.0 &&
+              nearestStartSession != null,
       child: Column(
-        children: const [
+        children: [
           AppText(
-            "11 Mar, 4:00 PM",
+            "${DateTimeUtils.getBirthFormattedDateTime(nearestStartSession?.startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(nearestStartSession?.startDate ?? DateTime.now())}",
             fontSize: 16,
             fontWeight: FontWeight.w700,
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          AppText(
+          const AppText(
             "My next availability",
             fontSize: 12,
             fontWeight: FontWeight.w400,
@@ -413,7 +591,9 @@ class _HomeState extends State<Home> {
 
   Widget getSetAvailabilityCTA() {
     return Visibility(
-      visible: !isProfileEmpty && !isSessionBooked,
+      visible:
+          profileCompletionPercentageResponse?.completePercentage == 100.0 &&
+              listOfSessionDetailResponse != null,
       child: Padding(
         padding: const EdgeInsets.only(top: 10.0, right: 20),
         child: Container(
@@ -491,7 +671,8 @@ class _HomeState extends State<Home> {
 
   Widget getNextSessionDetailsContainer() {
     return Visibility(
-      visible: isSessionBooked && !isProfileEmpty,
+      visible: listOfSessionDetailResponse!.isNotEmpty &&
+          profileCompletionPercentageResponse?.completePercentage == 100.0,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -506,8 +687,8 @@ class _HomeState extends State<Home> {
                 const SizedBox(
                   height: 5,
                 ),
-                const AppText(
-                  "JEE MAIN doubt clearing",
+                AppText(
+                  nearestStartSession?.agenda ?? "This is Agenda Section",
                   fontSize: 12,
                   color: AppColors.whiteColor,
                   fontWeight: FontWeight.w500,
@@ -515,10 +696,11 @@ class _HomeState extends State<Home> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 100.0),
+                Padding(
+                  padding: const EdgeInsets.only(right: 100.0),
                   child: AppText(
-                    "Next session with Mahesh",
+                    "Next session with"
+                    "${nearestStartSession?.studentId ?? " "}",
                     fontSize: 14,
                     color: AppColors.whiteColor,
                     fontWeight: FontWeight.w500,
@@ -564,20 +746,30 @@ class _HomeState extends State<Home> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const AppText(
-          "Feb 11  02:00 PM",
+        AppText(
+          getTimeText(),
           fontSize: 12,
           fontWeight: FontWeight.w600,
           color: AppColors.whiteColor,
         ),
-        getLeftTimeBeforeSession()
+        getLeftTimeInSeconds(nearestStartSession?.startDate ?? DateTime.now()) <
+                1801
+            ? getNearestSessionLeftTime()
+            : Container()
       ],
     );
   }
 
+  String getTimeText() {
+    String text = "";
+    text =
+        "${DateTimeUtils.getBirthFormattedDateTime(nearestStartSession?.startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(nearestStartSession?.startDate ?? DateTime.now())} - ${DateTimeUtils.getTimeInAMOrPM(nearestStartSession?.endDate ?? DateTime.now())}";
+    return text;
+  }
+
   Widget getCompleteProfileContainer() {
     return Visibility(
-      visible: isProfileEmpty,
+      visible: profileCompletionPercentageResponse?.completePercentage != 100,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
@@ -623,7 +815,9 @@ class _HomeState extends State<Home> {
   }
 
   onTapCompleteProfileCTA() {
-    Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard);
+    Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
+        arguments:
+            ProfileDashboardArguments(directedIndex: 1, isNewUser: false));
   }
 
   Widget getCompleteProfileCTA() {
@@ -652,8 +846,11 @@ class _HomeState extends State<Home> {
 }
 
 class HomeAppBar extends PreferredSize {
-  double appSizeHeight;
-  HomeAppBar({Key? key, required this.appSizeHeight})
+  final double appSizeHeight;
+  final TeacherDetails? teacherDetails;
+
+  HomeAppBar(
+      {Key? key, required this.appSizeHeight, required this.teacherDetails})
       : super(
             key: key,
             child: Container(),
@@ -686,13 +883,13 @@ class HomeAppBar extends PreferredSize {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           AppText(
-            "Hi, Akshat Kamesra",
+            "Hi ${teacherDetails?.name ?? "Guest"}",
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
-          AppText("Good Morning!")
+          const AppText("Good Morning!")
         ],
       ),
     ));
@@ -709,10 +906,19 @@ class HomeAppBar extends PreferredSize {
   Widget getProfileImage(BuildContext context) {
     return GestureDetector(
       onTap: () => navigateToProfileScreen(context),
-      child: const CircleAvatar(
-        radius: 25,
-        child: AppImage(
-          image: ImageAsset.blueAvatar,
+      child: SizedBox(
+        height: 44,
+        width: 44,
+        child: CircleAvatar(
+          radius: 30.0,
+          foregroundImage: teacherDetails?.profilePictureUrl != null
+              ? NetworkImage(teacherDetails!.profilePictureUrl!)
+              : null,
+          child: teacherDetails?.profilePictureUrl == null
+              ? const AppImage(
+            image: ImageAsset.blueAvatar,
+          )
+              : CommonWidgets.getCircularProgressIndicator(),
         ),
       ),
     );

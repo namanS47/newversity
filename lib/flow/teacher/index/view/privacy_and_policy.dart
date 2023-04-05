@@ -1,4 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import '../../../../common/common_widgets.dart';
 
 class PrivacyAndPolicy extends StatefulWidget {
   const PrivacyAndPolicy({Key? key}) : super(key: key);
@@ -10,6 +12,14 @@ class PrivacyAndPolicy extends StatefulWidget {
 class _PrivacyAndPolicyState extends State<PrivacyAndPolicy> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: const [
+          AppText("Coming soon"),
+        ],
+      ),
+    );
   }
 }

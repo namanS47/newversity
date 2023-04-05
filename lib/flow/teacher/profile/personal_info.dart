@@ -16,9 +16,9 @@ import '../data/model/teacher_details/teacher_details.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
 class PersonalInformation extends StatefulWidget {
-  ProfileDashboardArguments profileDashboardArguments;
+  final ProfileDashboardArguments profileDashboardArguments;
 
-  PersonalInformation({Key? key, required this.profileDashboardArguments})
+  const PersonalInformation({Key? key, required this.profileDashboardArguments})
       : super(key: key);
 
   @override
@@ -38,6 +38,12 @@ class _PersonalInformationState extends State<PersonalInformation> {
   bool isLoading = false;
 
   @override
+  void initState() {
+    context.read<TeacherDetailsBloc>().add(FetchTeacherDetailEvent());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<TeacherDetailsBloc, TeacherDetailsState>(
         builder: (BuildContext context, TeacherDetailsState state) {
@@ -52,7 +58,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
       if (state is TeacherDetailsSavingSuccessState) {
         isLoading = false;
         context.read<ProfileBloc>().add(ChangeProfileCardIndexEvent());
-      } else if (state is TeacherDetailsSavingFailureState) {
+      } else if(state is FetchTeacherDetailSuccessState) {
+        TeacherDetails? details = context.read<TeacherDetailsBloc>().teacherDetails;
+        _nameController.text = details?.name ?? "";
+        _titleController.text = details?.title ?? "";
+        _infoController.text = details?.info ?? "";
+        _locationController.text = details?.location ?? "";
+      }  else if (state is TeacherDetailsSavingFailureState) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
@@ -96,7 +108,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   const SizedBox(
                     height: 10,
                   ),
-                  getUploadPictureLayout(context),
+                  getUploadPictureBuilder(),
                   const SizedBox(
                     height: 20,
                   ),
@@ -158,7 +170,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
   Widget getProceedCTA(BuildContext context) {
     return AppCta(
       onTap: () => onTapContinueButton(context),
-      text: !widget.profileDashboardArguments.isNewUser
+      text: !widget.profileDashboardArguments.showBackButton
           ? AppStrings.update
           : AppStrings.proceed,
       isLoading: isLoading,
@@ -174,21 +186,41 @@ class _PersonalInformationState extends State<PersonalInformation> {
     );
   }
 
-  Widget getUploadPictureLayout(BuildContext context) {
+  Widget getUploadPictureBuilder() {
+    return BlocBuilder<TeacherDetailsBloc, TeacherDetailsState>(
+      builder: (context, state) {
+        if (state is TeacherImageUploadLoadingState) {
+          return getUploadPictureLayout(context, true, "Loading");
+        }
+        if (state is TeacherImageUploadSuccessState) {
+          return getUploadPictureLayout(context, false, "Uploaded");
+        }
+        if (state is TeacherImageUploadFailureState) {
+          return getUploadPictureLayout(context, false, "Failed");
+        }
+        return getUploadPictureLayout(context, false, "Upload");
+      },
+    );
+  }
+
+  Widget getUploadPictureLayout(
+      BuildContext context, bool isLoading, String ctaText) {
     return Row(
       children: [
         Container(
-            height: 60,
-            width: 60,
-            decoration: BoxDecoration(
-              color: AppColors.grey35,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-                child: Padding(
+          height: 60,
+          width: 60,
+          decoration: BoxDecoration(
+            color: AppColors.grey35,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Center(
+            child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: SvgPicture.asset(ImageAsset.uploadProfilePic),
-            ))),
+            ),
+          ),
+        ),
         const SizedBox(
           width: 10,
         ),
@@ -200,16 +232,18 @@ class _PersonalInformationState extends State<PersonalInformation> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: AppColors.primaryColor),
-            child: const Center(
+            child: Center(
               child: Padding(
-                padding: EdgeInsets.all(2.0),
-                child: Text(
-                  "Upload",
-                  style: TextStyle(
-                      color: AppColors.whiteColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400),
-                ),
+                padding: const EdgeInsets.all(2.0),
+                child: isLoading
+                    ? CommonWidgets.getCircularProgressIndicator()
+                    : Text(
+                        ctaText,
+                        style: const TextStyle(
+                            color: AppColors.whiteColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400),
+                      ),
               ),
             ),
           ),
@@ -235,15 +269,36 @@ class _PersonalInformationState extends State<PersonalInformation> {
   }
 
   upLoadPic(BuildContext context) {
-    showDialog(
+    XFile? file;
+    showModalBottomSheet(
       context: context,
-      builder: (_) {
-        return ProfilePhotoPopUp(
-          blocContext: context,
-          profileUrl: "",
+      builder: (context) {
+        return ImagePickerOptionBottomSheet(
+          onCameraClick: () async {
+            final image =
+                await ImagePicker().pickImage(source: ImageSource.camera);
+            if (image != null) {
+              file = image;
+              Navigator.pop(context);
+            }
+          },
+          onGalleryClick: () async {
+            final image =
+                await ImagePicker().pickImage(source: ImageSource.gallery);
+            if (image != null) {
+              file = image;
+              Navigator.pop(context);
+            }
+          },
         );
       },
-    );
+    ).whenComplete(() {
+      if (file != null) {
+        context
+            .read<TeacherDetailsBloc>()
+            .add(UploadTeacherImageEvent(file: file!));
+      }
+    });
   }
 
   Widget getYourNameTextField() {

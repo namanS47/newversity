@@ -4,6 +4,6 @@ part of 'teacher_bookings_bloc.dart';
 abstract class TeacherBookingEvent {}
 
 class ChangeSessionTabEvent extends TeacherBookingEvent {
-  int index;
+  final int index;
   ChangeSessionTabEvent({required this.index});
 }

@@ -4,13 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:newversity/di/di_initializer.dart';
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/storage/preferences.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
-import 'package:newversity/utils/enums.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../../../common/common_widgets.dart';
@@ -147,6 +145,7 @@ class _OtpRouteState extends State<OtpRoute> {
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
       child: AppCta(
         onTap: onButtonTap,
+        text: AppStrings.verifyOtp,
         isLoading: _isLoading,
       ),
     );
@@ -185,7 +184,6 @@ class _OtpRouteState extends State<OtpRoute> {
       setState(() {
         _isLoading = false;
       });
-      print("Please enter corrent otp");
     }
   }
 

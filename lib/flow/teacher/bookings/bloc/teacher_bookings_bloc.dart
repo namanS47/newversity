@@ -12,14 +12,14 @@ class TeacherBookingsBloc
 
   TeacherBookingsBloc() : super(TeacherBookingInitial()) {
     on<ChangeSessionTabEvent>((event, emit) async {
-      updateSessionTab(event, emit);
+      await updateSessionTab(event, emit);
     });
   }
 
   Future<void> updateSessionTab(event, emit) async {
     if (event is ChangeSessionTabEvent) {
       selectedIndex = event.index;
-      emit(UpdatedSessionState());
+      await emit(UpdatedSessionState());
     }
   }
 }

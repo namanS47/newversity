@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/bloc/previous_section_bloc/previous_session_bloc.dart';
-import 'package:newversity/flow/teacher/bookings/model/previous_session_data.dart';
+import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
 import 'package:newversity/flow/teacher/bookings/view/bottom_sheets/sort_by_bottom_sheet_previous_session.dart';
+import 'package:newversity/utils/date_time_utils.dart';
+import 'package:newversity/utils/enums.dart';
 
 import '../../../../common/common_widgets.dart';
 import '../../../../navigation/app_routes.dart';
 import '../../../../resources/images.dart';
 import '../../../../themes/colors.dart';
+import '../../home/model/session_response_model.dart';
 
 class PreviousSessions extends StatefulWidget {
   const PreviousSessions({Key? key}) : super(key: key);
@@ -17,11 +20,26 @@ class PreviousSessions extends StatefulWidget {
 }
 
 class _PreviousSessionsState extends State<PreviousSessions> {
+
+  List<SessionDetailsResponse>? listOfSessionDetailResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<PreviousSessionBloc>(context).add(
+        FetchAllPreviousSessionsEvent(
+            type: getSessionType(SessionType.previous)));
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PreviousSessionBloc, PreviousSessionStates>(
       listener: (context, state) {
-        // TODO: implement listener
+        if (state is FetchedPreviousSessionState) {
+          listOfSessionDetailResponse = state.listOfPreviousSession;
+        }
       },
       builder: (context, state) {
         return Column(
@@ -29,12 +47,11 @@ class _PreviousSessionsState extends State<PreviousSessions> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(
-              height: 10,
-            ),
-            getTimeFilter(),
-            const SizedBox(
-              height: 10,
-            ),
+              height: 30,
+            ), // getTimeFilter(),
+            // const SizedBox(
+            //   height: 10,
+            // ),
             getListOfPreviousSessions(),
           ],
         );
@@ -42,38 +59,89 @@ class _PreviousSessionsState extends State<PreviousSessions> {
     );
   }
 
-  List<PreviousSessionData> listOfPreviousData =
-      PreviousSessionData.listOfPreviousData;
-
   Widget getListOfPreviousSessions() {
-    return Wrap(
-      spacing: 15,
-      runSpacing: 12,
-      children: List.generate(
-        listOfPreviousData.length,
-        (curIndex) {
-          return getPreviousSessionDataView(curIndex);
-        },
-      ),
-    );
+    return listOfSessionDetailResponse != null
+        ? listOfSessionDetailResponse!.isNotEmpty
+            ? BlocBuilder<PreviousSessionBloc, PreviousSessionStates>(
+                builder: (context, state) {
+                  return Wrap(
+                    spacing: 15,
+                    runSpacing: 12,
+                    children: List.generate(
+                      listOfSessionDetailResponse!.length,
+                      (curIndex) {
+                        return getPreviousSessionDataView(curIndex);
+                      },
+                    ),
+                  );
+                },
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height - 300,
+                      width: MediaQuery.of(context).size.width,
+                      child: const Center(
+                        child: AppText(
+                          "Data not Found",
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              )
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height - 300,
+                  width: MediaQuery.of(context).size.width,
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.cyanBlue,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          );
   }
 
-  onProfileTap() {
-    Navigator.of(context).pushNamed(AppRoutes.sessionDetails, arguments: true);
+  int getLeftTimeInSeconds(DateTime startDate, DateTime endDate) {
+    return (startDate.difference(endDate).inMinutes);
+  }
+
+  onProfileTap(int index) {
+    Navigator.of(context).pushNamed(AppRoutes.sessionDetails,
+        arguments: SessionDetailArguments(
+            id: listOfSessionDetailResponse![index].id!, isPrevious: true));
   }
 
   Widget getPreviousSessionDataView(int index) {
+    int durationInMin = getLeftTimeInSeconds(
+        listOfSessionDetailResponse![index].startDate!,
+        listOfSessionDetailResponse![index].endDate!);
+    String sessionDate = DateTimeUtils.getBirthFormattedDateTime(
+        listOfSessionDetailResponse![index].endDate!);
     return GestureDetector(
-      onTap: () => onProfileTap(),
+      onTap: () => onProfileTap(index),
       child: Row(
         children: [
-          const SizedBox(
+          SizedBox(
             height: 66,
             width: 66,
             child: CircleAvatar(
               radius: 200,
               child: AppImage(
-                image: ImageAsset.blueAvatar,
+                image: listOfSessionDetailResponse![index].paymentId ??
+                    ImageAsset.blueAvatar,
               ),
             ),
           ),
@@ -86,7 +154,7 @@ class _PreviousSessionsState extends State<PreviousSessions> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
-                listOfPreviousData[index].name,
+                listOfSessionDetailResponse![index].studentId ?? "",
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -97,12 +165,13 @@ class _PreviousSessionsState extends State<PreviousSessions> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AppText(
-                    listOfPreviousData[index].guidanceFor,
+                    listOfSessionDetailResponse![index].agenda ??
+                        " This is Agenda section",
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
                   AppText(
-                    "${listOfPreviousData[index].totalDuration} min call",
+                    "${durationInMin.toString()} min call",
                     fontSize: 10,
                     fontWeight: FontWeight.w400,
                   ),
@@ -115,12 +184,13 @@ class _PreviousSessionsState extends State<PreviousSessions> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AppText(
-                    listOfPreviousData[index].qualification,
+                    listOfSessionDetailResponse![index].id ??
+                        "This is Qualification Section",
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
                   AppText(
-                    "On: ${listOfPreviousData[index].date}",
+                    "On: $sessionDate",
                     fontSize: 10,
                     fontWeight: FontWeight.w400,
                   ),

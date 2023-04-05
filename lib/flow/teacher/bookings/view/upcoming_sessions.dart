@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/bloc/upcoming_session_bloc/upcoming_session_bloc.dart';
-import 'package:newversity/flow/teacher/bookings/model/upcoming_session_data.dart';
+import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
 import 'package:newversity/flow/teacher/bookings/view/bottom_sheets/sort_by_bottom_sheet_upcoming_session.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
+import 'package:newversity/utils/enums.dart';
 
 import '../../../../common/common_widgets.dart';
+import '../../../../utils/date_time_utils.dart';
+import '../../home/model/session_response_model.dart';
 
 class UpcomingSessions extends StatefulWidget {
   const UpcomingSessions({Key? key}) : super(key: key);
@@ -17,44 +20,91 @@ class UpcomingSessions extends StatefulWidget {
 }
 
 class _UpcomingSessionsState extends State<UpcomingSessions> {
+  List<SessionDetailsResponse>? listOfSessionDetailResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<UpcomingSessionBloc>(context).add(
+        FetchAllUpcomingSessionsEvent(
+            type: getSessionType(SessionType.upcoming)));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<UpcomingSessionBloc, UpcomingSessionStates>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
-      builder: (context, state) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            getTimeFilter(),
-            const SizedBox(
-              height: 10,
-            ),
-            getListOfUpcomingSessions(),
-          ],
-        );
-      },
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(
+          height: 10,
+        ), // getTimeFilter(),
+        const SizedBox(
+          height: 10,
+        ),
+        getListOfUpcomingSessions(),
+      ],
     );
   }
 
-  List<UpComingSessionData> listOfUpComingSessionData =
-      UpComingSessionData.listOfUpComingData;
-
   Widget getListOfUpcomingSessions() {
-    return Wrap(
-      spacing: 15,
-      runSpacing: 12,
-      children: List.generate(
-        listOfUpComingSessionData.length,
-        (curIndex) {
-          return getUpComingSessionDataView(curIndex);
-        },
-      ),
+    return BlocConsumer<UpcomingSessionBloc, UpcomingSessionStates>(
+      listener: (context, state) {
+        if (state is FetchedUpcomingSessionState) {
+          listOfSessionDetailResponse = state.sessionDetailResponse;
+        }
+        // TODO: implement listener
+      },
+      builder: (context, state) {
+        return listOfSessionDetailResponse != null
+            ? listOfSessionDetailResponse!.isNotEmpty
+                ? Wrap(
+                    spacing: 15,
+                    runSpacing: 12,
+                    children: List.generate(
+                      listOfSessionDetailResponse!.length,
+                      (curIndex) {
+                        return getUpComingSessionDataView(curIndex);
+                      },
+                    ),
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height - 300,
+                          width: MediaQuery.of(context).size.width,
+                          child: const Center(
+                            child: AppText(
+                              "Data not Found",
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height - 300,
+                      width: MediaQuery.of(context).size.width,
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.cyanBlue,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              );
+      },
     );
   }
 
@@ -110,22 +160,25 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
     );
   }
 
-  onProfileTap() {
-    Navigator.of(context).pushNamed(AppRoutes.sessionDetails, arguments: false);
+  onProfileTap(int index) {
+    Navigator.of(context).pushNamed(AppRoutes.sessionDetails,
+        arguments: SessionDetailArguments(
+            id: listOfSessionDetailResponse![index].id!, isPrevious: false));
   }
 
   Widget getUpComingSessionDataView(int index) {
     return GestureDetector(
-      onTap: () => onProfileTap(),
+      onTap: () => onProfileTap(index),
       child: Row(
         children: [
-          const SizedBox(
+          SizedBox(
             height: 66,
             width: 66,
             child: CircleAvatar(
               radius: 200,
               child: AppImage(
-                image: ImageAsset.blueAvatar,
+                image: listOfSessionDetailResponse![index].paymentId ??
+                    ImageAsset.blueAvatar,
               ),
             ),
           ),
@@ -141,19 +194,26 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AppText(
-                    listOfUpComingSessionData[index].name,
+                    listOfSessionDetailResponse![index].studentId ?? "",
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
-                  getStartingTime(01, 20, 17,
-                      listOfUpComingSessionData[index].crossedThresholdTime),
+                  AppText(
+                    "Starts at : ${getTimeText(index)}",
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.cyanBlue,
+                  )
+                  // getStartingTime(01, 20, 17,
+                  //     listOfUpComingSessionData[index].crossedThresholdTime),
                 ],
               ),
               const SizedBox(
                 height: 7,
               ),
               AppText(
-                listOfUpComingSessionData[index].trainingFor,
+                listOfSessionDetailResponse![index].agenda ??
+                    "This is Agenda Section",
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
@@ -164,7 +224,8 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AppText(
-                    listOfUpComingSessionData[index].qualification,
+                    listOfSessionDetailResponse![index].id ??
+                        "This is Qualifucation Section",
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
@@ -191,18 +252,33 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
     );
   }
 
+  int getLeftTimeInSeconds(DateTime dateTime) {
+    return (dateTime.difference(DateTime.now()).inSeconds);
+  }
+
+  String getTimeText(int index) {
+    String text = "";
+    text =
+        "${DateTimeUtils.getTimeInAMOrPM(listOfSessionDetailResponse![index].startDate ?? DateTime.now())} - ${DateTimeUtils.getTimeInAMOrPM(listOfSessionDetailResponse![index].endDate ?? DateTime.now())}";
+    return text;
+  }
+
   onTapJoinNow() {}
 
   Widget getJoinNowCTA(int index) {
     return GestureDetector(
-      onTap: () => listOfUpComingSessionData[index].crossedThresholdTime
-          ? onTapJoinNow()
-          : null,
+      onTap: () =>
+          getLeftTimeInSeconds(listOfSessionDetailResponse![index].startDate!) <
+                  1801
+              ? onTapJoinNow()
+              : null,
       child: Container(
         height: 32,
         width: 100,
         decoration: BoxDecoration(
-          color: listOfUpComingSessionData[index].crossedThresholdTime
+          color: getLeftTimeInSeconds(
+                      listOfSessionDetailResponse![index].startDate!) <
+                  1801
               ? AppColors.cyanBlue
               : AppColors.grey50,
           borderRadius: BorderRadius.circular(10),
@@ -214,7 +290,9 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
               "JOIN NOW",
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: listOfUpComingSessionData[index].crossedThresholdTime
+              color: getLeftTimeInSeconds(
+                          listOfSessionDetailResponse![index].startDate!) <
+                      1801
                   ? AppColors.whiteColor
                   : AppColors.grey35,
             ),

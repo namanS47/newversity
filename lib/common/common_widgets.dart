@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:newversity/resources/images.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../themes/colors.dart';
@@ -192,7 +196,7 @@ class AppAnimatedBottomSheet extends StatelessWidget {
 }
 
 class AppImage extends StatelessWidget {
-  final String? image;
+  final String image;
   final double? height;
   final double? webHeight;
   final double? width;
@@ -203,7 +207,7 @@ class AppImage extends StatelessWidget {
 
   const AppImage({
     Key? key,
-    @required this.image,
+    required this.image,
     this.webFit,
     this.fit,
     this.height,
@@ -215,9 +219,9 @@ class AppImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return image!.contains('http')
+    return image.contains('http')
         ? CachedNetworkImage(
-            imageUrl: '$image',
+            imageUrl: image,
             height: webHeight,
             width: webWidth,
             fit: webFit ?? BoxFit.cover,
@@ -227,28 +231,16 @@ class AppImage extends StatelessWidget {
             errorWidget: (context, url, error) =>
                 const Icon(Icons.error, color: Colors.red),
           )
-        : image!.contains('product/') || image!.contains('public/')
-            ? CachedNetworkImage(
-                imageUrl: 'https://d3df8f1z9cx8fl.cloudfront.net/$image',
-                height: webHeight,
-                width: webWidth,
-                fit: webFit ?? BoxFit.cover,
-                placeholder: (context, url) => ShimmerEffectView(
-                    height: webHeight ?? double.maxFinite,
-                    width: webWidth ?? double.maxFinite),
-                errorWidget: (context, url, error) =>
-                    const Icon(Icons.error, color: Colors.red),
-              )
-            : image!.split('.').last != 'svg'
+        : image.split('.').last != 'svg'
                 ? Image.asset(
-                    image!,
+                    image,
                     fit: fit,
                     height: height,
                     width: width,
                     color: color,
                   )
                 : SvgPicture.asset(
-                    image!,
+                    image,
                     height: height,
                     width: width,
                     color: color,
@@ -557,6 +549,67 @@ class AppCta extends StatelessWidget {
                 )
               : CommonWidgets.getCircularProgressIndicator(),
         ),
+      ),
+    );
+  }
+}
+
+class ImagePickerOptionBottomSheet extends StatefulWidget {
+  const ImagePickerOptionBottomSheet({
+    Key? key,
+    required this.onCameraClick,
+    required this.onGalleryClick
+  }) : super(key: key);
+
+  final void Function() onCameraClick;
+  final void Function() onGalleryClick;
+
+  @override
+  State<ImagePickerOptionBottomSheet> createState() => _ImagePickerOptionBottomSheetState();
+}
+
+class _ImagePickerOptionBottomSheetState extends State<ImagePickerOptionBottomSheet> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      height: 150,
+      // color: Colors.red,
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.cancel),
+            ),
+          ),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: widget.onCameraClick,
+                  child: const Text(
+                    "Camera",
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: widget.onGalleryClick,
+                  child: const Text(
+                    "Gallery",
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

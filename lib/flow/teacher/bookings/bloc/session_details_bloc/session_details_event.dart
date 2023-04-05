@@ -8,4 +8,12 @@ class CancelRequestSelectEvent extends SessionDetailsEvents {
   CancelRequestSelectEvent({required this.item});
 }
 
+class FetchSessionDetailByIdEvent extends SessionDetailsEvents {
+  final String id;
+  FetchSessionDetailByIdEvent({required this.id});
+}
 
+class SessionAddingEvent extends SessionDetailsEvents {
+  final SessionSaveRequest sessionSaveRequest;
+  SessionAddingEvent({required this.sessionSaveRequest});
+}

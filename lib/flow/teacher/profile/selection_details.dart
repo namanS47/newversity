@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
 import 'package:newversity/navigation/app_routes.dart';
+import 'package:newversity/utils/enums.dart';
 
 import '../../../common/common_widgets.dart';
 import '../../../themes/colors.dart';
@@ -11,8 +12,9 @@ import 'model/tags_response_model.dart';
 import 'model/tags_with_teacher_id_request_model.dart';
 
 class SelectionDetails extends StatefulWidget {
-  ProfileDashboardArguments profileDashboardArguments;
-  SelectionDetails({Key? key, required this.profileDashboardArguments})
+  final ProfileDashboardArguments profileDashboardArguments;
+
+  const SelectionDetails({Key? key, required this.profileDashboardArguments})
       : super(key: key);
 
   @override
@@ -22,15 +24,17 @@ class SelectionDetails extends StatefulWidget {
 class _SelectionDetailsState extends State<SelectionDetails> {
   final _specifyController = TextEditingController();
   List<TagsResponseModel> allMentorsTags = [];
-
   List<TagsResponseModel> allSelectedTags = [];
+  bool isLoading = false;
+  bool showErrorText = false;
+  bool showSpecify = false;
+
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<ProfileBloc>(context)
-        .add(FetchMentorshipTag(tagCat: "guidance"));
+        .add(FetchMentorshipTag(tagCat: getTagCategory(TagCategory.guidance)));
   }
 
   bool isRebuildWidgetState(ProfileStates state) {
@@ -50,9 +54,9 @@ class _SelectionDetailsState extends State<SelectionDetails> {
           allMentorsTags = state.listOfMentorshipTags;
         }
         if (state is SavedTagsState) {
+          isLoading = false;
           Navigator.of(context).pushNamed(AppRoutes.teacherHomePageRoute);
         }
-        // TODO: implement listener
       },
       builder: (context, state) {
         return Padding(
@@ -82,11 +86,26 @@ class _SelectionDetailsState extends State<SelectionDetails> {
                 height: 20,
               ),
               showSpecify ? getYourDesignation() : Container(),
+              const SizedBox(
+                height: 10,
+              ),
+              showErrorText
+                  ? const AppText(
+                      "Please select at least one",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.redColorShadow400,
+                    )
+                  : Container(),
+              const SizedBox(
+                height: 10,
+              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: AppCta(
+                  isLoading: isLoading,
                   onTap: () => onProceedTap(context),
-                  text: !widget.profileDashboardArguments.isNewUser
+                  text: !widget.profileDashboardArguments.showBackButton
                       ? AppStrings.update
                       : AppStrings.proceed,
                 ),
@@ -101,18 +120,23 @@ class _SelectionDetailsState extends State<SelectionDetails> {
   onProceedTap(BuildContext context) {
     List<TagModel> allRequestedTags = [];
     for (TagsResponseModel x in allSelectedTags) {
-      allRequestedTags.add(TagModel(
-          tagCategory: x.tagCategory, tagName: x.tagName));
+      allRequestedTags
+          .add(TagModel(tagCategory: x.tagCategory, tagName: x.tagName));
     }
     if (_specifyController.text.isNotEmpty) {
-      allRequestedTags.add(TagModel(
-          tagCategory: "guidance", tagName: _specifyController.text));
+      allRequestedTags.add(
+          TagModel(tagCategory: "guidance", tagName: _specifyController.text));
     }
-    BlocProvider.of<ProfileBloc>(context)
-        .add(SaveTagsEvents(listOfTags: allRequestedTags));
+    if (allRequestedTags.isNotEmpty) {
+      isLoading = true;
+      BlocProvider.of<ProfileBloc>(context).add(
+          SaveTagsEvents(category: "guidance", listOfTags: allRequestedTags));
+    } else {
+      showErrorText = true;
+      setState(() {});
+    }
   }
 
-  bool showSpecify = false;
   onSelectedSession(int index) {
     if (index == allMentorsTags.length - 1) {
       showSpecify = !showSpecify;
@@ -138,18 +162,6 @@ class _SelectionDetailsState extends State<SelectionDetails> {
       isDense: true,
     );
   }
-
-  List<String> examsCracked = [
-    "Personal Mentorship",
-    "Exam prep strategy",
-    "Career/Market/Industry insights/Future Trends",
-    "College Planning",
-    "Course/Stream Planning",
-    "Interview prep",
-    "Job preparation",
-    "Professional life experience",
-    "Others",
-  ];
 
   Widget getSelectedComptetiveExams() {
     return Wrap(

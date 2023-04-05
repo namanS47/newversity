@@ -2,12 +2,15 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_response_model.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_response_model.dart';
+import 'package:newversity/network/webservice/exception.dart';
 
 import '../../../../../common/common_utils.dart';
 import '../../../../../di/di_initializer.dart';
@@ -24,7 +27,7 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
   double sliderPadding = 0.0;
   String teacherId = "";
   int selectedSkinTone = 0;
-  int selctedProfileTab = 0;
+  int selectedProfileTab = 0;
   List<String> listOfProfileSection = ["Overview", "Review"];
   List<Widget> profileCardList = <Widget>[];
   final TeacherBaseRepository _teacherBaseRepository =
@@ -80,21 +83,39 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
       await getAllTags(event, emit);
     });
 
-    on<FetchTeacherDetails>((event, emit) async {
+    on<FetchTeacherDetailsEvent>((event, emit) async {
       teacherId = CommonUtils().getLoggedInUser();
       await getTeacherDetails(event, emit);
+    });
+
+    on<FetchProfileCompletionInfoEvent>((event, emit) async {
+      teacherId = CommonUtils().getLoggedInUser();
+      await getProfileCompletionInfo(event, emit);
+    });
+
+    on<UploadDocumentEvent>((event, emit) async {
+      emit(UploadDocumentLoadingState(tag: event.tag));
+      try{
+        File newFile = CommonUtils().renameFile(event.file, teacherId);
+        await _teacherBaseRepository.uploadTagDocument(
+            newFile, teacherId, event.tag.tagName ?? "");
+        newFile.delete();
+        emit(UploadDocumentSuccessState(tag: event.tag));
+      } catch(exception) {
+        emit(UploadDocumentFailureState(tag: event.tag));
+      }
     });
   }
 
   Future<void> updateProfileTab(event, emit) async {
     if (event is ChangeProfileTab) {
-      selctedProfileTab = event.index;
+      selectedProfileTab = event.index;
       emit(UpdateProfileState());
     }
   }
 
   Future<void> getAllTagsByTeacherId(event, emit) async {
-    List<TagsResponseModel> listOfExperties = [];
+    List<TagsResponseModel> listOfExpertise = [];
     List<TagsResponseModel> listOfMentorship = [];
     try {
       emit(FetchingTagsWithTeacherId());
@@ -102,27 +123,52 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
           await _teacherBaseRepository.fetchAllTagsWithTeacherId(teacherId);
       if (response != null) {
         for (TagsResponseModel x in response) {
-          if (x.tagCategory == "exam") {
-            listOfExperties.add(x);
+          if (x.tagCategory == "exams") {
+            listOfExpertise.add(x);
           } else {
             listOfMentorship.add(x);
           }
         }
-        emit(FetchedExpertiesState(listOfTags: listOfExperties));
-        emit(FetchedMentorsipState(listOfTags: listOfMentorship));
+        emit(FetchedExpertiseState(listOfTags: listOfExpertise));
+        emit(FetchedMentorshipState(listOfTags: listOfMentorship));
       }
-    } on SocketException catch (e) {
-      emit(FetchingTagsWithTeacherIdFailure());
+    } catch (exception) {
+      if (exception is BadRequestException) {
+        emit(FetchingTagsWithTeacherIdFailure(
+            msg: exception.message.toString()));
+      } else {
+        emit(FetchingTagsWithTeacherIdFailure(msg: "Something went wrong"));
+      }
     }
   }
 
   Future<void> getTeacherDetails(event, emit) async {
     try {
+      emit(FetchingTeacherProfileState());
       final response =
           await _teacherBaseRepository.getTeachersDetail(teacherId);
-      emit(FetchedTeachersProfile(teacherDetails: response));
-    } on SocketException {
-      emit(FetchingTeachersProfileFailure());
+      emit(FetchedTeachersProfileState(teacherDetails: response));
+    } catch (exception) {
+      if (exception is BadRequestException) {
+        emit(FetchingTeachersProfileFailureState(
+            msg: exception.message.toString()));
+      } else {
+        emit(FetchingTeachersProfileFailureState(msg: "Something went wrong"));
+      }
+    }
+  }
+
+  Future<void> getProfileCompletionInfo(event, emit) async {
+    try {
+      emit(FetchingProfileCompletionInfoState());
+      final response =
+          await _teacherBaseRepository.getProfileCompletionInfo(teacherId);
+      emit(FetchedProfileCompletionInfoState(percentageResponse: response));
+    } catch (exception) {
+      if (exception is BadRequestException) {
+        emit(FetchingProfileCompletionInfoFailureState(
+            msg: exception.message.toString()));
+      }
     }
   }
 
@@ -134,7 +180,6 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
       if (response != null) {
         if (event is FetchExamTagsEvent) {
           for (TagsResponseModel x in response) {
-            print("${event.tagCat} --- ${x.tagCategory}");
             if (event.tagCat == (x.tagCategory)) {
               allTags.add(x);
             }
@@ -153,8 +198,12 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
           emit(FetchedMentorshipTagsState(listOfMentorshipTags: allTags));
         }
       }
-    } on SocketException catch (e) {
-      emit(FetchingTagsFailure());
+    } catch (exception) {
+      if (exception is BadRequestException) {
+        emit(FetchingTagsFailure(msg: exception.message.toString()));
+      } else {
+        emit(FetchingTagsFailure(msg: "Something went wrong"));
+      }
     }
   }
 
@@ -163,12 +212,16 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
       emit(AddingTagsState());
       if (event is SaveTagsEvents) {
         await _teacherBaseRepository.saveListOfTags(
-            event.listOfTags, teacherId);
+            event.category, event.listOfTags, teacherId);
       }
 
       emit(SavedTagsState());
-    } on SocketException catch (e) {
-      emit(AddingTagsFailureState());
+    } catch (exception) {
+      if (exception is BadRequestException) {
+        emit(AddingTagsFailureState(msg: exception.message.toString()));
+      } else {
+        emit(AddingTagsFailureState(msg: "Something went wrong"));
+      }
     }
   }
 
@@ -181,8 +234,12 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
         emit(
             FetchedTeachersExperiencesState(listOfTeacherExperience: response));
       }
-    } on SocketException catch (e) {
-      emit(FetchingTagsFailure());
+    } catch (exception) {
+      if (exception is BadRequestException) {
+        emit(FetchingTagsFailure(msg: exception.message.toString()));
+      } else {
+        emit(FetchingTagsFailure(msg: "Something went wrong"));
+      }
     }
   }
 
@@ -194,8 +251,13 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
       if (response != null) {
         emit(FetchedTeacherEducationState(listOfTeacherEducation: response));
       }
-    } on SocketException catch (e) {
-      emit(FetchingTagsFailure());
+    } catch (exception) {
+      if (exception is BadRequestException) {
+        emit(FetchingTeacherEducationFailureState(
+            msg: exception.message.toString()));
+      } else {
+        emit(FetchingTeacherEducationFailureState(msg: "Something went wrong"));
+      }
     }
   }
 
@@ -207,8 +269,13 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
             event.experienceRequestModel, teacherId);
       }
       emit(SavedTeacherExperienceState());
-    } on SocketException catch (e) {
-      emit(SavingFailureTeacherExperienceState());
+    } catch (exception) {
+      if (exception is BadRequestException) {
+        emit(SavingFailureTeacherExperienceState(
+            msg: exception.message.toString()));
+      } else {
+        emit(SavingFailureTeacherExperienceState(msg: "Something went wrong"));
+      }
     }
   }
 
@@ -220,8 +287,13 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
             event.educationRequestModel, teacherId);
       }
       emit(SavedTeacherEducationState());
-    } on SocketException catch (e) {
-      emit(SavingFailureTeacherEducationState());
+    } catch (exception) {
+      if (exception is BadRequestException) {
+        emit(SavingFailureTeacherEducationState(
+            msg: exception.message.toString()));
+      } else {
+        emit(SavingFailureTeacherEducationState(msg: "Something went wrong"));
+      }
     }
   }
 

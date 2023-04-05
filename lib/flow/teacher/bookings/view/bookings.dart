@@ -18,7 +18,7 @@ class Bookings extends StatefulWidget {
 
 Widget getTopBanner() {
   return Container(
-    height: 300,
+    height: 200,
     decoration: const BoxDecoration(
         color: AppColors.lightCyan,
         borderRadius: BorderRadius.only(
@@ -27,6 +27,7 @@ Widget getTopBanner() {
 }
 
 class _BookingsState extends State<Bookings> {
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<TeacherBookingsBloc, TeacherBookingStates>(

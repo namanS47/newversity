@@ -11,6 +11,11 @@ class ProfileBottomSheet extends StatefulWidget {
 }
 
 class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
+
+  List<String> communicationLanguageList = ["English", "Hindi", "Sanskrit"];
+  List<String> listOfTargetExam = ["Neet"];
+  List<String> listOfAcademicInformation = ["+2 Passed"];
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -75,7 +80,7 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
     );
   }
 
-  List<String> communicationLanguageList = ["English", "Hindi", "Sanskrit"];
+
 
   Widget getCommunicationLanguage() {
     return Column(
@@ -103,7 +108,7 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
     );
   }
 
-  List<String> listOfTargetExam = ["Neet"];
+
 
   Widget getTargetExamView() {
     return Column(
@@ -171,7 +176,7 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
     );
   }
 
-  List<String> listOfAcademicInformation = ["+2 Passed"];
+
 
   Widget getAcademicInformation() {
     return Column(
