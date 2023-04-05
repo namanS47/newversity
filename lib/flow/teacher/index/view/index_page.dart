@@ -77,7 +77,7 @@ class _IndexPageState extends State<IndexPage> {
                   AppImage(
                     image: context
                         .read<IndexBloc>()
-                        .pagesNameWithImageIcon[index]['image'],
+                        .pagesNameWithImageIcon[index]['image'] ?? "",
                     color: context.read<IndexBloc>().selectedIndex == index
                         ? AppColors.primaryColor
                         : AppColors.cyanBlue,

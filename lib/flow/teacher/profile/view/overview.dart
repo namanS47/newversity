@@ -24,8 +24,8 @@ class ProfileOverview extends StatefulWidget {
 }
 
 class _ProfileOverviewState extends State<ProfileOverview> {
-  List<TagsResponseModel>? allExpertise;
-  List<TagsResponseModel>? allMentorship;
+  List<TagsResponseModel> allExpertise = [];
+  List<TagsResponseModel> allMentorship = [];
   List<ExperienceResponseModel>? lisOfExperienceModel;
   List<EducationResponseModel>? listOfEducationModel;
   TeacherDetails? teacherDetails;
@@ -536,11 +536,9 @@ class _ProfileOverviewState extends State<ProfileOverview> {
             const SizedBox(
               height: 5,
             ),
-            allMentorship != null
-                ? allMentorship!.isNotEmpty
+                allMentorship.isNotEmpty
                     ? getListOfTalkingPoints()
-                    : noDataFound(40)
-                : getProgressIndicator(40),
+                    : noDataFound(40),
           ],
         ),
       ),
@@ -552,7 +550,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
       spacing: 15,
       runSpacing: 12,
       children: List.generate(
-        allMentorship!.length,
+        allMentorship.length,
         (curIndex) {
           return getTagView(allMentorship?[curIndex].tagName ?? "");
         },
@@ -653,11 +651,11 @@ class _ProfileOverviewState extends State<ProfileOverview> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        getTagView(allExperties[index].tagName.toString()),
+        getTagView(allExpertise?[index].tagName ?? ""),
         BlocBuilder<ProfileBloc, ProfileStates>(
           builder: (context, state) {
             if (state is UploadDocumentLoadingState &&
-                state.tag == allExperties[index]) {
+                state.tag == allExpertise[index]) {
               return const SizedBox(
                 width: 20,
                 height: 20,
@@ -667,32 +665,32 @@ class _ProfileOverviewState extends State<ProfileOverview> {
               );
             }
             if (state is UploadDocumentSuccessState &&
-                state.tag == allExperties[index]) {
+                state.tag == allExpertise?[index]) {
               return const Text(
                 "Verifying",
                 style: TextStyle(color: AppColors.lightRedColorShadow400),
               );
             }
-            switch (allExperties[index].teacherTagDetails?.tagStatus) {
+            switch (allExpertise[index].teacherTagDetails?.tagStatus) {
               case "Verified":
                 return const Text(
                   "Verified",
                   style: TextStyle(color: AppColors.colorGreen),
                 );
               case "Unverified":
-                return uploadDocumentWidget(allExperties[index]);
+                return uploadDocumentWidget(allExpertise[index]);
               case "Failed":
-                return uploadDocumentWidget(allExperties[index]);
+                return uploadDocumentWidget(allExpertise[index]);
               case "InProcess":
                 return const Text(
                   "Verifying",
                   style: TextStyle(color: AppColors.lightRedColorShadow400),
                 );
               default:
-                return uploadDocumentWidget(allExperties[index]);
+                return uploadDocumentWidget(allExpertise[index]);
             }
           },
-        )
+        ),
         getTagView(allExpertise?[index].tagName ?? ""),
         uploadDocumentWidget(allExpertise?[index] ?? TagsResponseModel())
       ],

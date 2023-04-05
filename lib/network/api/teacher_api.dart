@@ -89,7 +89,7 @@ abstract class TeacherApi {
 
   @GET("/session/teacher")
   Future<List<SessionDetailsResponse>?> getSessionDetails(
-      @Query("type") String type);
+      @Header("teacherId") String teacherId, @Query("type") String type);
 
   @POST("/teacher/tags/verify")
   @MultiPart()
@@ -98,5 +98,5 @@ abstract class TeacherApi {
   @POST("/teacher/profileImage")
   @MultiPart()
   Future<TeacherDetails?> uploadProfilePicture(@Part() File file, @Part() String teacherId);
-      @Header("teacherId") String teacherId, @Query("type") String type);
+
 }

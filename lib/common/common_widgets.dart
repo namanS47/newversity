@@ -231,19 +231,7 @@ class AppImage extends StatelessWidget {
             errorWidget: (context, url, error) =>
                 const Icon(Icons.error, color: Colors.red),
           )
-        : image.contains('product/') || image.contains('public/')
-            ? CachedNetworkImage(
-                imageUrl: 'https://d3df8f1z9cx8fl.cloudfront.net/$image',
-                height: webHeight,
-                width: webWidth,
-                fit: webFit ?? BoxFit.cover,
-                placeholder: (context, url) => ShimmerEffectView(
-                    height: webHeight ?? double.maxFinite,
-                    width: webWidth ?? double.maxFinite),
-                errorWidget: (context, url, error) =>
-                    const Icon(Icons.error, color: Colors.red),
-              )
-            : image.split('.').last != 'svg'
+        : image.split('.').last != 'svg'
                 ? Image.asset(
                     image,
                     fit: fit,
