@@ -569,14 +569,18 @@ class AppCta extends StatelessWidget {
 class ImagePickerOptionBottomSheet extends StatefulWidget {
   const ImagePickerOptionBottomSheet({
     Key? key,
+    required this.onCameraClick,
+    required this.onGalleryClick
   }) : super(key: key);
+
+  final void Function() onCameraClick;
+  final void Function() onGalleryClick;
 
   @override
   State<ImagePickerOptionBottomSheet> createState() => _ImagePickerOptionBottomSheetState();
 }
 
 class _ImagePickerOptionBottomSheetState extends State<ImagePickerOptionBottomSheet> {
-  File? file;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -589,7 +593,7 @@ class _ImagePickerOptionBottomSheetState extends State<ImagePickerOptionBottomSh
             alignment: Alignment.centerRight,
             child: IconButton(
               onPressed: () {
-                Navigator.pop(context, file);
+                Navigator.pop(context);
               },
               icon: const Icon(Icons.cancel),
             ),
@@ -600,13 +604,7 @@ class _ImagePickerOptionBottomSheetState extends State<ImagePickerOptionBottomSh
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () async {
-                    final image = await ImagePicker().pickImage(source: ImageSource.camera);
-                    if(image != null) {
-                      file = File(image.path);
-                      Navigator.pop(context);
-                    }
-                  },
+                  onTap: widget.onCameraClick,
                   child: const Text(
                     "Camera",
                     style: TextStyle(fontWeight: FontWeight.w600),
@@ -614,12 +612,7 @@ class _ImagePickerOptionBottomSheetState extends State<ImagePickerOptionBottomSh
                 ),
                 const Spacer(),
                 GestureDetector(
-                  onTap: () async {
-                    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                    if(image != null) {
-                      file = File(image.path);
-                    }
-                  },
+                  onTap: widget.onGalleryClick,
                   child: const Text(
                     "Gallery",
                     style: TextStyle(fontWeight: FontWeight.w600),

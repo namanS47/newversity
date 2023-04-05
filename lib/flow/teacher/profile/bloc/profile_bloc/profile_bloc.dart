@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_response_model.dart';
+import 'package:path/path.dart' as path;
 
 import '../../../../../common/common_utils.dart';
 import '../../../../../di/di_initializer.dart';
@@ -83,6 +85,19 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
     on<FetchTeacherDetails>((event, emit) async {
       teacherId = CommonUtils().getLoggedInUser();
       await getTeacherDetails(event, emit);
+    });
+
+    on<UploadDocumentEvent>((event, emit) async {
+      emit(UploadDocumentLoadingState(tag: event.tag));
+      try{
+        File newFile = renameFile(event.file);
+        await _teacherBaseRepository.uploadTagDocument(
+            newFile, teacherId, event.tag.tagName ?? "");
+        newFile.delete();
+      } catch(exception) {
+        emit(UploadDocumentFailureState(tag: event.tag));
+      }
+      emit(UploadDocumentSuccessState(tag: event.tag));
     });
   }
 
@@ -231,5 +246,17 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
     double singlePart = sliderWidth / (profileCardList.length - 1);
     isBack ? sliderPadding -= singlePart : sliderPadding += singlePart;
     isBack ? currentProfileStep -= 1 : currentProfileStep += 1;
+  }
+
+  File renameFile(XFile xFile) {
+    String dir = path.dirname(xFile.path);
+    String fileName = path.basename(xFile.path);
+    String newFileName =
+        DateTime.now().toString().replaceAll(RegExp('[^A-Za-z0-9]'), "") +
+            teacherId +
+            fileName.substring(fileName.indexOf('.'));
+    String newPath = path.join(dir, newFileName);
+    File file = File(xFile.path);
+    return file.renameSync(newPath);
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:newversity/config/app_config.dart';
 import 'package:newversity/flow/teacher/availability/data/model/availability_model.dart';
@@ -56,7 +58,6 @@ abstract class TeacherApi {
 
   @POST("/teacher/tags")
   Future<void> saveListOfTags(
-      @Query("category") String category,
       @Body() TagRequestModel tagsList, @Header("teacherId") String teacherId);
 
   @GET("/teacher/education")
@@ -80,4 +81,8 @@ abstract class TeacherApi {
   @GET("/session/teacher")
   Future<List<SessionDetailsResponse>?> getSessionDetails(
       @Query("type") String type);
+  
+  @POST("/teacher/tags/verify")
+  @MultiPart()
+  Future<void> uploadTagDocument(@Part() File file, @Part() String teacherId, @Part() String tag);
 }

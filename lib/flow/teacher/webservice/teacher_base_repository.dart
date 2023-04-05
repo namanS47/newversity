@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:newversity/di/di_initializer.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
@@ -106,5 +108,13 @@ class TeacherBaseRepository extends BaseRepository {
       AppException.forException(exception.response);
     }
     return response;
+  }
+
+  Future<void> uploadTagDocument(File file, String teacherId, String tagName) async {
+    try{
+      await _teacherApi.uploadTagDocument(file, teacherId, tagName);
+    } on DioError catch (exception) {
+      AppException.forException(exception.response);
+    }
   }
 }

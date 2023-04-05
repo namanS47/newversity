@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
@@ -632,37 +633,92 @@ class _ProfileOverviewState extends State<ProfileOverview> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         getTagView(allExperties[index].tagName.toString()),
-        uploadDocumentWidget(allExperties[index])
+        BlocBuilder<ProfileBloc, ProfileStates>(
+          builder: (context, state) {
+            if (state is UploadDocumentLoadingState &&
+                state.tag == allExperties[index]) {
+              return const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              );
+            }
+            if (state is UploadDocumentSuccessState &&
+                state.tag == allExperties[index]) {
+              return const Text(
+                "Verifying",
+                style: TextStyle(color: AppColors.lightRedColorShadow400),
+              );
+            }
+            switch (allExperties[index].teacherTagDetails?.tagStatus) {
+              case "Verified":
+                return const Text(
+                  "Verified",
+                  style: TextStyle(color: AppColors.colorGreen),
+                );
+              case "Unverified":
+                return uploadDocumentWidget(allExperties[index]);
+              case "Failed":
+                return uploadDocumentWidget(allExperties[index]);
+              case "InProcess":
+                return const Text(
+                  "Verifying",
+                  style: TextStyle(color: AppColors.lightRedColorShadow400),
+                );
+              default:
+                return uploadDocumentWidget(allExperties[index]);
+            }
+          },
+        )
       ],
     );
   }
 
   Widget uploadDocumentWidget(TagsResponseModel tag) {
-    return Visibility(
-      visible: !(tag.teacherTagDetails?.tagStatus ==
-          TagStatus.Verified.toString().split('.').first),
-      child: GestureDetector(
-        onTap: () async {
-          final result = await showModalBottomSheet(
-            context: context,
-            builder: (context) {
-              return ImagePickerOptionBottomSheet(
-
-              );
-            },
-          );
-          print("naman--- ${result}");
-        },
-        child: Row(
-          children: [
-            SvgPicture.asset(ImageAsset.uploadProfilePic),
-            const AppText(
-              "Upload documents",
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-            ),
-          ],
-        ),
+    XFile? file;
+    return GestureDetector(
+      onTap: () async {
+        showModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return ImagePickerOptionBottomSheet(
+              onCameraClick: () async {
+                final image =
+                    await ImagePicker().pickImage(source: ImageSource.camera);
+                if (image != null) {
+                  file = image;
+                  Navigator.pop(context);
+                }
+              },
+              onGalleryClick: () async {
+                final image =
+                    await ImagePicker().pickImage(source: ImageSource.gallery);
+                if (image != null) {
+                  file = image;
+                  Navigator.pop(context);
+                }
+              },
+            );
+          },
+        ).whenComplete(() {
+          if (file != null) {
+            context
+                .read<ProfileBloc>()
+                .add(UploadDocumentEvent(file: file!, tag: tag));
+          }
+        });
+      },
+      child: Row(
+        children: [
+          SvgPicture.asset(ImageAsset.uploadProfilePic),
+          const AppText(
+            "Upload documents",
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+          ),
+        ],
       ),
     );
   }
