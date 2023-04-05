@@ -20,7 +20,7 @@ class UpcomingSessions extends StatefulWidget {
 }
 
 class _UpcomingSessionsState extends State<UpcomingSessions> {
-  List<SessionDetailsResponse>? listOfSessionDetailResponse;
+  List<SessionDetailsResponse> listOfSessionDetailResponse = [];
 
   @override
   void initState() {
@@ -50,19 +50,18 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
   Widget getListOfUpcomingSessions() {
     return BlocConsumer<UpcomingSessionBloc, UpcomingSessionStates>(
       listener: (context, state) {
-        if (state is FetchedUpcomingSessionState) {
-          listOfSessionDetailResponse = state.sessionDetailResponse;
+        if (state is FetchedUpcomingSessionState && state.sessionDetailResponse != null) {
+          listOfSessionDetailResponse = state.sessionDetailResponse!;
         }
         // TODO: implement listener
       },
       builder: (context, state) {
-        return listOfSessionDetailResponse != null
-            ? listOfSessionDetailResponse!.isNotEmpty
+        return listOfSessionDetailResponse.isNotEmpty
                 ? Wrap(
                     spacing: 15,
                     runSpacing: 12,
                     children: List.generate(
-                      listOfSessionDetailResponse!.length,
+                      listOfSessionDetailResponse.length,
                       (curIndex) {
                         return getUpComingSessionDataView(curIndex);
                       },
@@ -86,24 +85,7 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
                         ),
                       )
                     ],
-                  )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Center(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height - 300,
-                      width: MediaQuery.of(context).size.width,
-                      child: const Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.cyanBlue,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              );
+                  );
       },
     );
   }
@@ -160,10 +142,11 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
     );
   }
 
+  //TODO: Naman remove force unwrapping
   onProfileTap(int index) {
     Navigator.of(context).pushNamed(AppRoutes.sessionDetails,
         arguments: SessionDetailArguments(
-            id: listOfSessionDetailResponse![index].id!, isPrevious: false));
+            id: listOfSessionDetailResponse[index].id!, isPrevious: false));
   }
 
   Widget getUpComingSessionDataView(int index) {
@@ -177,7 +160,7 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
             child: CircleAvatar(
               radius: 200,
               child: AppImage(
-                image: listOfSessionDetailResponse![index].paymentId ??
+                image: listOfSessionDetailResponse[index].paymentId ??
                     ImageAsset.blueAvatar,
               ),
             ),
@@ -194,7 +177,7 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AppText(
-                    listOfSessionDetailResponse![index].studentId ?? "",
+                    listOfSessionDetailResponse[index].studentId ?? "",
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -212,7 +195,7 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
                 height: 7,
               ),
               AppText(
-                listOfSessionDetailResponse![index].agenda ??
+                listOfSessionDetailResponse[index].agenda ??
                     "This is Agenda Section",
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
@@ -224,7 +207,7 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AppText(
-                    listOfSessionDetailResponse![index].id ??
+                    listOfSessionDetailResponse[index].id ??
                         "This is Qualifucation Section",
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -259,7 +242,7 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
   String getTimeText(int index) {
     String text = "";
     text =
-        "${DateTimeUtils.getTimeInAMOrPM(listOfSessionDetailResponse![index].startDate ?? DateTime.now())} - ${DateTimeUtils.getTimeInAMOrPM(listOfSessionDetailResponse![index].endDate ?? DateTime.now())}";
+        "${DateTimeUtils.getTimeInAMOrPM(listOfSessionDetailResponse[index].startDate ?? DateTime.now())} - ${DateTimeUtils.getTimeInAMOrPM(listOfSessionDetailResponse[index].endDate ?? DateTime.now())}";
     return text;
   }
 
@@ -268,7 +251,7 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
   Widget getJoinNowCTA(int index) {
     return GestureDetector(
       onTap: () =>
-          getLeftTimeInSeconds(listOfSessionDetailResponse![index].startDate!) <
+          getLeftTimeInSeconds(listOfSessionDetailResponse[index].startDate!) <
                   1801
               ? onTapJoinNow()
               : null,
@@ -277,7 +260,7 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
         width: 100,
         decoration: BoxDecoration(
           color: getLeftTimeInSeconds(
-                      listOfSessionDetailResponse![index].startDate!) <
+                      listOfSessionDetailResponse[index].startDate!) <
                   1801
               ? AppColors.cyanBlue
               : AppColors.grey50,
@@ -291,7 +274,7 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: getLeftTimeInSeconds(
-                          listOfSessionDetailResponse![index].startDate!) <
+                          listOfSessionDetailResponse[index].startDate!) <
                       1801
                   ? AppColors.whiteColor
                   : AppColors.grey35,

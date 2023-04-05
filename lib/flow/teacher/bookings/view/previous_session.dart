@@ -21,7 +21,7 @@ class PreviousSessions extends StatefulWidget {
 
 class _PreviousSessionsState extends State<PreviousSessions> {
 
-  List<SessionDetailsResponse>? listOfSessionDetailResponse;
+  List<SessionDetailsResponse> listOfSessionDetailResponse = [];
 
   @override
   void initState() {
@@ -37,8 +37,8 @@ class _PreviousSessionsState extends State<PreviousSessions> {
   Widget build(BuildContext context) {
     return BlocConsumer<PreviousSessionBloc, PreviousSessionStates>(
       listener: (context, state) {
-        if (state is FetchedPreviousSessionState) {
-          listOfSessionDetailResponse = state.listOfPreviousSession;
+        if (state is FetchedPreviousSessionState && state.listOfPreviousSession != null) {
+          listOfSessionDetailResponse = state.listOfPreviousSession!;
         }
       },
       builder: (context, state) {
@@ -60,15 +60,14 @@ class _PreviousSessionsState extends State<PreviousSessions> {
   }
 
   Widget getListOfPreviousSessions() {
-    return listOfSessionDetailResponse != null
-        ? listOfSessionDetailResponse!.isNotEmpty
+    return listOfSessionDetailResponse.isNotEmpty
             ? BlocBuilder<PreviousSessionBloc, PreviousSessionStates>(
                 builder: (context, state) {
                   return Wrap(
                     spacing: 15,
                     runSpacing: 12,
                     children: List.generate(
-                      listOfSessionDetailResponse!.length,
+                      listOfSessionDetailResponse.length,
                       (curIndex) {
                         return getPreviousSessionDataView(curIndex);
                       },
@@ -94,24 +93,7 @@ class _PreviousSessionsState extends State<PreviousSessions> {
                     ),
                   )
                 ],
-              )
-        : Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Center(
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height - 300,
-                  width: MediaQuery.of(context).size.width,
-                  child: const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.cyanBlue,
-                    ),
-                  ),
-                ),
-              )
-            ],
-          );
+              );
   }
 
   int getLeftTimeInSeconds(DateTime startDate, DateTime endDate) {
@@ -119,17 +101,19 @@ class _PreviousSessionsState extends State<PreviousSessions> {
   }
 
   onProfileTap(int index) {
+
+    //TODO: Naman remove force unwrapping
     Navigator.of(context).pushNamed(AppRoutes.sessionDetails,
         arguments: SessionDetailArguments(
-            id: listOfSessionDetailResponse![index].id!, isPrevious: true));
+            id: listOfSessionDetailResponse[index].id!, isPrevious: true));
   }
 
   Widget getPreviousSessionDataView(int index) {
     int durationInMin = getLeftTimeInSeconds(
-        listOfSessionDetailResponse![index].startDate!,
-        listOfSessionDetailResponse![index].endDate!);
+        listOfSessionDetailResponse[index].startDate!,
+        listOfSessionDetailResponse[index].endDate!);
     String sessionDate = DateTimeUtils.getBirthFormattedDateTime(
-        listOfSessionDetailResponse![index].endDate!);
+        listOfSessionDetailResponse[index].endDate!);
     return GestureDetector(
       onTap: () => onProfileTap(index),
       child: Row(
@@ -140,7 +124,7 @@ class _PreviousSessionsState extends State<PreviousSessions> {
             child: CircleAvatar(
               radius: 200,
               child: AppImage(
-                image: listOfSessionDetailResponse![index].paymentId ??
+                image: listOfSessionDetailResponse[index].paymentId ??
                     ImageAsset.blueAvatar,
               ),
             ),
@@ -154,7 +138,7 @@ class _PreviousSessionsState extends State<PreviousSessions> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
-                listOfSessionDetailResponse![index].studentId ?? "",
+                listOfSessionDetailResponse[index].studentId ?? "",
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -165,7 +149,7 @@ class _PreviousSessionsState extends State<PreviousSessions> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AppText(
-                    listOfSessionDetailResponse![index].agenda ??
+                    listOfSessionDetailResponse[index].agenda ??
                         " This is Agenda section",
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -184,7 +168,7 @@ class _PreviousSessionsState extends State<PreviousSessions> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AppText(
-                    listOfSessionDetailResponse![index].id ??
+                    listOfSessionDetailResponse[index].id ??
                         "This is Qualification Section",
                     fontSize: 12,
                     fontWeight: FontWeight.w500,

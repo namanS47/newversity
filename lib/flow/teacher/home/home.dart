@@ -817,7 +817,7 @@ class _HomeState extends State<Home> {
   onTapCompleteProfileCTA() {
     Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
         arguments:
-            ProfileDashboardArguments(directedIndex: 1, isNewUser: false));
+            ProfileDashboardArguments(directedIndex: 1, showBackButton: false));
   }
 
   Widget getCompleteProfileCTA() {
