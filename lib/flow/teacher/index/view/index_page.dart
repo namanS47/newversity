@@ -21,7 +21,6 @@ class _IndexPageState extends State<IndexPage> {
       },
       builder: (context, state) {
         return Scaffold(
-          key: context.read<IndexBloc>().scaffoldKey,
           resizeToAvoidBottomInset: false,
           endDrawer: const SizedBox(width: 240, child: ProfileDrawerScreen()),
           drawerEnableOpenDragGesture: true,

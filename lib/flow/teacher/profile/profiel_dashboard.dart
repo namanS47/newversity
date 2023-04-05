@@ -68,7 +68,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Visibility(
-                        visible: !widget.profileDashboardArguments.isNewUser ||
+                        visible: !widget.profileDashboardArguments.showBackButton ||
                             !(context.read<ProfileBloc>().currentProfileStep ==
                                 0),
                         child: GestureDetector(

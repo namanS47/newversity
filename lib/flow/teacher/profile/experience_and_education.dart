@@ -99,7 +99,7 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: AppCta(
-            text: !widget.profileDashboardArguments.isNewUser
+            text: !widget.profileDashboardArguments.showBackButton
                 ? AppStrings.update
                 : AppStrings.proceed,
             isLoading: false,

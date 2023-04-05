@@ -170,7 +170,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
   Widget getProceedCTA(BuildContext context) {
     return AppCta(
       onTap: () => onTapContinueButton(context),
-      text: !widget.profileDashboardArguments.isNewUser
+      text: !widget.profileDashboardArguments.showBackButton
           ? AppStrings.update
           : AppStrings.proceed,
       isLoading: isLoading,

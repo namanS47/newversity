@@ -105,7 +105,7 @@ class _SelectionDetailsState extends State<SelectionDetails> {
                 child: AppCta(
                   isLoading: isLoading,
                   onTap: () => onProceedTap(context),
-                  text: !widget.profileDashboardArguments.isNewUser
+                  text: !widget.profileDashboardArguments.showBackButton
                       ? AppStrings.update
                       : AppStrings.proceed,
                 ),

@@ -1,7 +1,7 @@
 class ProfileDashboardArguments {
   int directedIndex;
-  bool isNewUser = true;
+  bool showBackButton = true;
 
   ProfileDashboardArguments(
-      {required this.directedIndex, required this.isNewUser});
+      {required this.directedIndex, required this.showBackButton});
 }

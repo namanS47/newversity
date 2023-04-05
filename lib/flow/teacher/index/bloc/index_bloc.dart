@@ -16,7 +16,6 @@ part 'index_state.dart';
 
 class IndexBloc extends Bloc<IndexEvents, IndexState> {
   int selectedIndex = 0;
-  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   List<Widget> indexPages = <Widget>[
     BlocProvider(
       create: (context) => SessionBloc(),

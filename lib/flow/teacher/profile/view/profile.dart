@@ -13,6 +13,7 @@ import 'package:newversity/themes/colors.dart';
 import 'package:newversity/utils/string_extensions.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
+import '../../index/view/profile_drawer_screen.dart';
 import '../bloc/profile_bloc/profile_bloc.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -26,6 +27,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   TeacherDetails? teacherDetails;
   ProfileCompletionPercentageResponse? profileCompletionPercentageResponse;
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -36,8 +38,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   onDrawerTap() {
-    if (context.read<IndexBloc>().scaffoldKey.currentState != null) {
-      context.read<IndexBloc>().scaffoldKey.currentState?.openDrawer();
+    if(scaffoldKey.currentState != null) {
+      scaffoldKey.currentState!.openDrawer();
     }
   }
 
@@ -54,6 +56,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
       builder: (context, state) {
         return Scaffold(
+          key: scaffoldKey,
+          endDrawer: const SizedBox(width: 240, child: ProfileDrawerScreen()),
           resizeToAvoidBottomInset: true,
           body: Stack(
             children: [
