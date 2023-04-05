@@ -117,4 +117,13 @@ class TeacherBaseRepository extends BaseRepository {
       AppException.forException(exception.response);
     }
   }
+
+  Future<TeacherDetails?> uploadTeacherProfileUrl(File file, String teacherId) async {
+    try{
+      return await _teacherApi.uploadProfilePicture(file, teacherId);
+    } on DioError catch (exception) {
+      AppException.forException(exception.response);
+      return null;
+    }
+  }
 }

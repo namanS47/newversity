@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/flow/teacher/index/bloc/index_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:newversity/flow/teacher/profile/view/review.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
+import 'package:newversity/utils/string_extensions.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../bloc/profile_bloc/profile_bloc.dart';
@@ -21,9 +23,9 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   TeacherDetails? teacherDetails;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetails());
   }
@@ -40,7 +42,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       listener: (context, state) {
         if (state is FetchedTeachersProfile) {
           teacherDetails = state.teacherDetails;
-          // TODO: implement listener
         }
       },
       builder: (context, state) {
@@ -324,10 +325,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               height: 66,
               width: 66,
               child: CircleAvatar(
-                child: AppImage(
-                  image: teacherDetails?.profilePictureUrl ??
-                      ImageAsset.blueAvatar,
-                ),
+                radius: 30.0,
+                foregroundImage: teacherDetails?.profilePictureUrl != null
+                    ? NetworkImage(teacherDetails!.profilePictureUrl!)
+                    : null,
+                child: teacherDetails?.profilePictureUrl == null
+                    ? const AppImage(
+                        image: ImageAsset.blueAvatar,
+                      )
+                    : CommonWidgets.getCircularProgressIndicator(),
               ),
             ),
           ),

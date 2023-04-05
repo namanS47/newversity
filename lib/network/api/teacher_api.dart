@@ -85,4 +85,8 @@ abstract class TeacherApi {
   @POST("/teacher/tags/verify")
   @MultiPart()
   Future<void> uploadTagDocument(@Part() File file, @Part() String teacherId, @Part() String tag);
+  
+  @POST("/teacher/profileImage")
+  @MultiPart()
+  Future<TeacherDetails?> uploadProfilePicture(@Part() File file, @Part() String teacherId);
 }
