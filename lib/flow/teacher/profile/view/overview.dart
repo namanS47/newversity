@@ -548,7 +548,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
       children: List.generate(
         allMentorship.length,
         (curIndex) {
-          return getTagView(allMentorship?[curIndex].tagName ?? "");
+          return getTagView(allMentorship[curIndex].tagName ?? "");
         },
       ),
     );
