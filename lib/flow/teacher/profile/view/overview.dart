@@ -7,7 +7,6 @@ import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_detail
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/flow/teacher/profile/view/bootom_sheet_view/profile_set_session_rate.dart';
 import 'package:newversity/resources/images.dart';
-import 'package:newversity/utils/enums.dart';
 
 import '../../../../themes/colors.dart';
 import '../../../../utils/date_time_utils.dart';
@@ -26,8 +25,8 @@ class ProfileOverview extends StatefulWidget {
 class _ProfileOverviewState extends State<ProfileOverview> {
   List<TagsResponseModel> allExpertise = [];
   List<TagsResponseModel> allMentorship = [];
-  List<ExperienceResponseModel>? lisOfExperienceModel;
-  List<EducationResponseModel>? listOfEducationModel;
+  List<ExperienceResponseModel> lisOfExperienceModel = [];
+  List<EducationResponseModel> listOfEducationModel = [];
   TeacherDetails? teacherDetails;
 
   @override
@@ -256,11 +255,10 @@ class _ProfileOverviewState extends State<ProfileOverview> {
         const SizedBox(
           height: 5,
         ),
-        listOfEducationModel != null
-            ? listOfEducationModel!.isNotEmpty
+        listOfEducationModel.isNotEmpty
                 ? getEducation()
                 : noDataFound(40)
-            : getProgressIndicator(40),
+
       ],
     );
   }
@@ -308,7 +306,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getCGPA(int index) {
     return AppText(
-      "CGPA-${listOfEducationModel?[index].grade ?? ""}",
+      "CGPA-${listOfEducationModel[index].grade ?? ""}",
       fontSize: 12,
       fontWeight: FontWeight.w400,
     );
@@ -316,20 +314,20 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getStream(int index) {
     return Text(
-      listOfEducationModel?[index].degree ?? "",
+      listOfEducationModel[index].degree ?? "",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
 
   Widget getEducationalDuration(int index) {
     String duraionString = DateTimeUtils.getEmploymentDurationDateTime(
-        listOfEducationModel?[index].startDate ?? DateTime.now());
+        listOfEducationModel[index].startDate ?? DateTime.now());
     duraionString += "-";
-    if (listOfEducationModel?[index].currentlyWorkingHere == true) {
+    if (listOfEducationModel[index].currentlyWorkingHere == true) {
       duraionString += "Present";
     } else {
       duraionString += DateTimeUtils.getEmploymentDurationDateTime(
-          listOfEducationModel?[index].endDate ?? DateTime.now());
+          listOfEducationModel[index].endDate ?? DateTime.now());
     }
     return Text(
       duraionString,
@@ -339,7 +337,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getEducationalInstitute(int index) {
     return Text(
-      listOfEducationModel?[index].name ?? "",
+      listOfEducationModel[index].name ?? "",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
     );
   }
@@ -351,7 +349,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
         spacing: 30,
         runSpacing: 12,
         children: List.generate(
-          listOfEducationModel!.length,
+          listOfEducationModel.length,
           (curIndex) {
             return getEducationView(curIndex);
           },
@@ -367,7 +365,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
         spacing: 30,
         runSpacing: 12,
         children: List.generate(
-          lisOfExperienceModel!.length ?? 0,
+          lisOfExperienceModel.length,
           (curIndex) {
             return getExperienceView(curIndex);
           },
@@ -380,7 +378,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Text(
-        lisOfExperienceModel?[index].location ?? "",
+        lisOfExperienceModel[index].location ?? "",
         style: const TextStyle(
             color: AppColors.secColor,
             fontSize: 12,
@@ -391,13 +389,13 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getDuration(int index) {
     String durationString = DateTimeUtils.getEmploymentDurationDateTime(
-        lisOfExperienceModel?[index].startDate ?? DateTime.now());
+        lisOfExperienceModel[index].startDate ?? DateTime.now());
     durationString += "-";
-    if (lisOfExperienceModel?[index].currentlyWorkingHere == true) {
+    if (lisOfExperienceModel[index].currentlyWorkingHere == true) {
       durationString += "Present";
     } else {
       durationString += DateTimeUtils.getEmploymentDurationDateTime(
-          lisOfExperienceModel?[index].endDate ?? DateTime.now());
+          lisOfExperienceModel[index].endDate ?? DateTime.now());
     }
 
     return Text(
@@ -408,14 +406,14 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getDesignation(int index) {
     return Text(
-      lisOfExperienceModel?[index].title ?? "",
+      lisOfExperienceModel[index].title ?? "",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
     );
   }
 
   Widget getInstitute(int index) {
     return Text(
-      lisOfExperienceModel?[index].companyName ?? "",
+      lisOfExperienceModel[index].companyName ?? "",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
@@ -469,11 +467,9 @@ class _ProfileOverviewState extends State<ProfileOverview> {
         const SizedBox(
           height: 5,
         ),
-        lisOfExperienceModel != null
-            ? lisOfExperienceModel!.isNotEmpty
+        lisOfExperienceModel.isNotEmpty
                 ? getExperience()
                 : noDataFound(40)
-            : getProgressIndicator(40),
       ],
     );
   }
@@ -599,11 +595,9 @@ class _ProfileOverviewState extends State<ProfileOverview> {
             const SizedBox(
               height: 5,
             ),
-            allExpertise != null
-                ? allExpertise!.isNotEmpty
+            allExpertise.isNotEmpty
                     ? getListOfExperties()
                     : noDataFound(40)
-                : getProgressIndicator(40),
           ],
         ),
       ),
@@ -639,7 +633,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
       spacing: 15,
       runSpacing: 12,
       children: List.generate(
-        allExpertise!.length,
+        allExpertise.length,
         (curIndex) {
           return getExpertiseView(curIndex);
         },
@@ -651,7 +645,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        getTagView(allExpertise?[index].tagName ?? ""),
+        getTagView(allExpertise[index].tagName ?? ""),
         BlocBuilder<ProfileBloc, ProfileStates>(
           builder: (context, state) {
             if (state is UploadDocumentLoadingState &&
@@ -665,7 +659,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
               );
             }
             if (state is UploadDocumentSuccessState &&
-                state.tag == allExpertise?[index]) {
+                state.tag == allExpertise[index]) {
               return const Text(
                 "Verifying",
                 style: TextStyle(color: AppColors.lightRedColorShadow400),
@@ -691,8 +685,6 @@ class _ProfileOverviewState extends State<ProfileOverview> {
             }
           },
         ),
-        getTagView(allExpertise?[index].tagName ?? ""),
-        uploadDocumentWidget(allExpertise?[index] ?? TagsResponseModel())
       ],
     );
   }

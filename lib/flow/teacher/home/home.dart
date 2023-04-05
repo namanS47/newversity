@@ -42,7 +42,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> assignNearestSessionDetail() async {
-    if (listOfSessionDetailResponse != null) {
+    if (listOfSessionDetailResponse != null && listOfSessionDetailResponse?.isNotEmpty == true) {
       int minSecond = getLeftTimeInSeconds(
           listOfSessionDetailResponse?[0].startDate ?? DateTime.now());
       for (SessionDetailsResponse? sessionDetailsResponse
