@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
 import 'package:newversity/navigation/app_routes.dart';
 
 import '../app_bloc/app_bloc.dart';
@@ -18,7 +19,7 @@ class InitialRoute extends StatelessWidget {
               context, AppRoutes.teacherHomePageRoute);
         } else if (state is RedirectToTeacherPersonalInformationRoute) {
           Navigator.pushReplacementNamed(
-              context, AppRoutes.teacherProfileDashBoard);
+              context, AppRoutes.teacherProfileDashBoard, arguments: ProfileDashboardArguments(directedIndex: 1, showBackButton: true));
         } else if (state is RedirectToStudentHome) {
           Navigator.pushReplacementNamed(context, AppRoutes.studentHome);
         } else if (state is SomethingWentWrongState) {
