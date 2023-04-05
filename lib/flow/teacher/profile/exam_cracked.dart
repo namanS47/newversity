@@ -21,6 +21,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
   final _specifyController = TextEditingController();
   List<TagsResponseModel> allExamsTags = [];
   List<TagsResponseModel> allSelectedTags = [];
+  List<TagModel> allRequestedTags = [];
   bool isLoading = false;
   bool showErrorText = false;
 
@@ -30,6 +31,17 @@ class _ExamsCrackedState extends State<ExamsCracked> {
     super.initState();
     BlocProvider.of<ProfileBloc>(context)
         .add(FetchExamTagsEvent(tagCat: getTagCategory(TagCategory.exams)));
+
+    _specifyController.addListener(() {
+      if (_specifyController.text.replaceAll(" ", "").isNotEmpty &&
+          _specifyController.text.contains(" ")) {
+        setState(() {
+          allRequestedTags.add(TagModel(
+              tagCategory: "exams", tagName: _specifyController.text));
+          _specifyController.text = "";
+        });
+      }
+    });
   }
 
   bool isRebuildWidgetState(ProfileStates state) {
@@ -48,6 +60,12 @@ class _ExamsCrackedState extends State<ExamsCracked> {
       listener: (context, state) {
         if (state is FetchedExamTagsState) {
           allExamsTags = state.listOfTags;
+          final teacherId = context.read<ProfileBloc>().teacherId;
+          for (var element in allExamsTags) {
+            if(element.teacherTagDetailList?.containsKey(teacherId) == true) {
+              allSelectedTags.add(element);
+            }
+          }
         }
         if (state is SavedTagsState) {
           isLoading = false;
@@ -68,7 +86,11 @@ class _ExamsCrackedState extends State<ExamsCracked> {
               const SizedBox(
                 height: 20,
               ),
-              allExamsTags.isNotEmpty ? getExamsLayout() : Container(),
+              getExamsLayout(),
+              const SizedBox(
+                height: 8,
+              ),
+              getRequestedTagWidget(),
               const SizedBox(
                 height: 20,
               ),
@@ -122,7 +144,6 @@ class _ExamsCrackedState extends State<ExamsCracked> {
   }
 
   onProceedTap(BuildContext context) {
-    List<TagModel> allRequestedTags = [];
     for (TagsResponseModel x in allSelectedTags) {
       allRequestedTags
           .add(TagModel(tagCategory: x.tagCategory, tagName: x.tagName));
@@ -163,6 +184,56 @@ class _ExamsCrackedState extends State<ExamsCracked> {
             return examsView(curIndex);
           },
         ),
+      ),
+    );
+  }
+
+  Widget examsViewForRequestedTag(int curIndex) {
+    return GestureDetector(
+      // onTap: () => onSelectedSession(curIndex),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: AppColors.lightCyan,
+            border: Border.all(width: 0.3, color: AppColors.grey32)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                allRequestedTags[curIndex].tagName ?? "",
+                style:
+                const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+              ),
+              InkWell(
+                  onTap: () {
+                    setState(() {
+                      allRequestedTags.removeAt(curIndex);
+                    });
+                  },
+                  child: const Icon(
+                    Icons.cancel,
+                    color: AppColors.whiteColor,
+                    size: 20,
+                  )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget getRequestedTagWidget() {
+    return Wrap(
+      spacing: 15,
+      runSpacing: 12,
+      children: List.generate(
+        allRequestedTags.length,
+            (curIndex) {
+          return examsViewForRequestedTag(curIndex);
+        },
       ),
     );
   }
