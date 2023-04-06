@@ -12,6 +12,8 @@ import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
+import '../../../common/common_utils.dart';
+import '../data/model/teacher_details/teacher_details.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
 class ProfileDashboard extends StatefulWidget {
@@ -24,7 +26,6 @@ class ProfileDashboard extends StatefulWidget {
 }
 
 class _ProfileDashboardState extends State<ProfileDashboard> {
-
   @override
   void initState() {
     super.initState();
@@ -37,7 +38,11 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: BlocConsumer<ProfileBloc, ProfileStates>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is ProfileDetailsSavingSuccessState) {
+            Navigator.of(context).pushNamed(AppRoutes.teacherHomePageRoute);
+          }
+        },
         builder: (context, state) {
           if (state is ProfileInitial) {
             context.read<ProfileBloc>().profileCardList = [
@@ -68,9 +73,10 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Visibility(
-                        visible: !widget.profileDashboardArguments.showBackButton ||
+                        visible: widget
+                                .profileDashboardArguments.showBackButton ||
                             !(context.read<ProfileBloc>().currentProfileStep ==
-                                0),
+                                1),
                         child: GestureDetector(
                           onTap: () async {
                             if (context.read<ProfileBloc>().currentProfileStep >
@@ -117,10 +123,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context)
-                                .pushNamed(AppRoutes.teacherHomePageRoute);
-                          },
+                          onTap: () => onSkipTap(),
                           child: const Text("Skip"),
                         ),
                       )
@@ -136,6 +139,16 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  onSkipTap() {
+    BlocProvider.of<TeacherDetailsBloc>(context).add(
+      SaveTeacherDetailsEvent(
+        teacherDetails: TeacherDetails(
+          teacherId: CommonUtils().getLoggedInUser(),
+        ),
       ),
     );
   }

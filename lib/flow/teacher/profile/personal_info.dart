@@ -58,13 +58,14 @@ class _PersonalInformationState extends State<PersonalInformation> {
       if (state is TeacherDetailsSavingSuccessState) {
         isLoading = false;
         context.read<ProfileBloc>().add(ChangeProfileCardIndexEvent());
-      } else if(state is FetchTeacherDetailSuccessState) {
-        TeacherDetails? details = context.read<TeacherDetailsBloc>().teacherDetails;
+      } else if (state is FetchTeacherDetailSuccessState) {
+        TeacherDetails? details =
+            context.read<TeacherDetailsBloc>().teacherDetails;
         _nameController.text = details?.name ?? "";
         _titleController.text = details?.title ?? "";
         _infoController.text = details?.info ?? "";
         _locationController.text = details?.location ?? "";
-      }  else if (state is TeacherDetailsSavingFailureState) {
+      } else if (state is TeacherDetailsSavingFailureState) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
@@ -275,8 +276,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
       builder: (context) {
         return ImagePickerOptionBottomSheet(
           onCameraClick: () async {
-            final image =
-                await ImagePicker().pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
+            final image = await ImagePicker().pickImage(
+                source: ImageSource.camera,
+                preferredCameraDevice: CameraDevice.front);
             if (image != null) {
               file = image;
               Navigator.pop(context);
@@ -386,11 +388,11 @@ class _PersonalInformationState extends State<PersonalInformation> {
       BlocProvider.of<TeacherDetailsBloc>(context).add(
         SaveTeacherDetailsEvent(
           teacherDetails: TeacherDetails(
-              teacherId: CommonUtils().getLoggedInUser(),
-              name: _nameController.text,
-              location: _locationController.text,
-              title: _titleController.text,
-              info: _infoController.text,
+            teacherId: CommonUtils().getLoggedInUser(),
+            name: _nameController.text,
+            location: _locationController.text,
+            title: _titleController.text,
+            info: _infoController.text,
           ),
         ),
       );

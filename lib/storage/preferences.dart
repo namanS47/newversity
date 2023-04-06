@@ -59,17 +59,16 @@ abstract class Preferences {
   Future<UserType?> getUserType();
 
   Future<void> setUserType(UserType userType);
-
 }
 
 class PreferencesImpl extends Preferences {
   @override
   Future<UserType?> getUserType() async {
-    final userType =  await getObjectPreference(PreferencesKey.userType);
-    if(userType == "teacher"){
+    final userType = await getObjectPreference(PreferencesKey.userType);
+    if (userType == "teacher") {
       return UserType.teacher;
     }
-    if(userType == "student") {
+    if (userType == "student") {
       return UserType.student;
     }
     return null;
@@ -77,7 +76,8 @@ class PreferencesImpl extends Preferences {
 
   @override
   Future<void> setUserType(UserType userType) {
-    return setObjectPreference(PreferencesKey.userType, userType.toShortString());
+    return setObjectPreference(
+        PreferencesKey.userType, userType.toShortString());
   }
 
   @override

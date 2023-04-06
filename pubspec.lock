@@ -374,6 +374,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.0"
+  flutter_countdown_timer:
+    dependency: "direct main"
+    description:
+      name: flutter_countdown_timer
+      sha256: dfcbd7d6f76a5589f78f3f3ba2f9ea2e199368eccc1adce4153ce985b9587bc5
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -989,6 +997,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  slide_countdown:
+    dependency: "direct main"
+    description:
+      name: slide_countdown
+      sha256: "875af3ece988a1131a43636e78912f856d516cf7fdda3db403e0d3749e4bed71"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
   source_gen:
     dependency: transitive
     description:
@@ -1053,6 +1069,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  stream_duration:
+    dependency: transitive
+    description:
+      name: stream_duration
+      sha256: a29e071bf3e5d284e1e7dce98dbbaf547e16543c4802ec4f1a5c74e516c71af5
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.1"
   stream_transform:
     dependency: transitive
     description:

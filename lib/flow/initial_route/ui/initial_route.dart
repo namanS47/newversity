@@ -19,7 +19,7 @@ class InitialRoute extends StatelessWidget {
               context, AppRoutes.teacherHomePageRoute);
         } else if (state is RedirectToTeacherPersonalInformationRoute) {
           Navigator.pushReplacementNamed(
-              context, AppRoutes.teacherProfileDashBoard, arguments: ProfileDashboardArguments(directedIndex: 1, showBackButton: true));
+              context, AppRoutes.teacherProfileDashBoard, arguments: ProfileDashboardArguments(directedIndex: 1, showBackButton: false));
         } else if (state is RedirectToStudentHome) {
           Navigator.pushReplacementNamed(context, AppRoutes.studentHome);
         } else if (state is SomethingWentWrongState) {

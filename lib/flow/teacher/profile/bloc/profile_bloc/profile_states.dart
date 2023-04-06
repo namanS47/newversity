@@ -123,15 +123,27 @@ class FetchingTagsFailure extends ProfileStates {
 
 class UploadDocumentLoadingState extends ProfileStates {
   UploadDocumentLoadingState({required this.tag});
+
   final TagsResponseModel tag;
 }
 
 class UploadDocumentSuccessState extends ProfileStates {
   UploadDocumentSuccessState({required this.tag});
+
   final TagsResponseModel tag;
 }
 
 class UploadDocumentFailureState extends ProfileStates {
   UploadDocumentFailureState({required this.tag});
+
   final TagsResponseModel tag;
+}
+
+class ProfileDetailsSavingState extends ProfileStates {}
+
+class ProfileDetailsSavingSuccessState extends ProfileStates {}
+
+class ProfileDetailsSavingFailureState extends ProfileStates {
+  final String msg;
+  ProfileDetailsSavingFailureState({required this.msg});
 }

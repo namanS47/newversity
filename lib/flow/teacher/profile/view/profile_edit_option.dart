@@ -87,19 +87,19 @@ class _ProfileEditOptionState extends State<ProfileEditOption> {
   onPersonalInfoTap() {
     Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
         arguments:
-            ProfileDashboardArguments(directedIndex: 1, showBackButton: false));
+            ProfileDashboardArguments(directedIndex: 1, showBackButton: true));
   }
 
   onExperienceAndEducationTap() {
     Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
         arguments:
-            ProfileDashboardArguments(directedIndex: 2, showBackButton: false));
+            ProfileDashboardArguments(directedIndex: 2, showBackButton: true));
   }
 
   onTeacherPreferenceTap() {
     Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
         arguments:
-            ProfileDashboardArguments(directedIndex: 4, showBackButton: false));
+            ProfileDashboardArguments(directedIndex: 4, showBackButton: true));
   }
 
   Widget getPersonalInfoEditLayout() {

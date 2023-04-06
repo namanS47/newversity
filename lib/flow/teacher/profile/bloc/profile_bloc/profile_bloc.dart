@@ -14,6 +14,7 @@ import 'package:newversity/network/webservice/exception.dart';
 
 import '../../../../../common/common_utils.dart';
 import '../../../../../di/di_initializer.dart';
+import '../../../../../storage/preferences.dart';
 import '../../../webservice/teacher_base_repository.dart';
 import '../../model/tags_with_teacher_id_request_model.dart';
 
@@ -32,7 +33,6 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
   List<Widget> profileCardList = <Widget>[];
   final TeacherBaseRepository _teacherBaseRepository =
       DI.inject<TeacherBaseRepository>();
-
 
   ProfileBloc() : super(ProfileInitial()) {
     on<ChangeProfileCardIndexEvent>((event, emit) async {
@@ -96,16 +96,43 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
 
     on<UploadDocumentEvent>((event, emit) async {
       emit(UploadDocumentLoadingState(tag: event.tag));
-      try{
+      try {
         File newFile = CommonUtils().renameFile(event.file, teacherId);
         await _teacherBaseRepository.uploadTagDocument(
             newFile, teacherId, event.tag.tagName ?? "");
         newFile.delete();
         emit(UploadDocumentSuccessState(tag: event.tag));
-      } catch(exception) {
+      } catch (exception) {
         emit(UploadDocumentFailureState(tag: event.tag));
       }
     });
+
+    on<SaveProfileDetailsEvent>((event, emit) async {
+      teacherId = CommonUtils().getLoggedInUser();
+      await saveProfileDetails(event, emit);
+    });
+  }
+
+  Future<void> saveProfileDetails(event, emit) async {
+    emit(ProfileDetailsSavingState());
+    try {
+      if (event is SaveProfileDetailsEvent) {
+        event.teacherDetails.mobileNumber =
+            await DI.inject<Preferences>().getMobileNumber();
+        final response = await _teacherBaseRepository.addTeacherDetails(
+            event.teacherDetails, teacherId);
+        if (response != null) {
+          emit(ProfileDetailsSavingSuccessState());
+        }
+      }
+    } catch (exception) {
+      if (exception is BadRequestException) {
+        emit(ProfileDetailsSavingFailureState(
+            msg: exception.message.toString()));
+      } else {
+        emit(ProfileDetailsSavingFailureState(msg: "Something went wrong"));
+      }
+    }
   }
 
   Future<void> updateProfileTab(event, emit) async {

@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
-import 'package:newversity/flow/teacher/index/bloc/index_bloc.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/flow/teacher/profile/view/overview.dart';
 import 'package:newversity/flow/teacher/profile/view/review.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
-import 'package:newversity/utils/string_extensions.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../index/view/profile_drawer_screen.dart';
@@ -24,7 +21,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
   TeacherDetails? teacherDetails;
   ProfileCompletionPercentageResponse? profileCompletionPercentageResponse;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -38,8 +34,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   onDrawerTap() {
-    if(scaffoldKey.currentState != null) {
-      scaffoldKey.currentState!.openDrawer();
+    if (scaffoldKey.currentState != null) {
+      scaffoldKey.currentState!.openEndDrawer();
     }
   }
 
@@ -57,8 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (context, state) {
         return Scaffold(
           key: scaffoldKey,
-          drawer: const SizedBox(width: 240, child: ProfileDrawerScreen()),
-          drawerEnableOpenDragGesture: true,
+          endDrawer: const SizedBox(width: 240, child: ProfileDrawerScreen()),
           resizeToAvoidBottomInset: true,
           body: Stack(
             children: [
@@ -92,9 +87,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                           GestureDetector(
-                              behavior: HitTestBehavior.translucent,
+                              behavior: HitTestBehavior.deferToChild,
                               onTap: () => onDrawerTap(),
-                              child: const AppImage(image: ImageAsset.drawer)),
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: AppImage(image: ImageAsset.drawer),
+                              )),
                         ],
                       ),
                     ),

@@ -57,6 +57,12 @@ class FetchProfileCompletionInfoEvent extends ProfileEvents {}
 
 class UploadDocumentEvent extends ProfileEvents {
   UploadDocumentEvent({required this.file, required this.tag});
+
   final XFile file;
   final TagsResponseModel tag;
+}
+
+class SaveProfileDetailsEvent extends ProfileEvents {
+  SaveProfileDetailsEvent({required this.teacherDetails});
+  final TeacherDetails teacherDetails;
 }
