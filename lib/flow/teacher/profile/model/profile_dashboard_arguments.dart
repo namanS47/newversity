@@ -1,5 +1,5 @@
 class ProfileDashboardArguments {
-  int directedIndex;
+  int directedIndex = 1;
   bool showBackButton = true;
 
   ProfileDashboardArguments(

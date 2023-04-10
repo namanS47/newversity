@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/index/bloc/index_bloc.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/flow/teacher/profile/view/overview.dart';
 import 'package:newversity/flow/teacher/profile/view/review.dart';
@@ -53,7 +54,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (context, state) {
         return Scaffold(
           key: scaffoldKey,
-          endDrawer: const SizedBox(width: 240, child: ProfileDrawerScreen()),
+          endDrawer: SizedBox(
+              width: 240,
+              child: BlocProvider<IndexBloc>(
+                create: (context) => IndexBloc(),
+                child: const ProfileDrawerScreen(),
+              )),
           resizeToAvoidBottomInset: true,
           body: Stack(
             children: [

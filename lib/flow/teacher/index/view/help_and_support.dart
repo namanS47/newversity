@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/teacher/index/view/bottom_sheet/contact_us.dart';
+import 'package:newversity/navigation/app_routes.dart';
 
 import '../../../../resources/images.dart';
 import '../../../../themes/colors.dart';
@@ -91,7 +92,9 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
 
   onTapOfRaiseIssueContainer() {}
 
-  onTapOfFaqsContainer() {}
+  onTapOfFaqsContainer() {
+    Navigator.of(context).pushNamed(AppRoutes.faqs);
+  }
 
   Widget getFaqsContainer() {
     return GestureDetector(
@@ -150,7 +153,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              AppText(
+              const AppText(
                 "Wants to connect with us?",
                 fontSize: 14,
                 fontWeight: FontWeight.w500,

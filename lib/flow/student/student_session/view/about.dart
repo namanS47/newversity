@@ -1,13 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:newversity/flow/student/seesion/data/experience_data.dart';
-import 'package:newversity/resources/app_text_styles.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/strings.dart';
-import 'package:newversity/utils/strings.dart';
 
-import '../../../themes/colors.dart';
+import '../../../../themes/colors.dart';
+import '../model/experience_data.dart';
 
 class AboutSession extends StatelessWidget {
   AboutSession({Key? key}) : super(key: key);

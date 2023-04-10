@@ -45,6 +45,7 @@ class AppStrings {
   static const availableSlot = "Available slots";
   static const availableTime = "Available times";
   static const perSession = "Per session";
+  static const zeroEarnings = "Oho zero earnings !";
   static const companyName = "Company Name";
   static const degree = "Degree";
   static const grade = "Grade";
@@ -72,6 +73,7 @@ class AppStrings {
   static const enterOtp = "Please enter the 6-digit code sent to";
   static const correctOtp = "Please enter correct otp";
   static const emptyProfile = "Your profile is looking empty!";
+  static const findMentor = "Find a best mentor for you !";
   static const addingDetailsInst =
       "Add some details and personalize your experience. Complete it now and start enjoying our app!";
 

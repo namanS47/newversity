@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:newversity/flow/student/seesion/data/experience_data.dart';
 import 'package:newversity/themes/colors.dart';
-
-import '../../../themes/strings.dart';
+import '../../../../themes/strings.dart';
+import '../model/experience_data.dart';
 
 class SessionAvailability extends StatefulWidget {
   const SessionAvailability({Key? key}) : super(key: key);

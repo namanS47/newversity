@@ -20,7 +20,6 @@ class PreviousSessions extends StatefulWidget {
 }
 
 class _PreviousSessionsState extends State<PreviousSessions> {
-
   List<SessionDetailsResponse> listOfSessionDetailResponse = [];
 
   @override
@@ -31,17 +30,19 @@ class _PreviousSessionsState extends State<PreviousSessions> {
             type: getSessionType(SessionType.previous)));
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PreviousSessionBloc, PreviousSessionStates>(
       listener: (context, state) {
-        if (state is FetchedPreviousSessionState && state.listOfPreviousSession != null) {
+        if (state is FetchedPreviousSessionState &&
+            state.listOfPreviousSession != null) {
           listOfSessionDetailResponse = state.listOfPreviousSession!;
         }
       },
       builder: (context, state) {
+        if (state is FetchingPreviousSessionState) {
+          return getProgressIndicator();
+        }
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -59,41 +60,61 @@ class _PreviousSessionsState extends State<PreviousSessions> {
     );
   }
 
+  Widget getProgressIndicator() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Center(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height - 300,
+            width: MediaQuery.of(context).size.width,
+            child: const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.cyanBlue,
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
   Widget getListOfPreviousSessions() {
     return listOfSessionDetailResponse.isNotEmpty
-            ? BlocBuilder<PreviousSessionBloc, PreviousSessionStates>(
-                builder: (context, state) {
-                  return Wrap(
-                    spacing: 15,
-                    runSpacing: 12,
-                    children: List.generate(
-                      listOfSessionDetailResponse.length,
-                      (curIndex) {
-                        return getPreviousSessionDataView(curIndex);
-                      },
-                    ),
-                  );
-                },
-              )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Center(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height - 300,
-                      width: MediaQuery.of(context).size.width,
-                      child: const Center(
-                        child: AppText(
-                          "Data not Found",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+        ? BlocBuilder<PreviousSessionBloc, PreviousSessionStates>(
+            builder: (context, state) {
+              return Wrap(
+                spacing: 15,
+                runSpacing: 12,
+                children: List.generate(
+                  listOfSessionDetailResponse.length,
+                  (curIndex) {
+                    return getPreviousSessionDataView(curIndex);
+                  },
+                ),
               );
+            },
+          )
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height - 300,
+                  width: MediaQuery.of(context).size.width,
+                  child: const Center(
+                    child: AppText(
+                      "Data not Found",
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          );
   }
 
   int getLeftTimeInSeconds(DateTime startDate, DateTime endDate) {
@@ -101,7 +122,6 @@ class _PreviousSessionsState extends State<PreviousSessions> {
   }
 
   onProfileTap(int index) {
-
     //TODO: Naman remove force unwrapping
     Navigator.of(context).pushNamed(AppRoutes.sessionDetails,
         arguments: SessionDetailArguments(

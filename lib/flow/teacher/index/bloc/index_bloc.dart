@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newversity/common/common_utils.dart';
+import 'package:newversity/flow/student/campus/bloc/campus_bloc/campus_bloc.dart';
+import 'package:newversity/flow/student/campus/view/student_campus.dart';
+import 'package:newversity/flow/student/home/bloc/student_home_bloc.dart';
+import 'package:newversity/flow/student/home/view/student_home.dart';
+import 'package:newversity/flow/student/student_session/bloc/student_session_bloc.dart';
+import 'package:newversity/flow/student/student_session/view/student_session.dart';
 import 'package:newversity/flow/teacher/availability/availability_route.dart';
-import 'package:newversity/flow/teacher/bookings/bloc/session_details_bloc/session_details_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/bloc/teacher_bookings_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/view/bookings.dart';
 import 'package:newversity/flow/teacher/home/bloc/session_bloc/session_details_bloc.dart';
@@ -31,6 +37,21 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
     )
   ];
 
+  List<Widget> studentIndexPage = <Widget>[
+    BlocProvider<StudentHomeBloc>(
+      create: (context) => StudentHomeBloc(),
+      child: const StudentHomeScreen(),
+    ),
+    BlocProvider<StudentSessionBloc>(
+      create: (context) => StudentSessionBloc(),
+      child: const StudentSessionScreen(),
+    ),
+    BlocProvider<StudentCampusBloc>(
+      create: (context) => StudentCampusBloc(),
+      child: const StudentCampusScreen(),
+    )
+  ];
+
   List<String> drawerOptions = <String>[
     ImageAsset.user,
     ImageAsset.bank,
@@ -47,10 +68,18 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
     {'image': ImageAsset.availability, 'name': 'Availability'},
   ];
 
+  List<Map<String, String>> studentPagesNameWithImageIcon =
+      <Map<String, String>>[
+    {'image': ImageAsset.home, 'name': 'Home'},
+    {'image': ImageAsset.session, 'name': 'My Session'},
+    {'image': ImageAsset.campus, 'name': 'Campus'},
+  ];
+
   IndexBloc() : super(IndexInitialState()) {
     on<IndexPageUpdateEvent>((event, emit) async {
       updatePageIndex(event, emit);
     });
+
   }
 
   Future<void> updatePageIndex(event, emit) async {

@@ -1,12 +1,8 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:newversity/resources/images.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../themes/colors.dart';
@@ -225,26 +221,25 @@ class AppImage extends StatelessWidget {
             height: webHeight,
             width: webWidth,
             fit: webFit ?? BoxFit.cover,
-            placeholder: (context, url) => ShimmerEffectView(
-                height: webHeight ?? double.maxFinite,
-                width: webWidth ?? double.maxFinite),
+            placeholder: (context, url) =>
+                CommonWidgets.getCircularProgressIndicator(),
             errorWidget: (context, url, error) =>
                 const Icon(Icons.error, color: Colors.red),
           )
         : image.split('.').last != 'svg'
-                ? Image.asset(
-                    image,
-                    fit: fit,
-                    height: height,
-                    width: width,
-                    color: color,
-                  )
-                : SvgPicture.asset(
-                    image,
-                    height: height,
-                    width: width,
-                    color: color,
-                  );
+            ? Image.asset(
+                image,
+                fit: fit,
+                height: height,
+                width: width,
+                color: color,
+              )
+            : SvgPicture.asset(
+                image,
+                height: height,
+                width: width,
+                color: color,
+              );
   }
 }
 
@@ -289,6 +284,7 @@ class AppTextFormField extends StatefulWidget {
       this.onChange,
       this.hintTextStyle,
       this.fillColor,
+      this.isEnable = true,
       this.contentPadding,
       this.textInputAction})
       : super(key: key);
@@ -301,6 +297,7 @@ class AppTextFormField extends StatefulWidget {
   final String? hintText;
   final String? errorText;
   final bool? isDense;
+  final bool isEnable;
   final int? maxLines;
   final Function? onChange;
   final TextStyle? hintTextStyle;
@@ -326,6 +323,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
     final List<TextInputFormatter> formatters = widget.inputFormatters ?? [];
 
     return TextFormField(
+      enabled: widget.isEnable,
       controller: _controller,
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction ?? TextInputAction.done,
@@ -510,6 +508,7 @@ class AppCta extends StatelessWidget {
     this.text = "",
     this.isLoading = false,
     this.padding,
+    this.textColor,
     this.width,
     this.color,
     this.isEnable = true,
@@ -520,6 +519,7 @@ class AppCta extends StatelessWidget {
   final String text;
   final double? width;
   final Color? color;
+  final Color? textColor;
   final bool isEnable;
 
   final EdgeInsetsGeometry? padding;
@@ -541,9 +541,9 @@ class AppCta extends StatelessWidget {
               ? Center(
                   child: Text(
                     text,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 16,
-                        color: Colors.white,
+                        color: textColor ?? Colors.white,
                         fontWeight: FontWeight.w600),
                   ),
                 )
@@ -555,20 +555,20 @@ class AppCta extends StatelessWidget {
 }
 
 class ImagePickerOptionBottomSheet extends StatefulWidget {
-  const ImagePickerOptionBottomSheet({
-    Key? key,
-    required this.onCameraClick,
-    required this.onGalleryClick
-  }) : super(key: key);
+  const ImagePickerOptionBottomSheet(
+      {Key? key, required this.onCameraClick, required this.onGalleryClick})
+      : super(key: key);
 
   final void Function() onCameraClick;
   final void Function() onGalleryClick;
 
   @override
-  State<ImagePickerOptionBottomSheet> createState() => _ImagePickerOptionBottomSheetState();
+  State<ImagePickerOptionBottomSheet> createState() =>
+      _ImagePickerOptionBottomSheetState();
 }
 
-class _ImagePickerOptionBottomSheetState extends State<ImagePickerOptionBottomSheet> {
+class _ImagePickerOptionBottomSheetState
+    extends State<ImagePickerOptionBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(

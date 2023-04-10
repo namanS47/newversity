@@ -73,7 +73,7 @@ class _SelectionDetailsState extends State<SelectionDetails> {
         }
         if (state is SavedTagsState) {
           isLoading = false;
-          Navigator.of(context).pushNamed(AppRoutes.teacherHomePageRoute);
+          Navigator.of(context).pushNamed(AppRoutes.teacherHomePageRoute,arguments: false);
         }
       },
       builder: (context, state) {

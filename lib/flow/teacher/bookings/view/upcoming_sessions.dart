@@ -50,43 +50,67 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
   Widget getListOfUpcomingSessions() {
     return BlocConsumer<UpcomingSessionBloc, UpcomingSessionStates>(
       listener: (context, state) {
-        if (state is FetchedUpcomingSessionState && state.sessionDetailResponse != null) {
+        if (state is FetchedUpcomingSessionState &&
+            state.sessionDetailResponse != null) {
           listOfSessionDetailResponse = state.sessionDetailResponse!;
         }
         // TODO: implement listener
       },
       builder: (context, state) {
+        if (state is FetchingUpcomingSessionState) {
+          return getProgressIndicator();
+        }
         return listOfSessionDetailResponse.isNotEmpty
-                ? Wrap(
-                    spacing: 15,
-                    runSpacing: 12,
-                    children: List.generate(
-                      listOfSessionDetailResponse.length,
-                      (curIndex) {
-                        return getUpComingSessionDataView(curIndex);
-                      },
+            ? Wrap(
+                spacing: 15,
+                runSpacing: 12,
+                children: List.generate(
+                  listOfSessionDetailResponse.length,
+                  (curIndex) {
+                    return getUpComingSessionDataView(curIndex);
+                  },
+                ),
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height - 300,
+                      width: MediaQuery.of(context).size.width,
+                      child: const Center(
+                        child: AppText(
+                          "Data not Found",
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
                   )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height - 300,
-                          width: MediaQuery.of(context).size.width,
-                          child: const Center(
-                            child: AppText(
-                              "Data not Found",
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  );
+                ],
+              );
       },
+    );
+  }
+
+  Widget getProgressIndicator() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Center(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height - 300,
+            width: MediaQuery.of(context).size.width,
+            child: const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.cyanBlue,
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 

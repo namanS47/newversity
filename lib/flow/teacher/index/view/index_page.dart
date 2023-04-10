@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
-import 'package:newversity/flow/teacher/index/view/profile_drawer_screen.dart';
 import 'package:newversity/themes/colors.dart';
 
 import '../bloc/index_bloc.dart';
 
 class IndexPage extends StatefulWidget {
-  const IndexPage({Key? key}) : super(key: key);
+  final bool isStudent;
+  const IndexPage({Key? key, required this.isStudent}) : super(key: key);
 
   @override
   State<IndexPage> createState() => _IndexPageState();
@@ -15,25 +15,34 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPageState extends State<IndexPage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<IndexBloc, IndexState>(
-      listener: (context, state) {
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
-          endDrawer: const SizedBox(width: 240, child: ProfileDrawerScreen()),
-          drawerEnableOpenDragGesture: true,
           bottomNavigationBar: Row(
             children: List.generate(
-              context.read<IndexBloc>().indexPages.length,
+              widget.isStudent
+                  ? context.read<IndexBloc>().studentIndexPage.length
+                  : context.read<IndexBloc>().indexPages.length,
               (index) => getBottomNavigationBarItems(index),
             ),
           ),
-          body: context
-              .read<IndexBloc>()
-              .indexPages
-              .elementAt(context.read<IndexBloc>().selectedIndex),
+          body: widget.isStudent
+              ? context
+                  .read<IndexBloc>()
+                  .studentIndexPage
+                  .elementAt(context.read<IndexBloc>().selectedIndex)
+              : context
+                  .read<IndexBloc>()
+                  .indexPages
+                  .elementAt(context.read<IndexBloc>().selectedIndex),
         );
       },
     );
@@ -47,7 +56,10 @@ class _IndexPageState extends State<IndexPage> {
       },
       child: Container(
         height: 74,
-        width: MediaQuery.of(context).size.width / 3,
+        width: MediaQuery.of(context).size.width /
+            (widget.isStudent
+                ? context.read<IndexBloc>().studentIndexPage.length
+                : context.read<IndexBloc>().indexPages.length),
         decoration: const BoxDecoration(
           color: AppColors.whiteColor,
         ),
@@ -74,9 +86,16 @@ class _IndexPageState extends State<IndexPage> {
               Column(
                 children: [
                   AppImage(
-                    image: context
-                        .read<IndexBloc>()
-                        .pagesNameWithImageIcon[index]['image'] ?? "",
+                    image: widget.isStudent ?? true
+                        ? context
+                                    .read<IndexBloc>()
+                                    .studentPagesNameWithImageIcon[index]
+                                ['image'] ??
+                            ""
+                        : context
+                                .read<IndexBloc>()
+                                .pagesNameWithImageIcon[index]['image'] ??
+                            "",
                     color: context.read<IndexBloc>().selectedIndex == index
                         ? AppColors.primaryColor
                         : AppColors.cyanBlue,
@@ -86,9 +105,15 @@ class _IndexPageState extends State<IndexPage> {
                   ),
                   const SizedBox(height: 6),
                   AppText(
-                    context.read<IndexBloc>().pagesNameWithImageIcon[index]
-                            ['name'] ??
-                        "",
+                    widget.isStudent ?? true
+                        ? context
+                                .read<IndexBloc>()
+                                .studentPagesNameWithImageIcon[index]['name'] ??
+                            ""
+                        : context
+                                .read<IndexBloc>()
+                                .pagesNameWithImageIcon[index]['name'] ??
+                            "",
                     color: context.read<IndexBloc>().selectedIndex == index
                         ? AppColors.primaryColor
                         : AppColors.cyanBlue,

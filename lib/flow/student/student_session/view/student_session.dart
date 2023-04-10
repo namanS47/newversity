@@ -1,23 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:newversity/flow/student/seesion/about.dart';
-import 'package:newversity/flow/student/seesion/availability.dart';
-import 'package:newversity/flow/student/seesion/review.dart';
+import 'package:newversity/flow/student/student_session/view/review.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
 
-import '../../../common/common_widgets.dart';
-import '../../../resources/images.dart';
+import '../../../../common/common_widgets.dart';
+import '../../../../resources/images.dart';
+import 'about.dart';
+import 'availability.dart';
 
-class BookSession extends StatefulWidget {
-  const BookSession({Key? key}) : super(key: key);
+class StudentSessionScreen extends StatefulWidget {
+  const StudentSessionScreen({Key? key}) : super(key: key);
 
   @override
-  State<BookSession> createState() => _BookSessionState();
+  State<StudentSessionScreen> createState() => _StudentSessionScreenState();
 }
 
-class _BookSessionState extends State<BookSession> {
+class _StudentSessionScreenState extends State<StudentSessionScreen> {
   PageController pageController = PageController();
   List<String> sessionCategory = ["About", "Availability", "Reviews"];
 
@@ -44,7 +43,8 @@ class _BookSessionState extends State<BookSession> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18.0,vertical: 18),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18.0, vertical: 18),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -88,23 +88,21 @@ class _BookSessionState extends State<BookSession> {
                           Expanded(
                               child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
+                            children: const [
+                              Text(
                                 "Akshat Kamesra",
                                 style: TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w600),
                               ),
-                              const SizedBox(
+                              SizedBox(
                                 height: 10,
                               ),
                               Expanded(
-                                child: Container(
-                                  child: const Text(
-                                    AppStrings.loremText,
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400),
-                                  ),
+                                child: Text(
+                                  AppStrings.loremText,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w400),
                                 ),
                               )
                             ],

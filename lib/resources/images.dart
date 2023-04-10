@@ -20,6 +20,8 @@ class ImageAsset {
   static const String rupay = '${_svgPath}rupay.svg';
   static const String drawer = '${_svgPath}drawer.svg';
   static const String lock = '${_svgPath}lock.svg';
+  static const String zeroEarnings = '${_svgPath}zero_earnings.svg';
+  static const String search = '${_svgPath}search.svg';
   static const String filter = '${_svgPath}filter.svg';
   static const String edit = '${_svgPath}edit.svg';
   static const String editPrimary = '${_svgPath}edit_primary.svg';
@@ -29,6 +31,9 @@ class ImageAsset {
   static const String availability = '${_svgPath}availability.svg';
   static const String bookings = '${_svgPath}bookings.svg';
   static const String star = '${_svgPath}star.svg';
+  static const String session = '${_svgPath}session.svg';
+  static const String campus = '${_svgPath}campus.svg';
+  static const String invite = '${_svgPath}invite.svg';
 
   // Drawer strings
   static const user = "${_svgPath}user.svg";

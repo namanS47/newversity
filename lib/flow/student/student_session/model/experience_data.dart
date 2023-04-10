@@ -1,4 +1,4 @@
-import 'package:intl/intl.dart';
+
 import 'package:newversity/utils/utils.dart';
 
 class ExperienceData {

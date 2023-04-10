@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:newversity/di/di_initializer.dart';
+import 'package:newversity/flow/teacher/bank_account/model/bank_request_model.dart';
+import 'package:newversity/flow/teacher/bank_account/model/bank_response_model.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_response_model.dart';
@@ -27,7 +29,23 @@ class TeacherBaseRepository extends BaseRepository {
     } on DioError catch (exception) {
       throw AppException.forException(exception.response);
     }
-    return null;
+  }
+
+  Future<BankResponseModel?> getBankDetails(String teacherId) async {
+    try {
+      return await _teacherApi.getBankAccount(teacherId);
+    } on DioError catch (exception) {
+      throw AppException.forException(exception.response);
+    }
+  }
+
+  Future<void> addBankAccount(
+      AddBankRequestModel bankRequestModel, String teacherId) async {
+    try {
+      return await _teacherApi.addBankAccount(teacherId, bankRequestModel);
+    } on DioError catch (exception) {
+      throw AppException.forException(exception.response);
+    }
   }
 
   Future<List<SessionDetailsResponse>?> getSessionDetails(
@@ -158,16 +176,18 @@ class TeacherBaseRepository extends BaseRepository {
     return sessionDetailsResponse;
   }
 
-  Future<void> uploadTagDocument(File file, String teacherId, String tagName) async {
-    try{
+  Future<void> uploadTagDocument(
+      File file, String teacherId, String tagName) async {
+    try {
       await _teacherApi.uploadTagDocument(file, teacherId, tagName);
     } on DioError catch (exception) {
       AppException.forException(exception.response);
     }
   }
 
-  Future<TeacherDetails?> uploadTeacherProfileUrl(File file, String teacherId) async {
-    try{
+  Future<TeacherDetails?> uploadTeacherProfileUrl(
+      File file, String teacherId) async {
+    try {
       return await _teacherApi.uploadProfilePicture(file, teacherId);
     } on DioError catch (exception) {
       AppException.forException(exception.response);

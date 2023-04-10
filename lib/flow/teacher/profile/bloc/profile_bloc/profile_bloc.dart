@@ -27,7 +27,6 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
   double sliderWidth = 195.0;
   double sliderPadding = 0.0;
   String teacherId = CommonUtils().getLoggedInUser();
-  int selectedSkinTone = 0;
   int selectedProfileTab = 0;
   List<String> listOfProfileSection = ["Overview", "Review"];
   List<Widget> profileCardList = <Widget>[];

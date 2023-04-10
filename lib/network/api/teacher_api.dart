@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:newversity/config/app_config.dart';
 import 'package:newversity/flow/teacher/availability/data/model/availability_model.dart';
 import 'package:newversity/flow/teacher/availability/data/model/fetch_availability_request_model.dart';
+import 'package:newversity/flow/teacher/bank_account/model/bank_request_model.dart';
+import 'package:newversity/flow/teacher/bank_account/model/bank_response_model.dart';
 import 'package:newversity/flow/teacher/home/model/session_request_model.dart';
 import 'package:newversity/flow/teacher/home/model/session_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
@@ -80,6 +82,14 @@ abstract class TeacherApi {
   @POST("/session/add")
   Future<void>? addSessionDetail(@Body() SessionSaveRequest sessionSaveRequest);
 
+  @POST("/bankAccount")
+  Future<void>? addBankAccount(@Header("teacherId") String teacherId,
+      @Body() AddBankRequestModel addBankRequestModel);
+
+  @GET("/bankAccount")
+  Future<BankResponseModel?>? getBankAccount(
+      @Header("teacherId") String teacherId);
+
   @GET("/teacher/availability")
   Future<List<AvailabilityModel>?> fetchAvailability(
       @Body() FetchAvailabilityRequestModel requestModel);
@@ -93,10 +103,11 @@ abstract class TeacherApi {
 
   @POST("/teacher/tags/verify")
   @MultiPart()
-  Future<void> uploadTagDocument(@Part() File file, @Part() String teacherId, @Part() String tag);
+  Future<void> uploadTagDocument(
+      @Part() File file, @Part() String teacherId, @Part() String tag);
 
   @POST("/teacher/profileImage")
   @MultiPart()
-  Future<TeacherDetails?> uploadProfilePicture(@Part() File file, @Part() String teacherId);
-
+  Future<TeacherDetails?> uploadProfilePicture(
+      @Part() File file, @Part() String teacherId);
 }

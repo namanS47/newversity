@@ -42,7 +42,8 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> assignNearestSessionDetail() async {
-    if (listOfSessionDetailResponse != null && listOfSessionDetailResponse?.isNotEmpty == true) {
+    if (listOfSessionDetailResponse != null &&
+        listOfSessionDetailResponse?.isNotEmpty == true) {
       int minSecond = getLeftTimeInSeconds(
           listOfSessionDetailResponse?[0].startDate ?? DateTime.now());
       for (SessionDetailsResponse? sessionDetailsResponse
@@ -424,18 +425,25 @@ class _HomeState extends State<Home> {
     );
   }
 
+  onTapOfTotalEarning() {
+    Navigator.of(context).pushNamed(AppRoutes.totalEarning);
+  }
+
   Widget getDashBoardDetailContainers() {
     return Column(
       children: [
         Row(
           children: [
             Expanded(
-                child: getDetailsContainer(
-                    AppColors.lightCyanBlue,
-                    ImageAsset.rupay,
-                    AppColors.totalEarningColor,
-                    "00",
-                    "Total Earnings")),
+                child: GestureDetector(
+                  onTap: () => onTapOfTotalEarning(),
+                  child: getDetailsContainer(
+                      AppColors.lightCyanBlue,
+                      ImageAsset.rupay,
+                      AppColors.totalEarningColor,
+                      "00",
+                      "Total Earnings"),
+                )),
             const SizedBox(
               width: 16,
             ),
@@ -817,7 +825,7 @@ class _HomeState extends State<Home> {
   onTapCompleteProfileCTA() {
     Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
         arguments:
-            ProfileDashboardArguments(directedIndex: 1, showBackButton: false));
+            ProfileDashboardArguments(directedIndex: 1, showBackButton: true));
   }
 
   Widget getCompleteProfileCTA() {
@@ -916,8 +924,8 @@ class HomeAppBar extends PreferredSize {
               : null,
           child: teacherDetails?.profilePictureUrl == null
               ? const AppImage(
-            image: ImageAsset.blueAvatar,
-          )
+                  image: ImageAsset.blueAvatar,
+                )
               : CommonWidgets.getCircularProgressIndicator(),
         ),
       ),

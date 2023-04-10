@@ -1,11 +1,8 @@
-
-
 part of 'index_bloc.dart';
 
 @immutable
-abstract class IndexState {
-}
+abstract class IndexState {}
 
-class IndexInitialState extends IndexState{}
+class IndexInitialState extends IndexState {}
 
 class PageUpdatedState extends IndexState {}

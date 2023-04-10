@@ -1,5 +1,6 @@
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:newversity/firestore/data/firestore_repository.dart';
+import 'package:newversity/flow/student/profile_dashboard/data/repo/profile_dashboard_repository.dart';
 import 'package:newversity/flow/teacher/webservice/teacher_base_repository.dart';
 import 'package:newversity/network/api/common_api.dart';
 import 'package:newversity/network/api/dio_client.dart';
@@ -7,6 +8,7 @@ import 'package:newversity/network/api/student_api.dart';
 import 'package:newversity/network/api/teacher_api.dart';
 import 'package:newversity/storage/preferences.dart';
 
+import '../flow/student/webservice/student_base_repository.dart';
 import '../flow/teacher/availability/data/repository/availability_repository.dart';
 
 class DI {
@@ -19,6 +21,8 @@ class DI {
     addDependency(TeacherApi(DioClient.getDio()), true);
     addDependency(StudentApi(DioClient.getDio()), true);
     addDependency(TeacherBaseRepository(), true);
+    addDependency(StudentBaseRepository(), true);
+    addDependency(ProfileDashboardRepository(), true);
     addDependency(AvailabilityRepository(), true);
 
     return DI();

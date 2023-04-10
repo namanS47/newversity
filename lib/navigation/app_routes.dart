@@ -7,6 +7,7 @@ class AppRoutes {
 
   //Student Flow
   static const String studentHome = "student_home";
+  static const String studentProfileDashboardRoute = "student_profile_dashboard_route";
 
   // Book Session
   static const String bookSession = "book_session";
@@ -30,6 +31,8 @@ class AppRoutes {
   static const bank = "bank_account";
   static const settings = "settings";
   static const privacyPolicy = "privacy_policy";
+  static const totalEarning = "total_earning";
+  static const addBankAccount = "add_bank_account";
   static const termsAndCondition = "terms_condition";
   static const helpAndSupport = "help_support";
   static const faqs = "faqs";

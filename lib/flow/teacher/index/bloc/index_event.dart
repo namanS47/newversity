@@ -7,3 +7,4 @@ class IndexPageUpdateEvent extends IndexEvents {
   int index;
   IndexPageUpdateEvent({required this.index});
 }
+

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:language_picker/language_picker_dialog.dart';
+import 'package:language_picker/languages.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -33,6 +35,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
   final TextEditingController _infoController = TextEditingController();
 
   final TextEditingController _locationController = TextEditingController();
+
+  final TextEditingController _languageController = TextEditingController();
 
   bool showErrorText = false;
   bool isLoading = false;
@@ -85,7 +89,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
           physics: const NeverScrollableScrollPhysics(),
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -141,6 +145,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   const SizedBox(
                     height: 20,
                   ),
+                  getYourLanguage(),
                   getProceedCTA(context),
                 ],
               ),
@@ -148,6 +153,42 @@ class _PersonalInformationState extends State<PersonalInformation> {
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildDialogItem(Language language) => Row(
+        children: <Widget>[
+          Text(language.name),
+          const SizedBox(width: 8.0),
+          Flexible(child: Text("(${language.isoCode})"))
+        ],
+      );
+
+  void _openLanguagePickerDialog() => showDialog(
+        context: context,
+        builder: (context) => Theme(
+            data: Theme.of(context).copyWith(primaryColor: Colors.pink),
+            child: LanguagePickerDialog(
+                titlePadding: const EdgeInsets.all(8.0),
+                searchCursorColor: Colors.pinkAccent,
+                searchInputDecoration:
+                    const InputDecoration(hintText: 'Search...'),
+                isSearchable: true,
+                title: const Text('Select your language'),
+                onValuePicked: (Language language) => setState(() {
+                      _languageController.text = language.name;
+                    }),
+                itemBuilder: _buildDialogItem)),
+      );
+
+  Widget getYourLanguage() {
+    return InkWell(
+      onTap: () => _openLanguagePickerDialog(),
+      child: AppTextFormField(
+        isEnable: false,
+        hintText: "select your language",
+        controller: _languageController,
+      ),
     );
   }
 
@@ -165,7 +206,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     return _nameController.text.isNotEmpty &&
         _titleController.text.isNotEmpty &&
         _infoController.text.isNotEmpty &&
-        _locationController.text.isNotEmpty;
+        _locationController.text.isNotEmpty && _languageController.text.isNotEmpty;
   }
 
   Widget getProceedCTA(BuildContext context) {
@@ -391,6 +432,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
             teacherId: CommonUtils().getLoggedInUser(),
             name: _nameController.text,
             location: _locationController.text,
+            language: [_languageController.text],
             title: _titleController.text,
             info: _infoController.text,
           ),

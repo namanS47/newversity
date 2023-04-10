@@ -40,7 +40,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
       body: BlocConsumer<ProfileBloc, ProfileStates>(
         listener: (context, state) {
           if (state is ProfileDetailsSavingSuccessState) {
-            Navigator.of(context).pushNamed(AppRoutes.teacherHomePageRoute);
+            Navigator.of(context).pushNamed(AppRoutes.teacherHomePageRoute,arguments: false);
           }
         },
         builder: (context, state) {
@@ -144,8 +144,8 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
   }
 
   onSkipTap() {
-    BlocProvider.of<TeacherDetailsBloc>(context).add(
-      SaveTeacherDetailsEvent(
+    BlocProvider.of<ProfileBloc>(context).add(
+      SaveProfileDetailsEvent(
         teacherDetails: TeacherDetails(
           teacherId: CommonUtils().getLoggedInUser(),
         ),

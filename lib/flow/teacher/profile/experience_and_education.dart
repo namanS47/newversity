@@ -9,7 +9,6 @@ import 'package:newversity/utils/date_time_utils.dart';
 
 import '../../../common/common_widgets.dart';
 import '../../../themes/strings.dart';
-import '../../student/seesion/data/experience_data.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 import 'model/education_response_model.dart';
 
@@ -111,8 +110,6 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
     );
   }
 
-  List<EducationData> educationData = EducationData.educationData;
-
   Widget getEducationLayout() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -169,8 +166,6 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
       ],
     );
   }
-
-  List<ExperienceData> experienceData = ExperienceData.experienceData;
 
   Widget getExperienceLayout() {
     return Padding(

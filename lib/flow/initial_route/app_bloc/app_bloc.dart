@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:newversity/common/common_utils.dart';
 import 'package:newversity/di/di_initializer.dart';
+import 'package:newversity/network/api/student_api.dart';
 import 'package:newversity/network/webservice/exception.dart';
 import 'package:newversity/storage/preferences.dart';
 
@@ -13,6 +14,7 @@ part 'app_state.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
   final TeacherApi _teacherApi = DI.inject<TeacherApi>();
+  final StudentApi _studentApi = DI.inject<StudentApi>();
 
   AppBloc() : super(AppInitial()) {
     on<FetchInitialRouteEvent>((event, emit) async {
@@ -29,15 +31,26 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
     final isStudent = await CommonUtils().isUserStudent();
     if (isStudent) {
-      return emit(RedirectToStudentHome());
+      final studentId = CommonUtils().getLoggedInUser();
+      try {
+        final response = await _studentApi.getStudentDetails(studentId);
+        if (response?.name != null) {
+          return emit(RedirectToStudentHome());
+        } else {
+          return emit(RedirectToStudentProfileDashboardRoute());
+        }
+      } on AppException catch (e) {
+        return emit(SomethingWentWrongState());
+      }
     }
 
     final isTeacher = await CommonUtils().isUserTeacher();
     if (isTeacher) {
       final teacherId = CommonUtils().getLoggedInUser();
+      print("Teacher Id $teacherId");
       try {
         final response = await _teacherApi.getTeacherDetails(teacherId);
-        if (response != null) {
+        if (response?.name != null) {
           return emit(RedirectToTeacherHomeRoute());
         } else {
           return emit(RedirectToTeacherPersonalInformationRoute());

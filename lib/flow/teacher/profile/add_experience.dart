@@ -342,9 +342,9 @@ class _AddExperienceState extends State<AddExperience> {
   Future<void> selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      firstDate: DateTime(DateTime.now().year - 100, 1),
-      lastDate: DateTime.now().subtract(const Duration(days: 6570)),
-      initialDate: DateTime.now().subtract(const Duration(days: 6570)),
+      firstDate: DateTime(1988),
+      lastDate: DateTime.now(),
+      initialDate: DateTime.now().subtract(const Duration(days: 1)),
       // helpText: "Date of Birthdate",
       confirmText: "Okay",
       cancelText: "Cancel",
@@ -378,9 +378,9 @@ class _AddExperienceState extends State<AddExperience> {
   Future<void> selectEndDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      firstDate: DateTime(DateTime.now().year - 100, 1),
-      lastDate: DateTime.now().subtract(const Duration(days: 6570)),
-      initialDate: DateTime.now().subtract(const Duration(days: 6570)),
+      firstDate: DateTime(1988),
+      lastDate: DateTime.now(),
+      initialDate: DateTime.now().subtract(const Duration(days: 1)),
       helpText: "Date of Birthdate",
       confirmText: "Okay",
       cancelText: "Cancel",
