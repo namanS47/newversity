@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
@@ -73,7 +72,8 @@ class _SelectionDetailsState extends State<SelectionDetails> {
         }
         if (state is SavedTagsState) {
           isLoading = false;
-          Navigator.of(context).pushNamed(AppRoutes.teacherHomePageRoute,arguments: false);
+          Navigator.of(context)
+              .pushNamed(AppRoutes.teacherHomePageRoute, arguments: false);
         }
       },
       builder: (context, state) {

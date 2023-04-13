@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
+import 'package:newversity/flow/student/profile_dashboard/data/model/student_details_model.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/home/bloc/home_session_bloc/home_session_details_bloc.dart';
 import 'package:newversity/flow/teacher/home/model/session_data.dart';
 import 'package:newversity/flow/teacher/home/model/session_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
@@ -14,7 +16,6 @@ import 'package:newversity/utils/enums.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
 import '../profile/model/profile_dashboard_arguments.dart';
-import 'bloc/session_bloc/session_details_bloc.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   bool isSessionBooked = true;
   TeacherDetails? teacherDetails;
-  TeacherDetails? studentDetails;
+  StudentDetail? studentDetails;
   List<SessionDetailsResponse>? listOfSessionDetailResponse = [];
   SessionDetailsResponse? nearestStartSession;
   ProfileCompletionPercentageResponse? profileCompletionPercentageResponse;
@@ -34,10 +35,10 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<SessionBloc>(context)
+    BlocProvider.of<HomeSessionBloc>(context)
         .add(FetchProfilePercentageInfoEvent());
-    BlocProvider.of<SessionBloc>(context).add(FetchTeacherDetailEvent());
-    BlocProvider.of<SessionBloc>(context).add(
+    BlocProvider.of<HomeSessionBloc>(context).add(FetchTeacherDetailEvent());
+    BlocProvider.of<HomeSessionBloc>(context).add(
         FetchSessionDetailEvent(type: getSessionType(SessionType.upcoming)));
   }
 
@@ -64,7 +65,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SessionBloc, SessionStates>(
+    return BlocConsumer<HomeSessionBloc, HomeSessionStates>(
       listener: (context, state) {
         if (state is FetchedStudentDetailState) {
           studentDetails = state.studentDetails;
@@ -436,14 +437,14 @@ class _HomeState extends State<Home> {
           children: [
             Expanded(
                 child: GestureDetector(
-                  onTap: () => onTapOfTotalEarning(),
-                  child: getDetailsContainer(
-                      AppColors.lightCyanBlue,
-                      ImageAsset.rupay,
-                      AppColors.totalEarningColor,
-                      "00",
-                      "Total Earnings"),
-                )),
+              onTap: () => onTapOfTotalEarning(),
+              child: getDetailsContainer(
+                  AppColors.lightCyanBlue,
+                  ImageAsset.rupay,
+                  AppColors.totalEarningColor,
+                  "00",
+                  "Total Earnings"),
+            )),
             const SizedBox(
               width: 16,
             ),

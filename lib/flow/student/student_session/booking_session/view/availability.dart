@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/themes/colors.dart';
-import '../../../../themes/strings.dart';
-import '../model/experience_data.dart';
+
+import '../../../../../themes/strings.dart';
+import '../../model/experience_data.dart';
 
 class SessionAvailability extends StatefulWidget {
   const SessionAvailability({Key? key}) : super(key: key);
@@ -47,11 +49,10 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
 
   Widget getNextAvailable(){
     return const Center(
-      child: Text(AppStrings.nextAvailable,style: TextStyle(
-        fontSize: 12,
-        color: AppColors.strongCyan,
-        fontWeight: FontWeight.w500
-      ),),
+      child: AppText(AppStrings.nextAvailable,
+          fontSize: 12,
+          color: AppColors.strongCyan,
+          fontWeight: FontWeight.w500),
     );
   }
 

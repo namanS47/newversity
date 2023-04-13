@@ -178,8 +178,7 @@ class _OtpRouteState extends State<OtpRoute> {
       final preferences = DI.inject<Preferences>();
       preferences.setMobileNumber(widget.loginArguments.mobileNumber);
       preferences.setUserType(widget.loginArguments.userType);
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil(AppRoutes.initialRoute, (route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.initialRoute, (route) => false);
     } catch (e) {
       setState(() {
         _isLoading = false;

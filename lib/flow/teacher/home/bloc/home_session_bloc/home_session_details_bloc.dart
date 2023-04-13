@@ -1,24 +1,29 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:newversity/flow/student/profile_dashboard/data/model/student_details_model.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/flow/teacher/home/model/session_response_model.dart';
 import 'package:newversity/network/webservice/exception.dart';
 
 import '../../../../../common/common_utils.dart';
 import '../../../../../di/di_initializer.dart';
+import '../../../../student/webservice/student_base_repository.dart';
 import '../../../profile/model/profile_completion_percentage_response.dart';
 import '../../../webservice/teacher_base_repository.dart';
 
-part 'session_detail_events.dart';
+part 'home_session_detail_events.dart';
 
-part 'session_detail_states.dart';
+part 'home_session_detail_states.dart';
 
-class SessionBloc extends Bloc<SessionDetailEvents, SessionStates> {
+class HomeSessionBloc extends Bloc<HomeSessionDetailEvents, HomeSessionStates> {
   final TeacherBaseRepository _teacherBaseRepository =
       DI.inject<TeacherBaseRepository>();
+
+  final StudentBaseRepository _studentBaseRepo =
+      DI.inject<StudentBaseRepository>();
   String teacherId = "";
 
-  SessionBloc() : super(SessionDetailInitialState()) {
+  HomeSessionBloc() : super(SessionDetailInitialState()) {
     on<FetchSessionDetailEvent>((event, emit) async {
       teacherId = CommonUtils().getLoggedInUser();
       await fetchSessionDetails(event, emit);
@@ -80,7 +85,7 @@ class SessionBloc extends Bloc<SessionDetailEvents, SessionStates> {
     try {
       if (event is FetchStudentDetailsEvent) {
         final studentDetails =
-            await _teacherBaseRepository.getTeachersDetail(event.studentId);
+            await _studentBaseRepo.fetchStudentDetails(event.studentId);
         emit(FetchedStudentDetailState(studentDetails: studentDetails));
       }
     } catch (exception) {

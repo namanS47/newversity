@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:newversity/common/common_utils.dart';
+import 'package:newversity/flow/teacher/bank_account/model/bank_request_model.dart';
 import 'package:newversity/flow/teacher/bank_account/model/bank_response_model.dart';
 import 'package:newversity/network/webservice/exception.dart';
 
@@ -18,11 +19,11 @@ class BankAccountBloc extends Bloc<BankAccountEvents, BankAccountStates> {
 
   BankAccountBloc() : super(BankAccountInitialState()) {
     on<AddBankAccountEvent>((event, emit) async {
-      addBankAccountInfo(event, emit);
+      await addBankAccountInfo(event, emit);
     });
 
     on<FetchBankDetailsEvent>((event, emit) async {
-      addBankAccountInfo(event, emit);
+      await fetchBankDetails(event, emit);
     });
   }
 
@@ -31,7 +32,7 @@ class BankAccountBloc extends Bloc<BankAccountEvents, BankAccountStates> {
       emit(AddingBankAccountState());
       try {
         await _teacherBaseRepository.addBankAccount(
-            event.addBankRequestModel, teacherId);
+            teacherId, event.addBankRequestModel);
         emit(AddedBankAccountState());
       } catch (exception) {
         if (exception is BadRequestException) {

@@ -34,6 +34,10 @@ class ImageAsset {
   static const String session = '${_svgPath}session.svg';
   static const String campus = '${_svgPath}campus.svg';
   static const String invite = '${_svgPath}invite.svg';
+  static const String detailDesign = '${_svgPath}detail_design.svg';
+  static const String thumbsUp = '${_svgPath}thumbs_up.svg';
+  static const String chatBot = '${_svgPath}chat_bot.svg';
+  static const String icSuggestion = '${_svgPath}ic_suggestion.svg';
 
   // Drawer strings
   static const user = "${_svgPath}user.svg";

@@ -41,6 +41,8 @@ class _PersonalInformationState extends State<PersonalInformation> {
   bool showErrorText = false;
   bool isLoading = false;
 
+  List<String>? languageSelected = [];
+
   @override
   void initState() {
     context.read<TeacherDetailsBloc>().add(FetchTeacherDetailEvent());
@@ -69,6 +71,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
         _titleController.text = details?.title ?? "";
         _infoController.text = details?.info ?? "";
         _locationController.text = details?.location ?? "";
+        if (details?.language != null) {
+          languageSelected = details?.language;
+        }
       } else if (state is TeacherDetailsSavingFailureState) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -145,7 +150,20 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   const SizedBox(
                     height: 20,
                   ),
+                  getLanguageHeader(),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   getYourLanguage(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  languageSelected != null
+                      ? getLanguageSelectedList()
+                      : Container(),
+                  const SizedBox(
+                    height: 40,
+                  ),
                   getProceedCTA(context),
                 ],
               ),
@@ -153,6 +171,19 @@ class _PersonalInformationState extends State<PersonalInformation> {
           ],
         ),
       ],
+    );
+  }
+
+  Widget getLanguageSelectedList() {
+    return Wrap(
+      spacing: 15,
+      runSpacing: 12,
+      children: List.generate(
+        languageSelected!.length,
+        (curIndex) {
+          return languageView(curIndex);
+        },
+      ),
     );
   }
 
@@ -176,7 +207,9 @@ class _PersonalInformationState extends State<PersonalInformation> {
                 isSearchable: true,
                 title: const Text('Select your language'),
                 onValuePicked: (Language language) => setState(() {
-                      _languageController.text = language.name;
+                      if (!languageSelected!.contains(language.name)) {
+                        languageSelected?.add(language.name);
+                      }
                     }),
                 itemBuilder: _buildDialogItem)),
       );
@@ -206,7 +239,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
     return _nameController.text.isNotEmpty &&
         _titleController.text.isNotEmpty &&
         _infoController.text.isNotEmpty &&
-        _locationController.text.isNotEmpty && _languageController.text.isNotEmpty;
+        _locationController.text.isNotEmpty;
   }
 
   Widget getProceedCTA(BuildContext context) {
@@ -378,6 +411,47 @@ class _PersonalInformationState extends State<PersonalInformation> {
     );
   }
 
+  Widget languageView(int curIndex) {
+    return GestureDetector(
+      // onTap: () => onSelectedSession(curIndex),
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25),
+            color: AppColors.primaryColor,
+            border: Border.all(width: 0.3, color: AppColors.grey32)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              AppText(
+                languageSelected?[curIndex] ?? "",
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: AppColors.whiteColor,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              InkWell(
+                  onTap: () {
+                    setState(() {
+                      languageSelected?.removeAt(curIndex);
+                    });
+                  },
+                  child: const Icon(
+                    Icons.cancel,
+                    color: AppColors.whiteColor,
+                    size: 20,
+                  )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget getPersonalInformationHeader() {
     return const Text(
       AppStrings.personalInfo,
@@ -402,6 +476,13 @@ class _PersonalInformationState extends State<PersonalInformation> {
   Widget getAboutYourSelfHeader() {
     return const Text(
       AppStrings.aboutYourSelf,
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+    );
+  }
+
+  Widget getLanguageHeader() {
+    return const Text(
+      AppStrings.language,
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
     );
   }
@@ -432,7 +513,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
             teacherId: CommonUtils().getLoggedInUser(),
             name: _nameController.text,
             location: _locationController.text,
-            language: [_languageController.text],
+            language: languageSelected,
             title: _titleController.text,
             info: _infoController.text,
           ),

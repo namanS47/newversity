@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
-import 'package:newversity/flow/teacher/index/bloc/index_bloc.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/flow/teacher/profile/view/overview.dart';
 import 'package:newversity/flow/teacher/profile/view/review.dart';
+import 'package:newversity/flow/teacher/profile_drawer/bloc/profile_drawer_bloc.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-import '../../index/view/profile_drawer_screen.dart';
+import '../../profile_drawer/profile_drawer_screen.dart';
 import '../bloc/profile_bloc/profile_bloc.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -56,8 +56,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           key: scaffoldKey,
           endDrawer: SizedBox(
               width: 240,
-              child: BlocProvider<IndexBloc>(
-                create: (context) => IndexBloc(),
+              child: BlocProvider<ProfileDrawerBloc>(
+                create: (context) => ProfileDrawerBloc(),
                 child: const ProfileDrawerScreen(),
               )),
           resizeToAvoidBottomInset: true,

@@ -11,7 +11,7 @@ import 'package:newversity/themes/colors.dart';
 import 'package:newversity/utils/date_time_utils.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
-import '../bloc/session_details_bloc/session_details_bloc.dart';
+import '../bloc/session_details_bloc/booking_session_details_bloc.dart';
 import 'bottom_sheets/cancel_bottom_sheet.dart';
 
 class SessionDetailsScreen extends StatefulWidget {
@@ -25,7 +25,6 @@ class SessionDetailsScreen extends StatefulWidget {
 }
 
 class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
-
   SessionDetailsResponse? sessionDetailsResponse;
   bool showError = false;
   bool isSendLoading = false;
@@ -36,7 +35,7 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<SessionDetailsBloc>(context)
+    BlocProvider.of<BookingSessionDetailsBloc>(context)
         .add(FetchSessionDetailByIdEvent(id: widget.sessionDetailArguments.id));
   }
 
@@ -47,7 +46,8 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: BlocConsumer<SessionDetailsBloc, SessionDetailsStates>(
+          child: BlocConsumer<BookingSessionDetailsBloc,
+              BookingSessionDetailsStates>(
             listener: (context, state) {
               if (state is FetchedSessionDetailByIdState) {
                 sessionDetailsResponse = state.sessionDetails;
@@ -372,12 +372,13 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     if (isFormIsValid()) {
       isSendLoading = true;
-      BlocProvider.of<SessionDetailsBloc>(context).add(SessionAddingEvent(
-          sessionSaveRequest: SessionSaveRequest(
-              id: sessionDetailsResponse!.id,
-              teacherId: sessionDetailsResponse!.teacherId,
-              studentId: sessionDetailsResponse!.studentId,
-              mentorNote: _noteSenderController.text)));
+      BlocProvider.of<BookingSessionDetailsBloc>(context).add(
+          SessionAddingEvent(
+              sessionSaveRequest: SessionSaveRequest(
+                  id: sessionDetailsResponse!.id,
+                  teacherId: sessionDetailsResponse!.teacherId,
+                  studentId: sessionDetailsResponse!.studentId,
+                  mentorNote: _noteSenderController.text)));
     } else {
       showError = true;
       setState(() {});
@@ -458,8 +459,8 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
         ),
         builder: (_) {
           return AppAnimatedBottomSheet(
-              bottomSheetWidget: BlocProvider<SessionDetailsBloc>(
-                  create: (context) => SessionDetailsBloc(),
+              bottomSheetWidget: BlocProvider<BookingSessionDetailsBloc>(
+                  create: (context) => BookingSessionDetailsBloc(),
                   child: const CancelBooking()));
           // your stateful widget
         });
@@ -664,8 +665,11 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
           ),
         ),
         builder: (_) {
-          return const AppAnimatedBottomSheet(
-              bottomSheetWidget: ProfileBottomSheet()); // your stateful widget
+          return AppAnimatedBottomSheet(
+              bottomSheetWidget: BlocProvider<BookingSessionDetailsBloc>(
+            create: (context) => BookingSessionDetailsBloc(),
+            child:  ProfileBottomSheet(studentId: sessionDetailsResponse?.studentId ?? "",),
+          )); // your stateful widget
         });
   }
 

@@ -9,6 +9,11 @@ class AddBankRequestModel {
   String? accountName;
   String? ifscCode;
 
+  @override
+  String toString() {
+    return 'AddBankRequestModel{teacherId: $teacherId, accountNumber: $accountNumber, accountName: $accountName, ifscCode: $ifscCode}';
+  }
+
   AddBankRequestModel(
       {this.teacherId, this.accountNumber, this.accountName, this.ifscCode});
 

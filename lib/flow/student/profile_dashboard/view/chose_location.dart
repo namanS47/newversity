@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:newversity/common/common_widgets.dart';
+import 'package:newversity/navigation/app_routes.dart';
+
+import '../../../../resources/images.dart';
+import '../../../../themes/colors.dart';
 
 class StudentProfileLocation extends StatefulWidget {
   const StudentProfileLocation({Key? key}) : super(key: key);
@@ -9,16 +13,91 @@ class StudentProfileLocation extends StatefulWidget {
 }
 
 class _StudentProfileLocationState extends State<StudentProfileLocation> {
+  final _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: const [
-        Center(
-          child: AppText("This is Location Choosing Scrren"),
-        )
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          getFindMentorHeader(),
+          const SizedBox(
+            height: 20,
+          ),
+          getSearchHeader(),
+          const SizedBox(
+            height: 10,
+          ),
+          getFindMentorSearchWidget(),
+          const SizedBox(
+            height: 20,
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 600,
+            child:
+                Align(alignment: Alignment.bottomCenter, child: getNextCTA()),
+          ),
+        ],
+      ),
     );
+  }
+
+  Widget getFindMentorSearchWidget() {
+    return Container(
+      height: 50,
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            children: [
+              const AppImage(image: ImageAsset.search),
+              const SizedBox(
+                width: 13,
+              ),
+              Expanded(
+                  child: AppTextFormField(
+                controller: _searchController,
+                hintText: "search’",
+                hintTextStyle: const TextStyle(color: AppColors.blackMerlin, fontSize: 16),
+                decoration: const InputDecoration(border: InputBorder.none),
+              ))
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget getSearchHeader() {
+    return const AppText(
+      "Search for your city",
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+    );
+  }
+
+  Widget getFindMentorHeader() {
+    return const AppText(
+      "Find a better mentor from your location",
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+    );
+  }
+
+  Widget getNextCTA() {
+    return AppCta(
+      text: "Next",
+      onTap: () => onNextTap(),
+    );
+  }
+
+  onNextTap() {
+    Navigator.of(context).pushNamed(AppRoutes.studentHome, arguments: true);
   }
 }

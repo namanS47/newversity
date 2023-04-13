@@ -40,7 +40,8 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
       body: BlocConsumer<ProfileBloc, ProfileStates>(
         listener: (context, state) {
           if (state is ProfileDetailsSavingSuccessState) {
-            Navigator.of(context).pushNamed(AppRoutes.teacherHomePageRoute,arguments: false);
+            Navigator.of(context)
+                .pushNamed(AppRoutes.teacherHomePageRoute, arguments: false);
           }
         },
         builder: (context, state) {

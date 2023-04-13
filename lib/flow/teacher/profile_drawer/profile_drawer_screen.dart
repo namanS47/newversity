@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
+import 'package:newversity/flow/teacher/profile_drawer/bloc/profile_drawer_bloc.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
-
-import '../bloc/index_bloc.dart';
 
 class ProfileDrawerScreen extends StatefulWidget {
   const ProfileDrawerScreen({Key? key}) : super(key: key);
@@ -16,11 +15,17 @@ class ProfileDrawerScreen extends StatefulWidget {
 }
 
 class _ProfileDrawerScreenState extends State<ProfileDrawerScreen> {
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<IndexBloc, IndexState>(
+    return BlocConsumer<ProfileDrawerBloc, ProfileDrawerStates>(
       listener: (context, state) {
-        // TODO: implement listener
+        if (state is LoggedOutState) {
+          isLoading = false;
+          Navigator.pushNamedAndRemoveUntil(
+              context, AppRoutes.loginRoute, (route) => false);
+        }
       },
       builder: (context, state) {
         return Container(
@@ -56,7 +61,10 @@ class _ProfileDrawerScreenState extends State<ProfileDrawerScreen> {
                       primary: false,
                       physics: const NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.zero,
-                      itemCount: context.read<IndexBloc>().drawerOptions.length,
+                      itemCount: context
+                          .read<ProfileDrawerBloc>()
+                          .drawerOptions
+                          .length,
                       separatorBuilder: (context, index) =>
                           const SizedBox(height: 26),
                       itemBuilder: (context, index) {
@@ -66,7 +74,7 @@ class _ProfileDrawerScreenState extends State<ProfileDrawerScreen> {
                             children: [
                               AppImage(
                                 image: context
-                                    .read<IndexBloc>()
+                                    .read<ProfileDrawerBloc>()
                                     .drawerOptions[index],
                                 height: 24,
                                 width: 24,
@@ -86,20 +94,27 @@ class _ProfileDrawerScreenState extends State<ProfileDrawerScreen> {
                   ],
                 ),
               ),
-              Container(
-                height: 71,
-                width: MediaQuery.of(context).size.width,
-                decoration: const BoxDecoration(
-                  color: AppColors.primaryColor,
-                ),
-                child: const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: AppText(
-                      "LOGOUT",
-                      color: AppColors.whiteColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+              GestureDetector(
+                onTap: () => onLogout(),
+                child: Container(
+                  height: 71,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: const BoxDecoration(
+                    color: AppColors.primaryColor,
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: isLoading
+                          ? const CircularProgressIndicator(
+                              color: AppColors.primaryColor,
+                            )
+                          : const AppText(
+                              "LOGOUT",
+                              color: AppColors.whiteColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
                     ),
                   ),
                 ),
@@ -109,6 +124,11 @@ class _ProfileDrawerScreenState extends State<ProfileDrawerScreen> {
         );
       },
     );
+  }
+
+  onLogout() {
+    isLoading = true;
+    BlocProvider.of<ProfileDrawerBloc>(context).add(LogoutEvent());
   }
 
   String getDrawerOptionTitle(BuildContext context, int index) {

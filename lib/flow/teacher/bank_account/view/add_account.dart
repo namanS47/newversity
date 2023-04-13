@@ -29,19 +29,23 @@ class _AddBankAccountState extends State<AddBankAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.whiteColor,
       body: BlocConsumer<BankAccountBloc, BankAccountStates>(
         listener: (context, state) {
           if (state is AddedBankAccountState) {
             isLoading = false;
             Navigator.pop(context);
+          }else if(state is AddingBankAccountFailureState){
+            print(" see the error ${state.msg}");
           }
         },
         builder: (context, state) {
           return SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding:  const EdgeInsets.all(16.0),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -184,6 +188,7 @@ class _AddBankAccountState extends State<AddBankAccount> {
         _reEnterAccountNumberController.text.isNotEmpty &&
         _ifscCodeController.text.isNotEmpty;
   }
+
 
   onAddingAccountTap() {
     if (isFormValid()) {

@@ -32,7 +32,7 @@ class _StudentProfileDashboardState extends State<StudentProfileDashboard> {
       resizeToAvoidBottomInset: true,
       body: BlocConsumer<ProfileDashboardBloc, ProfileDashboardStates>(
         listener: (context, state) {
-          if (state is StudentDetailsSavedState) {
+          if (state is StudentDetailsSavedOnSkipState) {
             Navigator.of(context)
                 .pushNamed(AppRoutes.studentHome, arguments: true);
           }
@@ -141,7 +141,7 @@ class _StudentProfileDashboardState extends State<StudentProfileDashboard> {
 
   onSkipTap() {
     BlocProvider.of<ProfileDashboardBloc>(context).add(
-      StudentDetailSaveEvent(
+      StudentDetailSavingOnSkipEvent(
         studentDetailSavingRequestModel: StudentDetailSavingRequestModel(
           studentId: CommonUtils().getLoggedInUser(),
         ),

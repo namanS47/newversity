@@ -8,6 +8,12 @@ class StudentDetail {
   String? name;
   String? mobileNumber;
   String? email;
+
+  @override
+  String toString() {
+    return 'StudentDetail{studentId: $studentId, name: $name, mobileNumber: $mobileNumber, email: $email, location: $location, tags: $tags, profilePictureUrl: $profilePictureUrl, language: $language, info: $info}';
+  }
+
   String? location;
   List<String>? tags;
   String? profilePictureUrl;

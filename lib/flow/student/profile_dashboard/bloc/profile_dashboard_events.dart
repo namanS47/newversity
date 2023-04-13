@@ -23,3 +23,16 @@ class StudentDetailSaveEvent extends ProfileDashboardEvents {
   StudentDetailSavingRequestModel studentDetailSavingRequestModel;
   StudentDetailSaveEvent({required this.studentDetailSavingRequestModel});
 }
+
+class StudentDetailSavingOnSkipEvent extends ProfileDashboardEvents {
+  StudentDetailSavingRequestModel studentDetailSavingRequestModel;
+  StudentDetailSavingOnSkipEvent(
+      {required this.studentDetailSavingRequestModel});
+}
+
+class FetchStudentDetailEvent extends ProfileDashboardEvents {}
+
+class AddTagsEvent extends ProfileDashboardEvents {
+  final AddTagRequestModel addTagRequestModel;
+  AddTagsEvent({required this.addTagRequestModel});
+}

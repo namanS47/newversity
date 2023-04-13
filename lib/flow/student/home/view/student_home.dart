@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/student/home/bloc/student_home_bloc.dart';
 import 'package:newversity/flow/student/home/model/session_details.dart';
+import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
 import 'package:newversity/utils/date_time_utils.dart';
+import 'package:slide_countdown/slide_countdown.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
@@ -573,21 +575,35 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                           ],
                         ),
                         Container(
-                          width: 150,
                           height: 52,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: AppColors.cyanBlue),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              AppText(
-                                "Book Session",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.whiteColor,
-                              ),
-                            ],
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const AppText(
+                                  "Book Session",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.whiteColor,
+                                ),
+                                Row(
+                                  children: [
+                                    const AppText(
+                                      "Available in:",
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.whiteColor,
+                                    ),
+                                    getScheduleLeftTime(),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         )
                       ],
@@ -735,29 +751,34 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   }
 
   Widget getFindMentorSearchWidget() {
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            children: const [
-              AppImage(image: ImageAsset.search),
-              SizedBox(
-                height: 13,
-              ),
-              Expanded(
-                  child: AppText(
-                "Search ’EXAM NAME’",
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: AppColors.grey55,
-              ))
-            ],
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).pushNamed(AppRoutes.searchMentor);
+      },
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              children: const [
+                AppImage(image: ImageAsset.search),
+                SizedBox(
+                  height: 13,
+                ),
+                Expanded(
+                    child: AppText(
+                  "Search ’EXAM NAME’",
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.grey55,
+                ))
+              ],
+            ),
           ),
         ),
       ),
@@ -870,6 +891,31 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
             })
       ],
     ));
+  }
+
+  Widget getScheduleLeftTime() {
+    int timeLeftInSeconds = getLeftTimeInSeconds(DateTime(2024));
+    return SlideCountdown(
+      duration: Duration(seconds: timeLeftInSeconds),
+      decoration: const BoxDecoration(
+        color: Colors.transparent,
+      ),
+      slideDirection: SlideDirection.down,
+      durationTitle: DurationTitle.id(),
+      separator: ":",
+      textStyle: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+          color: AppColors.whiteColor),
+      separatorStyle: const TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w400,
+          color: AppColors.whiteColor),
+    );
+  }
+
+  int getLeftTimeInSeconds(DateTime dateTime) {
+    return (dateTime.difference(DateTime.now()).inSeconds);
   }
 }
 

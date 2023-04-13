@@ -40,7 +40,7 @@ class TeacherBaseRepository extends BaseRepository {
   }
 
   Future<void> addBankAccount(
-      AddBankRequestModel bankRequestModel, String teacherId) async {
+      String teacherId, AddBankRequestModel bankRequestModel) async {
     try {
       return await _teacherApi.addBankAccount(teacherId, bankRequestModel);
     } on DioError catch (exception) {

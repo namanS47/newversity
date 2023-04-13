@@ -21,7 +21,6 @@ class EarningScreen extends StatefulWidget {
 class _EarningScreenState extends State<EarningScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<BankAccountBloc>(context).add(FetchBankDetailsEvent());
   }
@@ -32,50 +31,59 @@ class _EarningScreenState extends State<EarningScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              InkWell(
-                  onTap: () => {Navigator.pop(context)},
-                  child: const AppImage(image: ImageAsset.arrowBack)),
-              Expanded(
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    const SizedBox(
-                      height: 20,
+    return BlocConsumer<BankAccountBloc, BankAccountStates>(
+      listener: (context, state) {
+        if (state is FetchedBankDetailsState) {
+          bankResponseModel = state.bankResponseModel;
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  InkWell(
+                      onTap: () => {Navigator.pop(context)},
+                      child: const AppImage(image: ImageAsset.arrowBack)),
+                  Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        getBankDetailsContainer(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        const AppText(
+                          "Earning History",
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        getEarningHistoryList(),
+                        getZeroEarningView(),
+                      ],
                     ),
-                    getBankDetailsContainer(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const AppText(
-                      "Earning History",
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    getEarningHistoryList(),
-                    getZeroEarningView(),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
   Widget getZeroEarningView() {
     return Visibility(
-      visible: !isBankAdded || listOfEarningDetails.isEmpty,
+      visible: bankResponseModel == null || listOfEarningDetails.isEmpty,
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height - 400,
@@ -101,7 +109,7 @@ class _EarningScreenState extends State<EarningScreen> {
 
   Widget getEarningHistoryList() {
     return Visibility(
-      visible: isBankAdded,
+      visible: bankResponseModel != null,
       child: Wrap(
         spacing: 30,
         runSpacing: 12,
@@ -188,63 +196,52 @@ class _EarningScreenState extends State<EarningScreen> {
   }
 
   Widget getBankDetailsContainer() {
-    return BlocConsumer<BankAccountBloc, BankAccountStates>(
-      listener: (context, state) {
-        if (state is FetchedBankDetailsState &&
-            state.bankResponseModel != null) {
-          bankResponseModel = state.bankResponseModel;
-        }
-        // TODO: implement listener
-      },
-      builder: (context, state) {
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: AppColors.perSessionRate,
-          ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 10,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: AppColors.perSessionRate,
+      ),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              const AppText(
+                "Total",
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+              ),
+              const SizedBox(
+                height: 2,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  AppText(
+                    "Earnings",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
                   ),
-                  const AppText(
-                    "Total",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  const SizedBox(
-                    height: 2,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      AppText(
-                        "Earnings",
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      AppText(
-                        "₹00",
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 14,
-                  ),
-                  getBankDetailsView(),
-                  getBankAccountAddCTA(),
+                  AppText(
+                    "₹00",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  )
                 ],
               ),
-            ),
+              const SizedBox(
+                height: 14,
+              ),
+              getBankDetailsView(),
+              getBankAccountAddCTA(),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -253,17 +250,17 @@ class _EarningScreenState extends State<EarningScreen> {
       visible: bankResponseModel != null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          AppText(
+        children: [
+          const AppText(
             "Bank",
             fontSize: 12,
             fontWeight: FontWeight.w400,
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           AppText(
-            "XXXX XXXX XXXX XXXX",
+            bankResponseModel?.accountNumber ?? "XXXX XXXX XXXX XXXX",
             fontSize: 12,
             fontWeight: FontWeight.w400,
           )

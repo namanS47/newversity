@@ -47,10 +47,9 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     final isTeacher = await CommonUtils().isUserTeacher();
     if (isTeacher) {
       final teacherId = CommonUtils().getLoggedInUser();
-      print("Teacher Id $teacherId");
       try {
-        final response = await _teacherApi.getTeacherDetails(teacherId);
-        if (response?.name != null) {
+        final response = await _teacherApi.getProfileCompletionInfo(teacherId);
+        if (response != null && response.completePercentage == 100) {
           return emit(RedirectToTeacherHomeRoute());
         } else {
           return emit(RedirectToTeacherPersonalInformationRoute());

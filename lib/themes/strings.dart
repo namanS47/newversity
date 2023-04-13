@@ -29,8 +29,9 @@ class AppStrings {
   static const about = "About";
   static const personalInfo = "Personal Information";
   static const selectExamsInfo = "Select exam names";
-  static const selectAtLeastOneInfo = "Select atleast 1 of these";
+  static const selectAtLeastOneInfo = "Select any 1 of these";
   static const examsCracked = "Exams that you have cracked";
+  static const whatAreYouPreparingFor = "What are you preparing for?";
   static const examsSelectionHeader = "Talk to me about";
   static const experienceAndEducation = "Experience & Qualification";
   static const title = "Title";
@@ -40,6 +41,7 @@ class AppStrings {
   static const locationType = "Location Type";
   static const homeTown = "Home Town";
   static const aboutYourSelf = "About Yourself";
+  static const language = "Language";
   static const uploadProfilePic = "Upload Profile Picture";
   static const yourName = "Your Name";
   static const availableSlot = "Available slots";
@@ -62,6 +64,7 @@ class AppStrings {
   static const thirtyMin = "30 mins";
   static const location = "Location";
   static const myBookings = "My Bookings";
+  static const mySessions = "My Sessions";
   static const experience = "Experience";
   static const completeProfile = "Complete profile";
   static const watchVideo = "Watch video";

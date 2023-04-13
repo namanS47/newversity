@@ -5,11 +5,15 @@ import 'package:newversity/flow/initial_route/app_bloc/app_bloc.dart';
 import 'package:newversity/flow/initial_route/ui/initial_route.dart';
 import 'package:newversity/flow/student/profile_dashboard/bloc/profile_dahsbord_bloc.dart';
 import 'package:newversity/flow/student/profile_dashboard/view/profile_dashboard.dart';
-import 'package:newversity/flow/student/student_session/view/student_session.dart';
+import 'package:newversity/flow/student/search/bloc/mentor_search_bloc.dart';
+import 'package:newversity/flow/student/search/view/mentor_search_page.dart';
+import 'package:newversity/flow/student/student_session/student_session_detail/bloc/student_session_detail_bloc.dart';
+import 'package:newversity/flow/student/student_session/student_session_detail/view/raise_issue_screen.dart';
+import 'package:newversity/flow/student/student_session/student_session_detail/view/student_session_detail_screen.dart';
 import 'package:newversity/flow/teacher/availability/availability_bloc/availability_bloc.dart';
 import 'package:newversity/flow/teacher/bank_account/bloc/bank_account_bloc.dart';
 import 'package:newversity/flow/teacher/bank_account/view/add_account.dart';
-import 'package:newversity/flow/teacher/bookings/bloc/session_details_bloc/session_details_bloc.dart';
+import 'package:newversity/flow/teacher/bookings/bloc/session_details_bloc/booking_session_details_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
 import 'package:newversity/flow/teacher/bookings/view/session_details.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
@@ -36,6 +40,7 @@ import 'package:newversity/room/room.dart';
 import '../flow/login/login_arguments.dart';
 import '../flow/login/presentation/login_screen.dart';
 import '../flow/login/presentation/otp_route.dart';
+import '../flow/student/student_session/booking_session/view/student_session.dart';
 import '../flow/teacher/availability/availability_route.dart';
 import '../flow/teacher/bank_account/earnings/view/earning_screen.dart';
 import '../flow/teacher/index/view/settings.dart';
@@ -85,12 +90,33 @@ class AppRouter {
           child: const StudentProfileDashboard());
     }
 
+    if (route.toString() == AppRoutes.studentSessionDetailRoute) {
+      return BlocProvider<StudentSessionDetailBloc>(
+          create: (context) => StudentSessionDetailBloc(),
+          child: StudentSessionDetailScreen(
+              sessionDetailArguments: params as SessionDetailArguments));
+    }
+
+    if (route.toString() == AppRoutes.raiseIssueRoute) {
+      return BlocProvider<StudentSessionDetailBloc>(
+          create: (context) => StudentSessionDetailBloc(),
+          child: const RaiseIssueScreen());
+    }
+
     if (route.toString() == AppRoutes.teacherPersonalInformationRoute) {
       return BlocProvider<TeacherDetailsBloc>(
         create: (context) => TeacherDetailsBloc(),
         child: const TeacherPersonalInfoRoute(),
       );
     }
+
+    if (route.toString() == AppRoutes.searchMentor) {
+      return BlocProvider<MentorSearchBloc>(
+        create: (context) => MentorSearchBloc(),
+        child: const MentorSearchScreen(),
+      );
+    }
+
     if (route.toString() == AppRoutes.teacherHomePageRoute) {
       return BlocProvider<IndexBloc>(
         create: (context) => IndexBloc(),
@@ -99,9 +125,11 @@ class AppRouter {
         ),
       );
     }
+
     if (route.toString() == AppRoutes.bookSession) {
       return const StudentSessionScreen();
     }
+
     if (route.toString() == AppRoutes.share) {
       return BlocProvider<TeacherDetailsBloc>(
         create: (context) => TeacherDetailsBloc(),
@@ -111,6 +139,8 @@ class AppRouter {
         ),
       );
     }
+
+
     if (route.toString() == AppRoutes.bank) {
       return const BankScreen();
     }
@@ -121,7 +151,10 @@ class AppRouter {
       return const PrivacyAndPolicy();
     }
     if (route.toString() == AppRoutes.totalEarning) {
-      return const EarningScreen();
+      return BlocProvider<BankAccountBloc>(
+        create: (context) => BankAccountBloc(),
+        child: const EarningScreen(),
+      );
     }
     if (route.toString() == AppRoutes.addBankAccount) {
       return BlocProvider<BankAccountBloc>(
@@ -157,8 +190,8 @@ class AppRouter {
     }
 
     if (route.toString() == AppRoutes.sessionDetails) {
-      return BlocProvider<SessionDetailsBloc>(
-          create: (context) => SessionDetailsBloc(),
+      return BlocProvider<BookingSessionDetailsBloc>(
+          create: (context) => BookingSessionDetailsBloc(),
           child: SessionDetailsScreen(
             sessionDetailArguments: params as SessionDetailArguments,
           ));

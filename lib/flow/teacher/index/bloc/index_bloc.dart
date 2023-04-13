@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:newversity/common/common_utils.dart';
 import 'package:newversity/flow/student/campus/bloc/campus_bloc/campus_bloc.dart';
 import 'package:newversity/flow/student/campus/view/student_campus.dart';
 import 'package:newversity/flow/student/home/bloc/student_home_bloc.dart';
 import 'package:newversity/flow/student/home/view/student_home.dart';
-import 'package:newversity/flow/student/student_session/bloc/student_session_bloc.dart';
-import 'package:newversity/flow/student/student_session/view/student_session.dart';
+import 'package:newversity/flow/student/student_session/my_session/bloc/my_session_bloc.dart';
+import 'package:newversity/flow/student/student_session/my_session/view/my_sessession_screen.dart';
 import 'package:newversity/flow/teacher/availability/availability_route.dart';
 import 'package:newversity/flow/teacher/bookings/bloc/teacher_bookings_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/view/bookings.dart';
-import 'package:newversity/flow/teacher/home/bloc/session_bloc/session_details_bloc.dart';
+import 'package:newversity/flow/teacher/home/bloc/home_session_bloc/home_session_details_bloc.dart';
 import 'package:newversity/resources/images.dart';
 
 import '../../availability/availability_bloc/availability_bloc.dart';
@@ -24,7 +23,7 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
   int selectedIndex = 0;
   List<Widget> indexPages = <Widget>[
     BlocProvider(
-      create: (context) => SessionBloc(),
+      create: (context) => HomeSessionBloc(),
       child: const Home(),
     ),
     BlocProvider(
@@ -42,24 +41,14 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
       create: (context) => StudentHomeBloc(),
       child: const StudentHomeScreen(),
     ),
-    BlocProvider<StudentSessionBloc>(
-      create: (context) => StudentSessionBloc(),
-      child: const StudentSessionScreen(),
+    BlocProvider<MySessionBloc>(
+      create: (context) => MySessionBloc(),
+      child: const MySessionScreen(),
     ),
     BlocProvider<StudentCampusBloc>(
       create: (context) => StudentCampusBloc(),
       child: const StudentCampusScreen(),
     )
-  ];
-
-  List<String> drawerOptions = <String>[
-    ImageAsset.user,
-    ImageAsset.bank,
-    ImageAsset.settings,
-    ImageAsset.privacyPolicy,
-    ImageAsset.termsAndCondition,
-    ImageAsset.helpAndSupport,
-    ImageAsset.faqs,
   ];
 
   List<Map<String, String>> pagesNameWithImageIcon = <Map<String, String>>[
@@ -79,7 +68,6 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
     on<IndexPageUpdateEvent>((event, emit) async {
       updatePageIndex(event, emit);
     });
-
   }
 
   Future<void> updatePageIndex(event, emit) async {

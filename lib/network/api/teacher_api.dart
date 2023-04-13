@@ -83,7 +83,7 @@ abstract class TeacherApi {
   Future<void>? addSessionDetail(@Body() SessionSaveRequest sessionSaveRequest);
 
   @POST("/bankAccount")
-  Future<void>? addBankAccount(@Header("teacherId") String teacherId,
+  Future<void> addBankAccount(@Header("teacherId") String teacherId,
       @Body() AddBankRequestModel addBankRequestModel);
 
   @GET("/bankAccount")

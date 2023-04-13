@@ -4,7 +4,7 @@ part of 'bank_account_bloc.dart';
 abstract class BankAccountEvents {}
 
 class AddBankAccountEvent extends BankAccountEvents {
-  final addBankRequestModel;
+  final AddBankRequestModel addBankRequestModel;
   AddBankAccountEvent({required this.addBankRequestModel});
 }
 
