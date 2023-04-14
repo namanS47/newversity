@@ -3,9 +3,14 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:slide_countdown/slide_countdown.dart';
 
+import '../flow/student/home/model/session_details.dart';
+import '../resources/images.dart';
 import '../themes/colors.dart';
+import '../utils/date_time_utils.dart';
 
 class AppDropdownButton extends StatelessWidget {
   final String hint;
@@ -654,3 +659,256 @@ class CommonWidgets {
     );
   }
 }
+
+class MentorCard extends StatefulWidget {
+  const MentorCard({Key? key, required this.mentorDetail}) : super(key: key);
+  final MentorDetails mentorDetail;
+
+  @override
+  State<MentorCard> createState() => _MentorCardState();
+}
+
+class _MentorCardState extends State<MentorCard> {
+  @override
+  Widget build(BuildContext context) {
+    return getMentorDetailsView();
+  }
+
+  Widget getMentorDetailsView() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(18),
+        child: Container(
+          width: MediaQuery.of(context).size.width - 50,
+          decoration: BoxDecoration(
+            border: Border.all(width: 1, color: AppColors.grey32),
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    getMentorsProfileImage(),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                AppText(
+                                  widget.mentorDetail.name ?? "",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                getRateContainer(),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            AppText(
+                              widget.mentorDetail.college ?? "",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            AppText(
+                              widget.mentorDetail.designation ?? "",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            // SizedBox(
+                            //   width: MediaQuery.of(context).size.width - 220,
+                            //   child: AppText(
+                            //     listOfMentorsDetails[index].certificates ?? "",
+                            //     fontSize: 12,
+                            //     fontWeight: FontWeight.w500,
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: const BoxDecoration(
+                  color: AppColors.mentorsAmountColor,
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Row(
+                              children: const [
+                                AppText(
+                                  "₹ 250",
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                AppText(
+                                  "/ 30 min session",
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: const [
+                                AppText(
+                                  "₹ 150",
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                AppText(
+                                  "/ 15 min session",
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Container(
+                          height: 52,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: AppColors.cyanBlue),
+                          child: Padding(
+                            padding:
+                            const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const AppText(
+                                  "Book Session",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.whiteColor,
+                                ),
+                                getNextAvailabilityWidget()
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget getMentorsProfileImage() {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      width: 100,
+      child: widget.mentorDetail.profileImageUrl == null
+          ? const AppImage(
+        image: ImageAsset.blueAvatar,
+      )
+          : Image.network(
+        widget.mentorDetail.profileImageUrl ?? "",
+        fit: BoxFit.fill,
+      ),
+    );
+  }
+
+  Widget getRateContainer() {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.grey32,
+        borderRadius: BorderRadius.circular(11.0),
+      ),
+      width: 32,
+      child: Padding(
+        padding: const EdgeInsets.all(2.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Icon(
+              Icons.star,
+              size: 8,
+              color: Colors.amber,
+            ),
+            Text(
+              widget.mentorDetail.rating.toString(),
+              style: const TextStyle(fontSize: 10),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getNextAvailabilityWidget() {
+    DateTime date = DateTime(2024);
+    int timeLeftInSeconds = getLeftTimeInSeconds(date);
+    if (timeLeftInSeconds > DateTimeUtils.secondsInOneDay) {
+      String weekday = DateFormat('EEEE').format(date);
+      return AppText(
+        "Available: Next $weekday",
+        fontSize: 10,
+        fontWeight: FontWeight.w400,
+        color: AppColors.whiteColor,
+      );
+    }
+
+    return Row(
+      children: [
+        const AppText(
+          "Available in:",
+          fontSize: 10,
+          fontWeight: FontWeight.w400,
+          color: AppColors.whiteColor,
+        ),
+        getScheduleLeftTime(timeLeftInSeconds),
+      ],
+    );
+  }
+
+  Widget getScheduleLeftTime(int timeLeftInSeconds) {
+    return SlideCountdown(
+      duration: Duration(seconds: timeLeftInSeconds),
+      decoration: const BoxDecoration(
+        color: Colors.transparent,
+      ),
+      slideDirection: SlideDirection.down,
+      durationTitle: DurationTitle.id(),
+      separator: ":",
+      textStyle: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+          color: AppColors.whiteColor),
+      separatorStyle: const TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w400,
+          color: AppColors.whiteColor),
+    );
+  }
+
+  int getLeftTimeInSeconds(DateTime dateTime) {
+    return (dateTime.difference(DateTime.now()).inSeconds);
+  }
+}
+

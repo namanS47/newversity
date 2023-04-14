@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DateTimeUtils {
+  static const secondsInOneDay = 60*60*24;
+
   static String getFormattedDateTime(DateTime dateTime) {
     final DateFormat formatter = DateFormat('MMMM, yyyy');
     return formatter.format(dateTime);
