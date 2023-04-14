@@ -7,6 +7,10 @@ import 'package:newversity/flow/student/profile_dashboard/bloc/profile_dahsbord_
 import 'package:newversity/flow/student/profile_dashboard/view/profile_dashboard.dart';
 import 'package:newversity/flow/student/search/bloc/mentor_search_bloc.dart';
 import 'package:newversity/flow/student/search/view/mentor_search_page.dart';
+import 'package:newversity/flow/student/student_profile/bloc/student_profile_bloc.dart';
+import 'package:newversity/flow/student/student_profile/view/edit_student_profile.dart';
+import 'package:newversity/flow/student/student_profile/view/student_profile.dart';
+import 'package:newversity/flow/student/student_session/booking_session/model/student_session_argument.dart';
 import 'package:newversity/flow/student/student_session/student_session_detail/bloc/student_session_detail_bloc.dart';
 import 'package:newversity/flow/student/student_session/student_session_detail/view/raise_issue_screen.dart';
 import 'package:newversity/flow/student/student_session/student_session_detail/view/student_session_detail_screen.dart';
@@ -40,6 +44,7 @@ import 'package:newversity/room/room.dart';
 import '../flow/login/login_arguments.dart';
 import '../flow/login/presentation/login_screen.dart';
 import '../flow/login/presentation/otp_route.dart';
+import '../flow/student/student_session/booking_session/bloc/student_session_bloc.dart';
 import '../flow/student/student_session/booking_session/view/student_session.dart';
 import '../flow/teacher/availability/availability_route.dart';
 import '../flow/teacher/bank_account/earnings/view/earning_screen.dart';
@@ -127,7 +132,12 @@ class AppRouter {
     }
 
     if (route.toString() == AppRoutes.bookSession) {
-      return const StudentSessionScreen();
+      return BlocProvider(
+        create: (context) => StudentSessionBloc(),
+        child: StudentSessionScreen(
+          studentSessionArgument: params as StudentSessionArgument,
+        ),
+      );
     }
 
     if (route.toString() == AppRoutes.share) {
@@ -139,7 +149,6 @@ class AppRouter {
         ),
       );
     }
-
 
     if (route.toString() == AppRoutes.bank) {
       return const BankScreen();
@@ -156,6 +165,20 @@ class AppRouter {
         child: const EarningScreen(),
       );
     }
+    if (route.toString() == AppRoutes.studentProfile) {
+      return BlocProvider<StudentProfileBloc>(
+        create: (context) => StudentProfileBloc(),
+        child: const StudentProfileScreen(),
+      );
+    }
+
+    if (route.toString() == AppRoutes.editProfile) {
+      return BlocProvider<StudentProfileBloc>(
+        create: (context) => StudentProfileBloc(),
+        child: const EditStudentProfile(),
+      );
+    }
+
     if (route.toString() == AppRoutes.addBankAccount) {
       return BlocProvider<BankAccountBloc>(
         create: (context) => BankAccountBloc(),

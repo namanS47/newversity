@@ -7,12 +7,12 @@ import '../../../../../network/webservice/exception.dart';
 import '../../../../teacher/profile/model/tags_response_model.dart';
 
 class ProfileDashboardRepository extends StudentBaseRepository {
-  final StudentApi _teacherApi = DI.inject<StudentApi>();
+  final StudentApi _studApi = DI.inject<StudentApi>();
 
   Future<List<TagsResponseModel>?> fetchAllTags() async {
     List<TagsResponseModel>? listOfTags = [];
     try {
-      listOfTags = await _teacherApi.getTags();
+      listOfTags = await _studApi.getTags();
     } on DioError catch (exception) {
       throw AppException.forException(exception.response);
     }

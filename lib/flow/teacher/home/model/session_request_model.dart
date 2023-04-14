@@ -15,7 +15,7 @@ class SessionSaveRequest {
   String? paymentId;
   String? mentorNote;
   String? studentFeedback;
-  int? studentRating;
+  double? studentRating;
   bool? cancelled;
 
   SessionSaveRequest(

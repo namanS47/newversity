@@ -8,6 +8,7 @@ import 'package:newversity/network/api/student_api.dart';
 import 'package:newversity/network/api/teacher_api.dart';
 import 'package:newversity/storage/preferences.dart';
 
+import '../flow/student/student_session/booking_session/data/booking_session_repo.dart';
 import '../flow/student/webservice/student_base_repository.dart';
 import '../flow/teacher/availability/data/repository/availability_repository.dart';
 
@@ -23,6 +24,7 @@ class DI {
     addDependency(TeacherBaseRepository(), true);
     addDependency(StudentBaseRepository(), true);
     addDependency(ProfileDashboardRepository(), true);
+    addDependency(SessionBookingRepository(), true);
     addDependency(AvailabilityRepository(), true);
 
     return DI();

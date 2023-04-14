@@ -7,10 +7,13 @@ class AppRoutes {
 
   //Student Flow
   static const String studentHome = "student_home";
-  static const String studentProfileDashboardRoute = "student_profile_dashboard_route";
-  static const String studentSessionDetailRoute = "student_session_detail_route";
+  static const String studentProfileDashboardRoute =
+      "student_profile_dashboard_route";
+  static const String studentSessionDetailRoute =
+      "student_session_detail_route";
   static const String raiseIssueRoute = "raise_issue_route";
-
+  static const String studentProfile = "student_profile";
+  static const String editProfile = "edit_student_profile_route";
 
   // Book Session
   static const String bookSession = "book_session";

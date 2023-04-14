@@ -24,12 +24,16 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                children: const [
-                  AppImage(image: ImageAsset.arrowBack),
-                  SizedBox(
+                children:  [
+                  InkWell(
+                    onTap: ()=>{
+                      Navigator.pop(context)
+                    },
+                      child: const AppImage(image: ImageAsset.arrowBack)),
+                  const SizedBox(
                     width: 10,
                   ),
-                  AppText(
+                  const AppText(
                     "Help and Support",
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
@@ -90,7 +94,9 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
     );
   }
 
-  onTapOfRaiseIssueContainer() {}
+  onTapOfRaiseIssueContainer() {
+    Navigator.of(context).pushNamed(AppRoutes.raiseIssueRoute);
+  }
 
   onTapOfFaqsContainer() {
     Navigator.of(context).pushNamed(AppRoutes.faqs);

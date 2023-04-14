@@ -8,6 +8,7 @@ class StudentDetailSavingRequestModel {
   String? name;
   String? mobileNumber;
   String? location;
+  String? email;
   List<String>? tags;
   String? profilePictureUrl;
   List<String>? language;
@@ -18,6 +19,7 @@ class StudentDetailSavingRequestModel {
       this.name,
       this.mobileNumber,
       this.location,
+        this.email,
       this.tags,
       this.profilePictureUrl,
       this.language,

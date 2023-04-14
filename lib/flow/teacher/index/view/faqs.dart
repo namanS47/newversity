@@ -26,12 +26,16 @@ class _FaqsScreenState extends State<FaqsScreen> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
-                  AppImage(image: ImageAsset.arrowBack),
-                  SizedBox(
+                children: [
+                  InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const AppImage(image: ImageAsset.arrowBack)),
+                  const SizedBox(
                     width: 10,
                   ),
-                  AppText(
+                  const AppText(
                     "FAQ",
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
