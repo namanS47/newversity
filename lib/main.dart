@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:newversity/firebase_options.dart';
 import 'package:newversity/navigation/app_router.dart';
 import 'package:newversity/navigation/app_routes.dart';
@@ -22,6 +23,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return MaterialApp(
       theme: AppTheme.lightTheme,
       home: const LoginScreen(),
