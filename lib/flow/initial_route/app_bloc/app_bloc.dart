@@ -34,7 +34,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       final studentId = CommonUtils().getLoggedInUser();
       try {
         final response = await _studentApi.getProfileCompletionInfo(studentId);
-        if (response != null && response.completePercentage == 100) {
+        if (response != null && response.completePercentage != 0) {
           return emit(RedirectToStudentHome());
         } else {
           return emit(RedirectToStudentProfileDashboardRoute());
