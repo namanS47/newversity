@@ -1,31 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newversity/flow/student/student_session/booking_session/model/student_session_argument.dart';
 import 'package:newversity/flow/student/student_session/booking_session/view/review.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
 
 import '../../../../../common/common_widgets.dart';
 import '../../../../../resources/images.dart';
+import '../bloc/student_session_bloc.dart';
 import 'about.dart';
 import 'availability.dart';
 
 class StudentSessionScreen extends StatefulWidget {
-  const StudentSessionScreen({Key? key}) : super(key: key);
+  final StudentSessionArgument studentSessionArgument;
+
+  const StudentSessionScreen({Key? key, required this.studentSessionArgument})
+      : super(key: key);
 
   @override
   State<StudentSessionScreen> createState() => _StudentSessionScreenState();
 }
 
 class _StudentSessionScreenState extends State<StudentSessionScreen> {
-  PageController pageController = PageController();
-  List<String> sessionCategory = ["About", "Availability", "Reviews"];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    BlocProvider.of<StudentSessionBloc>(context).add(FetchTeacherDetailsEvent(
+        teacherId: widget.studentSessionArgument.teacherId ?? ""));
+  }
+
+  TeacherDetails? teacherDetails;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: false,
-      body: getScreeContent(),
+    return BlocConsumer<StudentSessionBloc, StudentSessionStates>(
+      listener: (context, state) {
+        if (state is FetchedTeacherDetailsState) {
+          teacherDetails = state.teacherDetails;
+        }
+        // TODO: implement listener
+      },
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          resizeToAvoidBottomInset: false,
+          body: getScreeContent(),
+        );
+      },
     );
   }
 
@@ -48,9 +71,11 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SvgPicture.asset(ImageAsset.arrowBack),
-                    SvgPicture.asset(
-                      ImageAsset.share,
+                    GestureDetector(
+                        onTap: () => {Navigator.pop(context)},
+                        child: const AppImage(image: ImageAsset.arrowBack)),
+                    const AppImage(
+                      image: ImageAsset.share,
                       height: 19,
                       width: 16,
                     ),
@@ -69,84 +94,96 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
     );
   }
 
-  Widget getMentorDetails() {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10.0),
-          border: Border.all(width: 1, color: AppColors.grey32)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(3.0),
-            child: const SizedBox(
-              width: 70,
-              height: 92,
-              child: AppImage(
-                image: ImageAsset.mentor,
-                fit: BoxFit.cover,
+  Widget getMentorsProfileImage() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+        height: 92,
+        width: 70,
+        child: teacherDetails?.profilePictureUrl == null
+            ? const AppImage(
+                image: ImageAsset.blueAvatar,
+              )
+            : Image.network(
+                teacherDetails?.profilePictureUrl ?? "",
+                fit: BoxFit.fill,
               ),
+      ),
+    );
+  }
+
+  Widget getMentorDetails() {
+    return Visibility(
+      visible: teacherDetails != null,
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+            border: Border.all(width: 1, color: AppColors.grey32)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            getMentorsProfileImage(),
+            const SizedBox(
+              width: 10,
             ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const AppText(
-                      "Akshat Kamesra",
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.grey32,
-                        borderRadius: BorderRadius.circular(11.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AppText(
+                        teacherDetails?.name ?? "",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
                       ),
-                      width: 32,
-                      child: Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: const [
-                            Icon(
-                              Icons.star,
-                              size: 8,
-                              color: Colors.amber,
-                            ),
-                            Text(
-                              "5",
-                              style: TextStyle(fontSize: 10),
-                            )
-                          ],
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.grey32,
+                          borderRadius: BorderRadius.circular(11.0),
+                        ),
+                        width: 32,
+                        child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: const [
+                              Icon(
+                                Icons.star,
+                                size: 8,
+                                color: Colors.amber,
+                              ),
+                              Text(
+                                "5",
+                                style: TextStyle(fontSize: 10),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const AppText(
-                  AppStrings.loremText,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                )
-              ],
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  AppText(
+                    teacherDetails?.info ?? "",
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  )
+                ],
+              ),
             ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-        ],
+            const SizedBox(
+              width: 10,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -164,41 +201,39 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
   onButtonTap() {}
 
   onTabTap(int index) {
-    selectedSessionIndex = index;
-    // pageController.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
-    setState(() {});
+    context.read<StudentSessionBloc>().add(UpdateTabBarEvent(index: index));
   }
 
-  int selectedSessionIndex = 0;
-
   Widget categoryTab(String item) {
-    int index = sessionCategory.indexOf(item);
+    int index =
+        context.read<StudentSessionBloc>().sessionCategory.indexOf(item);
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(3),
         child: InkWell(
           onTap: () => onTabTap(index),
-          child: selectedSessionIndex == index
-              ? Container(
-                  height: 38,
-                  decoration: BoxDecoration(
-                      color: AppColors.cyanBlue,
-                      borderRadius: BorderRadius.circular(20.0)),
-                  child: Center(
-                    child: Text(
-                      item,
-                      style: const TextStyle(color: AppColors.whiteColor),
+          child:
+              context.read<StudentSessionBloc>().selectedSessionIndex == index
+                  ? Container(
+                      height: 38,
+                      decoration: BoxDecoration(
+                          color: AppColors.cyanBlue,
+                          borderRadius: BorderRadius.circular(20.0)),
+                      child: Center(
+                        child: Text(
+                          item,
+                          style: const TextStyle(color: AppColors.whiteColor),
+                        ),
+                      ),
+                    )
+                  : SizedBox(
+                      height: 38,
+                      child: Center(
+                        child: Text(
+                          item,
+                        ),
+                      ),
                     ),
-                  ),
-                )
-              : SizedBox(
-                  height: 38,
-                  child: Center(
-                    child: Text(
-                      item,
-                    ),
-                  ),
-                ),
         ),
       ),
     );
@@ -227,10 +262,23 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      if (selectedSessionIndex == 0) AboutSession(),
-                      if (selectedSessionIndex == 1)
+                      if (context
+                              .read<StudentSessionBloc>()
+                              .selectedSessionIndex ==
+                          0)
+                        AboutSession(
+                          studentSessionArgument: widget.studentSessionArgument,
+                        ),
+                      if (context
+                              .read<StudentSessionBloc>()
+                              .selectedSessionIndex ==
+                          1)
                         const SessionAvailability(),
-                      if (selectedSessionIndex == 2) const SessionReview()
+                      if (context
+                              .read<StudentSessionBloc>()
+                              .selectedSessionIndex ==
+                          2)
+                        const SessionReview()
                     ],
                   ),
                 ),
@@ -263,7 +311,11 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
 
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: sessionCategory.map((item) => categoryTab(item)).toList(),
+        children: context
+            .read<StudentSessionBloc>()
+            .sessionCategory
+            .map((item) => categoryTab(item))
+            .toList(),
       ),
       // child: ListView.separated(
       //   padding: EdgeInsets.only(left: 5, right: 16, top: 5,bottom: 5),

@@ -9,3 +9,5 @@ class UpdatedNextSessionIndexEvent extends StudentHomeEvents {
   final int nextIndex;
   UpdatedNextSessionIndexEvent({required this.nextIndex});
 }
+
+class FetchStudentDetailEvent extends StudentHomeEvents {}

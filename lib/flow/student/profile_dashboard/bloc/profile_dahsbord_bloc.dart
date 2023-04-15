@@ -125,6 +125,8 @@ class ProfileDashboardBloc
     emit(StudentDetailsSavingState());
     try {
       if (event is StudentDetailSaveEvent) {
+        event.studentDetailSavingRequestModel.mobileNumber =
+        await DI.inject<Preferences>().getMobileNumber();
         final response = await _studentBaseRepository.saveStudentDetails(
             event.studentDetailSavingRequestModel, studentId);
         if (response != null) {

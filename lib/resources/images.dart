@@ -38,6 +38,8 @@ class ImageAsset {
   static const String thumbsUp = '${_svgPath}thumbs_up.svg';
   static const String chatBot = '${_svgPath}chat_bot.svg';
   static const String icSuggestion = '${_svgPath}ic_suggestion.svg';
+  static const String icCompletenessWelcome = '${_svgPath}ic_completeness_welcome.svg';
+  static const String icCamera = '${_svgPath}ic_camera.svg';
 
   // Drawer strings
   static const user = "${_svgPath}user.svg";

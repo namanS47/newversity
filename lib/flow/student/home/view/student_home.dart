@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/student/home/bloc/student_home_bloc.dart';
 import 'package:newversity/flow/student/home/model/session_details.dart';
+import 'package:newversity/flow/student/profile_dashboard/data/model/student_details_model.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
@@ -23,6 +24,7 @@ class StudentHomeScreen extends StatefulWidget {
 }
 
 class _StudentHomeScreenState extends State<StudentHomeScreen> {
+  StudentDetail? studentDetail;
   late TutorialCoachMark tutorialCoachMark;
   List<TargetFocus> targetFocus = [];
   GlobalKey key = GlobalKey();
@@ -32,6 +34,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
     // initTargets();
     // WidgetsBinding.instance.addPostFrameCallback(_layout);
     super.initState();
+    BlocProvider.of<StudentHomeBloc>(context).add(FetchStudentDetailEvent());
   }
 
   void _layout(_) {
@@ -60,82 +63,94 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
           Container(
             color: AppColors.lightCyan,
           ),
-          SafeArea(
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      getProfileWidget(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      getFindMentorHeader(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      getFindMentorSearchWidget(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ),
-                BlocConsumer<StudentHomeBloc, StudentHomeStates>(
-                  listener: (context, state) {},
-                  builder: (context, state) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(28),
-                              topRight: Radius.circular(28))),
+          BlocConsumer<StudentHomeBloc, StudentHomeStates>(
+            listener: (context, state) {
+              // TODO: implement listener
+              if (state is FetchedStudentDetailsState) {
+                studentDetail = state.studentDetail;
+              }
+            },
+            builder: (context, state) {
+              return SafeArea(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          getNextSessionCarousel(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          studentDetail != null
+                              ? getProfileWidget()
+                              : Container(),
                           const SizedBox(
                             height: 20,
                           ),
-                          getNearByHeader(),
+                          getFindMentorHeader(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getFindMentorSearchWidget(),
                           const SizedBox(
                             height: 20,
-                          ),
-                          getNearbyMentorList(),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          getMentorsReviewHeader(),
-                          const SizedBox(
-                            height: 18,
-                          ),
-                          getMentorsReviewList(),
-                          const SizedBox(
-                            height: 32,
-                          ),
-                          getStudentReviewHeader(),
-                          const SizedBox(
-                            height: 18,
-                          ),
-                          getStudentReviewList(),
-                          getInviteContainer(),
-                          const SizedBox(
-                            height: 100,
                           ),
                         ],
                       ),
-                    );
-                  },
-                )
-              ],
-            ),
+                    ),
+                    BlocConsumer<StudentHomeBloc, StudentHomeStates>(
+                      listener: (context, state) {},
+                      builder: (context, state) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: const BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(28),
+                                  topRight: Radius.circular(28))),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              getNextSessionCarousel(),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              getNearByHeader(),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              getNearbyMentorList(),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              getMentorsReviewHeader(),
+                              const SizedBox(
+                                height: 18,
+                              ),
+                              getMentorsReviewList(),
+                              const SizedBox(
+                                height: 32,
+                              ),
+                              getStudentReviewHeader(),
+                              const SizedBox(
+                                height: 18,
+                              ),
+                              getStudentReviewList(),
+                              getInviteContainer(),
+                              const SizedBox(
+                                height: 100,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    )
+                  ],
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -623,16 +638,16 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
 
   Widget getLocation() {
     return Row(
-      children: const [
+      children: [
         AppText(
-          "Mumbai",
+          studentDetail?.location ?? "",
           fontSize: 12,
           fontWeight: FontWeight.w400,
         ),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
-        Icon(
+        const Icon(
           Icons.keyboard_arrow_down,
           size: 15,
         ),
@@ -641,8 +656,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   }
 
   Widget getStudentName() {
-    return const AppText(
-      "Hi Mahesh",
+    return AppText(
+      "Hi ${studentDetail?.name ?? "Guest"}",
       fontSize: 16,
       fontWeight: FontWeight.w600,
     );
@@ -651,21 +666,29 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   String profileImage =
       "https://media.istockphoto.com/id/1309328823/photo/headshot-portrait-of-smiling-male-employee-in-office.jpg?b=1&s=612x612&w=0&k=20&c=eU56mZTN4ZXYDJ2SR2DFcQahxEnIl3CiqpP3SOQVbbI=";
 
+  onProfileTap() {
+    Navigator.of(context).pushNamed(AppRoutes.studentProfile);
+  }
+
   Widget getProfileImage() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: SizedBox(
-        height: 44,
-        width: 44,
-        child: CircleAvatar(
-          radius: 30.0,
-          foregroundImage:
-              profileImage != null ? NetworkImage(profileImage) : null,
-          child: profileImage == null
-              ? const AppImage(
-                  image: ImageAsset.blueAvatar,
-                )
-              : CommonWidgets.getCircularProgressIndicator(),
+    return GestureDetector(
+      onTap: () => onProfileTap(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        child: SizedBox(
+          height: 44,
+          width: 44,
+          child: CircleAvatar(
+            radius: 30.0,
+            foregroundImage: studentDetail?.profilePictureUrl != null
+                ? NetworkImage(studentDetail?.profilePictureUrl ?? "")
+                : null,
+            child: studentDetail?.profilePictureUrl == null
+                ? const AppImage(
+                    image: ImageAsset.blueAvatar,
+                  )
+                : CommonWidgets.getCircularProgressIndicator(),
+          ),
         ),
       ),
     );

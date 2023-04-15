@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newversity/flow/student/student_session/previous_session/bloc/student_previous_session_bloc.dart';
 import 'package:newversity/flow/student/student_session/previous_session/model/previous_session_details_model.dart';
 import 'package:newversity/utils/date_time_utils.dart';
 
@@ -6,7 +8,9 @@ import '../../../../../common/common_widgets.dart';
 import '../../../../../navigation/app_routes.dart';
 import '../../../../../resources/images.dart';
 import '../../../../../themes/colors.dart';
+import '../../../../../utils/enums.dart';
 import '../../../../teacher/bookings/model/session_detail_arguments.dart';
+import '../../my_session/model/session_detail_response_model.dart';
 
 class StudentPreviousSessionScreen extends StatefulWidget {
   const StudentPreviousSessionScreen({Key? key}) : super(key: key);
@@ -21,18 +25,88 @@ class _StudentPreviousSessionScreenState
   List<PreviousSessionDetailsModel> listOfMentorsDetails =
       PreviousSessionDetailsModel.listOfMentorsDetails;
 
+  List<SessionDetailResponseModel> listOfPreviousSession = [];
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<StudentPreviousSessionBloc>(context).add(
+        FetchStudentPreviousSessionEvent(
+            sessionType: getSessionType(SessionType.previous)));
+  }
+
+  bool isRebuildWidgetState(StudentPreviousSessionState state) {
+    return state is FetchingStudentPreviousSessionState ||
+        state is FetchingStudentPreviousSessionFailureState ||
+        state is FetchedStudentPreviousSessionState ||
+        state is PreviousDataNotFoundState;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(
-          height: 20,
-        ),
-        getMentorsList(),
-        const SizedBox(
-          height: 20,
-        ),
-      ],
+    return BlocConsumer<StudentPreviousSessionBloc,
+        StudentPreviousSessionState>(
+      buildWhen: (previous, current) => isRebuildWidgetState(current),
+      listenWhen: (previous, current) => isRebuildWidgetState(current),
+      listener: (context, state) {
+        if (state is FetchedStudentPreviousSessionState) {
+          listOfPreviousSession = state.listOfPreviousSession;
+        }
+      },
+      builder: (context, state) {
+        if (state is FetchingStudentPreviousSessionState) {
+          return SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.cyanBlue,
+                  ),
+                )
+              ],
+            ),
+          );
+        } else if (state is PreviousDataNotFoundState) {
+          return SizedBox(
+            height: 400,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                Center(
+                  child: AppText("No Previous Session Found"),
+                )
+              ],
+            ),
+          );
+        } else if (state is FetchingStudentPreviousSessionFailureState) {
+          return SizedBox(
+            height: 400,
+            child: Column(
+              children: [
+                Center(
+                  child: AppText(state.msg ?? ""),
+                )
+              ],
+            ),
+          );
+        } else {
+          return Column(
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              getMentorsList(),
+              const SizedBox(
+                height: 20,
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 
@@ -41,7 +115,7 @@ class _StudentPreviousSessionScreenState
       spacing: 15,
       runSpacing: 12,
       children: List.generate(
-        listOfMentorsDetails.length,
+        listOfPreviousSession.length,
         (curIndex) {
           return getMentorDetailsView(curIndex);
         },
@@ -53,12 +127,14 @@ class _StudentPreviousSessionScreenState
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: 100,
-      child: listOfMentorsDetails[index].profileImageUrl == null
+      child: listOfPreviousSession[index].teacherDetail?.profilePictureUrl ==
+              null
           ? const AppImage(
               image: ImageAsset.blueAvatar,
             )
           : Image.network(
-              listOfMentorsDetails[index].profileImageUrl ?? "",
+              listOfPreviousSession[index].teacherDetail?.profilePictureUrl ??
+                  "",
               fit: BoxFit.fill,
             ),
     );
@@ -82,7 +158,7 @@ class _StudentPreviousSessionScreenState
               color: Colors.amber,
             ),
             Text(
-              listOfMentorsDetails[index].rating.toString(),
+              "${listOfPreviousSession[index].studentRating}",
               style: const TextStyle(fontSize: 10),
             )
           ],
@@ -91,17 +167,17 @@ class _StudentPreviousSessionScreenState
     );
   }
 
-  onSessionTap() {
+  onSessionTap(int index) {
     Navigator.of(context).pushNamed(AppRoutes.studentSessionDetailRoute,
         arguments: SessionDetailArguments(
-          id: "0",
+          id: listOfPreviousSession[index].id.toString(),
           isPrevious: true,
         ));
   }
 
   Widget getMentorDetailsView(int index) {
     return GestureDetector(
-      onTap: () => onSessionTap(),
+      onTap: () => onSessionTap(index),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
         child: Container(
@@ -128,7 +204,10 @@ class _StudentPreviousSessionScreenState
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 AppText(
-                                  listOfMentorsDetails[index].name ?? "",
+                                  listOfPreviousSession[index]
+                                          .teacherDetail
+                                          ?.name ??
+                                      "",
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -139,19 +218,28 @@ class _StudentPreviousSessionScreenState
                               height: 10,
                             ),
                             AppText(
-                              listOfMentorsDetails[index].college ?? "",
+                              listOfPreviousSession[index]
+                                      .teacherDetail
+                                      ?.tags.toString() ??
+                                  "",
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
                             AppText(
-                              listOfMentorsDetails[index].designation ?? "",
+                              listOfPreviousSession[index]
+                                      .teacherDetail
+                                      ?.designation ??
+                                  "",
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
                             SizedBox(
                               width: MediaQuery.of(context).size.width - 220,
                               child: AppText(
-                                listOfMentorsDetails[index].certificates ?? "",
+                                listOfPreviousSession[index]
+                                        .teacherDetail
+                                        ?.education ??
+                                    "",
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -186,8 +274,8 @@ class _StudentPreviousSessionScreenState
                               width: 5,
                             ),
                             AppText(
-                              DateTimeUtils.getEmploymentDurationDateTime(
-                                  listOfMentorsDetails[index].endTime ??
+                              DateTimeUtils.getBirthFormattedDateTime(
+                                  listOfPreviousSession[index].endDate ??
                                       DateTime.now()),
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
@@ -195,7 +283,9 @@ class _StudentPreviousSessionScreenState
                           ],
                         ),
                         AppText(
-                          listOfMentorsDetails[index].sessionType ?? "",
+                          listOfPreviousSession[index].sessionType == "long"
+                              ? getSessionTypeWithSlotType(SlotType.long)
+                              : getSessionTypeWithSlotType(SlotType.long),
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
                         ),

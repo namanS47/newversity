@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newversity/flow/student/student_session/upcoming_session/bloc/student_upcoming_session_bloc.dart';
 import 'package:newversity/flow/student/student_session/upcoming_session/model/upcoming_session_detail_model.dart';
 import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
 import 'package:newversity/navigation/app_routes.dart';
@@ -7,6 +9,8 @@ import 'package:slide_countdown/slide_countdown.dart';
 import '../../../../../common/common_widgets.dart';
 import '../../../../../resources/images.dart';
 import '../../../../../themes/colors.dart';
+import '../../../../../utils/enums.dart';
+import '../../my_session/model/session_detail_response_model.dart';
 
 class StudentUpcomingSessionScreen extends StatefulWidget {
   const StudentUpcomingSessionScreen({Key? key}) : super(key: key);
@@ -21,19 +25,90 @@ class _StudentUpcomingSessionScreenState
   List<UpcomingSessionDetailsModel> listOfMentorsDetails =
       UpcomingSessionDetailsModel.listOfMentorsDetails;
 
+  List<SessionDetailResponseModel> listOfUpcomingSessions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<StudentUpcomingSessionBloc>(context).add(
+        FetchStudentUpcomingSessionEvent(
+            sessionType: getSessionType(SessionType.upcoming)));
+  }
+
+  bool isRebuildWidgetState(StudentUpcomingSessionStates state) {
+    return state is FetchingStudentUpcomingSessionState ||
+        state is FetchingStudentUpcomingSessionFailureState ||
+        state is FetchedStudentUpcomingSessionState ||
+        state is UpcomingDataNotFoundState;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(
-          height: 20,
-        ),
-        getMentorsList(),
-        const SizedBox(
-          height: 20,
-        )
-      ],
-    );
+    return BlocConsumer<StudentUpcomingSessionBloc,
+            StudentUpcomingSessionStates>(
+        buildWhen: (previous, current) => isRebuildWidgetState(current),
+        listenWhen: (previous, current) => isRebuildWidgetState(current),
+        listener: (context, state) {
+          if (state is FetchedStudentUpcomingSessionState) {
+            listOfUpcomingSessions = state.listOfUpcomingSession;
+          }
+        },
+        builder: (context, state) {
+          if (state is FetchingStudentUpcomingSessionState) {
+            return SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.cyanBlue,
+                    ),
+                  )
+                ],
+              ),
+            );
+          } else if (state is UpcomingDataNotFoundState) {
+            return SizedBox(
+              height: 400,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Center(
+                    child: AppText(
+                      "No Upcoming Session Found",
+                    ),
+                  )
+                ],
+              ),
+            );
+          } else if (state is FetchingStudentUpcomingSessionFailureState) {
+            return SizedBox(
+              height: 400,
+              child: Column(
+                children: [
+                  Center(
+                    child: AppText(state.msg),
+                  )
+                ],
+              ),
+            );
+          } else {
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                getMentorsList(),
+                const SizedBox(
+                  height: 20,
+                )
+              ],
+            );
+          }
+        });
   }
 
   Widget getMentorsList() {
@@ -41,7 +116,7 @@ class _StudentUpcomingSessionScreenState
       spacing: 15,
       runSpacing: 12,
       children: List.generate(
-        listOfMentorsDetails.length,
+        listOfUpcomingSessions.length,
         (curIndex) {
           return getMentorDetailsView(curIndex);
         },
@@ -53,12 +128,14 @@ class _StudentUpcomingSessionScreenState
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: 100,
-      child: listOfMentorsDetails[index].profileImageUrl == null
+      child: listOfUpcomingSessions[index].teacherDetail?.profilePictureUrl ==
+              null
           ? const AppImage(
               image: ImageAsset.blueAvatar,
             )
           : Image.network(
-              listOfMentorsDetails[index].profileImageUrl ?? "",
+              listOfUpcomingSessions[index].teacherDetail?.profilePictureUrl ??
+                  "",
               fit: BoxFit.fill,
             ),
     );
@@ -81,9 +158,9 @@ class _StudentUpcomingSessionScreenState
               size: 8,
               color: Colors.amber,
             ),
-            Text(
-              listOfMentorsDetails[index].rating.toString(),
-              style: const TextStyle(fontSize: 10),
+            AppText(
+              "${listOfUpcomingSessions[index].studentRating ?? 3}",
+              fontSize: 10,
             )
           ],
         ),
@@ -91,17 +168,17 @@ class _StudentUpcomingSessionScreenState
     );
   }
 
-  onSessionTap() {
+  onSessionTap(int index) {
     Navigator.of(context).pushNamed(AppRoutes.studentSessionDetailRoute,
         arguments: SessionDetailArguments(
-          id: "0",
+          id: listOfUpcomingSessions[index].id.toString(),
           isPrevious: false,
         ));
   }
 
   Widget getMentorDetailsView(int index) {
     return GestureDetector(
-      onTap: () => onSessionTap(),
+      onTap: () => onSessionTap(index),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
         child: Container(
@@ -128,7 +205,10 @@ class _StudentUpcomingSessionScreenState
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 AppText(
-                                  listOfMentorsDetails[index].name ?? "",
+                                  listOfUpcomingSessions[index]
+                                          .teacherDetail
+                                          ?.name ??
+                                      "",
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -139,7 +219,10 @@ class _StudentUpcomingSessionScreenState
                               height: 10,
                             ),
                             AppText(
-                              listOfMentorsDetails[index].college ?? "",
+                              listOfUpcomingSessions[index]
+                                      .teacherTagList?[0]
+                                      .tagName ??
+                                  "",
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
@@ -151,7 +234,10 @@ class _StudentUpcomingSessionScreenState
                             SizedBox(
                               width: MediaQuery.of(context).size.width - 220,
                               child: AppText(
-                                listOfMentorsDetails[index].certificates ?? "",
+                                listOfUpcomingSessions[index]
+                                        .teacherDetail
+                                        ?.education ??
+                                    "",
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -181,12 +267,15 @@ class _StudentUpcomingSessionScreenState
                             Row(
                               children: [
                                 AppText(
-                                  "₹ ${listOfMentorsDetails[index].sessionAmount}",
+                                  "₹ ${listOfUpcomingSessions[index].amount}",
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                 ),
                                 AppText(
-                                  "/ ${listOfMentorsDetails[index].sessionType}",
+                                  listOfUpcomingSessions[index].sessionType ==
+                                          "long"
+                                      ? "/ ${getSessionTypeWithSlotType(SlotType.long)}"
+                                      : "/ ${getSessionTypeWithSlotType(SlotType.short)}",
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -197,7 +286,7 @@ class _StudentUpcomingSessionScreenState
                         ),
                         GestureDetector(
                           onTap: () => getLeftTimeInSeconds(
-                                      listOfMentorsDetails[index].startTime ??
+                                      listOfUpcomingSessions[index].startDate ??
                                           DateTime.now()) <
                                   1801
                               ? onJoinNowTap()
@@ -208,8 +297,8 @@ class _StudentUpcomingSessionScreenState
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: getLeftTimeInSeconds(
-                                            listOfMentorsDetails[index]
-                                                    .startTime ??
+                                            listOfUpcomingSessions[index]
+                                                    .startDate ??
                                                 DateTime.now()) <
                                         1801
                                     ? AppColors.cyanBlue
@@ -245,11 +334,9 @@ class _StudentUpcomingSessionScreenState
     return (dateTime.difference(DateTime.now()).inSeconds);
   }
 
-  bool isTimeUp = false;
-
   Widget getScheduleLeftTime(int index) {
     int timeLeftInSeconds = getLeftTimeInSeconds(
-        listOfMentorsDetails[index].startTime ?? DateTime.now());
+        listOfUpcomingSessions[index].startDate ?? DateTime.now());
     return SlideCountdown(
       duration: Duration(seconds: timeLeftInSeconds),
       decoration: const BoxDecoration(
@@ -258,9 +345,6 @@ class _StudentUpcomingSessionScreenState
       slideDirection: SlideDirection.down,
       durationTitle: DurationTitle.id(),
       separator: ":",
-      onDone: () {
-        isTimeUp = true;
-      },
       textStyle: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w400,
