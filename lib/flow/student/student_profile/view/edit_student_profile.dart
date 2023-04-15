@@ -148,7 +148,7 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
                 radius: 30.0,
                 foregroundImage:
                     profilePicUPloadedStudent?.profilePictureUrl != null
-                        ? NetworkImage(studentDetail!.profilePictureUrl ?? "")
+                        ? NetworkImage(profilePicUPloadedStudent!.profilePictureUrl ?? "")
                         : null,
                 child: profilePicUPloadedStudent?.profilePictureUrl == null
                     ? const AppImage(
