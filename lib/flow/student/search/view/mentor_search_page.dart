@@ -28,38 +28,6 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
               height: 1,
               color: AppColors.grey32,
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  physics: const BouncingScrollPhysics(),
-                  children: [
-                    const AppText(
-                      "Top searches",
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    suggestionWidget(),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    const AppText(
-                      "Recent searches",
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    getRecentSearches()
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -74,6 +42,41 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
     "OLYMPIAD",
     "IIT"
   ];
+
+  Widget getTopSearchedWidget() {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          physics: const BouncingScrollPhysics(),
+          children: [
+            const AppText(
+              "Top searches",
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            suggestionWidget(),
+            const SizedBox(
+              height: 15,
+            ),
+            const AppText(
+              "Recent searches",
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            getRecentSearches()
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget getRecentSearches() {
     return SizedBox(
@@ -136,25 +139,29 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
-          children: const [
-            AppImage(
+          children: [
+            const AppImage(
               image: ImageAsset.close,
               height: 32,
               width: 32,
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             Expanded(
               child: AppTextFormField(
-                hintTextStyle: TextStyle(
+                hintTextStyle: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
+                  color: AppColors.black30
                 ),
                 hintText: "Search exam name",
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: InputBorder.none,
                 ),
+                onChange: (value) {
+
+                },
               ),
             )
           ],

@@ -31,11 +31,13 @@ abstract class StudentApi {
       @Header("studentId") String studentId);
 
   @POST("/tags")
-  Future<void> addListOfTags(
-      @Body() AddTagRequestModel addTagRequestModel);
+  Future<void> addListOfTags(@Body() AddTagRequestModel addTagRequestModel);
 
   @POST("/student/profileImage")
   @MultiPart()
   Future<StudentDetail?> uploadStudentProleImage(
       @Part() File file, @Part() String studentId);
+
+  @GET("/tag/search")
+  Future<List<String>> fetchTagsListBySearchKeyword(@Query("tag") String tag);
 }
