@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/student/student_session/upcoming_session/bloc/student_upcoming_session_bloc.dart';
-import 'package:newversity/flow/student/student_session/upcoming_session/model/upcoming_session_detail_model.dart';
 import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:slide_countdown/slide_countdown.dart';
@@ -22,9 +21,6 @@ class StudentUpcomingSessionScreen extends StatefulWidget {
 
 class _StudentUpcomingSessionScreenState
     extends State<StudentUpcomingSessionScreen> {
-  List<UpcomingSessionDetailsModel> listOfMentorsDetails =
-      UpcomingSessionDetailsModel.listOfMentorsDetails;
-
   List<SessionDetailResponseModel> listOfUpcomingSessions = [];
 
   @override
@@ -128,16 +124,18 @@ class _StudentUpcomingSessionScreenState
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: 100,
-      child: listOfUpcomingSessions[index].teacherDetail?.profilePictureUrl ==
-              null
-          ? const AppImage(
-              image: ImageAsset.blueAvatar,
-            )
-          : Image.network(
-              listOfUpcomingSessions[index].teacherDetail?.profilePictureUrl ??
-                  "",
-              fit: BoxFit.fill,
-            ),
+      child:
+          listOfUpcomingSessions[index].teacherDetail?.profilePictureUrl == null
+              ? const AppImage(
+                  image: ImageAsset.blueAvatar,
+                )
+              : AppImage(
+                  image: listOfUpcomingSessions[index]
+                          .teacherDetail
+                          ?.profilePictureUrl ??
+                      "",
+                  fit: BoxFit.fill,
+                ),
     );
   }
 
@@ -176,13 +174,23 @@ class _StudentUpcomingSessionScreenState
         ));
   }
 
+  String assignTeacherTagForSession(int index) {
+    String tagList = "";
+    for (TeacherTagList teacherTagList
+        in listOfUpcomingSessions[index].teacherTagList!) {
+      tagList = "$tagList${teacherTagList.tagName},";
+    }
+    return tagList;
+  }
+
   Widget getMentorDetailsView(int index) {
+    String sessionTags = assignTeacherTagForSession(index);
     return GestureDetector(
       onTap: () => onSessionTap(index),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
         child: Container(
-          height: 210,
+          height: MediaQuery.of(context).size.height / 3.5,
           decoration: BoxDecoration(
             border: Border.all(width: 1, color: AppColors.grey32),
             borderRadius: BorderRadius.circular(18),
@@ -220,24 +228,30 @@ class _StudentUpcomingSessionScreenState
                             ),
                             AppText(
                               listOfUpcomingSessions[index]
-                                      .teacherTagList?[0]
-                                      .tagName ??
+                                      .teacherDetail
+                                      ?.education ??
                                   "",
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
+                            const SizedBox(
+                              height: 5,
+                            ),
                             AppText(
-                              listOfMentorsDetails[index].designation ?? "",
+                              listOfUpcomingSessions[index]
+                                      .teacherDetail
+                                      ?.designation ??
+                                  "",
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width - 220,
+                              width: MediaQuery.of(context).size.width,
                               child: AppText(
-                                listOfUpcomingSessions[index]
-                                        .teacherDetail
-                                        ?.education ??
-                                    "",
+                                sessionTags,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),

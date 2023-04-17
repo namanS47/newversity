@@ -3,6 +3,7 @@ class AppRoutes {
   static const String initialRoute = "initial_route";
   static const String loginRoute = "login_route";
   static const String otpRoute = "otp_route";
+  static const String onBoarding = "on_boarding";
   static const String somethingWentWrongRoute = "something_went_wrong_route";
 
   //Student Flow
@@ -18,12 +19,13 @@ class AppRoutes {
   // Book Session
   static const String bookSession = "book_session";
 
+  // feedback
+  static const String congratulationFeedback = "congratulation_feedback";
+
   //search
   static const String searchMentor = "mentor_search";
 
   //Teacher Flow
-  static const String teacherPersonalInformationRoute =
-      "teacher_personal_information_route";
   static const String teacherExperienceAndQualificationRoute =
       "teacher_experience_and_qualification_route";
   static const String expertiseRoute = "expertise_route";

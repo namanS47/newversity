@@ -215,7 +215,7 @@ class AppImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return image.contains('http')
+    return image.startsWith('http')
         ? CachedNetworkImage(
             imageUrl: image,
             height: webHeight,
@@ -226,20 +226,31 @@ class AppImage extends StatelessWidget {
             errorWidget: (context, url, error) =>
                 const Icon(Icons.error, color: Colors.red),
           )
-        : image.split('.').last != 'svg'
-            ? Image.asset(
-                image,
-                fit: fit,
-                height: height,
-                width: width,
-                color: color,
+        : !image.startsWith('http') && !image.contains('.')
+            ? CachedNetworkImage(
+                imageUrl: image,
+                height: webHeight,
+                width: webWidth,
+                fit: webFit ?? BoxFit.cover,
+                placeholder: (context, url) =>
+                    CommonWidgets.getCircularProgressIndicator(),
+                errorWidget: (context, url, error) =>
+                    const Icon(Icons.error, color: Colors.red),
               )
-            : SvgPicture.asset(
-                image,
-                height: height,
-                width: width,
-                color: color,
-              );
+            : image.split('.').last != 'svg'
+                ? Image.asset(
+                    image,
+                    fit: fit,
+                    height: height,
+                    width: width,
+                    color: color,
+                  )
+                : SvgPicture.asset(
+                    image,
+                    height: height,
+                    width: width,
+                    color: color,
+                  );
   }
 }
 

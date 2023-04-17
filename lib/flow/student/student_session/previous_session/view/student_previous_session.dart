@@ -127,16 +127,18 @@ class _StudentPreviousSessionScreenState
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: 100,
-      child: listOfPreviousSession[index].teacherDetail?.profilePictureUrl ==
-              null
-          ? const AppImage(
-              image: ImageAsset.blueAvatar,
-            )
-          : Image.network(
-              listOfPreviousSession[index].teacherDetail?.profilePictureUrl ??
-                  "",
-              fit: BoxFit.fill,
-            ),
+      child:
+          listOfPreviousSession[index].teacherDetail?.profilePictureUrl == null
+              ? const AppImage(
+                  image: ImageAsset.blueAvatar,
+                )
+              : AppImage(
+                  image: listOfPreviousSession[index]
+                          .teacherDetail
+                          ?.profilePictureUrl ??
+                      "",
+                  fit: BoxFit.fill,
+                ),
     );
   }
 
@@ -175,13 +177,23 @@ class _StudentPreviousSessionScreenState
         ));
   }
 
+  String assignTeacherTagForSession(int index) {
+    String tagList = "";
+    for (TeacherTagList teacherTagList
+        in listOfPreviousSession[index].teacherTagList!) {
+      tagList = "$tagList${teacherTagList.tagName},";
+    }
+    return tagList;
+  }
+
   Widget getMentorDetailsView(int index) {
+    String sessionTags = assignTeacherTagForSession(index);
     return GestureDetector(
       onTap: () => onSessionTap(index),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
         child: Container(
-          height: 175,
+          height: MediaQuery.of(context).size.height / 4,
           decoration: BoxDecoration(
             border: Border.all(width: 1, color: AppColors.grey32),
             borderRadius: BorderRadius.circular(18),
@@ -220,10 +232,13 @@ class _StudentPreviousSessionScreenState
                             AppText(
                               listOfPreviousSession[index]
                                       .teacherDetail
-                                      ?.tags.toString() ??
+                                      ?.education ??
                                   "",
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
+                            ),
+                            const SizedBox(
+                              height: 5,
                             ),
                             AppText(
                               listOfPreviousSession[index]
@@ -233,13 +248,13 @@ class _StudentPreviousSessionScreenState
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width - 220,
+                              width: MediaQuery.of(context).size.width,
                               child: AppText(
-                                listOfPreviousSession[index]
-                                        .teacherDetail
-                                        ?.education ??
-                                    "",
+                                sessionTags,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
