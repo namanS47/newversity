@@ -73,7 +73,7 @@ class StudentBaseRepository extends BaseRepository {
     List<SessionDetailResponseModel>? listOfSessionDetails = [];
     try {
       listOfSessionDetails =
-          await _studentApi.getSessionsByType("student1", type);
+          await _studentApi.getSessionsByType(studentId, type);
     } on DioError catch (exception) {
       throw AppException.forException(exception.response);
     }
