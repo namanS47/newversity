@@ -13,7 +13,6 @@ import 'package:slide_countdown/slide_countdown.dart';
 import '../../../../../common/common_widgets.dart';
 import '../../../../../resources/images.dart';
 import '../../../../../themes/colors.dart';
-import '../../../../../themes/strings.dart';
 import '../../../../../utils/date_time_utils.dart';
 import '../../../../teacher/home/model/session_request_model.dart';
 
@@ -158,23 +157,26 @@ class _StudentSessionDetailScreenState
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
         height: 92,
         width: 70,
-        child: sessionDetailResponseModel?.teacherDetail?.profilePictureUrl ==
-                null
-            ? const AppImage(
-                image: ImageAsset.blueAvatar,
-              )
-            : Image.network(
-                sessionDetailResponseModel?.teacherDetail?.profilePictureUrl ??
-                    "",
-                fit: BoxFit.fill,
-              ),
+        child:
+            sessionDetailResponseModel?.teacherDetail?.profilePictureUrl == null
+                ? const AppImage(
+                    image: ImageAsset.blueAvatar,
+                  )
+                : AppImage(
+                    image: sessionDetailResponseModel
+                            ?.teacherDetail?.profilePictureUrl ??
+                        "",
+                    fit: BoxFit.fill,
+                  ),
       ),
     );
   }
 
   Widget getMentorDetails() {
     return GestureDetector(
-      onTap: () => onMentorDetailsTap(),
+      onTap: () => !widget.sessionDetailArguments.isPrevious
+          ? onMentorDetailsTap()
+          : null,
       child: Container(
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
@@ -198,8 +200,7 @@ class _StudentSessionDetailScreenState
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AppText(
-                        sessionDetailResponseModel?.teacherDetail?.name ??
-                            "Akshat Kumar",
+                        sessionDetailResponseModel?.teacherDetail?.name ?? "",
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
@@ -220,7 +221,7 @@ class _StudentSessionDetailScreenState
                                 color: Colors.amber,
                               ),
                               AppText(
-                                "${sessionDetailResponseModel?.studentRating ?? 3}",
+                                "${sessionDetailResponseModel?.studentRating}",
                                 fontSize: 10,
                               )
                             ],
@@ -233,8 +234,7 @@ class _StudentSessionDetailScreenState
                     height: 10,
                   ),
                   AppText(
-                    sessionDetailResponseModel?.teacherDetail?.info ??
-                        AppStrings.loremText,
+                    sessionDetailResponseModel?.teacherDetail?.info ?? "",
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                   )
@@ -280,7 +280,7 @@ class _StudentSessionDetailScreenState
             half: Container()),
         minRating: 1,
         maxRating: 5,
-        initialRating: 0,
+        initialRating: sessionDetailResponseModel?.studentRating ?? 0,
         itemSize: 25,
         updateOnDrag: true,
         glow: true,
@@ -485,10 +485,8 @@ class _StudentSessionDetailScreenState
   String getTimeText() {
     String text = "";
     if (widget.sessionDetailArguments.isPrevious) {
-      text = DateTimeUtils.getBirthFormattedDateTime(
-              sessionDetailResponseModel?.endDate ?? DateTime.now()) +
-          DateTimeUtils.getTimeInAMOrPM(
-              sessionDetailResponseModel?.endDate ?? DateTime.now());
+      text =
+          "${DateTimeUtils.getBirthFormattedDateTime(sessionDetailResponseModel?.endDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(sessionDetailResponseModel?.endDate ?? DateTime.now())}";
     } else {
       text =
           "${DateTimeUtils.getBirthFormattedDateTime(sessionDetailResponseModel?.startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(sessionDetailResponseModel?.startDate ?? DateTime.now())} - ${DateTimeUtils.getTimeInAMOrPM(sessionDetailResponseModel?.endDate ?? DateTime.now())}";
@@ -529,7 +527,7 @@ class _StudentSessionDetailScreenState
                 height: 10,
               ),
               AppText(
-                sessionDetailResponseModel?.mentorNote ?? AppStrings.loremText,
+                sessionDetailResponseModel?.mentorNote ?? "",
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
               ),
@@ -635,7 +633,7 @@ class _StudentSessionDetailScreenState
             Padding(
               padding: const EdgeInsets.only(right: 15.0),
               child: AppText(
-                sessionDetailResponseModel?.agenda ?? "This is Agenda Section",
+                sessionDetailResponseModel?.agenda ?? "",
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
                 color: AppColors.grey50,

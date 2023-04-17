@@ -5,6 +5,8 @@ import 'package:newversity/flow/student/profile_dashboard/data/model/add_tag_req
 import 'package:newversity/flow/student/profile_dashboard/data/model/student_detail_saving_request_model.dart';
 import 'package:newversity/flow/student/profile_dashboard/data/model/student_details_model.dart';
 import 'package:newversity/flow/student/student_session/my_session/model/session_detail_response_model.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/profile/model/tags_with_teacher_id_request_model.dart';
 import 'package:retrofit/http.dart';
 
 import '../../config/app_config.dart';
@@ -50,6 +52,10 @@ abstract class StudentApi {
 
   @POST("/tags")
   Future<void> addListOfTags(@Body() AddTagRequestModel addTagRequestModel);
+
+  @GET("/tag/allTeacher")
+  Future<List<TeacherDetails>?> getTeacherByTags(
+      @Body() TagRequestModel addTagRequestModel);
 
   @POST("/student/profileImage")
   @MultiPart()

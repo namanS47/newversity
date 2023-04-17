@@ -105,9 +105,9 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
             ? const AppImage(
                 image: ImageAsset.blueAvatar,
               )
-            : Image.network(
-                teacherDetails?.profilePictureUrl ?? "",
-                fit: BoxFit.fill,
+            : AppImage(
+                image: teacherDetails?.profilePictureUrl ?? "",
+                fit: BoxFit.cover,
               ),
       ),
     );

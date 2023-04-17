@@ -40,6 +40,8 @@ class ImageAsset {
   static const String icSuggestion = '${_svgPath}ic_suggestion.svg';
   static const String icCompletenessWelcome = '${_svgPath}ic_completeness_welcome.svg';
   static const String icCamera = '${_svgPath}ic_camera.svg';
+  static const String icNewVersityLogo = '${_svgPath}new_versity_logo.svg';
+  static const String icGrowth = '${_svgPath}growth.svg';
 
   // Drawer strings
   static const user = "${_svgPath}user.svg";
@@ -59,4 +61,7 @@ class ImageAsset {
 
   //PNG Path
   static const mentor = "${_pngPath}mentor.jpeg";
+  static const icOnBoarding = '${_pngPath}ic_onboarding.png';
+  static const loginBanner = '${_pngPath}login_banner.png';
+  static const mentorLoginBanner = '${_pngPath}mentor_login_banner.png';
 }

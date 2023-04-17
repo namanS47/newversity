@@ -6,6 +6,9 @@ import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/student/home/bloc/student_home_bloc.dart';
 import 'package:newversity/flow/student/home/model/session_details.dart';
 import 'package:newversity/flow/student/profile_dashboard/data/model/student_details_model.dart';
+import 'package:newversity/flow/student/student_session/booking_session/model/student_session_argument.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/profile/model/tags_with_teacher_id_request_model.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
@@ -15,6 +18,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../../resources/images.dart';
+import '../../../../utils/enums.dart';
 
 class StudentHomeScreen extends StatefulWidget {
   const StudentHomeScreen({Key? key}) : super(key: key);
@@ -28,6 +32,10 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   late TutorialCoachMark tutorialCoachMark;
   List<TargetFocus> targetFocus = [];
   GlobalKey key = GlobalKey();
+  List<TagModel> lisOfTagRequestModel = [];
+  List<TeacherDetails> lisOfTeachersDetails = [];
+
+  List<String> listOfStudentTag = [];
 
   @override
   void initState() {
@@ -35,6 +43,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
     // WidgetsBinding.instance.addPostFrameCallback(_layout);
     super.initState();
     BlocProvider.of<StudentHomeBloc>(context).add(FetchStudentDetailEvent());
+    BlocProvider.of<StudentHomeBloc>(context).add(FetchUpcomingSessionEvent(
+        sessionType: getSessionType(SessionType.upcoming)));
   }
 
   void _layout(_) {
@@ -65,9 +75,19 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
           ),
           BlocConsumer<StudentHomeBloc, StudentHomeStates>(
             listener: (context, state) {
-              // TODO: implement listener
               if (state is FetchedStudentDetailsState) {
                 studentDetail = state.studentDetail;
+                listOfStudentTag = studentDetail!.tags!;
+                for (String element in listOfStudentTag) {
+                  lisOfTagRequestModel.add(TagModel(tagName: element));
+                }
+                BlocProvider.of<StudentHomeBloc>(context).add(
+                    FetchMentorsByTagEvent(
+                        tagRequestModel: TagRequestModel(
+                            tagModelList: lisOfTagRequestModel)));
+              }
+              if (state is FetchedMentorsWithTagState) {
+                lisOfTeachersDetails = state.lisOfTeacherDetails;
               }
             },
             builder: (context, state) {
@@ -100,52 +120,54 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                         ],
                       ),
                     ),
-                    BlocConsumer<StudentHomeBloc, StudentHomeStates>(
-                      listener: (context, state) {},
-                      builder: (context, state) {
-                        return Container(
-                          width: MediaQuery.of(context).size.width,
-                          decoration: const BoxDecoration(
-                              color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(28),
-                                  topRight: Radius.circular(28))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              getNextSessionCarousel(),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              getNearByHeader(),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              getNearbyMentorList(),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              getMentorsReviewHeader(),
-                              const SizedBox(
-                                height: 18,
-                              ),
-                              getMentorsReviewList(),
-                              const SizedBox(
-                                height: 32,
-                              ),
-                              getStudentReviewHeader(),
-                              const SizedBox(
-                                height: 18,
-                              ),
-                              getStudentReviewList(),
-                              getInviteContainer(),
-                              const SizedBox(
-                                height: 100,
-                              ),
-                            ],
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: const BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(28),
+                              topRight: Radius.circular(28))),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          context
+                                  .read<StudentHomeBloc>()
+                                  .listOfUpcomingSessions
+                                  .isNotEmpty
+                              ? getNextSessionCarousel()
+                              : Container(),
+                          const SizedBox(
+                            height: 20,
                           ),
-                        );
-                      },
+                          getNearByHeader(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          lisOfTeachersDetails.isNotEmpty
+                              ? getNearbyMentorList()
+                              : Container(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          getMentorsReviewHeader(),
+                          const SizedBox(
+                            height: 18,
+                          ),
+                          getMentorsReviewList(),
+                          const SizedBox(
+                            height: 32,
+                          ),
+                          getStudentReviewHeader(),
+                          const SizedBox(
+                            height: 18,
+                          ),
+                          getStudentReviewList(),
+                          getInviteContainer(),
+                          const SizedBox(
+                            height: 100,
+                          ),
+                        ],
+                      ),
                     )
                   ],
                 ),
@@ -441,12 +463,228 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       child: ListView.separated(
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
-        itemCount: listOfMentorsDetails.length,
-        itemBuilder: (context, index) => MentorCard(mentorDetail: listOfMentorsDetails[index]),
+        itemCount: lisOfTeachersDetails.length,
+        itemBuilder: (context, index) => getMentorDetailsView(index),
         separatorBuilder: (BuildContext context, int index) => const SizedBox(
           width: 0,
         ),
       ),
+    );
+  }
+
+  Widget getRateContainer(int index) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.grey32,
+        borderRadius: BorderRadius.circular(11.0),
+      ),
+      width: 32,
+      child: Padding(
+        padding: const EdgeInsets.all(2.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            const Icon(
+              Icons.star,
+              size: 8,
+              color: Colors.amber,
+            ),
+            Text(
+              listOfMentorsDetails[index].rating.toString(),
+              style: const TextStyle(fontSize: 10),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  String assignTeacherTagForSession(int index) {
+    String tagList = "";
+    for (String element in lisOfTeachersDetails[index].tags!) {
+      tagList = "$tagList$element,";
+    }
+    return tagList;
+  }
+
+  Widget getMentorDetailsView(int index) {
+    String sessionTags = assignTeacherTagForSession(index);
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(18),
+        child: Container(
+          width: MediaQuery.of(context).size.width - 70,
+          decoration: BoxDecoration(
+            border: Border.all(width: 1, color: AppColors.grey32),
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    getMentorsProfileImage(index),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                AppText(
+                                  lisOfTeachersDetails[index].name ?? "",
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                getRateContainer(index),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            AppText(
+                              lisOfTeachersDetails[index].education ?? "",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            AppText(
+                              lisOfTeachersDetails[index].designation ?? "",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: AppText(
+                                sessionTags,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: const BoxDecoration(
+                  color: AppColors.mentorsAmountColor,
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                AppText(
+                                  "₹ ${lisOfTeachersDetails[index].sessionPricing?["session_type_a"]}",
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                const AppText(
+                                  "/ 30 min session",
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                AppText(
+                                  "₹ ${lisOfTeachersDetails[index].sessionPricing?["session_type_b"]}",
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                const AppText(
+                                  "/ 15 min session",
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        GestureDetector(
+                          onTap: () => onBookSessionTap(index),
+                          child: Container(
+                            height: 52,
+                            width: 150,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: AppColors.cyanBlue),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  AppText(
+                                    "Book Session",
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.whiteColor,
+                                  ),
+                                  // Row(
+                                  //   children: [
+                                  //     const AppText(
+                                  //       "Available in:",
+                                  //       fontSize: 10,
+                                  //       fontWeight: FontWeight.w400,
+                                  //       color: AppColors.whiteColor,
+                                  //     ),
+                                  //     getScheduleLeftTime(),
+                                  //   ],
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  onBookSessionTap(int index) {
+    Navigator.of(context).pushNamed(AppRoutes.bookSession,
+        arguments: StudentSessionArgument(
+            teacherId: lisOfTeachersDetails[index].teacherId));
+  }
+
+  Widget getMentorsProfileImage(int index) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      width: 100,
+      child: lisOfTeachersDetails[index].profilePictureUrl == null
+          ? const AppImage(
+              image: ImageAsset.blueAvatar,
+            )
+          : AppImage(
+              image: lisOfTeachersDetails[index].profilePictureUrl ?? "",
+              fit: BoxFit.fill,
+            ),
     );
   }
 
@@ -476,7 +714,12 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       children: [
         CarouselSlider.builder(
           itemCount:
-              context.read<StudentHomeBloc>().listOfSessionDetails.length,
+              context.read<StudentHomeBloc>().listOfUpcomingSessions.length > 3
+                  ? 2
+                  : context
+                      .read<StudentHomeBloc>()
+                      .listOfUpcomingSessions
+                      .length,
           itemBuilder: (context, index, realIndex) {
             return getNextSessionView(index);
           },
@@ -494,7 +737,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
           child: AnimatedSmoothIndicator(
             activeIndex:
                 context.read<StudentHomeBloc>().currentNextSessionIndex,
-            count: context.read<StudentHomeBloc>().listOfSessionDetails.length,
+            count:
+                context.read<StudentHomeBloc>().listOfUpcomingSessions.length,
             onDotClicked: (dotIndex) {
               BlocProvider.of<StudentHomeBloc>(context)
                   .add(UpdatedNextSessionIndexEvent(nextIndex: dotIndex));
@@ -531,7 +775,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                   AppText(
                     context
                             .read<StudentHomeBloc>()
-                            .listOfSessionDetails[index]
+                            .listOfUpcomingSessions[index]
                             .agenda ??
                         "",
                     fontSize: 12,
@@ -542,7 +786,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                     height: 10,
                   ),
                   AppText(
-                    "Next session with ${context.read<StudentHomeBloc>().listOfSessionDetails[index].mentorName ?? ""}",
+                    "Next session with ${context.read<StudentHomeBloc>().listOfUpcomingSessions[index].teacherDetail?.name ?? ""}",
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
@@ -553,7 +797,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                   Row(
                     children: [
                       AppText(
-                        "${DateTimeUtils.getBirthFormattedDateTime(context.read<StudentHomeBloc>().listOfSessionDetails[index].dateTime ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(context.read<StudentHomeBloc>().listOfSessionDetails[index].dateTime ?? DateTime.now())}",
+                        "${DateTimeUtils.getBirthFormattedDateTime(context.read<StudentHomeBloc>().listOfUpcomingSessions[index].startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(context.read<StudentHomeBloc>().listOfUpcomingSessions[index].startDate ?? DateTime.now())}",
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
@@ -717,6 +961,33 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       ],
     ));
   }
+
+  Widget getScheduleLeftTime() {
+    int timeLeftInSeconds = getLeftTimeInSeconds(DateTime(2024));
+    return SlideCountdown(
+      duration: Duration(seconds: timeLeftInSeconds),
+      decoration: const BoxDecoration(
+        color: Colors.transparent,
+      ),
+      slideDirection: SlideDirection.down,
+      durationTitle: DurationTitle.id(),
+      separator: ":",
+      textStyle: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+          color: AppColors.whiteColor),
+      separatorStyle: const TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w400,
+          color: AppColors.whiteColor),
+    );
+  }
+
+  int getLeftTimeInSeconds(DateTime dateTime) {
+    return (dateTime.difference(DateTime.now()).inSeconds);
+  }
+
+  void assignListOfTags() {}
 }
 
 class CoachMarker extends StatefulWidget {
