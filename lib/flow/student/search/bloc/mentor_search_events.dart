@@ -8,3 +8,8 @@ class GetTagsBySearchKeywordEvent extends MentorSearchEvents {
   GetTagsBySearchKeywordEvent({required this.searchKeyword});
   final String searchKeyword;
 }
+
+class FetchTeacherListByTagNameEvent extends MentorSearchEvents {
+  FetchTeacherListByTagNameEvent({required this.tagName});
+  final String tagName;
+}

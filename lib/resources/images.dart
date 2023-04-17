@@ -42,6 +42,7 @@ class ImageAsset {
   static const String icCamera = '${_svgPath}ic_camera.svg';
   static const String icNewVersityLogo = '${_svgPath}new_versity_logo.svg';
   static const String icGrowth = '${_svgPath}growth.svg';
+  static const String nothingFoundIcon = '${_svgPath}seo_bw.svg';
 
   // Drawer strings
   static const user = "${_svgPath}user.svg";

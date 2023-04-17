@@ -300,6 +300,7 @@ class AppTextFormField extends StatefulWidget {
       this.onChange,
       this.hintTextStyle,
       this.fillColor,
+      this.autofocus,
       this.isEnable = true,
       this.contentPadding,
       this.textInputAction})
@@ -318,6 +319,7 @@ class AppTextFormField extends StatefulWidget {
   final Function? onChange;
   final TextStyle? hintTextStyle;
   final Color? fillColor;
+  final bool? autofocus;
   final EdgeInsetsGeometry? contentPadding;
   final TextInputAction? textInputAction;
 
@@ -345,6 +347,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       textInputAction: widget.textInputAction ?? TextInputAction.done,
       inputFormatters: formatters,
       textCapitalization: TextCapitalization.words,
+      autofocus: widget.autofocus ?? false,
       validator: widget.validator != null
           ? (value) {
               return widget.validator!(value);
@@ -686,62 +689,134 @@ class _MentorCardState extends State<MentorCard> {
   }
 
   Widget getMentorDetailsView() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16.0),
-      child: ClipRRect(
+    return Container(
+      margin: const EdgeInsets.only(left: 16.0),
+      width: MediaQuery.of(context).size.width - 50,
+      height: 220,
+      decoration: BoxDecoration(
+        border: Border.all(width: 1, color: AppColors.grey32),
         borderRadius: BorderRadius.circular(18),
-        child: Container(
-          width: MediaQuery.of(context).size.width - 50,
-          decoration: BoxDecoration(
-            border: Border.all(width: 1, color: AppColors.grey32),
-            borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 132,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                getMentorsProfileImage(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AppText(
+                            widget.mentorDetail.name ?? "",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          getRateContainer(),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      AppText(
+                        widget.mentorDetail.college ?? "",
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      AppText(
+                        widget.mentorDetail.designation ?? "",
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      // SizedBox(
+                      //   width: MediaQuery.of(context).size.width - 220,
+                      //   child: AppText(
+                      //     listOfMentorsDetails[index].certificates ?? "",
+                      //     fontSize: 12,
+                      //     fontWeight: FontWeight.w500,
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
-          child: Column(
-            children: [
-              Expanded(
+          Container(
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(18),
+                bottomLeft: Radius.circular(18),
+              ),
+              color: AppColors.mentorsAmountColor,
+            ),
+            child: Center(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    getMentorsProfileImage(),
-                    Expanded(
+                    Column(
+                      children: [
+                        Row(
+                          children: const [
+                            AppText(
+                              "₹ 250",
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            AppText(
+                              "/ 30 min session",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: const [
+                            AppText(
+                              "₹ 150",
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            AppText(
+                              "/ 15 min session",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Container(
+                      height: 52,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: AppColors.cyanBlue),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                AppText(
-                                  widget.mentorDetail.name ?? "",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                getRateContainer(),
-                              ],
+                            const AppText(
+                              "Book Session",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.whiteColor,
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            AppText(
-                              widget.mentorDetail.college ?? "",
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            AppText(
-                              widget.mentorDetail.designation ?? "",
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            // SizedBox(
-                            //   width: MediaQuery.of(context).size.width - 220,
-                            //   child: AppText(
-                            //     listOfMentorsDetails[index].certificates ?? "",
-                            //     fontSize: 12,
-                            //     fontWeight: FontWeight.w500,
-                            //   ),
-                            // ),
+                            getNextAvailabilityWidget()
                           ],
                         ),
                       ),
@@ -749,99 +824,30 @@ class _MentorCardState extends State<MentorCard> {
                   ],
                 ),
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: const BoxDecoration(
-                  color: AppColors.mentorsAmountColor,
-                ),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12.0, vertical: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          children: [
-                            Row(
-                              children: const [
-                                AppText(
-                                  "₹ 250",
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                AppText(
-                                  "/ 30 min session",
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: const [
-                                AppText(
-                                  "₹ 150",
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                AppText(
-                                  "/ 15 min session",
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 52,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: AppColors.cyanBlue),
-                          child: Padding(
-                            padding:
-                            const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const AppText(
-                                  "Book Session",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.whiteColor,
-                                ),
-                                getNextAvailabilityWidget()
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
+            ),
+          )
+        ],
       ),
     );
   }
 
   Widget getMentorsProfileImage() {
     return SizedBox(
-      height: MediaQuery.of(context).size.height,
+      // height: MediaQuery.of(context).size.height,
       width: 100,
       child: widget.mentorDetail.profileImageUrl == null
           ? const AppImage(
-        image: ImageAsset.blueAvatar,
-      )
-          : Image.network(
-        widget.mentorDetail.profileImageUrl ?? "",
-        fit: BoxFit.fill,
-      ),
+              image: ImageAsset.blueAvatar,
+            )
+          : ClipRRect(
+              borderRadius:
+                  const BorderRadius.only(topLeft: Radius.circular(18)),
+              child: Image.network(
+                widget.mentorDetail.profileImageUrl ?? "",
+                fit: BoxFit.cover,
+                height: 132,
+              ),
+            ),
     );
   }
 
@@ -922,4 +928,3 @@ class _MentorCardState extends State<MentorCard> {
     return (dateTime.difference(DateTime.now()).inSeconds);
   }
 }
-

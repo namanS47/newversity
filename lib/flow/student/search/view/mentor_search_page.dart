@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:newversity/common/common_widgets.dart';
+import 'package:newversity/flow/student/search/bloc/mentor_search_bloc.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 
-import '../../home/model/session_details.dart';
+import '../../../../common/mentor_detail_card.dart';
 
 class MentorSearchScreen extends StatefulWidget {
   const MentorSearchScreen({Key? key}) : super(key: key);
@@ -13,20 +18,55 @@ class MentorSearchScreen extends StatefulWidget {
 }
 
 class _MentorSearchScreenState extends State<MentorSearchScreen> {
-  List<MentorDetails> listOfMentorsDetails = MentorDetails.listOfMentorsDetails;
+  @override
+  void initState() {
+    context
+        .read<MentorSearchBloc>()
+        .add(GetTagsBySearchKeywordEvent(searchKeyword: ""));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 10),
-            searchAppBar(),
+            searchAppBar(context),
             Container(
               height: 1,
               color: AppColors.grey32,
+            ),
+            BlocConsumer<MentorSearchBloc, MentorSearchStates>(
+              builder: (context, state) {
+                if (state is FetchingTagBySearchKeywordFailureState) {
+                  return const Center(
+                      child: NoResultFoundScreen(
+                    message: "Please check spelling or try different key words",
+                  ));
+                }
+                if (state is FetchingTagBySearchKeywordLoadingState) {
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 200),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                if (state is FetchTeacherListByTagNameSuccessState) {
+                  if (state.teacherDetailsList.isNotEmpty) {
+                    return getResultedTeacherListWidget(
+                        state.teacherDetailsList);
+                  } else {
+                    return const Center(
+                      child: NoResultFoundScreen(
+                          message:
+                              "No teacher is available for this tag, please try a different tag"),
+                    );
+                  }
+                }
+                return getSearchSuggestionWidget();
+              },
+              listener: (context, state) {},
             ),
           ],
         ),
@@ -34,14 +74,37 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
     );
   }
 
-  List<String> listOfSuggestions = [
-    "JEE MAIN",
-    "JEE ADVANCE",
-    "NEET",
-    "NIT",
-    "OLYMPIAD",
-    "IIT"
-  ];
+  Widget getResultedTeacherListWidget(List<TeacherDetails> teacherDetailsList) {
+    return Expanded(
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: teacherDetailsList.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: MentorDetailCard(mentorDetail: teacherDetailsList[index]),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget getSearchSuggestionWidget() {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: ListView.builder(
+          physics: const ClampingScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return getSuggestionView(
+                context.read<MentorSearchBloc>().resultedTags[index]);
+          },
+          itemCount: context.read<MentorSearchBloc>().resultedTags.length,
+        ),
+      ),
+    );
+  }
 
   Widget getTopSearchedWidget() {
     return Expanded(
@@ -59,114 +122,110 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
             const SizedBox(
               height: 20,
             ),
-            suggestionWidget(),
-            const SizedBox(
-              height: 15,
-            ),
-            const AppText(
-              "Recent searches",
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            getRecentSearches()
+            getSearchSuggestionWidget(),
           ],
         ),
       ),
     );
   }
 
-  Widget getRecentSearches() {
-    return SizedBox(
-      height: 220,
-      child: ListView.separated(
-        padding: const EdgeInsets.only(right: 16, top: 5),
-        physics: const ClampingScrollPhysics(),
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: listOfMentorsDetails.length,
-        itemBuilder: (context, index) =>
-            MentorCard(mentorDetail: listOfMentorsDetails[index]),
-        separatorBuilder: (BuildContext context, int index) => const SizedBox(
-          width: 6,
-        ),
-      ),
-    );
-  }
-
-  Widget suggestionWidget() {
-    return Wrap(
-      runSpacing: 15,
-      spacing: 12,
-      children: List.generate(
-        listOfSuggestions.length,
-        (index) => getSuggestionView(index),
-      ),
-    );
-  }
-
-  Widget getSuggestionView(int index) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
+  Widget getSuggestionView(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12, right: 12),
+      child: InkWell(
+        onTap: () {
+          context
+              .read<MentorSearchBloc>()
+              .add(FetchTeacherListByTagNameEvent(tagName: text));
+        },
+        child: Row(
           children: [
-            const AppImage(
-              image: ImageAsset.search,
-              width: 25,
-              height: 25,
-            ),
             const SizedBox(
               width: 10,
             ),
-            AppText(
-              listOfSuggestions[index],
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: AppColors.grey55,
-            ),
-          ],
-        ),
-        const AppImage(image: ImageAsset.icSuggestion),
-      ],
-    );
-  }
-
-  Widget searchAppBar() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            const AppImage(
-              image: ImageAsset.close,
-              height: 32,
-              width: 32,
-            ),
-            const SizedBox(
-              width: 20,
-            ),
             Expanded(
-              child: AppTextFormField(
-                hintTextStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.black30
-                ),
-                hintText: "Search exam name",
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                ),
-                onChange: (value) {
-
-                },
+              child: AppText(
+                text,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: AppColors.colorBlack,
+                overflow: TextOverflow.clip,
               ),
-            )
+            ),
+            const AppImage(image: ImageAsset.icSuggestion),
           ],
         ),
       ),
+    );
+  }
+
+  Widget searchAppBar(BuildContext context) {
+    return Container(
+      height: 60,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          const AppImage(
+            image: ImageAsset.close,
+            height: 20,
+            width: 20,
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          Expanded(
+            child: AppTextFormField(
+              hintTextStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.black30),
+              hintText: "Search exam name",
+              autofocus: true,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+              ),
+              onChange: (value) {
+                context
+                    .read<MentorSearchBloc>()
+                    .add(GetTagsBySearchKeywordEvent(searchKeyword: value));
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class NoResultFoundScreen extends StatelessWidget {
+  const NoResultFoundScreen({Key? key, required this.message})
+      : super(key: key);
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(
+          height: 30,
+        ),
+        SvgPicture.asset(ImageAsset.nothingFoundIcon),
+        const Padding(
+          padding: EdgeInsets.only(top: 40, bottom: 20),
+          child: Text(
+            "No result found",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+        ),
+        Text(
+          message,
+          style: const TextStyle(fontWeight: FontWeight.w500),
+          textAlign: TextAlign.center,
+        )
+      ],
     );
   }
 }
