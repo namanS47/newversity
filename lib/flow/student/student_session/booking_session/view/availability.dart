@@ -41,7 +41,9 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
     var elm = state is FetchingTeacherAvailabilityState ||
         state is FetchedTeacherAvailabilityState ||
         state is FetchingTeacherAvailabilityFailureState ||
-        state is NotTeacherSlotFoundState;
+        state is NotTeacherSlotFoundState ||
+        state is UpdateSelectedDateTimeIndexState ||
+        state is UpdatedAvailabilityIndexState;
     return elm;
   }
 
@@ -52,31 +54,44 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
         listenWhen: (previous, current) => _isRebuildWidgetState(current),
         buildWhen: (previous, current) => _isRebuildWidgetState(current),
         builder: (context, state) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              getAvailableSlotHeader(),
-              const SizedBox(
-                height: 10,
-              ),
-              getAvailableSlotLayout(),
-              const SizedBox(
-                height: 20,
-              ),
-              AvailabilityTimingWidget(
-                teacherId: widget.studentSessionArgument.teacherId ?? "",
-                listOfSessionTimings:
-                    context.read<StudentSessionBloc>().dateTimeMap[context
-                            .read<StudentSessionBloc>()
-                            .dateTimeMap
-                            .keys
-                            .elementAt(context
-                                .read<StudentSessionBloc>()
-                                .selectedDateIndex)] ??
-                        [AvailabilityModel()],
-              )
-            ],
-          );
+          return context.read<StudentSessionBloc>().dateTimeMap.isNotEmpty
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    getAvailableSlotHeader(),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    getAvailableSlotLayout(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    AvailabilityTimingWidget(
+                      teacherId: widget.studentSessionArgument.teacherId ?? "",
+                      listOfSessionTimings:
+                          context.read<StudentSessionBloc>().dateTimeMap[context
+                                  .read<StudentSessionBloc>()
+                                  .dateTimeMap
+                                  .keys
+                                  .elementAt(context
+                                      .read<StudentSessionBloc>()
+                                      .selectedDateIndex)] ??
+                              [AvailabilityModel()],
+                    )
+                  ],
+                )
+              : Column(
+                  children: const [
+                    SizedBox(
+                      height: 500,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.cyanBlue,
+                        ),
+                      ),
+                    )
+                  ],
+                );
           // if (state is FetchingTeacherAvailabilityState ||
           //     state is StudentSessionInitialState) {
           //   return Column(
@@ -95,7 +110,46 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
           //   );
           // }
           // if (state is FetchedTeacherAvailabilityState) {
-          //   return ;
+          //   return context.read<StudentSessionBloc>().dateTimeMap.isNotEmpty
+          //       ? Column(
+          //           crossAxisAlignment: CrossAxisAlignment.start,
+          //           children: [
+          //             getAvailableSlotHeader(),
+          //             const SizedBox(
+          //               height: 10,
+          //             ),
+          //             getAvailableSlotLayout(),
+          //             const SizedBox(
+          //               height: 20,
+          //             ),
+          //             AvailabilityTimingWidget(
+          //               teacherId:
+          //                   widget.studentSessionArgument.teacherId ?? "",
+          //               listOfSessionTimings:
+          //                   context.read<StudentSessionBloc>().dateTimeMap[
+          //                           context
+          //                               .read<StudentSessionBloc>()
+          //                               .dateTimeMap
+          //                               .keys
+          //                               .elementAt(context
+          //                                   .read<StudentSessionBloc>()
+          //                                   .selectedDateIndex)] ??
+          //                       [AvailabilityModel()],
+          //             )
+          //           ],
+          //         )
+          //       : Column(
+          //           children: const [
+          //             SizedBox(
+          //               height: 500,
+          //               child: Center(
+          //                 child: CircularProgressIndicator(
+          //                   color: AppColors.cyanBlue,
+          //                 ),
+          //               ),
+          //             )
+          //           ],
+          //         );
           // }
           // if (state is NotTeacherSlotFoundState) {
           //   return Column(

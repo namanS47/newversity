@@ -124,18 +124,32 @@ class _StudentUpcomingSessionScreenState
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: 100,
-      child:
-          listOfUpcomingSessions[index].teacherDetail?.profilePictureUrl == null
-              ? const AppImage(
+      child: listOfUpcomingSessions[index].teacherDetail?.profilePictureUrl ==
+              null
+          ? const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Center(
+                child: AppImage(
                   image: ImageAsset.blueAvatar,
-                )
-              : AppImage(
-                  image: listOfUpcomingSessions[index]
-                          .teacherDetail
-                          ?.profilePictureUrl ??
-                      "",
-                  fit: BoxFit.fill,
                 ),
+              ),
+            )
+          : Image.network(
+              listOfUpcomingSessions[index].teacherDetail?.profilePictureUrl ??
+                  "",
+              fit: BoxFit.fill,
+              errorBuilder: (BuildContext context, Object exception,
+                  StackTrace? stackTrace) {
+                return const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: AppImage(
+                      image: ImageAsset.blueAvatar,
+                    ),
+                  ),
+                );
+              },
+            ),
     );
   }
 

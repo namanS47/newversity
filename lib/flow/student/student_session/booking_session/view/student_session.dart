@@ -39,6 +39,7 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
   bool _isRebuildWidgetState(StudentSessionStates state) {
     var elm = state is StudentSessionInitialState ||
         state is UpdatedTabBarState ||
+        state is UpdateSelectedDateTimeIndexState ||
         state is FetchingTeacherDetailsState ||
         state is FetchingTeacherDetailsFailureState ||
         state is FetchedTeacherDetailsState;
@@ -114,12 +115,28 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
         height: 92,
         width: 70,
         child: teacherDetails?.profilePictureUrl == null
-            ? const AppImage(
-                image: ImageAsset.blueAvatar,
+            ? const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Center(
+                  child: AppImage(
+                    image: ImageAsset.blueAvatar,
+                  ),
+                ),
               )
-            : AppImage(
-                image: teacherDetails?.profilePictureUrl ?? "",
+            : Image.network(
+                teacherDetails?.profilePictureUrl ?? "",
                 fit: BoxFit.cover,
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: AppImage(
+                        image: ImageAsset.blueAvatar,
+                      ),
+                    ),
+                  );
+                },
               ),
       ),
     );

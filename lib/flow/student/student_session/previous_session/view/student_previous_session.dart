@@ -127,18 +127,32 @@ class _StudentPreviousSessionScreenState
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: 100,
-      child:
-          listOfPreviousSession[index].teacherDetail?.profilePictureUrl == null
-              ? const AppImage(
-                  image: ImageAsset.blueAvatar,
-                )
-              : AppImage(
-                  image: listOfPreviousSession[index]
-                          .teacherDetail
-                          ?.profilePictureUrl ??
-                      "",
-                  fit: BoxFit.fill,
-                ),
+      child: listOfPreviousSession[index].teacherDetail?.profilePictureUrl ==
+              null
+          ? const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Center(
+          child: AppImage(
+            image: ImageAsset.blueAvatar,
+          ),
+        ),
+      )
+          : Image.network(
+              listOfPreviousSession[index].teacherDetail?.profilePictureUrl ??
+                  "",
+              errorBuilder: (BuildContext context, Object exception,
+                  StackTrace? stackTrace) {
+                return const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: AppImage(
+                      image: ImageAsset.blueAvatar,
+                    ),
+                  ),
+                );
+              },
+              fit: BoxFit.fill,
+            ),
     );
   }
 
