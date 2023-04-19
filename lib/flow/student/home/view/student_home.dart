@@ -679,11 +679,27 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       height: MediaQuery.of(context).size.height,
       width: 100,
       child: lisOfTeachersDetails[index].profilePictureUrl == null
-          ? const AppImage(
-              image: ImageAsset.blueAvatar,
+          ? const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Center(
+                child: AppImage(
+                  image: ImageAsset.blueAvatar,
+                ),
+              ),
             )
-          : AppImage(
-              image: lisOfTeachersDetails[index].profilePictureUrl ?? "",
+          : Image.network(
+              lisOfTeachersDetails[index].profilePictureUrl ?? "",
+              errorBuilder: (BuildContext context, Object exception,
+                  StackTrace? stackTrace) {
+                return const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: AppImage(
+                      image: ImageAsset.blueAvatar,
+                    ),
+                  ),
+                );
+              },
               fit: BoxFit.fill,
             ),
     );
@@ -874,9 +890,10 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                 ],
               ),
               InkWell(
-                onTap: (){
-                  Navigator.of(context).pushNamed(AppRoutes.notificationRoute);
-                },
+                  onTap: () {
+                    Navigator.of(context)
+                        .pushNamed(AppRoutes.notificationRoute);
+                  },
                   child: const AppImage(image: ImageAsset.notification)),
             ],
           ),

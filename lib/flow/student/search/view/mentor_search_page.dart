@@ -138,6 +138,17 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
             )
           : Image.network(
               listOfMentorsDetails[index].profileImageUrl ?? "",
+              errorBuilder: (BuildContext context, Object exception,
+                  StackTrace? stackTrace) {
+                return const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: AppImage(
+                      image: ImageAsset.blueAvatar,
+                    ),
+                  ),
+                );
+              },
               fit: BoxFit.fill,
             ),
     );

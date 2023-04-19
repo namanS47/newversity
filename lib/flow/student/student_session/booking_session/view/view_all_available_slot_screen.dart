@@ -41,72 +41,58 @@ class _ViewAllAvailableSlotScreenState
 
   @override
   void initState() {
-    BlocProvider.of<StudentSessionBloc>(context).add(FetchTeacherDetailsEvent(
-        teacherId: widget.studentSessionArgument.teacherId ?? ""));
     super.initState();
-    context.read<StudentSessionBloc>().add(FetchTeacherAvailabilityEvent(
-        fetchAvailabilityRequestModel: FetchAvailabilityRequestModel(
-            teacherId: "8Wx3In76qQWvKItxcFTNA7n9Yau1")));
     BlocProvider.of<StudentSessionBloc>(context).add(
-        FetchTeacherSessionTimingsEvent(
+        FetchTeacherAvailabilityEvent(
             fetchAvailabilityRequestModel: FetchAvailabilityRequestModel(
-                teacherId: "8Wx3In76qQWvKItxcFTNA7n9Yau1",
-                date: context.read<StudentSessionBloc>().selectedDate)));
+                teacherId: "8Wx3In76qQWvKItxcFTNA7n9Yau1")));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<StudentSessionBloc, StudentSessionStates>(
-      listener: (context, state) {
-        if (state is FetchedTeacherAvailabilityState) {
-          lisOfAvailability = state.availabilityList;
-        }
-        if (state is FetchedTeacherSessionTimingsState) {
-          lisOfTimings = state.availabilityList;
-        }
-      },
-      builder: (context, state) {
-        return Scaffold(
-          body: Stack(
-            children: [
-              Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                decoration: const BoxDecoration(color: AppColors.lightCyan),
-              ),
-              SafeArea(
-                child: Stack(
-                  children: [
-                    SingleChildScrollView(
-                      primary: true,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          getAppHeader(),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          isCalenderView
-                              ? getCalenderView()
-                              : getDateListWidget(),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        Expanded(child: Container()),
-                        getConfirmationCTA()
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ],
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(color: AppColors.lightCyan),
           ),
-        );
-      },
+          SafeArea(
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  primary: true,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      getAppHeader(),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      isCalenderView ? getCalenderView() : getDateListWidget(),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    Expanded(child: Container()),
+                    getConfirmationCTA()
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+      ),
     );
+  }
+
+  bool _isRebuildWidgetAvailabilityState(StudentSessionStates state) {
+    var elm = state is FetchingTeacherAvailabilityState ||
+        state is FetchedTeacherAvailabilityState ;
+    return elm;
   }
 
   Widget getDateListWidget() {
@@ -122,54 +108,112 @@ class _ViewAllAvailableSlotScreenState
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           physics: const NeverScrollableScrollPhysics(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              fetchListOfDataContainsTodayDateAvailability()
-                  ? getTodayContainer()
-                  : Container(),
-              const SizedBox(
-                height: 20,
-              ),
-              getUpcomingContainers(),
-              const SizedBox(
-                height: 100,
-              ),
-            ],
+          child: BlocConsumer<StudentSessionBloc, StudentSessionStates>(
+              listenWhen: (previous, current) => _isRebuildWidgetAvailabilityState(current),
+            buildWhen: (previous, current) => _isRebuildWidgetAvailabilityState(current),
+            listener: (context, state) {
+              if (state is FetchedTeacherAvailabilityState) {
+                lisOfAvailability =
+                    context.read<StudentSessionBloc>().dateTimeMap;
+              }
+            },
+            builder: (context, state) {
+              if (state is FetchedTeacherAvailabilityState) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    fetchListOfDataContainsTodayDateAvailability()
+                        ? getTodayContainer()
+                        : Container(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    getUpcomingContainers(),
+                    const SizedBox(
+                      height: 100,
+                    ),
+                  ],
+                );
+              }
+              return Column(
+                children: const [
+                  SizedBox(
+                    height: 500,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.cyanBlue,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
     );
   }
 
+  bool _isRebuildWidgetState(StudentSessionStates state) {
+    var elm = state is FetchingTeacherSessionTimingsState ||
+        state is FetchingTeacherSessionTimingsFailureState ||
+        state is FetchedTeacherSessionTimingsState;
+    return elm;
+  }
+
   Widget getCalenderView() {
-    return Column(
-      children: [
-        getCalenderWidget(),
-        const SizedBox(
-          height: 20,
-        ),
-        Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(
-            color: AppColors.whiteColor,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25), topRight: Radius.circular(25)),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              child: AvailabilityTimingWidget(
-                teacherId: widget.studentSessionArgument.teacherId ?? "",
-                listOfSessionTimings: lisOfTimings,
+    return BlocConsumer<StudentSessionBloc, StudentSessionStates>(
+      listenWhen: (previous, current) => _isRebuildWidgetState(current),
+      listener: (context, state) {
+        if (state is FetchedTeacherSessionTimingsState) {
+          lisOfTimings = state.availabilityList;
+        }
+      },
+      builder: (context, state) {
+        if (state is FetchedTeacherSessionTimingsState) {
+          return Column(
+            children: [
+              getCalenderWidget(),
+              const SizedBox(
+                height: 20,
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                decoration: const BoxDecoration(
+                  color: AppColors.whiteColor,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(25),
+                      topRight: Radius.circular(25)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    child: AvailabilityTimingWidget(
+                      teacherId: widget.studentSessionArgument.teacherId ?? "",
+                      listOfSessionTimings: lisOfTimings,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+        return Column(
+          children: const [
+            SizedBox(
+              height: 500,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.cyanBlue,
+                ),
               ),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 
@@ -527,12 +571,18 @@ class _ViewAllAvailableSlotScreenState
 
   onCalenderViewTap() {
     isCalenderView = !isCalenderView;
-    BlocProvider.of<StudentSessionBloc>(context).add(
-        FetchTeacherSessionTimingsEvent(
-            fetchAvailabilityRequestModel: FetchAvailabilityRequestModel(
-                teacherId: "8Wx3In76qQWvKItxcFTNA7n9Yau1",
-                date: context.read<StudentSessionBloc>().selectedDate)));
-    setState(() {});
+    if (isCalenderView) {
+      BlocProvider.of<StudentSessionBloc>(context).add(
+          FetchTeacherSessionTimingsEvent(
+              fetchAvailabilityRequestModel: FetchAvailabilityRequestModel(
+                  teacherId: "8Wx3In76qQWvKItxcFTNA7n9Yau1",
+                  date: context.read<StudentSessionBloc>().selectedDate)));
+    } else {
+      BlocProvider.of<StudentSessionBloc>(context).add(
+          FetchTeacherAvailabilityEvent(
+              fetchAvailabilityRequestModel: FetchAvailabilityRequestModel(
+                  teacherId: "8Wx3In76qQWvKItxcFTNA7n9Yau1")));
+    }
   }
 
   onConfirmTap() {

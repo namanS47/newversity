@@ -19,6 +19,7 @@ part 'student_session_states.dart';
 
 class StudentSessionBloc
     extends Bloc<StudentSessionEvents, StudentSessionStates> {
+
   double? amount = 0;
   String? sessionType = "short";
   DateTime selectedDate = DateTime.now();
@@ -26,7 +27,6 @@ class StudentSessionBloc
   List<AvailabilityModel> availabilityList = [];
   Map<String, List<AvailabilityModel>> dateTimeMap = {};
   SelectedDateTimeModel? selectedDateTimeModel;
-
   int selectedTabIndex = 0;
   final SessionBookingRepository _studentBookingRepo =
       DI.inject<SessionBookingRepository>();

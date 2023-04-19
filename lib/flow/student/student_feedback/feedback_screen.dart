@@ -324,17 +324,27 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
         height: 92,
         width: 70,
-        child:
-            sessionDetailResponseModel?.teacherDetail?.profilePictureUrl == null
-                ? const AppImage(
-                    image: ImageAsset.blueAvatar,
-                  )
-                : AppImage(
-                    image: sessionDetailResponseModel
-                            ?.teacherDetail?.profilePictureUrl ??
-                        "",
-                    fit: BoxFit.fill,
-                  ),
+        child: sessionDetailResponseModel?.teacherDetail?.profilePictureUrl ==
+                null
+            ? const AppImage(
+                image: ImageAsset.blueAvatar,
+              )
+            : Image.network(
+                sessionDetailResponseModel?.teacherDetail?.profilePictureUrl ??
+                    "",
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: AppImage(
+                        image: ImageAsset.blueAvatar,
+                      ),
+                    ),
+                  );
+                },
+                fit: BoxFit.fill,
+              ),
       ),
     );
   }

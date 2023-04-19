@@ -30,9 +30,9 @@ class _AvailabilityTimingWidgetState extends State<AvailabilityTimingWidget> {
 
   @override
   void initState() {
-    selectedDateTimeModel =
-        context.read<StudentSessionBloc>().selectedDateTimeModel;
     super.initState();
+    BlocProvider.of<StudentSessionBloc>(context).add(FetchTeacherDetailsEvent(
+        teacherId: widget.teacherId ?? ""));
   }
 
   @override
@@ -61,13 +61,6 @@ class _AvailabilityTimingWidgetState extends State<AvailabilityTimingWidget> {
               height: 20,
             ),
             getNoteContainer(),
-            const SizedBox(
-              height: 20,
-            ),
-            getNotificationChecker(),
-            const SizedBox(
-              height: 10,
-            ),
             const SizedBox(
               height: 120,
             )
