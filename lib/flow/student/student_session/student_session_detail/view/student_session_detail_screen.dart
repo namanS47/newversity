@@ -157,27 +157,30 @@ class _StudentSessionDetailScreenState
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
         height: 92,
         width: 70,
-        child: sessionDetailResponseModel?.teacherDetail?.profilePictureUrl ==
-                null
-            ? const AppImage(
-                image: ImageAsset.blueAvatar,
-              )
-            : Image.network(
-                sessionDetailResponseModel?.teacherDetail?.profilePictureUrl ??
-                    "",
-                errorBuilder: (BuildContext context, Object exception,
-                    StackTrace? stackTrace) {
-                  return const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(
-                      child: AppImage(
-                        image: ImageAsset.blueAvatar,
-                      ),
+        child:
+            sessionDetailResponseModel?.teacherDetail?.profilePictureUrl == null
+                ? const AppImage(
+                    image: ImageAsset.blueAvatar,
+                  )
+                : ClipRRect(
+                    borderRadius:
+                        const BorderRadius.only(topLeft: Radius.circular(18)),
+                    child: Image.network(
+                      sessionDetailResponseModel
+                              ?.teacherDetail?.profilePictureUrl ??
+                          "",
+                      fit: BoxFit.cover,
+                      height: 132,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return const Center(
+                          child: AppImage(
+                            image: ImageAsset.blueAvatar,
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-                fit: BoxFit.fill,
-              ),
+                  ),
       ),
     );
   }
