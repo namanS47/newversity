@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/student/student_session/upcoming_session/bloc/student_upcoming_session_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
 import 'package:newversity/navigation/app_routes.dart';
+import 'package:newversity/utils/strings.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
 import '../../../../../common/common_widgets.dart';
@@ -188,17 +189,9 @@ class _StudentUpcomingSessionScreenState
         ));
   }
 
-  String assignTeacherTagForSession(int index) {
-    String tagList = "";
-    for (TeacherTagList teacherTagList
-        in listOfUpcomingSessions[index].teacherTagList!) {
-      tagList = "$tagList${teacherTagList.tagName},";
-    }
-    return tagList;
-  }
-
   Widget getMentorDetailsView(int index) {
-    String sessionTags = assignTeacherTagForSession(index);
+    String sessionTags = StringsUtils.getTagListTextFromListOfTags(
+        listOfUpcomingSessions[index].teacherDetail?.tags ?? []);
     return GestureDetector(
       onTap: () => onSessionTap(index),
       child: ClipRRect(
@@ -223,19 +216,13 @@ class _StudentUpcomingSessionScreenState
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                AppText(
-                                  listOfUpcomingSessions[index]
-                                          .teacherDetail
-                                          ?.name ??
-                                      "",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                getRateContainer(index),
-                              ],
+                            AppText(
+                              listOfUpcomingSessions[index]
+                                      .teacherDetail
+                                      ?.name ??
+                                  "",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
                             ),
                             const SizedBox(
                               height: 10,
@@ -254,7 +241,7 @@ class _StudentUpcomingSessionScreenState
                             AppText(
                               listOfUpcomingSessions[index]
                                       .teacherDetail
-                                      ?.designation ??
+                                      ?.title ??
                                   "",
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -295,7 +282,7 @@ class _StudentUpcomingSessionScreenState
                             Row(
                               children: [
                                 AppText(
-                                  "₹ ${listOfUpcomingSessions[index].amount}",
+                                  "₹ ${listOfUpcomingSessions[index].amount?.toInt()}",
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -320,7 +307,7 @@ class _StudentUpcomingSessionScreenState
                               ? onJoinNowTap()
                               : null,
                           child: Container(
-                            width: 150,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
                             height: 52,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),

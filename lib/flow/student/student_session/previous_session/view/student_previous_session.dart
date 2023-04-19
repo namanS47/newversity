@@ -9,6 +9,7 @@ import '../../../../../navigation/app_routes.dart';
 import '../../../../../resources/images.dart';
 import '../../../../../themes/colors.dart';
 import '../../../../../utils/enums.dart';
+import '../../../../../utils/strings.dart';
 import '../../../../teacher/bookings/model/session_detail_arguments.dart';
 import '../../my_session/model/session_detail_response_model.dart';
 
@@ -130,13 +131,13 @@ class _StudentPreviousSessionScreenState
       child: listOfPreviousSession[index].teacherDetail?.profilePictureUrl ==
               null
           ? const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Center(
-          child: AppImage(
-            image: ImageAsset.blueAvatar,
-          ),
-        ),
-      )
+              padding: EdgeInsets.all(8.0),
+              child: Center(
+                child: AppImage(
+                  image: ImageAsset.blueAvatar,
+                ),
+              ),
+            )
           : Image.network(
               listOfPreviousSession[index].teacherDetail?.profilePictureUrl ??
                   "",
@@ -191,17 +192,9 @@ class _StudentPreviousSessionScreenState
         ));
   }
 
-  String assignTeacherTagForSession(int index) {
-    String tagList = "";
-    for (TeacherTagList teacherTagList
-        in listOfPreviousSession[index].teacherTagList!) {
-      tagList = "$tagList${teacherTagList.tagName},";
-    }
-    return tagList;
-  }
-
   Widget getMentorDetailsView(int index) {
-    String sessionTags = assignTeacherTagForSession(index);
+    String sessionTags = StringsUtils.getTagListTextFromListOfTags(
+        listOfPreviousSession[index].teacherDetail?.tags ?? []);
     return GestureDetector(
       onTap: () => onSessionTap(index),
       child: ClipRRect(
@@ -226,19 +219,13 @@ class _StudentPreviousSessionScreenState
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                AppText(
-                                  listOfPreviousSession[index]
-                                          .teacherDetail
-                                          ?.name ??
-                                      "",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                getRateContainer(index),
-                              ],
+                            AppText(
+                              listOfPreviousSession[index]
+                                      .teacherDetail
+                                      ?.name ??
+                                  "",
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
                             ),
                             const SizedBox(
                               height: 10,
@@ -257,7 +244,7 @@ class _StudentPreviousSessionScreenState
                             AppText(
                               listOfPreviousSession[index]
                                       .teacherDetail
-                                      ?.designation ??
+                                      ?.title ??
                                   "",
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
