@@ -38,10 +38,13 @@ class ImageAsset {
   static const String thumbsUp = '${_svgPath}thumbs_up.svg';
   static const String chatBot = '${_svgPath}chat_bot.svg';
   static const String icSuggestion = '${_svgPath}ic_suggestion.svg';
-  static const String icCompletenessWelcome = '${_svgPath}ic_completeness_welcome.svg';
+  static const String icCompletenessWelcome =
+      '${_svgPath}ic_completeness_welcome.svg';
   static const String icCamera = '${_svgPath}ic_camera.svg';
   static const String icNewVersityLogo = '${_svgPath}new_versity_logo.svg';
   static const String icGrowth = '${_svgPath}growth.svg';
+  static const String calenderIcon = '${_svgPath}calender_icon.svg';
+  static const String calenderUp = '${_svgPath}calender_up.svg';
 
   // Drawer strings
   static const user = "${_svgPath}user.svg";
@@ -58,6 +61,9 @@ class ImageAsset {
   static const mail = "${_svgPath}mail.svg";
   static const attach = "${_svgPath}attach.svg";
   static const editCheck = "${_svgPath}edit_check.svg";
+  static const paymentSuccessful = "${_svgPath}payment_successful.svg";
+  static const paymentProcessing = "${_svgPath}payment_processing.svg";
+  static const paymentError = "${_svgPath}payment_error.svg";
 
   //PNG Path
   static const mentor = "${_pngPath}mentor.jpeg";

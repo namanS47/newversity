@@ -9,6 +9,7 @@ class AppStrings {
   static const proceed = "Proceed";
   static const update = "Update";
   static const bookSession = "Book  Your Session";
+  static const confirm = "Confirm";
   static const addExperience = "Add Experience";
   static const addEducation = "Add Education";
   static const clickOnProceed = "By clicking on proceed, you agree to the ";
@@ -79,6 +80,16 @@ class AppStrings {
   static const findMentor = "Find a best mentor for you !";
   static const addingDetailsInst =
       "Add some details and personalize your experience. Complete it now and start enjoying our app!";
+
+  // payment
+
+  static const paymentSuccessfulInstruction =
+      "Your payment has been successfully done. we will send you a zoom link on your whatsapp or on covenient mode of conversation.";
+  static const paymentSuccessfulHeader =
+      "You have Successfully booked a session";
+  static const paymentErrorHeader = "Payment Error!";
+  static const paymentErrorInstruction =
+      "There has been an error while processing your request.";
 
   // Drawer strings
   static const share = "Share your profile";

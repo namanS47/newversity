@@ -35,3 +35,12 @@ class SavingStudentReviewFailureState extends StudentSessionDetailStates {
   final String? message;
   SavingStudentReviewFailureState({required this.message});
 }
+
+class RaisingSessionIssueState extends StudentSessionDetailStates {}
+
+class RaisedSessionIssueState extends StudentSessionDetailStates {}
+
+class RaisingSessionIssueFailureState extends StudentSessionDetailStates {
+  final String? msg;
+  RaisingSessionIssueFailureState({this.msg});
+}

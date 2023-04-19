@@ -1,4 +1,5 @@
 
+import 'package:newversity/utils/date_time_utils.dart';
 import 'package:newversity/utils/utils.dart';
 
 class ExperienceData {
@@ -86,29 +87,15 @@ class SlotData {
 
   static List<SlotData> slotData = [
     SlotData(slotDay: getCurrentDayName().substring(0, 3).toUpperCase(),
-        slotDate: "${getCurrentDate()} ${months[getCurrentMonth() - 1]}",
+        slotDate: "${getCurrentDate()} ${DateTimeUtils.months[getCurrentMonth() - 1]}",
         slotDuration: "2 Hrs 45 Min"),
     SlotData(slotDay: getDayNameByDiffrence(1).substring(0, 3).toUpperCase(),
-        slotDate: "${getTomorrowsDate()}  ${months[getMonthOfTomorrowsDate() -
+        slotDate: "${getTomorrowsDate()}  ${DateTimeUtils.months[getMonthOfTomorrowsDate() -
             1]}",
         slotDuration: "1 Hrs 30 Min"),
     SlotData(slotDay: getDayNameByDiffrence(2).substring(0, 3).toUpperCase(),
-        slotDate: "${theyAfterTomorrowsDate()}  ${months[getMonthOfTheyAfterTomorrowsDate() -
+        slotDate: "${theyAfterTomorrowsDate()}  ${DateTimeUtils.months[getMonthOfTheyAfterTomorrowsDate() -
             1]}"),
   ];
 
-  static List<String> months = [
-    'JAN',
-    'FEB',
-    'MAR',
-    'APR',
-    'MAY',
-    'JUN',
-    'JUL',
-    'AUG',
-    'SEP',
-    'OCT',
-    'NOV',
-    'DEC'
-  ];
 }

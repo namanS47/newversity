@@ -26,6 +26,10 @@ class StudentSessionDetailBloc
     on<SaveStudentReviewForSessionEvent>((event, emit) async {
       await saveStudentReviewForSession(event, emit);
     });
+
+    on<RaiseIssueForSessionEvent>((event, emit) async {
+      await raiseIssueForSession(event, emit);
+    });
   }
 
   Future<void> fetchStudentSessionDetail(FetchStudentSessionDetailEvent event,
@@ -60,6 +64,21 @@ class StudentSessionDetailBloc
         SavingStudentRatingFailureState(message: exception.message.toString());
       } else {
         SavingStudentRatingFailureState(message: "Something Went Wrong");
+      }
+    }
+  }
+
+  Future<void> raiseIssueForSession(RaiseIssueForSessionEvent event,
+      Emitter<StudentSessionDetailStates> emit) async {
+    emit(RaisingSessionIssueState());
+    try {
+      await _studentBaseRepository.saveSessionDetail(event.sessionSaveRequest);
+      emit(RaisedSessionIssueState());
+    } catch (exception) {
+      if (exception is BadRequestException) {
+        RaisingSessionIssueFailureState(msg: exception.message.toString());
+      } else {
+        RaisingSessionIssueFailureState(msg: "Something Went Wrong");
       }
     }
   }

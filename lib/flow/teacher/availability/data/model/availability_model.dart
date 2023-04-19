@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+
 part 'availability_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)

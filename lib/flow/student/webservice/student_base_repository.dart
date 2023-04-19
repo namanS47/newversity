@@ -12,6 +12,8 @@ import 'package:newversity/network/webservice/base_repository.dart';
 
 import '../../../di/di_initializer.dart';
 import '../../../network/webservice/exception.dart';
+import '../../teacher/availability/data/model/availability_model.dart';
+import '../../teacher/availability/data/model/fetch_availability_request_model.dart';
 import '../../teacher/home/model/session_request_model.dart';
 import '../../teacher/profile/model/profile_completion_percentage_response.dart';
 

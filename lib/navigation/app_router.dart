@@ -4,6 +4,10 @@ import 'package:newversity/flow/error_routes/error_route.dart';
 import 'package:newversity/flow/initial_route/app_bloc/app_bloc.dart';
 import 'package:newversity/flow/initial_route/ui/initial_route.dart';
 import 'package:newversity/flow/initial_route/ui/on_boarding_screen.dart';
+import 'package:newversity/flow/student/notification/view/student_notification.dart';
+import 'package:newversity/flow/student/payment_status/view/payment_failure.dart';
+import 'package:newversity/flow/student/payment_status/view/payment_processing.dart';
+import 'package:newversity/flow/student/payment_status/view/payment_scuccessfull.dart';
 import 'package:newversity/flow/student/profile_dashboard/bloc/profile_dahsbord_bloc.dart';
 import 'package:newversity/flow/student/profile_dashboard/view/profile_dashboard.dart';
 import 'package:newversity/flow/student/search/bloc/mentor_search_bloc.dart';
@@ -12,7 +16,12 @@ import 'package:newversity/flow/student/student_feedback/feedback_screen.dart';
 import 'package:newversity/flow/student/student_profile/bloc/student_profile_bloc.dart';
 import 'package:newversity/flow/student/student_profile/view/edit_student_profile.dart';
 import 'package:newversity/flow/student/student_profile/view/student_profile.dart';
+import 'package:newversity/flow/student/student_session/booking_session/model/date_availability_argument.dart';
+import 'package:newversity/flow/student/student_session/booking_session/model/session_bookin_argument.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/student_session_argument.dart';
+import 'package:newversity/flow/student/student_session/booking_session/view/date_wise_slot.dart';
+import 'package:newversity/flow/student/student_session/booking_session/view/student_booking_confirmation_screen.dart';
+import 'package:newversity/flow/student/student_session/booking_session/view/view_all_available_slot_screen.dart';
 import 'package:newversity/flow/student/student_session/student_session_detail/bloc/student_session_detail_bloc.dart';
 import 'package:newversity/flow/student/student_session/student_session_detail/view/raise_issue_screen.dart';
 import 'package:newversity/flow/student/student_session/student_session_detail/view/student_session_detail_screen.dart';
@@ -80,6 +89,49 @@ class AppRouter {
       return const StudentFeedBackScreen();
     }
 
+    if (route.toString() == AppRoutes.bookingConfirmation) {
+      return BlocProvider<StudentSessionBloc>(
+        create: (context) => StudentSessionBloc(),
+        child: StudentBookingConfirmationScreen(
+          sessionBookingArgument: params as SessionBookingArgument,
+        ),
+      );
+    }
+
+    if (route.toString() == AppRoutes.notificationRoute) {
+      return const StudentNotificationScreen();
+    }
+
+    if (route.toString() == AppRoutes.viewAllSlots) {
+      return BlocProvider<StudentSessionBloc>(
+        create: (context) => StudentSessionBloc(),
+        child: ViewAllAvailableSlotScreen(
+          studentSessionArgument: params as StudentSessionArgument,
+        ),
+      );
+    }
+
+    if (route.toString() == AppRoutes.dateWiseSlotRoute) {
+      return BlocProvider<StudentSessionBloc>(
+        create: (context) => StudentSessionBloc(),
+        child: DateWiseSlotViewScreen(
+          dateAvailabilityArgument: params as DateAvailabilityArgument,
+        ),
+      );
+    }
+
+    if (route.toString() == AppRoutes.paymentProcessing) {
+      return const PaymentProcessingScreen();
+    }
+
+    if (route.toString() == AppRoutes.paymentSuccessful) {
+      return const PaymentSuccessfulScreen();
+    }
+
+    if (route.toString() == AppRoutes.paymentError) {
+      return const PaymentFailureScreen();
+    }
+
     if (route.toString() == AppRoutes.otpRoute) {
       return OtpRoute(
         loginArguments: params as LoginArguments,
@@ -110,7 +162,9 @@ class AppRouter {
     if (route.toString() == AppRoutes.raiseIssueRoute) {
       return BlocProvider<StudentSessionDetailBloc>(
           create: (context) => StudentSessionDetailBloc(),
-          child: const RaiseIssueScreen());
+          child: RaiseIssueScreen(
+            sessionDetailArguments: params as SessionDetailArguments,
+          ));
     }
 
     if (route.toString() == AppRoutes.searchMentor) {

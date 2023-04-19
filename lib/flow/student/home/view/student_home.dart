@@ -873,7 +873,11 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                   getLocation(),
                 ],
               ),
-              const AppImage(image: ImageAsset.notification),
+              InkWell(
+                onTap: (){
+                  Navigator.of(context).pushNamed(AppRoutes.notificationRoute);
+                },
+                  child: const AppImage(image: ImageAsset.notification)),
             ],
           ),
         )

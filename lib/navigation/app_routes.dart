@@ -18,6 +18,17 @@ class AppRoutes {
 
   // Book Session
   static const String bookSession = "book_session";
+  static const String bookingConfirmation = "booking_confirmation";
+  static const String viewAllSlots = "view_all_slots";
+  static const String dateWiseSlotRoute = "date_wise_slot_route";
+
+  //notification
+  static const String notificationRoute = "notification_route";
+
+  //payment
+  static const String paymentSuccessful = "payment_successful";
+  static const String paymentProcessing = "payment_processing";
+  static const String paymentError = "payment_error";
 
   // feedback
   static const String congratulationFeedback = "congratulation_feedback";

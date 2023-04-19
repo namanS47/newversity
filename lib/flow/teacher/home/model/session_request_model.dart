@@ -7,8 +7,8 @@ class SessionSaveRequest {
   String? id;
   String? teacherId;
   String? studentId;
-  String? startDate;
-  String? endDate;
+  DateTime? startDate;
+  DateTime? endDate;
   double? amount;
   String? sessionType;
   String? agenda;
@@ -17,6 +17,8 @@ class SessionSaveRequest {
   String? studentFeedback;
   double? studentRating;
   bool? cancelled;
+  List<String>? issueRaised;
+
 
   SessionSaveRequest(
       {this.id,
@@ -31,6 +33,7 @@ class SessionSaveRequest {
       this.mentorNote,
       this.studentFeedback,
       this.studentRating,
+        this.issueRaised,
       this.cancelled});
 
   factory SessionSaveRequest.fromJson(Map<String, dynamic> json) =>

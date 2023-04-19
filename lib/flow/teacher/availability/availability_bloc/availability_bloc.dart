@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
@@ -127,7 +125,8 @@ class AvailabilityBloc extends Bloc<AvailabilityEvent, AvailabilityState> {
 
   bool isAddedAvailabilityValid() {
     for (var element in availabilityList) {
-      if(element.selectedStartTime == null || element.selectedEndTime == null) {
+      if (element.selectedStartTime == null ||
+          element.selectedEndTime == null) {
         return false;
       }
     }

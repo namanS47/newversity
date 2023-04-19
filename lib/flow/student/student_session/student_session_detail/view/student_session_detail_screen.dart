@@ -254,8 +254,11 @@ class _StudentSessionDetailScreenState
     return Visibility(
       visible: widget.sessionDetailArguments.isPrevious,
       child: GestureDetector(
-        onTap: () =>
-            {Navigator.of(context).pushNamed(AppRoutes.raiseIssueRoute)},
+        onTap: () => {
+          Navigator.of(context).pushNamed(AppRoutes.raiseIssueRoute,
+              arguments: SessionDetailArguments(
+                  id: widget.sessionDetailArguments.id, isPrevious: true))
+        },
         child: const AppText(
           "Raise an issue",
           decoration: TextDecoration.underline,

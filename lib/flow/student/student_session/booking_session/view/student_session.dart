@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newversity/common/common_utils.dart';
+import 'package:newversity/flow/student/student_session/booking_session/model/session_bookin_argument.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/student_session_argument.dart';
 import 'package:newversity/flow/student/student_session/booking_session/view/review.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
 
@@ -33,6 +36,15 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
 
   TeacherDetails? teacherDetails;
 
+  bool _isRebuildWidgetState(StudentSessionStates state) {
+    var elm = state is StudentSessionInitialState ||
+        state is UpdatedTabBarState ||
+        state is FetchingTeacherDetailsState ||
+        state is FetchingTeacherDetailsFailureState ||
+        state is FetchedTeacherDetailsState;
+    return elm;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<StudentSessionBloc, StudentSessionStates>(
@@ -40,8 +52,8 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
         if (state is FetchedTeacherDetailsState) {
           teacherDetails = state.teacherDetails;
         }
-        // TODO: implement listener
       },
+      buildWhen: (previous, current) => _isRebuildWidgetState(current),
       builder: (context, state) {
         return Scaffold(
           backgroundColor: Colors.white,
@@ -188,18 +200,6 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
     );
   }
 
-  Widget getConfirmCta() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      child: AppCta(
-        onTap: onButtonTap,
-        isLoading: false,
-      ),
-    );
-  }
-
-  onButtonTap() {}
-
   onTabTap(int index) {
     context.read<StudentSessionBloc>().add(UpdateTabBarEvent(index: index));
   }
@@ -212,28 +212,27 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
         padding: const EdgeInsets.all(3),
         child: InkWell(
           onTap: () => onTabTap(index),
-          child:
-              context.read<StudentSessionBloc>().selectedSessionIndex == index
-                  ? Container(
-                      height: 38,
-                      decoration: BoxDecoration(
-                          color: AppColors.cyanBlue,
-                          borderRadius: BorderRadius.circular(20.0)),
-                      child: Center(
-                        child: Text(
-                          item,
-                          style: const TextStyle(color: AppColors.whiteColor),
-                        ),
-                      ),
-                    )
-                  : SizedBox(
-                      height: 38,
-                      child: Center(
-                        child: Text(
-                          item,
-                        ),
-                      ),
+          child: context.read<StudentSessionBloc>().selectedTabIndex == index
+              ? Container(
+                  height: 38,
+                  decoration: BoxDecoration(
+                      color: AppColors.cyanBlue,
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Center(
+                    child: Text(
+                      item,
+                      style: const TextStyle(color: AppColors.whiteColor),
                     ),
+                  ),
+                )
+              : SizedBox(
+                  height: 38,
+                  child: Center(
+                    child: Text(
+                      item,
+                    ),
+                  ),
+                ),
         ),
       ),
     );
@@ -262,23 +261,20 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      if (context
-                              .read<StudentSessionBloc>()
-                              .selectedSessionIndex ==
+                      if (context.read<StudentSessionBloc>().selectedTabIndex ==
                           0)
                         AboutSession(
                           studentSessionArgument: widget.studentSessionArgument,
                         ),
-                      if (context
-                              .read<StudentSessionBloc>()
-                              .selectedSessionIndex ==
+                      if (context.read<StudentSessionBloc>().selectedTabIndex ==
                           1)
-                        const SessionAvailability(),
-                      if (context
-                              .read<StudentSessionBloc>()
-                              .selectedSessionIndex ==
+                        SessionAvailability(
+                          studentSessionArgument: widget.studentSessionArgument,
+                          teacherDetails: teacherDetails,
+                        ),
+                      if (context.read<StudentSessionBloc>().selectedTabIndex ==
                           2)
-                        const SessionReview()
+                        SessionReview()
                     ],
                   ),
                 ),
@@ -289,10 +285,21 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
         Column(
           children: [
             Expanded(child: Container()),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: AppCta(
-                text: AppStrings.bookSession,
+                onTap: () => onConfirmationTap(),
+                color: context.read<StudentSessionBloc>().selectedTabIndex != 1
+                    ? AppColors.cyanBlue
+                    : context
+                                .read<StudentSessionBloc>()
+                                .selectedDateTimeModel !=
+                            null
+                        ? AppColors.cyanBlue
+                        : AppColors.grey32,
+                text: context.read<StudentSessionBloc>().selectedTabIndex == 1
+                    ? AppStrings.confirm
+                    : AppStrings.bookSession,
               ),
             )
           ],
@@ -308,7 +315,6 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
         color: AppColors.grey32,
         borderRadius: BorderRadius.circular(20.0),
       ),
-
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: context
@@ -317,15 +323,36 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
             .map((item) => categoryTab(item))
             .toList(),
       ),
-      // child: ListView.separated(
-      //   padding: EdgeInsets.only(left: 5, right: 16, top: 5,bottom: 5),
-      //   physics: const ClampingScrollPhysics(),
-      //   shrinkWrap: true,
-      //   scrollDirection: Axis.horizontal,
-      //   itemCount: sessionCategory.length,
-      //   itemBuilder: (context, index) => categoryTab(index, context),
-      //   separatorBuilder: (BuildContext context, int index) => SizedBox(width: 24),
-      // ),
     );
+  }
+
+  onConfirmationTap() {
+    if (context.read<StudentSessionBloc>().selectedTabIndex != 1 &&
+        context.read<StudentSessionBloc>().selectedDateTimeModel == null) {
+      context.read<StudentSessionBloc>().add(UpdateTabBarEvent(index: 1));
+    } else if (context.read<StudentSessionBloc>().selectedDateTimeModel !=
+        null) {
+      Navigator.of(context).pushNamed(AppRoutes.bookingConfirmation,
+          arguments: SessionBookingArgument(
+              CommonUtils().getLoggedInUser(),
+              widget.studentSessionArgument.teacherId ?? "",
+              context
+                      .read<StudentSessionBloc>()
+                      .selectedDateTimeModel
+                      ?.currentSelectedDateTime ??
+                  DateTime.now(),
+              (context
+                          .read<StudentSessionBloc>()
+                          .selectedDateTimeModel
+                          ?.currentSelectedDateTime ??
+                      DateTime.now())
+                  .add(Duration(
+                      minutes: context.read<StudentSessionBloc>().sessionType ==
+                              "short"
+                          ? 15
+                          : 30)),
+              context.read<StudentSessionBloc>().sessionType ?? "",
+              context.read<StudentSessionBloc>().amount ?? 0));
+    }
   }
 }

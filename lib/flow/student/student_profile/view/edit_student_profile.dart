@@ -41,8 +41,19 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
   final TextEditingController _languageController = TextEditingController();
 
   @override
+  void dispose() {
+    super.dispose();
+    _nameController.dispose();
+    _mobileNumberController.dispose();
+    _locationController.dispose();
+    _emailIdController.dispose();
+    _homeTownController.dispose();
+    _aboutMeController.dispose();
+    _languageController.dispose();
+  }
+
+  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<StudentProfileBloc>(context)
         .add(FetchExamTagEvent(tagCat: getTagCategory(TagCategory.exams)));
@@ -85,7 +96,6 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
       },
     ).whenComplete(() {
       if (file != null) {
-
         context
             .read<StudentProfileBloc>()
             .add(UploadStudentImageEvent(file: file!));
@@ -102,7 +112,7 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
     return await Permission.camera.isGranted;
   }
 
-  StudentDetail? profilePicUPloadedStudent;
+  StudentDetail? profilePicUploadedStudent;
 
   Widget getProfileImage() {
     return BlocBuilder<StudentProfileBloc, StudentProfileStates>(
@@ -111,14 +121,15 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
           return getProfilePicture(context, "Loading");
         }
         if (state is StudentImageUploadedState) {
-          profilePicUPloadedStudent = state.studentDetail;
-          return profilePicUPloadedStudent != null
+          profilePicUploadedStudent = state.studentDetail;
+          return profilePicUploadedStudent != null
               ? getCurrentUploadedPicture(context, "Uploaded")
               : getProfilePicture(context, "Failed");
         }
         if (state is StudentImageUploadingFailureState) {
           return getProfilePicture(context, "Failed");
-        }if(state is StudentImageUploadingFailureState){
+        }
+        if (state is StudentImageUploadingFailureState) {
           return Padding(
             padding: const EdgeInsets.all(18.0),
             child: AppText(state.msg),
@@ -147,10 +158,11 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
               child: CircleAvatar(
                 radius: 30.0,
                 foregroundImage:
-                    profilePicUPloadedStudent?.profilePictureUrl != null
-                        ? NetworkImage(profilePicUPloadedStudent!.profilePictureUrl ?? "")
+                    profilePicUploadedStudent?.profilePictureUrl != null
+                        ? NetworkImage(
+                            profilePicUploadedStudent!.profilePictureUrl ?? "")
                         : null,
-                child: profilePicUPloadedStudent?.profilePictureUrl == null
+                child: profilePicUploadedStudent?.profilePictureUrl == null
                     ? const AppImage(
                         image: ImageAsset.blueAvatar,
                       )

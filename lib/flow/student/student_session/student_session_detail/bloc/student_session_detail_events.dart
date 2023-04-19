@@ -8,7 +8,7 @@ class FetchStudentSessionDetailEvent extends StudentSessionDetailEvents {
   FetchStudentSessionDetailEvent({required this.sessionId});
 }
 
-class SaveStudentRatingForSessionEvent extends StudentSessionDetailEvents{
+class SaveStudentRatingForSessionEvent extends StudentSessionDetailEvents {
   final SessionSaveRequest sessionSaveRequest;
   SaveStudentRatingForSessionEvent({required this.sessionSaveRequest});
 }
@@ -16,4 +16,9 @@ class SaveStudentRatingForSessionEvent extends StudentSessionDetailEvents{
 class SaveStudentReviewForSessionEvent extends StudentSessionDetailEvents {
   final SessionSaveRequest sessionSaveRequest;
   SaveStudentReviewForSessionEvent({required this.sessionSaveRequest});
+}
+
+class RaiseIssueForSessionEvent extends StudentSessionDetailEvents {
+  final SessionSaveRequest sessionSaveRequest;
+  RaiseIssueForSessionEvent({required this.sessionSaveRequest});
 }

@@ -27,3 +27,24 @@ class FetchTeacherAvailabilityEvent extends StudentSessionEvents {
   final FetchAvailabilityRequestModel fetchAvailabilityRequestModel;
   FetchTeacherAvailabilityEvent({required this.fetchAvailabilityRequestModel});
 }
+
+class FetchTeacherSessionTimingsEvent extends StudentSessionEvents {
+  final FetchAvailabilityRequestModel fetchAvailabilityRequestModel;
+  FetchTeacherSessionTimingsEvent(
+      {required this.fetchAvailabilityRequestModel});
+}
+
+class UpdateDateIndexOfAvailabilityEvent extends StudentSessionEvents {
+  final int index;
+  UpdateDateIndexOfAvailabilityEvent({required this.index});
+}
+
+class UpdateSelectedDateTimeEvent extends StudentSessionEvents {
+  final SelectedDateTimeModel currentSelectedDateTime;
+  UpdateSelectedDateTimeEvent({required this.currentSelectedDateTime});
+}
+
+class SessionAddingEvent extends StudentSessionEvents {
+  final SessionSaveRequest sessionSaveRequest;
+  SessionAddingEvent({required this.sessionSaveRequest});
+}

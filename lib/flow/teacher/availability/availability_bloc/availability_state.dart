@@ -25,7 +25,7 @@ class FetchAvailabilitySuccessState extends AvailabilityState {
   final List<AvailabilityModel> availabilityList;
 }
 
-class FetchAvailabilityFailureState extends AvailabilityState {
+class FetchAvailabilityFailureState extends  AvailabilityState {
   FetchAvailabilityFailureState({required this.message});
   final String message;
 }

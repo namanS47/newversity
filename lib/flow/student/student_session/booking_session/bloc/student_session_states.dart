@@ -48,10 +48,38 @@ class FetchingTeacherAvailabilityState extends StudentSessionStates {}
 class FetchedTeacherAvailabilityState extends StudentSessionStates {
   FetchedTeacherAvailabilityState({required this.availabilityList});
 
-  final List<AvailabilityModel> availabilityList;
+  final Map<String, List<AvailabilityModel>> availabilityList;
 }
+
+class NotTeacherSlotFoundState extends StudentSessionStates {}
 
 class FetchingTeacherAvailabilityFailureState extends StudentSessionStates {
   final String msg;
   FetchingTeacherAvailabilityFailureState({required this.msg});
+}
+
+class FetchingTeacherSessionTimingsState extends StudentSessionStates {}
+
+class FetchedTeacherSessionTimingsState extends StudentSessionStates {
+  FetchedTeacherSessionTimingsState({required this.availabilityList});
+
+  final List<AvailabilityModel> availabilityList;
+}
+
+class FetchingTeacherSessionTimingsFailureState extends StudentSessionStates {
+  final String msg;
+  FetchingTeacherSessionTimingsFailureState({required this.msg});
+}
+
+class UpdatedAvailabilityIndexState extends StudentSessionStates {}
+
+class UpdateSelectedDateTimeIndexState extends StudentSessionStates {}
+
+class BookingSessionState extends StudentSessionStates {}
+
+class BookedSessionState extends StudentSessionStates {}
+
+class BookingSessionFailureState extends StudentSessionStates {
+  final String msg;
+  BookingSessionFailureState({required this.msg});
 }
