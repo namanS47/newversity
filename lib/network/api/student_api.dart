@@ -61,4 +61,12 @@ abstract class StudentApi {
   @MultiPart()
   Future<StudentDetail?> uploadStudentProleImage(
       @Part() File file, @Part() String studentId);
+
+  @GET("/tag/search")
+  Future<List<String>> fetchTagsListBySearchKeyword(@Query("tag") String tag);
+
+  @GET("/tag/allTeacher")
+  Future<List<TeacherDetails>> fetchTeacherDetailsByTagName(
+    @Body() TagRequestModel tagsList,
+  );
 }

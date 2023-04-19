@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/student/home/bloc/student_home_bloc.dart';
 import 'package:newversity/flow/student/home/model/session_details.dart';
@@ -460,14 +461,12 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
     return SizedBox(
       height: 220,
       child: ListView.separated(
-        padding: const EdgeInsets.only(right: 16, top: 5),
-        physics: const ClampingScrollPhysics(),
-        shrinkWrap: true,
+        physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         itemCount: lisOfTeachersDetails.length,
         itemBuilder: (context, index) => getMentorDetailsView(index),
         separatorBuilder: (BuildContext context, int index) => const SizedBox(
-          width: 6,
+          width: 0,
         ),
       ),
     );

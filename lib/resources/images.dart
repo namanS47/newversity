@@ -45,6 +45,7 @@ class ImageAsset {
   static const String icGrowth = '${_svgPath}growth.svg';
   static const String calenderIcon = '${_svgPath}calender_icon.svg';
   static const String calenderUp = '${_svgPath}calender_up.svg';
+  static const String nothingFoundIcon = '${_svgPath}seo_bw.svg';
 
   // Drawer strings
   static const user = "${_svgPath}user.svg";

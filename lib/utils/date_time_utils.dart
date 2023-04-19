@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import '../flow/teacher/availability/data/model/availability_model.dart';
 
 class DateTimeUtils {
+  static const secondsInOneDay = 60*60*24;
+
   static String getFormattedDateTime(DateTime dateTime) {
     final DateFormat formatter = DateFormat('MMMM, yyyy');
     return formatter.format(dateTime);

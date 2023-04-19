@@ -31,6 +31,6 @@ class ClientVersioningInterceptor extends Interceptor {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     super.onResponse(response, handler);
-    log("${response.data} \n ${response.statusCode}");
+    log("uri: ${response.realUri} \n data: ${response.data} \n statusCode ${response.statusCode}");
   }
 }
