@@ -285,9 +285,15 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
                         ),
                       if (context.read<StudentSessionBloc>().selectedTabIndex ==
                           1)
-                        SessionAvailability(
-                          studentSessionArgument: widget.studentSessionArgument,
-                          teacherDetails: teacherDetails,
+                        BlocBuilder<StudentSessionBloc, StudentSessionStates>(
+                          buildWhen: (previous, current) => current is UpdatedTabBarState,
+                          builder: (context, state) {
+                            return SessionAvailability(
+                              studentSessionArgument:
+                                  widget.studentSessionArgument,
+                              teacherDetails: teacherDetails,
+                            );
+                          },
                         ),
                       if (context.read<StudentSessionBloc>().selectedTabIndex ==
                           2)

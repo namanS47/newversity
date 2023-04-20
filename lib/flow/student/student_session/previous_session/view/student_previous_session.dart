@@ -129,7 +129,12 @@ class _StudentPreviousSessionScreenState
       height: MediaQuery.of(context).size.height,
       width: 100,
       child: listOfPreviousSession[index].teacherDetail?.profilePictureUrl ==
-              null
+                  null ||
+              listOfPreviousSession[index]
+                      .teacherDetail
+                      ?.profilePictureUrl
+                      ?.contains("https") ==
+                  false
           ? const Padding(
               padding: EdgeInsets.all(8.0),
               child: Center(
