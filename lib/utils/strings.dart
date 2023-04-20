@@ -8,4 +8,20 @@ class StringsUtils {
     return "${DateTimeUtils.getTimeFormat(TimeOfDay.fromDateTime(startDate), context)} - ${DateTimeUtils.getTimeFormat(TimeOfDay.fromDateTime(endDate), context)}";
   }
 
+  static String getTagListTextFromListOfTags(List<String> tagList) {
+    String tagListString = "";
+    if(tagList.length > 2) {
+      tagListString+= tagList[0];
+      tagListString+= ", ";
+      tagListString+= tagList[1];
+      tagListString+= ", +${tagList.length-2}";
+    } else {
+      for (String tag
+      in tagList) {
+        tagListString = "$tagListString$tag,";
+      }
+    }
+    return tagListString;
+  }
+
 }

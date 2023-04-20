@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/student_session_argument.dart';
 import 'package:newversity/flow/student/student_session/my_session/model/session_detail_response_model.dart';
 import 'package:newversity/flow/student/student_session/student_session_detail/bloc/student_session_detail_bloc.dart';
@@ -209,39 +210,10 @@ class _StudentSessionDetailScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AppText(
-                        sessionDetailResponseModel?.teacherDetail?.name ?? "",
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.grey32,
-                          borderRadius: BorderRadius.circular(11.0),
-                        ),
-                        width: 32,
-                        child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              const Icon(
-                                Icons.star,
-                                size: 8,
-                                color: Colors.amber,
-                              ),
-                              AppText(
-                                "${sessionDetailResponseModel?.studentRating}",
-                                fontSize: 10,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                  AppText(
+                    sessionDetailResponseModel?.teacherDetail?.name ?? "",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
                   const SizedBox(
                     height: 10,
@@ -394,98 +366,96 @@ class _StudentSessionDetailScreenState
   }
 
   Widget getBottomView() {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: Stack(
-        children: [
-          AppImage(
-            width: MediaQuery.of(context).size.width,
-            image: ImageAsset.detailDesign,
-            fit: BoxFit.cover,
-          ),
-          Positioned(
-              left: 16,
-              bottom: 50,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width - 40,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
+      children: [
+        AppImage(
+          width: MediaQuery.of(context).size.width,
+          image: ImageAsset.detailDesign,
+          fit: BoxFit.cover,
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width - 40,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const AppText(
+                    "Order summary",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const AppText(
-                        "Order summary",
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        "Per session",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.grey55,
                       ),
-                      const SizedBox(
-                        height: 10,
+                      AppText(
+                        "₹${sessionDetailResponseModel?.amount ?? 0}",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.blackMerlin,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const AppText(
-                            "Per session",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey55,
-                          ),
-                          AppText(
-                            "₹${sessionDetailResponseModel?.amount ?? 0}",
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.blackMerlin,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 1,
-                        color: AppColors.grey35,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const AppText(
-                            "Total amount paid",
-                            color: AppColors.cyanBlue,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          AppText(
-                            "₹${sessionDetailResponseModel?.amount ?? 0}",
-                            color: AppColors.cyanBlue,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 1,
+                    color: AppColors.grey35,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       const AppText(
-                        "Payment method : UPI",
+                        "Total amount paid",
                         color: AppColors.cyanBlue,
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
                       ),
-                      const SizedBox(
-                        height: 20,
+                      AppText(
+                        "₹${sessionDetailResponseModel?.amount ?? 0}",
+                        color: AppColors.cyanBlue,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
                       ),
-                      getJoinNowBeforeThreshHold(),
-                      getJoinNowAfterThreshHold(),
                     ],
                   ),
-                ),
-              ))
-        ],
-      ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const AppText(
+                    "Payment method : UPI",
+                    color: AppColors.cyanBlue,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  getJoinNowBeforeThreshHold(),
+                  getJoinNowAfterThreshHold(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:newversity/common/common_widgets.dart';
+import 'package:newversity/common/mentor_detail_card.dart';
 import 'package:newversity/flow/student/home/bloc/student_home_bloc.dart';
 import 'package:newversity/flow/student/home/model/session_details.dart';
 import 'package:newversity/flow/student/profile_dashboard/data/model/student_details_model.dart';
@@ -455,8 +456,6 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
     );
   }
 
-  List<MentorDetails> listOfMentorsDetails = MentorDetails.listOfMentorsDetails;
-
   Widget getNearbyMentorList() {
     return SizedBox(
       height: 220,
@@ -464,36 +463,11 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         itemCount: lisOfTeachersDetails.length,
-        itemBuilder: (context, index) => getMentorDetailsView(index),
+        itemBuilder: (context, index) => MentorDetailCard(
+          mentorDetail: lisOfTeachersDetails[index],
+        ),
         separatorBuilder: (BuildContext context, int index) => const SizedBox(
           width: 0,
-        ),
-      ),
-    );
-  }
-
-  Widget getRateContainer(int index) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.grey32,
-        borderRadius: BorderRadius.circular(11.0),
-      ),
-      width: 32,
-      child: Padding(
-        padding: const EdgeInsets.all(2.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Icon(
-              Icons.star,
-              size: 8,
-              color: Colors.amber,
-            ),
-            Text(
-              listOfMentorsDetails[index].rating.toString(),
-              style: const TextStyle(fontSize: 10),
-            )
-          ],
         ),
       ),
     );
@@ -541,7 +515,6 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
-                                getRateContainer(index),
                               ],
                             ),
                             const SizedBox(
@@ -553,7 +526,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                               fontWeight: FontWeight.w500,
                             ),
                             AppText(
-                              lisOfTeachersDetails[index].designation ?? "",
+                              lisOfTeachersDetails[index].title ?? "",
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
