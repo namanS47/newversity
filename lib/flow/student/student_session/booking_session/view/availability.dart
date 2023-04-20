@@ -8,6 +8,7 @@ import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/utils/date_time_utils.dart';
 
+import '../../../../../resources/images.dart';
 import '../../../../../themes/strings.dart';
 import '../../../../teacher/availability/data/model/fetch_availability_request_model.dart';
 import '../model/student_session_argument.dart';
@@ -33,7 +34,7 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
     BlocProvider.of<StudentSessionBloc>(context).add(
         FetchTeacherAvailabilityEvent(
             fetchAvailabilityRequestModel: FetchAvailabilityRequestModel(
-                teacherId: "8Wx3In76qQWvKItxcFTNA7n9Yau1")));
+                teacherId: widget.studentSessionArgument.teacherId)));
     super.initState();
   }
 
@@ -54,148 +55,110 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
         listenWhen: (previous, current) => _isRebuildWidgetState(current),
         buildWhen: (previous, current) => _isRebuildWidgetState(current),
         builder: (context, state) {
-          return context.read<StudentSessionBloc>().dateTimeMap.isNotEmpty
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    getAvailableSlotHeader(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    getAvailableSlotLayout(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    AvailabilityTimingWidget(
-                      teacherId: widget.studentSessionArgument.teacherId ?? "",
-                      listOfSessionTimings:
-                          context.read<StudentSessionBloc>().dateTimeMap[context
-                                  .read<StudentSessionBloc>()
-                                  .dateTimeMap
-                                  .keys
-                                  .elementAt(context
-                                      .read<StudentSessionBloc>()
-                                      .selectedDateIndex)] ??
-                              [AvailabilityModel()],
-                    )
-                  ],
-                )
-              : Column(
-                  children: const [
-                    SizedBox(
-                      height: 500,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.cyanBlue,
-                        ),
+          if (state is FetchingTeacherAvailabilityState ||
+              state is UpdatedTabBarState) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                SizedBox(
+                  height: 150,
+                ),
+                Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.cyanBlue,
+                  ),
+                ),
+              ],
+            );
+          }
+          if (state is FetchedTeacherAvailabilityState) {
+            return context.read<StudentSessionBloc>().dateTimeMap.isNotEmpty
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      getAvailableSlotHeader(),
+                      const SizedBox(
+                        height: 10,
                       ),
-                    )
-                  ],
-                );
-          // if (state is FetchingTeacherAvailabilityState ||
-          //     state is StudentSessionInitialState) {
-          //   return Column(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     children: const [
-          //       SizedBox(
-          //         height: 150,
-          //       ),
-          //       Center(
-          //         child: CircularProgressIndicator(
-          //           color: AppColors.cyanBlue,
-          //         ),
-          //       ),
-          //     ],
-          //   );
-          // }
-          // if (state is FetchedTeacherAvailabilityState) {
-          //   return context.read<StudentSessionBloc>().dateTimeMap.isNotEmpty
-          //       ? Column(
-          //           crossAxisAlignment: CrossAxisAlignment.start,
-          //           children: [
-          //             getAvailableSlotHeader(),
-          //             const SizedBox(
-          //               height: 10,
-          //             ),
-          //             getAvailableSlotLayout(),
-          //             const SizedBox(
-          //               height: 20,
-          //             ),
-          //             AvailabilityTimingWidget(
-          //               teacherId:
-          //                   widget.studentSessionArgument.teacherId ?? "",
-          //               listOfSessionTimings:
-          //                   context.read<StudentSessionBloc>().dateTimeMap[
-          //                           context
-          //                               .read<StudentSessionBloc>()
-          //                               .dateTimeMap
-          //                               .keys
-          //                               .elementAt(context
-          //                                   .read<StudentSessionBloc>()
-          //                                   .selectedDateIndex)] ??
-          //                       [AvailabilityModel()],
-          //             )
-          //           ],
-          //         )
-          //       : Column(
-          //           children: const [
-          //             SizedBox(
-          //               height: 500,
-          //               child: Center(
-          //                 child: CircularProgressIndicator(
-          //                   color: AppColors.cyanBlue,
-          //                 ),
-          //               ),
-          //             )
-          //           ],
-          //         );
-          // }
-          // if (state is NotTeacherSlotFoundState) {
-          //   return Column(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     children: const [
-          //       SizedBox(
-          //         height: 70,
-          //       ),
-          //       Center(
-          //         child: AppImage(
-          //           image: ImageAsset.paymentError,
-          //         ),
-          //       ),
-          //       SizedBox(
-          //         height: 25,
-          //       ),
-          //       Center(
-          //         child: AppText(
-          //           "No teacher slot available right now! \n please contact to admin",
-          //           fontSize: 14,
-          //           fontWeight: FontWeight.w400,
-          //           color: AppColors.grey55,
-          //           textAlign: TextAlign.center,
-          //         ),
-          //       ),
-          //     ],
-          //   );
-          // }
-          // if (state is FetchingTeacherAvailabilityFailureState) {
-          //   return Column(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     children: const [
-          //       SizedBox(
-          //         height: 150,
-          //       ),
-          //       Center(
-          //         child: AppText("Something went wrong"),
-          //       ),
-          //     ],
-          //   );
-          // } else {
-          //   print("current state --- ${state.toString()}");
-          //   throw ArgumentError("unsupported state");
-          // }
+                      getAvailableSlotLayout(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      AvailabilityTimingWidget(
+                        teacherId:
+                            widget.studentSessionArgument.teacherId ?? "",
+                        listOfSessionTimings:
+                            context.read<StudentSessionBloc>().dateTimeMap[
+                                    context
+                                        .read<StudentSessionBloc>()
+                                        .dateTimeMap
+                                        .keys
+                                        .elementAt(context
+                                            .read<StudentSessionBloc>()
+                                            .selectedDateIndex)] ??
+                                [AvailabilityModel()],
+                      )
+                    ],
+                  )
+                : Column(
+                    children: const [
+                      SizedBox(
+                        height: 500,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.cyanBlue,
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+          }
+          if (state is NotTeacherSlotFoundState) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                SizedBox(
+                  height: 70,
+                ),
+                Center(
+                  child: AppImage(
+                    image: ImageAsset.paymentError,
+                  ),
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                Center(
+                  child: AppText(
+                    "No teacher slot available right now! \n please contact to admin",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.grey55,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            );
+          }
+          if (state is FetchingTeacherAvailabilityFailureState) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                SizedBox(
+                  height: 150,
+                ),
+                Center(
+                  child: AppText("Something went wrong"),
+                ),
+              ],
+            );
+          } else {
+            print("current state --- ${state.toString()}");
+            throw ArgumentError("unsupported state");
+          }
         });
   }
 
