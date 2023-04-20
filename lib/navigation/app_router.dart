@@ -77,7 +77,9 @@ class AppRouter {
   _navigation(route, {dynamic params}) {
     if (route.toString() == AppRoutes.initialRoute) {
       return BlocProvider<AppBloc>(
-        create: (context) => AppBloc()..add(FetchInitialRouteEvent()),
+        create: (context) =>
+        AppBloc()
+          ..add(FetchInitialRouteEvent()),
         child: const InitialRoute(),
       );
     }
@@ -258,7 +260,10 @@ class AppRouter {
     }
 
     if (route.toString() == AppRoutes.profileEdit) {
-      return const ProfileEditOption();
+      return BlocProvider<ProfileBloc>(
+        create: (context) => ProfileBloc(),
+        child: const ProfileEditOption(),
+      );
     }
     if (route.toString() == AppRoutes.profileScreen) {
       return BlocProvider<ProfileBloc>(

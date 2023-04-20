@@ -19,7 +19,6 @@ class AddEducation extends StatefulWidget {
 }
 
 class _AddEducationState extends State<AddEducation> {
-
   final TextEditingController _schoolController = TextEditingController();
   final TextEditingController _degreeController = TextEditingController();
   final TextEditingController _startDateController = TextEditingController();
@@ -35,6 +34,16 @@ class _AddEducationState extends State<AddEducation> {
     return state is SavingTeacherEducationState ||
         state is SavedTeacherEducationState ||
         state is SavingFailureTeacherEducationState;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _schoolController.dispose();
+    _degreeController.dispose();
+    _startDateController.dispose();
+    _endDateController.dispose();
+    _gradeController.dispose();
   }
 
   @override
@@ -164,8 +173,6 @@ class _AddEducationState extends State<AddEducation> {
     );
   }
 
-
-
   onAddingEducation(BuildContext context) async {
     if (isFormValid()) {
       setState(() {
@@ -198,8 +205,6 @@ class _AddEducationState extends State<AddEducation> {
         _startDateController.text.isNotEmpty &&
         (_endDateController.text.isNotEmpty || isCurrentlyWorkingHere);
   }
-
-
 
   Widget getCurrentlyWorkingLayout() {
     return Row(
@@ -292,8 +297,6 @@ class _AddEducationState extends State<AddEducation> {
     );
   }
 
-
-
   Future<void> selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -359,7 +362,8 @@ class _AddEducationState extends State<AddEducation> {
       },
     );
     if (picked != null) {
-      _endDateController.text = DateTimeUtils.getBirthFormattedDateTime(picked).toLowerCase();
+      _endDateController.text =
+          DateTimeUtils.getBirthFormattedDateTime(picked).toLowerCase();
       selectedEndDate = picked;
       setState(() {});
     }
@@ -394,6 +398,7 @@ class _AddEducationState extends State<AddEducation> {
   Widget getYourSchool() {
     return AppTextFormField(
       hintText: "Title",
+      keyboardType: TextInputType.text,
       controller: _schoolController,
       isDense: true,
     );
@@ -402,6 +407,7 @@ class _AddEducationState extends State<AddEducation> {
   Widget getYourDegreeName() {
     return AppTextFormField(
       hintText: "Degree",
+      keyboardType: TextInputType.text,
       controller: _degreeController,
       isDense: true,
     );

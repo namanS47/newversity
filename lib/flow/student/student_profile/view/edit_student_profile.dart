@@ -299,86 +299,100 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
                   // TODO: implement listener
                 },
                 builder: (context, state) {
-                  return Column(
+                  return Stack(
                     children: [
-                      const SizedBox(
-                        height: 110,
-                      ),
-                      getProfileImage(),
-                      Expanded(
-                        child: CustomScrollView(
-                          slivers: <Widget>[
-                            SliverToBoxAdapter(
-                              child: studentDetail != null
-                                  ? Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(
-                                          height: 12,
-                                        ),
-                                        getNameLayout(),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        getMobileNumberLayout(),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        getEmailIdLayout(),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        targetExams.isNotEmpty
-                                            ? getTargetExamLayout()
-                                            : Container(),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        getYourLanguage(),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        getHomeTownLayout(),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        getAboutLayout(),
-                                        const SizedBox(
-                                          height: 20,
-                                        ),
-                                        isShowError
-                                            ? AppText(
-                                                showTextError,
-                                                color:
-                                                    AppColors.redColorShadow400,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500,
-                                              )
-                                            : Container(),
-                                        AppCta(
-                                          onTap: () => onStudentAdd(),
-                                          text: "Save",
-                                          isLoading: isLoading,
-                                        )
-                                      ],
-                                    )
-                                  : SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.height,
-                                      child: Column(
-                                        children: const [
-                                          Center(
-                                            child: CircularProgressIndicator(
-                                              color: AppColors.cyanBlue,
+                      Column(
+                        children: [
+                          const SizedBox(
+                            height: 110,
+                          ),
+                          getProfileImage(),
+                          Expanded(
+                            child: CustomScrollView(
+                              slivers: <Widget>[
+                                SliverToBoxAdapter(
+                                  child: studentDetail != null
+                                      ? Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(
+                                              height: 12,
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
+                                            getNameLayout(),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            getMobileNumberLayout(),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            getEmailIdLayout(),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            targetExams.isNotEmpty
+                                                ? getTargetExamLayout()
+                                                : Container(),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            getYourLanguage(),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            getHomeTownLayout(),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            getAboutLayout(),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            isShowError
+                                                ? AppText(
+                                                    showTextError,
+                                                    color: AppColors
+                                                        .redColorShadow400,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                  )
+                                                : Container(),
+                                            const SizedBox(
+                                              height: 100,
+                                            ),
+                                          ],
+                                        )
+                                      : SizedBox(
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          child: Column(
+                                            children: const [
+                                              Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  color: AppColors.cyanBlue,
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          )
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Expanded(child: Container()),
+                          AppCta(
+                            onTap: () => onStudentAdd(),
+                            text: "Save",
+                            isLoading: isLoading,
+                          )
+                        ],
                       )
                     ],
                   );
@@ -449,6 +463,7 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
           height: 12,
         ),
         AppTextFormField(
+          keyboardType: TextInputType.text,
           hintText: "Enter city name",
           controller: _locationController,
         ),
@@ -471,6 +486,7 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
           height: 12,
         ),
         AppTextFormField(
+          keyboardType: TextInputType.text,
           hintText: "Describe yourself",
           controller: _aboutMeController,
         ),
@@ -623,6 +639,7 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
           height: 10,
         ),
         AppTextFormField(
+          keyboardType: TextInputType.number,
           hintText: "Enter mobile",
           controller: _mobileNumberController,
         ),
@@ -645,6 +662,7 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
           height: 10,
         ),
         AppTextFormField(
+          keyboardType: TextInputType.emailAddress,
           hintText: "Enter email id",
           controller: _emailIdController,
         ),
@@ -668,6 +686,7 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
           height: 10,
         ),
         AppTextFormField(
+          keyboardType: TextInputType.text,
           hintText: "Enter name",
           controller: _nameController,
         ),

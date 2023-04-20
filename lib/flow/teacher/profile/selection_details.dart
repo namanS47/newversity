@@ -31,6 +31,12 @@ class _SelectionDetailsState extends State<SelectionDetails> {
   bool showSpecify = false;
 
   @override
+  void dispose() {
+    super.dispose();
+    _specifyController.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     BlocProvider.of<ProfileBloc>(context)
@@ -77,55 +83,89 @@ class _SelectionDetailsState extends State<SelectionDetails> {
         }
       },
       builder: (context, state) {
-        return Padding(
-          padding: const EdgeInsets.all(18.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              getSelectionHeader(),
-              const SizedBox(
-                height: 20,
-              ),
-              selectExamNames(),
-              const SizedBox(
-                height: 20,
-              ),
-              getSelectedComptetiveExams(),
-              const SizedBox(
-                height: 8,
-              ),
-              getRequestedTagWidget(),
-              const SizedBox(
-                height: 20,
-              ),
-              showSpecify ? getTitleHeader() : Container(),
-              const SizedBox(
-                height: 10,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              showSpecify ? getYourDesignation() : Container(),
-              const SizedBox(
-                height: 10,
-              ),
-              showErrorText
-                  ? const AppText(
-                      "Please select at least one",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.redColorShadow400,
-                    )
-                  : Container(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: AppCta(
-                  isLoading: isLoading,
-                  onTap: () => onProceedTap(context),
-                  text: !widget.profileDashboardArguments.showBackButton
-                      ? AppStrings.update
-                      : AppStrings.proceed,
+        if (state is FetchingTagsState) {
+          return Expanded(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
+              Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.cyanBlue,
                 ),
+              )
+            ],
+          ));
+        }
+        return Expanded(
+          child: Stack(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        getSelectionHeader(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        selectExamNames(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        getSelectedComptetiveExams(),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        getRequestedTagWidget(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        showSpecify ? getTitleHeader() : Container(),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        showSpecify ? getYourDesignation() : Container(),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        showErrorText
+                            ? const AppText(
+                                "Please select at least one",
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.redColorShadow400,
+                              )
+                            : Container(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Column(
+                children: [
+                  Expanded(child: Container()),
+                  Container(
+                    color: AppColors.whiteColor,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: AppCta(
+                        isLoading: isLoading,
+                        onTap: () => onProceedTap(context),
+                        text: !widget.profileDashboardArguments.showBackButton
+                            ? AppStrings.update
+                            : AppStrings.proceed,
+                      ),
+                    ),
+                  )
+                ],
               )
             ],
           ),

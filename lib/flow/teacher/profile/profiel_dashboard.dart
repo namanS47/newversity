@@ -62,12 +62,8 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
             ];
           }
           return SafeArea(
-            bottom: false,
-            child: ListView(
-              primary: true,
-              shrinkWrap: true,
+            child: Column(
               children: [
-                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: Row(
@@ -79,6 +75,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                             !(context.read<ProfileBloc>().currentProfileStep ==
                                 1),
                         child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
                           onTap: () async {
                             if (context.read<ProfileBloc>().currentProfileStep >
                                 1) {
@@ -131,11 +128,10 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
                 if (context.read<ProfileBloc>().profileCardList.isNotEmpty) ...[
                   context.read<ProfileBloc>().profileCardList.elementAt(
                       context.read<ProfileBloc>().currentProfileStep - 1),
-                ],
+                ]
               ],
             ),
           );

@@ -36,6 +36,15 @@ class _AddExperienceState extends State<AddExperience> {
   DateTime? selectedStartDate;
   DateTime? selectedEndDate;
 
+  @override
+  void dispose() {
+    super.dispose();
+    _titleController.dispose();
+    _companyController.dispose();
+    _startDateController.dispose();
+    _endDateController.dispose();
+  }
+
   bool isRebuildWidgetState(ProfileStates state) {
     return state is SavingTeacherExperienceState ||
         state is SavedTeacherExperienceState ||

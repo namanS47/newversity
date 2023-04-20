@@ -31,8 +31,8 @@ class _AvailabilityTimingWidgetState extends State<AvailabilityTimingWidget> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<StudentSessionBloc>(context).add(FetchTeacherDetailsEvent(
-        teacherId: widget.teacherId ?? ""));
+    BlocProvider.of<StudentSessionBloc>(context)
+        .add(FetchTeacherDetailsEvent(teacherId: widget.teacherId ?? ""));
   }
 
   @override
@@ -52,7 +52,9 @@ class _AvailabilityTimingWidgetState extends State<AvailabilityTimingWidget> {
             const SizedBox(
               height: 10,
             ),
-            getPerSessionRate(),
+            teacherDetails != null && teacherDetails?.sessionPricing != null
+                ? getPerSessionRate()
+                : Container(),
             const SizedBox(
               height: 20,
             ),

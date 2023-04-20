@@ -375,13 +375,13 @@ class _AboutSessionState extends State<AboutSession> {
   Widget getLanguageView(int index) {
     return Container(
       height: 45,
-      width: 100,
       decoration: BoxDecoration(
           color: AppColors.primaryColor,
           borderRadius: BorderRadius.circular(25.0)),
-      child: Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             AppText(teacherDetails?.language?[index] ?? "",
                 color: AppColors.whiteColor,
@@ -401,13 +401,13 @@ class _AboutSessionState extends State<AboutSession> {
   Widget getLocationLayout() {
     return Container(
       height: 45,
-      width: 120,
       decoration: BoxDecoration(
           color: AppColors.primaryColor,
-          borderRadius: BorderRadius.circular(25.0)),
-      child: Center(
+          borderRadius: BorderRadius.circular(30.0)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(ImageAsset.location),
             const SizedBox(

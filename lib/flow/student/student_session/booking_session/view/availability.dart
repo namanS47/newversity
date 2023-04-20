@@ -34,7 +34,9 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
     BlocProvider.of<StudentSessionBloc>(context).add(
         FetchTeacherAvailabilityEvent(
             fetchAvailabilityRequestModel: FetchAvailabilityRequestModel(
-                teacherId: widget.studentSessionArgument.teacherId)));
+                teacherId: "8Wx3In76qQWvKItxcFTNA7n9Yau1"
+                // widget.studentSessionArgument.teacherId
+                )));
     super.initState();
   }
 
@@ -43,7 +45,6 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
         state is FetchedTeacherAvailabilityState ||
         state is FetchingTeacherAvailabilityFailureState ||
         state is NotTeacherSlotFoundState ||
-        state is UpdateSelectedDateTimeIndexState ||
         state is UpdatedAvailabilityIndexState;
     return elm;
   }
@@ -72,7 +73,7 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
               ],
             );
           }
-          if (state is FetchedTeacherAvailabilityState) {
+          if (state is FetchedTeacherAvailabilityState || state is UpdatedAvailabilityIndexState) {
             return context.read<StudentSessionBloc>().dateTimeMap.isNotEmpty
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

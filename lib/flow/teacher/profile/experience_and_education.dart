@@ -62,51 +62,73 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
   }
 
   Widget getExperienceAndQualificationContent() {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
+    return Expanded(
+      child: Stack(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        getExperienceAndQualificationHeader(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        getContainerHeaderLayout(
+                            AppStrings.experience, context),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        lisOfExperienceModel.isNotEmpty
+                            ? getExperienceLayout()
+                            : Container(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        getEducationContainerLayout(
+                            AppStrings.education, context),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        listOfEducationModel.isNotEmpty
+                            ? getEducationLayout()
+                            : Container(),
+                      ],
+                    ),
+                  ),
+                  Container(),
+                  const SizedBox(
+                    height: 100,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Column(
             children: [
-              getExperienceAndQualificationHeader(),
-              const SizedBox(
-                height: 20,
-              ),
-              getContainerHeaderLayout(AppStrings.experience, context),
-              const SizedBox(
-                height: 10,
-              ),
-              lisOfExperienceModel.isNotEmpty
-                  ? getExperienceLayout()
-                  : Container(),
-              const SizedBox(
-                height: 20,
-              ),
-              getEducationContainerLayout(AppStrings.education, context),
-              const SizedBox(
-                height: 10,
-              ),
-              listOfEducationModel.isNotEmpty
-                  ? getEducationLayout()
-                  : Container(),
+              Expanded(child: Container()),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Container(
+                  color: AppColors.whiteColor,
+                  child: AppCta(
+                    text: !widget.profileDashboardArguments.showBackButton
+                        ? AppStrings.update
+                        : AppStrings.proceed,
+                    isLoading: false,
+                    onTap: () => onTapContinueButton(context),
+                  ),
+                ),
+              )
             ],
-          ),
-        ),
-        Container(),
-        const SizedBox(
-          height: 100,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: AppCta(
-            text: !widget.profileDashboardArguments.showBackButton
-                ? AppStrings.update
-                : AppStrings.proceed,
-            isLoading: false,
-            onTap: () => onTapContinueButton(context),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 

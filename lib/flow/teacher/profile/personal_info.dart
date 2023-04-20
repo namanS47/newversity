@@ -44,6 +44,16 @@ class _PersonalInformationState extends State<PersonalInformation> {
   List<String>? languageSelected = [];
 
   @override
+  void dispose() {
+    super.dispose();
+    _nameController.dispose();
+    _titleController.dispose();
+    _infoController.dispose();
+    _locationController.dispose();
+    _languageController.dispose();
+  }
+
+  @override
   void initState() {
     context.read<TeacherDetailsBloc>().add(FetchTeacherDetailEvent());
     super.initState();
@@ -87,90 +97,111 @@ class _PersonalInformationState extends State<PersonalInformation> {
   }
 
   Widget getContentWidget(BuildContext context) {
-    return Column(
-      children: [
-        ListView(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+    return Expanded(
+      child: Stack(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  getPersonalInformationHeader(),
-                  const SizedBox(
-                    height: 10,
+                  SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          getPersonalInformationHeader(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getCompleteInstruction(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getYourNameHeader(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getYourNameTextField(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          getUploadPictureHeader(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getUploadPictureBuilder(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          getTitleHeader(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getYourDesignation(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          getAboutYourSelfHeader(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getAboutYourSelfTextField(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          getHomeTownHeader(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getYourLocation(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          getErrorText(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          getLanguageHeader(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getYourLanguage(),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          languageSelected != null
+                              ? getLanguageSelectedList()
+                              : Container(),
+                          const SizedBox(
+                            height: 200,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  getCompleteInstruction(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getYourNameHeader(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  getYourNameTextField(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getUploadPictureHeader(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  getUploadPictureBuilder(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getTitleHeader(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  getYourDesignation(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getAboutYourSelfHeader(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  getAboutYourSelfTextField(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getHomeTownHeader(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  getYourLocation(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getErrorText(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getLanguageHeader(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  getYourLanguage(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  languageSelected != null
-                      ? getLanguageSelectedList()
-                      : Container(),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  getProceedCTA(context),
                 ],
               ),
-            )
-          ],
-        ),
-      ],
+            ),
+          ),
+          Column(
+            children: [
+              Expanded(child: Container()),
+              Container(
+                  decoration: const BoxDecoration(
+                    color: AppColors.whiteColor,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 18.0, vertical: 0),
+                    child: getProceedCTA(context),
+                  )),
+            ],
+          )
+        ],
+      ),
     );
   }
 

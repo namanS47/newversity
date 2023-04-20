@@ -231,17 +231,21 @@ class AppImage extends StatelessWidget {
             errorWidget: (context, url, error) =>
                 const Icon(Icons.error, color: Colors.red),
           )
-        : !image.startsWith('http') && !image.contains('.')
-            ? CachedNetworkImage(
-                imageUrl: image,
-                height: webHeight,
-                width: webWidth,
-                fit: webFit ?? BoxFit.cover,
-                placeholder: (context, url) =>
-                    CommonWidgets.getCircularProgressIndicator(),
-                errorWidget: (context, url, error) =>
-                    const Icon(Icons.error, color: Colors.red),
-              )
+        : !image.contains('.')
+            ? Image.network(image,
+        height: webHeight,
+        width: webWidth,
+        fit: webFit ?? BoxFit.cover, errorBuilder: (BuildContext context,
+            Object exception, StackTrace? stackTrace) {
+          return const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Center(
+              child: AppImage(
+                image: ImageAsset.blueAvatar,
+              ),
+            ),
+          );
+        })
             : image.split('.').last != 'svg'
                 ? Image.asset(
                     image,

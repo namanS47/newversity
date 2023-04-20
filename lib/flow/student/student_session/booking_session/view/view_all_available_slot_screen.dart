@@ -50,48 +50,57 @@ class _ViewAllAvailableSlotScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(color: AppColors.lightCyan),
-          ),
-          SafeArea(
-            child: Stack(
-              children: [
-                SingleChildScrollView(
-                  primary: true,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      getAppHeader(),
-                      const SizedBox(
-                        height: 25,
-                      ),
-                      isCalenderView ? getCalenderView() : getDateListWidget(),
-                    ],
-                  ),
-                ),
-                Column(
+    return BlocConsumer<StudentSessionBloc, StudentSessionStates>(
+      listener: (context, state) {
+        // TODO: implement listener
+      },
+      builder: (context, state) {
+        return Scaffold(
+          body: Stack(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                decoration: const BoxDecoration(color: AppColors.lightCyan),
+              ),
+              SafeArea(
+                child: Stack(
                   children: [
-                    Expanded(child: Container()),
-                    getConfirmationCTA()
+                    SingleChildScrollView(
+                      primary: true,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          getAppHeader(),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          isCalenderView
+                              ? getCalenderView()
+                              : getDateListWidget(),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      children: [
+                        Expanded(child: Container()),
+                        getConfirmationCTA()
+                      ],
+                    )
                   ],
-                )
-              ],
-            ),
-          )
-        ],
-      ),
+                ),
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 
   bool _isRebuildWidgetAvailabilityState(StudentSessionStates state) {
     var elm = state is FetchingTeacherAvailabilityState ||
-        state is FetchedTeacherAvailabilityState ;
+        state is FetchedTeacherAvailabilityState;
     return elm;
   }
 
@@ -109,8 +118,10 @@ class _ViewAllAvailableSlotScreenState
         child: SingleChildScrollView(
           physics: const NeverScrollableScrollPhysics(),
           child: BlocConsumer<StudentSessionBloc, StudentSessionStates>(
-              listenWhen: (previous, current) => _isRebuildWidgetAvailabilityState(current),
-            buildWhen: (previous, current) => _isRebuildWidgetAvailabilityState(current),
+            listenWhen: (previous, current) =>
+                _isRebuildWidgetAvailabilityState(current),
+            buildWhen: (previous, current) =>
+                _isRebuildWidgetAvailabilityState(current),
             listener: (context, state) {
               if (state is FetchedTeacherAvailabilityState) {
                 lisOfAvailability =
@@ -164,6 +175,7 @@ class _ViewAllAvailableSlotScreenState
 
   Widget getCalenderView() {
     return BlocConsumer<StudentSessionBloc, StudentSessionStates>(
+      buildWhen: (previous, current) => _isRebuildWidgetState(current),
       listenWhen: (previous, current) => _isRebuildWidgetState(current),
       listener: (context, state) {
         if (state is FetchedTeacherSessionTimingsState) {
@@ -202,10 +214,12 @@ class _ViewAllAvailableSlotScreenState
           );
         }
         return Column(
-          children: const [
-            SizedBox(
-              height: 500,
-              child: Center(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(color: AppColors.whiteColor),
+              child: const Center(
                 child: CircularProgressIndicator(
                   color: AppColors.cyanBlue,
                 ),
@@ -583,6 +597,7 @@ class _ViewAllAvailableSlotScreenState
               fetchAvailabilityRequestModel: FetchAvailabilityRequestModel(
                   teacherId: "8Wx3In76qQWvKItxcFTNA7n9Yau1")));
     }
+    setState(() {});
   }
 
   onConfirmTap() {

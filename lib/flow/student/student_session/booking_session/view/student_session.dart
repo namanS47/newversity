@@ -114,7 +114,8 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
         height: 92,
         width: 70,
-        child: teacherDetails?.profilePictureUrl == null
+        child: teacherDetails?.profilePictureUrl == null ||
+                teacherDetails?.profilePictureUrl?.contains("https") == false
             ? const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Center(
@@ -286,7 +287,8 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
                       if (context.read<StudentSessionBloc>().selectedTabIndex ==
                           1)
                         BlocBuilder<StudentSessionBloc, StudentSessionStates>(
-                          buildWhen: (previous, current) => current is UpdatedTabBarState,
+                          buildWhen: (previous, current) =>
+                              current is UpdatedTabBarState,
                           builder: (context, state) {
                             return SessionAvailability(
                               studentSessionArgument:
@@ -308,21 +310,25 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
         Column(
           children: [
             Expanded(child: Container()),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: AppCta(
-                onTap: () => onConfirmationTap(),
-                color: context.read<StudentSessionBloc>().selectedTabIndex != 1
-                    ? AppColors.cyanBlue
-                    : context
-                                .read<StudentSessionBloc>()
-                                .selectedDateTimeModel !=
-                            null
-                        ? AppColors.cyanBlue
-                        : AppColors.grey32,
-                text: context.read<StudentSessionBloc>().selectedTabIndex == 1
-                    ? AppStrings.confirm
-                    : AppStrings.bookSession,
+            Container(
+              color: AppColors.whiteColor,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: AppCta(
+                  onTap: () => onConfirmationTap(),
+                  color:
+                      context.read<StudentSessionBloc>().selectedTabIndex != 1
+                          ? AppColors.cyanBlue
+                          : context
+                                      .read<StudentSessionBloc>()
+                                      .selectedDateTimeModel !=
+                                  null
+                              ? AppColors.cyanBlue
+                              : AppColors.grey32,
+                  text: context.read<StudentSessionBloc>().selectedTabIndex == 1
+                      ? AppStrings.confirm
+                      : AppStrings.bookSession,
+                ),
               ),
             )
           ],

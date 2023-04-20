@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:newversity/common/mentor_personal_detail_card.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 import 'package:newversity/utils/strings.dart';
 import 'package:slide_countdown/slide_countdown.dart';
@@ -40,51 +41,7 @@ class _MentorCardState extends State<MentorDetailCard> {
       ),
       child: Column(
         children: [
-          SizedBox(
-            height: 132,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                getMentorsProfileImage(),
-                Expanded(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(left: 10, top: 20, right: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppText(
-                          widget.mentorDetail.name ?? "",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        AppText(
-                          widget.mentorDetail.education ?? "",
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        AppText(
-                          widget.mentorDetail.title ?? "",
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        Text(
-                          sessionTags,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
+          MentorPersonalDetailCard(mentorDetail: widget.mentorDetail),
           Container(
             width: MediaQuery.of(context).size.width,
             decoration: const BoxDecoration(

@@ -93,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                           GestureDetector(
-                              behavior: HitTestBehavior.deferToChild,
+                              behavior: HitTestBehavior.translucent,
                               onTap: () => onDrawerTap(),
                               child: const Padding(
                                 padding: EdgeInsets.all(8.0),

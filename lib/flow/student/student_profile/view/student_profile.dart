@@ -58,7 +58,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
               child: CircleAvatar(
                 radius: 30.0,
                 foregroundImage: studentDetail?.profilePictureUrl != null
-                    ? NetworkImage(studentDetail!.profilePictureUrl!)
+                    ? NetworkImage(studentDetail?.profilePictureUrl ?? "")
                     : null,
                 child: studentDetail?.profilePictureUrl == null
                     ? const AppImage(
@@ -69,12 +69,15 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
             ),
           ),
         ),
-        const Positioned(
+        Positioned(
             right: -2,
             bottom: 5,
-            child: AppImage(
-              image: ImageAsset.check,
-            ))
+            child:
+                profileCompletionPercentageResponse?.completePercentage == 100
+                    ? const AppImage(
+                        image: ImageAsset.check,
+                      )
+                    : Container())
       ],
     );
   }
@@ -155,7 +158,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                         ],
                       ),
                       GestureDetector(
-                          behavior: HitTestBehavior.deferToChild,
+                          behavior: HitTestBehavior.translucent,
                           onTap: () => onDrawerTap(),
                           child: const Padding(
                             padding: EdgeInsets.all(8.0),

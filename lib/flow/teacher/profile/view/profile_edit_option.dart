@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 
 import '../../../../common/common_widgets.dart';
+import '../../data/model/teacher_details/teacher_details.dart';
+import '../bloc/profile_bloc/profile_bloc.dart';
 
 class ProfileEditOption extends StatefulWidget {
   const ProfileEditOption({Key? key}) : super(key: key);
@@ -14,72 +17,90 @@ class ProfileEditOption extends StatefulWidget {
 }
 
 class _ProfileEditOptionState extends State<ProfileEditOption> {
+  TeacherDetails? teacherDetails;
+
+  @override
+  void initState() {
+    BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetailsEvent());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            height: 192,
-            width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(color: AppColors.ligCyan),
-            child: SafeArea(
-              child: Padding(
+      body: BlocConsumer<ProfileBloc, ProfileStates>(
+        listener: (context, state) {
+          if (state is FetchedTeachersProfileState) {
+            teacherDetails = state.teacherDetails;
+          }
+        },
+        builder: (context, state) {
+          return Column(
+            children: [
+              Container(
+                height: 192,
+                width: MediaQuery.of(context).size.width,
+                decoration: const BoxDecoration(color: AppColors.ligCyan),
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () => {Navigator.pop(context)},
+                          child: const AppImage(
+                            image: ImageAsset.arrowBack,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        teacherDetails != null
+                            ? AppText(
+                                "Hi ${teacherDetails?.name ?? ""}",
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              )
+                            : Container(),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const AppText(
+                          "You can edit your personal details here by step wise",
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    GestureDetector(
-                      onTap: () => {Navigator.pop(context)},
-                      child: const AppImage(
-                        image: ImageAsset.arrowBack,
-                      ),
-                    ),
+                    getPersonalInfoEditLayout(),
                     const SizedBox(
                       height: 20,
                     ),
-                    const AppText(
-                      "Hi Akshat Kamesara",
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    getExperienceAndQualificationLayout(),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
-                    const AppText(
-                      "You can edit your personal details here by step wise",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    getTeacherPreferenceLayout()
                   ],
                 ),
               ),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              children: [
-                getPersonalInfoEditLayout(),
-                const SizedBox(
-                  height: 20,
-                ),
-                getExperienceAndQualificationLayout(),
-                const SizedBox(
-                  height: 20,
-                ),
-                getTeacherPreferenceLayout()
-              ],
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }
