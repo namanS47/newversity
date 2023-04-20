@@ -48,7 +48,8 @@ class _MentorCardState extends State<MentorDetailCard> {
                 getMentorsProfileImage(),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 10, top: 20, right: 10),
+                    padding:
+                        const EdgeInsets.only(left: 10, top: 20, right: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -72,7 +73,7 @@ class _MentorCardState extends State<MentorDetailCard> {
                         ),
                         Text(
                           sessionTags,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -177,7 +178,8 @@ class _MentorCardState extends State<MentorDetailCard> {
     return SizedBox(
       // height: MediaQuery.of(context).size.height,
       width: 100,
-      child: widget.mentorDetail.profilePictureUrl == null
+      child: widget.mentorDetail.profilePictureUrl == null ||
+              widget.mentorDetail.profilePictureUrl?.contains("https") == false
           ? const Center(
               child: AppImage(
                 image: ImageAsset.blueAvatar,

@@ -165,10 +165,13 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
-          const AppImage(
-            image: ImageAsset.close,
-            height: 20,
-            width: 20,
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: const AppImage(
+              image: ImageAsset.close,
+              height: 20,
+              width: 20,
+            ),
           ),
           const SizedBox(
             width: 20,
