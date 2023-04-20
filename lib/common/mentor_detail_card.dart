@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/utils/strings.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
+import '../flow/student/student_session/booking_session/model/student_session_argument.dart';
+import '../navigation/app_routes.dart';
 import '../resources/images.dart';
 import '../themes/colors.dart';
 import '../utils/date_time_utils.dart';
 import 'common_widgets.dart';
 
 class MentorDetailCard extends StatefulWidget {
-  const MentorDetailCard({Key? key, required this.mentorDetail})
+  const MentorDetailCard({Key? key, required this.mentorDetail, this.onTap})
       : super(key: key);
   final TeacherDetails mentorDetail;
+  final void Function()? onTap;
 
   @override
   State<MentorDetailCard> createState() => _MentorCardState();
@@ -24,6 +28,8 @@ class _MentorCardState extends State<MentorDetailCard> {
   }
 
   Widget getMentorDetailsView() {
+    String sessionTags = StringsUtils.getTagListTextFromListOfTags(
+        widget.mentorDetail.tags ?? []);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       width: MediaQuery.of(context).size.width - 50,
@@ -40,45 +46,39 @@ class _MentorCardState extends State<MentorDetailCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 getMentorsProfileImage(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppText(
-                        widget.mentorDetail.name ?? "",
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      AppText(
-                        widget.mentorDetail.education ?? "",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      AppText(
-                        widget.mentorDetail.title ?? "",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      Wrap(
-                        children: widget.mentorDetail.tags
-                                ?.map((e) => Text(e))
-                                .toList() ??
-                            [],
-                      )
-                      // SizedBox(
-                      //   width: MediaQuery.of(context).size.width - 220,
-                      //   child: AppText(
-                      //     listOfMentorsDetails[index].certificates ?? "",
-                      //     fontSize: 12,
-                      //     fontWeight: FontWeight.w500,
-                      //   ),
-                      // ),
-                    ],
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10, top: 20, right: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppText(
+                          widget.mentorDetail.name ?? "",
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        AppText(
+                          widget.mentorDetail.education ?? "",
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        AppText(
+                          widget.mentorDetail.title ?? "",
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        Text(
+                          sessionTags,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],
@@ -135,24 +135,31 @@ class _MentorCardState extends State<MentorDetailCard> {
                         ),
                       ],
                     ),
-                    Container(
-                      height: 52,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: AppColors.cyanBlue),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const AppText(
-                              "Book Session",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.whiteColor,
-                            ),
-                            getNextAvailabilityWidget()
-                          ],
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(AppRoutes.bookSession,
+                            arguments: StudentSessionArgument(
+                                teacherId: widget.mentorDetail.teacherId));
+                      },
+                      child: Container(
+                        height: 52,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: AppColors.cyanBlue),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const AppText(
+                                "Book Session",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.whiteColor,
+                              ),
+                              getNextAvailabilityWidget()
+                            ],
+                          ),
                         ),
                       ),
                     )
@@ -183,6 +190,14 @@ class _MentorCardState extends State<MentorDetailCard> {
                 widget.mentorDetail.profilePictureUrl ?? "",
                 fit: BoxFit.cover,
                 height: 132,
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return const Center(
+                    child: AppImage(
+                      image: ImageAsset.blueAvatar,
+                    ),
+                  );
+                },
               ),
             ),
     );
