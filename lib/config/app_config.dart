@@ -61,10 +61,11 @@ class AppConfig {
 
 class EnvironmentValues {
   //Staging
-  static const String newversityStagingUrl =
-      "http://newversity-env.eba-w8mvmik7.ap-south-1.elasticbeanstalk.com/";
+  // static const String newversityStagingUrl =
+  //     "http://newversity-env.eba-w8mvmik7.ap-south-1.elasticbeanstalk.com/";
 
-  // static const String newversityStagingUrl = "http://10.154.22.161:8080/";
+  static const String newversityStagingUrl = "http://192.168.1.5:8080/";
+  static const String stagingRazorPayKey = "rzp_test_C4quaG5XBcUQDb";
 
   // Production
   static const String newversityProductionUrl =

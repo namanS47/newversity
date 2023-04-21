@@ -1,5 +1,6 @@
 import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:newversity/firestore/data/firestore_repository.dart';
+import 'package:newversity/flow/student/payment/data/payment_repository.dart';
 import 'package:newversity/flow/student/profile_dashboard/data/repo/profile_dashboard_repository.dart';
 import 'package:newversity/flow/student/search/data/search_repository.dart';
 import 'package:newversity/flow/teacher/webservice/teacher_base_repository.dart';
@@ -28,6 +29,7 @@ class DI {
     addDependency(SessionBookingRepository(), true);
     addDependency(AvailabilityRepository(), true);
     addDependency(SearchRepository(), true);
+    addDependency(PaymentRepository(), true);
 
     return DI();
   }

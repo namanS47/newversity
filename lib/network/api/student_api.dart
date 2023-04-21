@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:newversity/flow/student/payment/data/model/payment_argument.dart';
 import 'package:newversity/flow/student/profile_dashboard/data/model/add_tag_request_model.dart';
 import 'package:newversity/flow/student/profile_dashboard/data/model/student_detail_saving_request_model.dart';
 import 'package:newversity/flow/student/profile_dashboard/data/model/student_details_model.dart';
@@ -10,6 +11,7 @@ import 'package:newversity/flow/teacher/profile/model/tags_with_teacher_id_reque
 import 'package:retrofit/http.dart';
 
 import '../../config/app_config.dart';
+import '../../flow/student/payment/data/model/create_order_response_model.dart';
 import '../../flow/teacher/home/model/session_request_model.dart';
 import '../../flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import '../../flow/teacher/profile/model/tags_response_model.dart';
@@ -69,4 +71,8 @@ abstract class StudentApi {
   Future<List<TeacherDetails>> fetchTeacherDetailsByTagName(
     @Body() TagRequestModel tagsList,
   );
+
+  @GET("/order")
+  Future<CreateOrderResponseModel?> createPaymentOrder(
+      @Body() PaymentArgument paymentArgument);
 }

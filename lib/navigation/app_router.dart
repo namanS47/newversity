@@ -5,6 +5,9 @@ import 'package:newversity/flow/initial_route/app_bloc/app_bloc.dart';
 import 'package:newversity/flow/initial_route/ui/initial_route.dart';
 import 'package:newversity/flow/initial_route/ui/on_boarding_screen.dart';
 import 'package:newversity/flow/student/notification/view/student_notification.dart';
+import 'package:newversity/flow/student/payment/data/model/payment_argument.dart';
+import 'package:newversity/flow/student/payment/payment_bloc/payment_bloc.dart';
+import 'package:newversity/flow/student/payment/payment_route.dart';
 import 'package:newversity/flow/student/payment_status/view/payment_failure.dart';
 import 'package:newversity/flow/student/payment_status/view/payment_processing.dart';
 import 'package:newversity/flow/student/payment_status/view/payment_scuccessfull.dart';
@@ -303,6 +306,12 @@ class AppRouter {
       return BlocProvider<AvailabilityBloc>(
         create: (context) => AvailabilityBloc(),
         child: const AvailabilityRoute(),
+      );
+    }
+    if (route.toString() == AppRoutes.paymentRoute) {
+      return BlocProvider<PaymentBloc>(
+        create: (context) => PaymentBloc(),
+        child: PaymentRoute(paymentArgument: params as PaymentArgument),
       );
     }
     if (route.toString() == AppRoutes.somethingWentWrongRoute) {
