@@ -1,4 +1,5 @@
 class StudentSessionArgument {
   final String? teacherId;
-  StudentSessionArgument({required this.teacherId});
+  final int pageIndex;
+  StudentSessionArgument({required this.teacherId, this.pageIndex = 0});
 }

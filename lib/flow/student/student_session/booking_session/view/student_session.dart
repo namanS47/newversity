@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_utils.dart';
+import 'package:newversity/common/mentor_personal_detail_card.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/session_bookin_argument.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/student_session_argument.dart';
 import 'package:newversity/flow/student/student_session/booking_session/view/review.dart';
@@ -26,24 +27,27 @@ class StudentSessionScreen extends StatefulWidget {
 }
 
 class _StudentSessionScreenState extends State<StudentSessionScreen> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    BlocProvider.of<StudentSessionBloc>(context).add(FetchTeacherDetailsEvent(
-        teacherId: widget.studentSessionArgument.teacherId ?? ""));
-  }
-
   TeacherDetails? teacherDetails;
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.studentSessionArgument.pageIndex == 0) {
+      BlocProvider.of<StudentSessionBloc>(context).add(FetchTeacherDetailsEvent(
+          teacherId: widget.studentSessionArgument.teacherId ?? ""));
+    } else {
+      context.read<StudentSessionBloc>().selectedTabIndex = 1;
+      context.read<StudentSessionBloc>().add(UpdateTabBarEvent(index: 1));
+    }
+  }
+
   bool _isRebuildWidgetState(StudentSessionStates state) {
-    var elm = state is StudentSessionInitialState ||
+    return state is StudentSessionInitialState ||
         state is UpdatedTabBarState ||
         state is UpdateSelectedDateTimeIndexState ||
         state is FetchingTeacherDetailsState ||
         state is FetchingTeacherDetailsFailureState ||
         state is FetchedTeacherDetailsState;
-    return elm;
   }
 
   @override
@@ -56,10 +60,12 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
       },
       buildWhen: (previous, current) => _isRebuildWidgetState(current),
       builder: (context, state) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          resizeToAvoidBottomInset: false,
-          body: getScreeContent(),
+        return SafeArea(
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            resizeToAvoidBottomInset: false,
+            body: getScreeContent(),
+          ),
         );
       },
     );
@@ -67,7 +73,7 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
 
   Widget getTopBanner() {
     return Container(
-      height: 180,
+      // height: 180,
       decoration: const BoxDecoration(
           color: AppColors.lightCyan,
           borderRadius: BorderRadius.only(
@@ -95,124 +101,18 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
                   ],
                 ),
               ),
-              Expanded(
-                child: Center(
-                  child: getMentorDetails(),
+              if(teacherDetails != null) Container(
+                decoration: const BoxDecoration(
+                  color: AppColors.whiteColor,
+                  borderRadius: BorderRadius.all(Radius.circular(20))
+                ),
+                child: MentorPersonalDetailCard(
+                  mentorDetail: teacherDetails!,
+                  showAllTags: true,
                 ),
               )
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget getMentorsProfileImage() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-        height: 92,
-        width: 70,
-        child: teacherDetails?.profilePictureUrl == null ||
-                teacherDetails?.profilePictureUrl?.contains("https") == false
-            ? const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Center(
-                  child: AppImage(
-                    image: ImageAsset.blueAvatar,
-                  ),
-                ),
-              )
-            : Image.network(
-                teacherDetails?.profilePictureUrl ?? "",
-                fit: BoxFit.cover,
-                errorBuilder: (BuildContext context, Object exception,
-                    StackTrace? stackTrace) {
-                  return const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(
-                      child: AppImage(
-                        image: ImageAsset.blueAvatar,
-                      ),
-                    ),
-                  );
-                },
-              ),
-      ),
-    );
-  }
-
-  Widget getMentorDetails() {
-    return Visibility(
-      visible: teacherDetails != null,
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
-            border: Border.all(width: 1, color: AppColors.grey32)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            getMentorsProfileImage(),
-            const SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AppText(
-                        teacherDetails?.name ?? "",
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.grey32,
-                          borderRadius: BorderRadius.circular(11.0),
-                        ),
-                        width: 32,
-                        child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
-                              Icon(
-                                Icons.star,
-                                size: 8,
-                                color: Colors.amber,
-                              ),
-                              Text(
-                                "5",
-                                style: TextStyle(fontSize: 10),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  AppText(
-                    teacherDetails?.info ?? "",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-          ],
         ),
       ),
     );

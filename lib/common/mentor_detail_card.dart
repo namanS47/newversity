@@ -29,8 +29,6 @@ class _MentorCardState extends State<MentorDetailCard> {
   }
 
   Widget getMentorDetailsView() {
-    String sessionTags = StringsUtils.getTagListTextFromListOfTags(
-        widget.mentorDetail.tags ?? []);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       width: MediaQuery.of(context).size.width - 50,

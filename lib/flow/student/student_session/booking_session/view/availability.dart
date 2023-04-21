@@ -57,7 +57,7 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
         buildWhen: (previous, current) => _isRebuildWidgetState(current),
         builder: (context, state) {
           if (state is FetchingTeacherAvailabilityState ||
-              state is UpdatedTabBarState) {
+              state is UpdatedTabBarState || state is StudentSessionInitialState) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
