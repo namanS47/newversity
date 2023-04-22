@@ -37,7 +37,7 @@ class _DateWiseSlotViewScreenState extends State<DateWiseSlotViewScreen> {
     BlocProvider.of<StudentSessionBloc>(context).add(
         FetchTeacherSessionTimingsEvent(
             fetchAvailabilityRequestModel: FetchAvailabilityRequestModel(
-                teacherId: "8Wx3In76qQWvKItxcFTNA7n9Yau1",
+                teacherId: widget.dateAvailabilityArgument.teacherId,
                 date: widget.dateAvailabilityArgument.currentDateTime)));
   }
 

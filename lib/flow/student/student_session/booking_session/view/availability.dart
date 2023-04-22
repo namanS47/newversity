@@ -34,7 +34,7 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
     BlocProvider.of<StudentSessionBloc>(context).add(
         FetchTeacherAvailabilityEvent(
             fetchAvailabilityRequestModel: FetchAvailabilityRequestModel(
-                teacherId: "8Wx3In76qQWvKItxcFTNA7n9Yau1"
+                teacherId: widget.teacherDetails?.teacherId
                 // widget.studentSessionArgument.teacherId
                 )));
     super.initState();

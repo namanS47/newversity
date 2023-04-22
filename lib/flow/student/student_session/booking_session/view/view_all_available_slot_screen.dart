@@ -312,7 +312,7 @@ class _ViewAllAvailableSlotScreenState
                     FetchTeacherSessionTimingsEvent(
                         fetchAvailabilityRequestModel:
                             FetchAvailabilityRequestModel(
-                                teacherId: "8Wx3In76qQWvKItxcFTNA7n9Yau1",
+                                teacherId: widget.studentSessionArgument.teacherId,
                                 date: context
                                     .read<StudentSessionBloc>()
                                     .selectedDate)));
@@ -602,13 +602,13 @@ class _ViewAllAvailableSlotScreenState
       BlocProvider.of<StudentSessionBloc>(context).add(
           FetchTeacherSessionTimingsEvent(
               fetchAvailabilityRequestModel: FetchAvailabilityRequestModel(
-                  teacherId: "8Wx3In76qQWvKItxcFTNA7n9Yau1",
+                  teacherId: widget.studentSessionArgument.teacherId,
                   date: context.read<StudentSessionBloc>().selectedDate)));
     } else {
       BlocProvider.of<StudentSessionBloc>(context).add(
           FetchTeacherAvailabilityEvent(
               fetchAvailabilityRequestModel: FetchAvailabilityRequestModel(
-                  teacherId: "8Wx3In76qQWvKItxcFTNA7n9Yau1")));
+                  teacherId: widget.studentSessionArgument.teacherId)));
     }
     setState(() {});
   }
