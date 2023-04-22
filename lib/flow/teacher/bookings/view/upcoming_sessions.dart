@@ -114,58 +114,6 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
     );
   }
 
-  Widget getStartingTime(
-      int hour, int min, int sec, bool crossedThreshHoldTime) {
-    return Row(
-      children: [
-        const AppText(
-          "Starts at: ",
-          fontSize: 10,
-          fontWeight: FontWeight.w400,
-        ),
-        AppText(
-          hour.toString(),
-          fontSize: 10,
-          fontWeight: FontWeight.w400,
-        ),
-        AppText(
-          "H",
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-          color: crossedThreshHoldTime
-              ? AppColors.redColorShadow400
-              : AppColors.strongGreen,
-        ),
-        AppText(
-          ":$min",
-          fontSize: 10,
-          fontWeight: FontWeight.w400,
-        ),
-        AppText(
-          "M",
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-          color: crossedThreshHoldTime
-              ? AppColors.redColorShadow400
-              : AppColors.strongGreen,
-        ),
-        AppText(
-          ":$sec",
-          fontSize: 10,
-          fontWeight: FontWeight.w400,
-        ),
-        AppText(
-          "S",
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-          color: crossedThreshHoldTime
-              ? AppColors.redColorShadow400
-              : AppColors.strongGreen,
-        ),
-      ],
-    );
-  }
-
   //TODO: Naman remove force unwrapping
   onProfileTap(int index) {
     Navigator.of(context).pushNamed(AppRoutes.sessionDetails,
@@ -219,8 +167,7 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
                 height: 7,
               ),
               AppText(
-                listOfSessionDetailResponse[index].agenda ??
-                    "This is Agenda Section",
+                listOfSessionDetailResponse[index].agenda ?? "",
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
@@ -231,8 +178,7 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AppText(
-                    listOfSessionDetailResponse[index].id ??
-                        "This is Qualifucation Section",
+                    listOfSessionDetailResponse[index].id ?? "",
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
@@ -270,14 +216,17 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
     return text;
   }
 
-  onTapJoinNow() {}
+  onTapJoinNow(int index) {
+    Navigator.of(context).pushNamed(AppRoutes.roomPageRoute,
+        arguments: listOfSessionDetailResponse[index].teacherToken);
+  }
 
   Widget getJoinNowCTA(int index) {
     return GestureDetector(
       onTap: () =>
           getLeftTimeInSeconds(listOfSessionDetailResponse[index].startDate!) <
                   1801
-              ? onTapJoinNow()
+              ? onTapJoinNow(index)
               : null,
       child: Container(
         height: 32,

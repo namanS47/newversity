@@ -27,7 +27,6 @@ Widget getTopBanner() {
 }
 
 class _BookingsState extends State<Bookings> {
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<TeacherBookingsBloc, TeacherBookingStates>(

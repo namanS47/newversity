@@ -96,8 +96,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               behavior: HitTestBehavior.translucent,
                               onTap: () => onDrawerTap(),
                               child: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: AppImage(image: ImageAsset.drawer),
+                                padding: EdgeInsets.all(18.0),
+                                child: Center(
+                                    child: AppImage(image: ImageAsset.drawer)),
                               )),
                         ],
                       ),
@@ -140,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   height: 10,
                                 ),
                                 AppText(
-                                    "Email : ${teacherDetails?.email ?? ""}"),
+                                    "Email : ${teacherDetails?.email ?? "Nil"}"),
                               ],
                             ),
                           ),
@@ -156,7 +157,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       context.read<ProfileBloc>().selectedProfileTab == 0
                           ? BlocProvider<ProfileBloc>(
                               create: (context) => ProfileBloc(),
-                              child: const ProfileOverview())
+                              child: ProfileOverview(
+                                profilePercentage:
+                                    profileCompletionPercentageResponse
+                                            ?.completePercentage ??
+                                        0,
+                              ))
                           : BlocProvider<ProfileBloc>(
                               create: (context) => ProfileBloc(),
                               child: const ProfileReview()),

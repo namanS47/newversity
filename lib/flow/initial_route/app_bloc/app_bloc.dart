@@ -39,7 +39,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         } else {
           return emit(RedirectToStudentProfileDashboardRoute());
         }
-      } on AppException catch (e) {
+      } on AppException {
         return emit(SomethingWentWrongState());
       }
     }
@@ -54,7 +54,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         } else {
           return emit(RedirectToTeacherPersonalInformationRoute());
         }
-      } on AppException catch (e) {
+      } on AppException {
         return emit(SomethingWentWrongState());
       }
     }

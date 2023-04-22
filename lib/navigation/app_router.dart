@@ -80,9 +80,7 @@ class AppRouter {
   _navigation(route, {dynamic params}) {
     if (route.toString() == AppRoutes.initialRoute) {
       return BlocProvider<AppBloc>(
-        create: (context) =>
-        AppBloc()
-          ..add(FetchInitialRouteEvent()),
+        create: (context) => AppBloc()..add(FetchInitialRouteEvent()),
         child: const InitialRoute(),
       );
     }
@@ -300,7 +298,9 @@ class AppRouter {
     }
 
     if (route.toString() == AppRoutes.roomPageRoute) {
-      return const RoomPage();
+      return RoomPage(
+        sessionToken: params as String?,
+      );
     }
     if (route.toString() == AppRoutes.availabilityRoute) {
       return BlocProvider<AvailabilityBloc>(

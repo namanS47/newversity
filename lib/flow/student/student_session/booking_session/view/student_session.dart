@@ -102,13 +102,15 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
                 ),
               ),
               if (teacherDetails != null)
-                Container(
-                  decoration: const BoxDecoration(
-                      color: AppColors.whiteColor,
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  child: MentorPersonalDetailCard(
-                    mentorDetail: teacherDetails!,
-                    showAllTags: true,
+                ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        color: AppColors.whiteColor,),
+                    child: MentorPersonalDetailCard(
+                      mentorDetail: teacherDetails!,
+                      showTrimTags: false,
+                    ),
                   ),
                 )
             ],

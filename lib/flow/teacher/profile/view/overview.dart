@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:newversity/common/common_widgets.dart';
+import 'package:newversity/common/complete_profile_card.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/profile/view/bootom_sheet_view/profile_completeness.dart';
 import 'package:newversity/flow/teacher/profile/view/bootom_sheet_view/profile_set_session_rate.dart';
 import 'package:newversity/resources/images.dart';
 
@@ -16,7 +18,9 @@ import '../model/experience_response_model.dart';
 import '../model/tags_response_model.dart';
 
 class ProfileOverview extends StatefulWidget {
-  const ProfileOverview({Key? key}) : super(key: key);
+  double profilePercentage;
+  ProfileOverview({Key? key, required this.profilePercentage})
+      : super(key: key);
 
   @override
   State<ProfileOverview> createState() => _ProfileOverviewState();
@@ -67,32 +71,44 @@ class _ProfileOverviewState extends State<ProfileOverview> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
-                    getAboutMe(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    getExpertise(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    getTalkingPoints(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    getLanguagePreferences(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    getHomeTown(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    getExperienceAndEducation(),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    widget.profilePercentage != 0
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              getAboutMe(),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              getExpertise(),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              getTalkingPoints(),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              getLanguagePreferences(),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              getHomeTown(),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              getCompletenessCard(widget.profilePercentage),
+                              getExperienceAndEducation(),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          )
+                        : CompleteProfileCard(
+                            profilePercentage: widget.profilePercentage),
                     getPerSessionRateLayout(),
                     const SizedBox(
                       height: 100,
@@ -105,6 +121,12 @@ class _ProfileOverviewState extends State<ProfileOverview> {
         );
       },
     );
+  }
+
+  Widget getCompletenessCard(double profilePercentage) {
+    return Visibility(
+        visible: widget.profilePercentage != 100,
+        child: CompleteProfileCard(profilePercentage: profilePercentage));
   }
 
   Widget getPerSessionRateLayout() {
@@ -134,27 +156,49 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   onAmountEditTap() async {
-    await showModalBottomSheet<dynamic>(
-        context: context,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10.0),
-            topRight: Radius.circular(10.0),
+    if (widget.profilePercentage == 0) {
+      await showModalBottomSheet<dynamic>(
+          context: context,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(100.0),
+              topRight: Radius.circular(100.0),
+            ),
           ),
-        ),
-        isScrollControlled: true,
-        builder: (_) {
-          return Padding(
-            padding: MediaQuery.of(context).viewInsets,
-            child: AppAnimatedBottomSheet(
-                bottomSheetWidget: BlocProvider<TeacherDetailsBloc>(
-                    create: (context) => TeacherDetailsBloc(),
-                    child: const ProfileEditSessionRate())),
-          );
-          // your stateful widget
-        }).whenComplete(() {
-      BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetailsEvent());
-    });
+          isScrollControlled: true,
+          builder: (_) {
+            return Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: const AppAnimatedBottomSheet(
+                  bottomSheetWidget: ProfileCompletenessBottomSheet()),
+            );
+            // your stateful widget
+          }).whenComplete(() {
+        BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetailsEvent());
+      });
+    } else {
+      await showModalBottomSheet<dynamic>(
+          context: context,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(100.0),
+              topRight: Radius.circular(100.0),
+            ),
+          ),
+          isScrollControlled: true,
+          builder: (_) {
+            return Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: AppAnimatedBottomSheet(
+                  bottomSheetWidget: BlocProvider<TeacherDetailsBloc>(
+                      create: (context) => TeacherDetailsBloc(),
+                      child: const ProfileEditSessionRate())),
+            );
+            // your stateful widget
+          }).whenComplete(() {
+        BlocProvider.of<ProfileBloc>(context).add(FetchTeacherDetailsEvent());
+      });
+    }
   }
 
   Widget setYourFee() {
@@ -227,21 +271,24 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getExperienceAndEducation() {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
-        child: Column(
-          children: [
-            getExperienceLayout(),
-            const SizedBox(
-              height: 20,
-            ),
-            getEducationLayout()
-          ],
+    return Visibility(
+      visible: widget.profilePercentage == 100,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
+          child: Column(
+            children: [
+              getExperienceLayout(),
+              const SizedBox(
+                height: 20,
+              ),
+              getEducationLayout()
+            ],
+          ),
         ),
       ),
     );
@@ -470,29 +517,32 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getLanguagePreferences() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getHeader("Language Preference"),
-            const SizedBox(
-              height: 5,
-            ),
-            teacherDetails != null
-                ? teacherDetails!.language != null
-                    ? teacherDetails!.language!.isNotEmpty
-                        ? getLanguagePreferenceList()
-                        : noDataFound(40)
-                    : noDataFound(40)
-                : getProgressIndicator(40),
-          ],
+    return Visibility(
+      visible: widget.profilePercentage == 100,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              getHeader("Language Preference"),
+              const SizedBox(
+                height: 5,
+              ),
+              teacherDetails != null
+                  ? teacherDetails!.language != null
+                      ? teacherDetails!.language!.isNotEmpty
+                          ? getLanguagePreferenceList()
+                          : noDataFound(40)
+                      : noDataFound(40)
+                  : getProgressIndicator(40),
+            ],
+          ),
         ),
       ),
     );
@@ -512,25 +562,28 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getTalkingPoints() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getHeader("Talk me about"),
-            const SizedBox(
-              height: 5,
-            ),
-            allMentorship.isNotEmpty
-                ? getListOfTalkingPoints()
-                : noDataFound(40),
-          ],
+    return Visibility(
+      visible: widget.profilePercentage == 100,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              getHeader("Talk me about"),
+              const SizedBox(
+                height: 5,
+              ),
+              allMentorship.isNotEmpty
+                  ? getListOfTalkingPoints()
+                  : noDataFound(40),
+            ],
+          ),
         ),
       ),
     );
@@ -575,23 +628,26 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getExpertise() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            getHeader("Experts in"),
-            const SizedBox(
-              height: 5,
-            ),
-            allExpertise.isNotEmpty ? getListOfExperties() : noDataFound(40)
-          ],
+    return Visibility(
+      visible: widget.profilePercentage == 100,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              getHeader("Experts in"),
+              const SizedBox(
+                height: 5,
+              ),
+              allExpertise.isNotEmpty ? getListOfExperties() : noDataFound(40)
+            ],
+          ),
         ),
       ),
     );
@@ -691,8 +747,9 @@ class _ProfileOverviewState extends State<ProfileOverview> {
           builder: (context) {
             return ImagePickerOptionBottomSheet(
               onCameraClick: () async {
-                final image =
-                    await ImagePicker().pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.front);
+                final image = await ImagePicker().pickImage(
+                    source: ImageSource.camera,
+                    preferredCameraDevice: CameraDevice.front);
                 if (image != null) {
                   file = image;
                   Navigator.pop(context);

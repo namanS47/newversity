@@ -140,7 +140,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                           const SizedBox(
                             height: 20,
                           ),
-                          getNearByHeader(),
+                          lisOfTeachersDetails.isNotEmpty ?getNearByHeader():Container(),
                           const SizedBox(
                             height: 20,
                           ),

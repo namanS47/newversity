@@ -17,7 +17,7 @@ class _TermsAndConditionState extends State<TermsAndCondition> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: const [
-          AppText("Coming soon"),
+          Center(child: AppText("Coming soon")),
         ],
       ),
     );

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/student/search/bloc/mentor_search_bloc.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
@@ -196,39 +194,6 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
           )
         ],
       ),
-    );
-  }
-}
-
-class NoResultFoundScreen extends StatelessWidget {
-  const NoResultFoundScreen({Key? key, required this.message})
-      : super(key: key);
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const SizedBox(
-          height: 30,
-        ),
-        SvgPicture.asset(ImageAsset.nothingFoundIcon),
-        const Padding(
-          padding: EdgeInsets.only(top: 40, bottom: 20),
-          child: Text(
-            "No result found",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-        ),
-        Text(
-          message,
-          style: const TextStyle(fontWeight: FontWeight.w500),
-          textAlign: TextAlign.center,
-        )
-      ],
     );
   }
 }

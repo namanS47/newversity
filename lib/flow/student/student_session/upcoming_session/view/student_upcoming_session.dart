@@ -196,7 +196,8 @@ class _StudentUpcomingSessionScreenState
 
   Widget getMentorDetailsView(int index) {
     String sessionTags = StringsUtils.getTagListTextFromListOfTags(
-        listOfUpcomingSessions[index].teacherDetail?.tags ?? []);
+        listOfUpcomingSessions[index].teacherDetail?.tags ?? [],
+        showTrimTagList: true);
     return GestureDetector(
       onTap: () => onSessionTap(index),
       child: ClipRRect(
@@ -309,7 +310,7 @@ class _StudentUpcomingSessionScreenState
                                       listOfUpcomingSessions[index].startDate ??
                                           DateTime.now()) <
                                   1801
-                              ? onJoinNowTap()
+                              ? onJoinNowTap(index)
                               : null,
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -348,7 +349,10 @@ class _StudentUpcomingSessionScreenState
     );
   }
 
-  onJoinNowTap() {}
+  onJoinNowTap(int index) {
+    Navigator.of(context).pushNamed(AppRoutes.roomPageRoute,
+        arguments: listOfUpcomingSessions[index].studentToken);
+  }
 
   int getLeftTimeInSeconds(DateTime dateTime) {
     return (dateTime.difference(DateTime.now()).inSeconds);

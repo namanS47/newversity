@@ -169,8 +169,7 @@ class _PreviousSessionsState extends State<PreviousSessions> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AppText(
-                    listOfSessionDetailResponse[index].agenda ??
-                        " This is Agenda section",
+                    listOfSessionDetailResponse[index].agenda ?? "",
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
@@ -188,8 +187,7 @@ class _PreviousSessionsState extends State<PreviousSessions> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AppText(
-                    listOfSessionDetailResponse[index].id ??
-                        "This is Qualification Section",
+                    listOfSessionDetailResponse[index].id ?? "",
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),

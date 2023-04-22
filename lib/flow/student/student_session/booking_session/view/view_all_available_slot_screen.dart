@@ -98,7 +98,8 @@ class _ViewAllAvailableSlotScreenState
 
   bool _isRebuildWidgetAvailabilityState(StudentSessionStates state) {
     var elm = state is FetchingTeacherAvailabilityState ||
-        state is FetchedTeacherAvailabilityState;
+        state is FetchedTeacherAvailabilityState ||
+        state is NotTeacherSlotFoundState;
     return elm;
   }
 
@@ -141,6 +142,20 @@ class _ViewAllAvailableSlotScreenState
                     getUpcomingContainers(),
                     const SizedBox(
                       height: 100,
+                    ),
+                  ],
+                );
+              }
+              if (state is NotTeacherSlotFoundState) {
+                return Column(
+                  children: const [
+                    SizedBox(
+                      height: 500,
+                      child: Center(
+                        child: NoResultFoundScreen(
+                          message: "No teacher slot available for this teacher",
+                        ),
+                      ),
                     ),
                   ],
                 );

@@ -19,6 +19,8 @@ class SessionDetailResponseModel {
   String? mentorNote;
   String? studentFeedback;
   double? studentRating;
+  String? teacherToken;
+  String? studentToken;
   bool? cancelled;
 
   SessionDetailResponseModel(
@@ -37,6 +39,8 @@ class SessionDetailResponseModel {
       this.mentorNote,
       this.studentFeedback,
       this.studentRating,
+      this.teacherToken,
+      this.studentToken,
       this.cancelled});
 
   factory SessionDetailResponseModel.fromJson(Map<String, dynamic> json) =>

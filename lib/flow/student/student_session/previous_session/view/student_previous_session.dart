@@ -199,7 +199,7 @@ class _StudentPreviousSessionScreenState
 
   Widget getMentorDetailsView(int index) {
     String sessionTags = StringsUtils.getTagListTextFromListOfTags(
-        listOfPreviousSession[index].teacherDetail?.tags ?? []);
+        listOfPreviousSession[index].teacherDetail?.tags ?? [],showTrimTagList: true);
     return GestureDetector(
       onTap: () => onSessionTap(index),
       child: ClipRRect(

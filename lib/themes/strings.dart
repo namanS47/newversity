@@ -8,6 +8,7 @@ class AppStrings {
       "Breaking barriers and providing flexibility to your mentorship.";
   static const proceed = "Proceed";
   static const update = "Update";
+  static const completeProfile = "Complete profile";
   static const bookSession = "Book  Your Session";
   static const confirm = "Confirm";
   static const addExperience = "Add Experience";
@@ -67,7 +68,6 @@ class AppStrings {
   static const myBookings = "My Bookings";
   static const mySessions = "My Sessions";
   static const experience = "Experience";
-  static const completeProfile = "Complete profile";
   static const watchVideo = "Watch video";
   static const setAvailability = "Set your availability";
   static const howItWorks = "How it works?";

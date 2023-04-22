@@ -4,7 +4,8 @@ import 'package:hmssdk_flutter/hmssdk_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class RoomPage extends StatelessWidget {
-  const RoomPage({super.key});
+  final String? sessionToken;
+  const RoomPage({super.key, required this.sessionToken});
 
   Future<bool> getPermissions() async {
     await Permission.camera.request();
@@ -39,7 +40,10 @@ class RoomPage extends StatelessWidget {
               await getPermissions();
               Navigator.push(
                 context,
-                CupertinoPageRoute(builder: (_) => const MeetingPage()),
+                CupertinoPageRoute(
+                    builder: (_) => MeetingPage(
+                          sessionToken: sessionToken ?? "",
+                        )),
               );
             },
             child: const Padding(
@@ -56,9 +60,9 @@ class RoomPage extends StatelessWidget {
   }
 }
 
-
 class MeetingPage extends StatefulWidget {
-  const MeetingPage({super.key});
+  final String sessionToken;
+  const MeetingPage({super.key, required this.sessionToken});
 
   @override
   State<MeetingPage> createState() => _MeetingPageState();
@@ -73,7 +77,6 @@ class _MeetingPageState extends State<MeetingPage>
   String authToken =
       "eyJhbGciOiJIUzI1NiJ9.eyJyb29tX2lkIjoiNjQwYTVhZjlkYjEwNGM0YzQ0YmVmZGY4Iiwicm9sZSI6Imd1ZXN0IiwidXNlcl9pZCI6Im5hbWFuVXNlcklkIiwiYWNjZXNzX2tleSI6IjY0MDlkNDRiZWRjN2M4ZjM2NzRjMGQzYiIsInR5cGUiOiJhcHAiLCJ2ZXJzaW9uIjoyLCJqdGkiOiI0M2E4MzlkNS04YWZhLTRjZWItYjljMi0yMTQ0YjM3Nzc3YmQiLCJleHAiOjE2Nzg0ODkzMjUsImlhdCI6MTY3ODQwMjg2NSwibmJmIjoxNjc4NDAyOTI1fQ.G8yEfE5cm75OkzN0g7pkQRzSH3h0A8fc67qNdAmmNK4";
   String userName = "test_user";
-
 
   // Variables required for rendering video and peer info
   HMSPeer? localPeer, remotePeer;
@@ -90,7 +93,8 @@ class _MeetingPageState extends State<MeetingPage>
     hmsSDK = HMSSDK();
     await hmsSDK.build(); // ensure to await while invoking the `build` method
     hmsSDK.addUpdateListener(listener: this);
-    hmsSDK.join(config: HMSConfig(authToken: authToken, userName: userName));
+    hmsSDK.join(
+        config: HMSConfig(authToken: widget.sessionToken, userName: userName));
   }
 
   // Clear all variables
@@ -156,8 +160,8 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   void onTrackUpdate(
       {required HMSTrack track,
-        required HMSTrackUpdate trackUpdate,
-        required HMSPeer peer}) {
+      required HMSTrackUpdate trackUpdate,
+      required HMSPeer peer}) {
     if (track.kind == HMSTrackKind.kHMSTrackKindVideo) {
       switch (trackUpdate) {
         case HMSTrackUpdate.trackRemoved:
@@ -185,7 +189,7 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   void onAudioDeviceChanged(
       {HMSAudioDevice? currentAudioDevice,
-        List<HMSAudioDevice>? availableAudioDevice}) {}
+      List<HMSAudioDevice>? availableAudioDevice}) {}
 
   @override
   void onChangeTrackStateRequest(
@@ -221,32 +225,32 @@ class _MeetingPageState extends State<MeetingPage>
     return Container(
       key: key,
       child: (videoTrack != null && !(videoTrack.isMute))
-      // Actual widget to render video
+          // Actual widget to render video
           ? HMSVideoView(
-        track: videoTrack,
-      )
+              track: videoTrack,
+            )
           : Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.blue.withAlpha(4),
-            shape: BoxShape.circle,
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.blue,
-                blurRadius: 20.0,
-                spreadRadius: 5.0,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.blue.withAlpha(4),
+                  shape: BoxShape.circle,
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.blue,
+                      blurRadius: 20.0,
+                      spreadRadius: 5.0,
+                    ),
+                  ],
+                ),
+                child: Text(
+                  peer?.name.substring(0, 1) ?? "D",
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600),
+                ),
               ),
-            ],
-          ),
-          child: Text(
-            peer?.name.substring(0, 1) ?? "D",
-            style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w600),
-          ),
-        ),
-      ),
+            ),
     );
   }
 
@@ -286,8 +290,7 @@ class _MeetingPageState extends State<MeetingPage>
                         localPeer)
                   ],
                 ),
-              ),
-              // End button to leave the room
+              ), // End button to leave the room
               Align(
                 alignment: Alignment.bottomCenter,
                 child: RawMaterialButton(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
 import 'package:newversity/flow/teacher/profile/exam_cracked.dart';
 import 'package:newversity/flow/teacher/profile/experience_and_education.dart';
@@ -118,11 +119,16 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                           ],
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          onTap: () => onSkipTap(),
-                          child: const Text("Skip"),
+                      GestureDetector(
+                        onTap: () => onSkipTap(),
+                        child: const Padding(
+                          padding: EdgeInsets.all(18.0),
+                          child: Center(
+                              child: AppText(
+                            "Skip",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          )),
                         ),
                       )
                     ],

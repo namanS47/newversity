@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
 
@@ -10,14 +9,17 @@ import 'common_widgets.dart';
 
 class MentorPersonalDetailCard extends StatelessWidget {
   final TeacherDetails mentorDetail;
-  final bool showAllTags;
-  const MentorPersonalDetailCard({Key? key, required this.mentorDetail, this.showAllTags = false})
+  final bool showTrimTags;
+
+  const MentorPersonalDetailCard(
+      {Key? key, required this.mentorDetail, this.showTrimTags = true})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String sessionTags =
-        StringsUtils.getTagListTextFromListOfTags(mentorDetail.tags ?? []);
+    String sessionTags = StringsUtils.getTagListTextFromListOfTags(
+        mentorDetail.tags ?? [],
+        showTrimTagList: showTrimTags);
     return InkWell(
       onTap: () {
         Navigator.of(context).pushNamed(AppRoutes.bookSession,

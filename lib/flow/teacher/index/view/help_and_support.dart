@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newversity/common/common_widgets.dart';
+import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
 import 'package:newversity/flow/teacher/index/view/bottom_sheet/contact_us.dart';
 import 'package:newversity/navigation/app_routes.dart';
 
@@ -95,7 +96,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
   }
 
   onTapOfRaiseIssueContainer() {
-    Navigator.of(context).pushNamed(AppRoutes.raiseIssueRoute);
+    Navigator.of(context).pushNamed(AppRoutes.raiseIssueRoute,arguments: SessionDetailArguments(id: "", isPrevious: false));
   }
 
   onTapOfFaqsContainer() {

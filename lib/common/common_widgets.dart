@@ -196,6 +196,39 @@ class AppAnimatedBottomSheet extends StatelessWidget {
   }
 }
 
+class NoResultFoundScreen extends StatelessWidget {
+  const NoResultFoundScreen({Key? key, required this.message})
+      : super(key: key);
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(
+          height: 30,
+        ),
+        SvgPicture.asset(ImageAsset.nothingFoundIcon),
+        const Padding(
+          padding: EdgeInsets.only(top: 40, bottom: 20),
+          child: Text(
+            "No result found",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+        ),
+        Text(
+          message,
+          style: const TextStyle(fontWeight: FontWeight.w500),
+          textAlign: TextAlign.center,
+        )
+      ],
+    );
+  }
+}
+
 class AppImage extends StatelessWidget {
   final String image;
   final double? height;
