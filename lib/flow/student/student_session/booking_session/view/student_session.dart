@@ -101,16 +101,16 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
                   ],
                 ),
               ),
-              if(teacherDetails != null) Container(
-                decoration: const BoxDecoration(
-                  color: AppColors.whiteColor,
-                  borderRadius: BorderRadius.all(Radius.circular(20))
-                ),
-                child: MentorPersonalDetailCard(
-                  mentorDetail: teacherDetails!,
-                  showAllTags: true,
-                ),
-              )
+              if (teacherDetails != null)
+                Container(
+                  decoration: const BoxDecoration(
+                      color: AppColors.whiteColor,
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  child: MentorPersonalDetailCard(
+                    mentorDetail: teacherDetails!,
+                    showAllTags: true,
+                  ),
+                )
             ],
           ),
         ),
@@ -281,7 +281,8 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
                           ? 15
                           : 30)),
               context.read<StudentSessionBloc>().sessionType ?? "",
-              context.read<StudentSessionBloc>().amount ?? 0));
+              context.read<StudentSessionBloc>().amount ?? 0,
+              context.read<StudentSessionBloc>().availabilityId ?? ""));
     }
   }
 }

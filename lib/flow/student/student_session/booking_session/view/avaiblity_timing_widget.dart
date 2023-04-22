@@ -14,6 +14,7 @@ import '../model/selected_datetime_model.dart';
 class AvailabilityTimingWidget extends StatefulWidget {
   final String? teacherId;
   final List<AvailabilityModel> listOfSessionTimings;
+
   const AvailabilityTimingWidget(
       {Key? key, required this.teacherId, required this.listOfSessionTimings})
       : super(key: key);
@@ -199,6 +200,8 @@ class _AvailabilityTimingWidgetState extends State<AvailabilityTimingWidget> {
       int dateSlotIndex) {
     context.read<StudentSessionBloc>().add(UpdateSelectedDateTimeEvent(
         currentSelectedDateTime: currentTapedSelectedTime));
+    context.read<StudentSessionBloc>().availabilityId =
+        widget.listOfSessionTimings[dateSlotIndex].availabilityId;
     context.read<StudentSessionBloc>().amount = (switchEnable
         ? teacherDetails?.sessionPricing!["session_type_b"]
         : teacherDetails?.sessionPricing!["session_type_a"]);

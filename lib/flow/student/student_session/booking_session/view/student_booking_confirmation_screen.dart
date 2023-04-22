@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
+import 'package:newversity/flow/student/payment/data/model/payment_argument.dart';
+import 'package:newversity/flow/student/payment/data/model/payment_completion_argument.dart';
 import 'package:newversity/flow/student/student_session/booking_session/bloc/student_session_bloc.dart';
 import 'package:newversity/flow/teacher/home/model/session_request_model.dart';
 import 'package:newversity/navigation/app_routes.dart';
@@ -89,17 +91,41 @@ class _StudentBookingConfirmationScreenState
         _agendaController.text.isNotEmpty;
   }
 
-  onTapPayConfirm() {
+  onTapPayConfirm() async {
     if (isFormValid()) {
       isLoading = true;
-      BlocProvider.of<StudentSessionBloc>(context).add(SessionAddingEvent(
-          sessionSaveRequest: SessionSaveRequest(
+
+      final paymentResult =
+          await Navigator.of(context).pushNamed(AppRoutes.paymentRoute,
+              arguments: PaymentArgument(
+                amount: widget.sessionBookingArgument.amount.toInt() * 100,
+                availabilityId: widget.sessionBookingArgument.availabilityId,
+              )) as PaymentCompletionArgument;
+
+      if (paymentResult.isPaymentSuccess) {
+        BlocProvider.of<StudentSessionBloc>(context).add(
+          SessionAddingEvent(
+            sessionSaveRequest: SessionSaveRequest(
               teacherId: widget.sessionBookingArgument.teacherId,
               studentId: widget.sessionBookingArgument.studentId,
               sessionType: widget.sessionBookingArgument.sessionType,
               startDate: widget.sessionBookingArgument.startTime,
               endDate: widget.sessionBookingArgument.endTime,
-              amount: widget.sessionBookingArgument.amount)));
+              amount: widget.sessionBookingArgument.amount,
+              paymentId: paymentResult.paymentId,
+              orderId: paymentResult.orderId
+            ),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Something went wrong",
+            ),
+          ),
+        );
+      }
     } else {
       isLoading = false;
       showError = true;

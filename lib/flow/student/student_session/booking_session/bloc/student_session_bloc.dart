@@ -24,6 +24,7 @@ class StudentSessionBloc
   String? sessionType = "short";
   DateTime selectedDate = DateTime.now();
   int selectedDateIndex = 0;
+  String? availabilityId;
   List<AvailabilityModel> availabilityList = [];
   Map<String, List<AvailabilityModel>> dateTimeMap = {};
   SelectedDateTimeModel? selectedDateTimeModel;
@@ -80,9 +81,9 @@ class StudentSessionBloc
       emit(BookedSessionState());
     } catch (exception) {
       if (exception is BadRequestException) {
-        BookingSessionFailureState(msg: exception.message.toString());
+        emit(BookingSessionFailureState(msg: exception.message.toString()));
       } else {
-        BookingSessionFailureState(msg: "Something Went Wrong");
+        emit(BookingSessionFailureState(msg: "Something Went Wrong"));
       }
     }
   }

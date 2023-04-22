@@ -5,9 +5,10 @@ class SessionBookingArgument {
   DateTime endTime;
   String sessionType;
   double amount;
+  String availabilityId;
 
   SessionBookingArgument(this.studentId, this.teacherId, this.startTime,
-      this.endTime, this.sessionType, this.amount);
+      this.endTime, this.sessionType, this.amount, this.availabilityId);
 
   @override
   String toString() {

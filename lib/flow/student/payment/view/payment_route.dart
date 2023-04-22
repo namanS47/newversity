@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/student/payment/data/model/payment_argument.dart';
+import 'package:newversity/flow/student/payment/data/model/payment_completion_argument.dart';
 import 'package:newversity/flow/student/payment/payment_bloc/payment_bloc.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-import '../../../config/app_config.dart';
+import '../../../../config/app_config.dart';
 
 class PaymentRoute extends StatefulWidget {
-  const PaymentRoute({Key? key, required this.paymentArgument}) : super(key: key);
+  const PaymentRoute({Key? key, required this.paymentArgument})
+      : super(key: key);
   final PaymentArgument paymentArgument;
 
   @override
@@ -16,9 +18,11 @@ class PaymentRoute extends StatefulWidget {
 
 class _PaymentRouteState extends State<PaymentRoute> {
   late Razorpay _razorPay;
+
   @override
   void initState() {
-    BlocProvider.of<PaymentBloc>(context).add(CreatePaymentOrderEvent(paymentArgument: widget.paymentArgument));
+    BlocProvider.of<PaymentBloc>(context)
+        .add(CreatePaymentOrderEvent(paymentArgument: widget.paymentArgument));
     _razorPay = Razorpay();
     super.initState();
   }
@@ -27,15 +31,17 @@ class _PaymentRouteState extends State<PaymentRoute> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: BlocConsumer<PaymentBloc, PaymentState> (
+        body: BlocConsumer<PaymentBloc, PaymentState>(
           listener: (context, state) {
-            if(state is CreatePaymentOrderSuccessState) {
+            if (state is CreatePaymentOrderSuccessState) {
               openRazorPayPG();
             }
           },
           builder: (context, state) {
-            if(state is CreatePaymentOrderLoadingState) {
-              return const Center(child: CircularProgressIndicator(),);
+            if (state is CreatePaymentOrderLoadingState) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             }
             // if(state is CreatePaymentOrderSuccessState) {
             //   return Container();
@@ -65,16 +71,24 @@ class _PaymentRouteState extends State<PaymentRoute> {
     };
 
     _razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS,
-            (PaymentSuccessResponse paymentSuccessResponse) {
-
-        });
+        (PaymentSuccessResponse paymentSuccessResponse) {
+      Navigator.pop(
+          context,
+          PaymentCompletionArgument(
+            isPaymentSuccess: true,
+            paymentId: paymentSuccessResponse.paymentId,
+            orderId: paymentSuccessResponse.orderId
+          ));
+    });
 
     _razorPay.on(Razorpay.EVENT_PAYMENT_ERROR,
-            (PaymentFailureResponse paymentFailureResponse) {
-
-        });
+        (PaymentFailureResponse paymentFailureResponse) {
+      Navigator.pop(context, PaymentCompletionArgument(
+          isPaymentSuccess: false,
+          errorMessage: paymentFailureResponse.message
+      ));
+    });
 
     _razorPay.open(options);
   }
 }
-

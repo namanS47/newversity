@@ -131,25 +131,27 @@ class _DateWiseSlotViewScreenState extends State<DateWiseSlotViewScreen> {
   onConfirmTap() {
     Navigator.of(context).pushNamed(AppRoutes.bookingConfirmation,
         arguments: SessionBookingArgument(
-            CommonUtils().getLoggedInUser(),
-            widget.dateAvailabilityArgument.teacherId ?? "",
-            context
-                    .read<StudentSessionBloc>()
-                    .selectedDateTimeModel
-                    ?.currentSelectedDateTime ??
-                DateTime.now(),
-            (context
-                        .read<StudentSessionBloc>()
-                        .selectedDateTimeModel
-                        ?.currentSelectedDateTime ??
-                    DateTime.now())
-                .add(Duration(
-                    minutes: context.read<StudentSessionBloc>().sessionType ==
-                            "short"
-                        ? 15
-                        : 30)),
-            context.read<StudentSessionBloc>().sessionType ?? "",
-            context.read<StudentSessionBloc>().amount ?? 0));
+          CommonUtils().getLoggedInUser(),
+          widget.dateAvailabilityArgument.teacherId ?? "",
+          context
+                  .read<StudentSessionBloc>()
+                  .selectedDateTimeModel
+                  ?.currentSelectedDateTime ??
+              DateTime.now(),
+          (context
+                      .read<StudentSessionBloc>()
+                      .selectedDateTimeModel
+                      ?.currentSelectedDateTime ??
+                  DateTime.now())
+              .add(Duration(
+                  minutes:
+                      context.read<StudentSessionBloc>().sessionType == "short"
+                          ? 15
+                          : 30)),
+          context.read<StudentSessionBloc>().sessionType ?? "",
+          context.read<StudentSessionBloc>().amount ?? 0,
+            context.read<StudentSessionBloc>().availabilityId ?? ""
+        ));
   }
 
   Widget getAppHeader() {

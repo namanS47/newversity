@@ -45,15 +45,13 @@ class _ViewAllAvailableSlotScreenState
     BlocProvider.of<StudentSessionBloc>(context).add(
         FetchTeacherAvailabilityEvent(
             fetchAvailabilityRequestModel: FetchAvailabilityRequestModel(
-                teacherId: "8Wx3In76qQWvKItxcFTNA7n9Yau1")));
+                teacherId: widget.studentSessionArgument.teacherId)));
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<StudentSessionBloc, StudentSessionStates>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
           body: Stack(
@@ -601,26 +599,29 @@ class _ViewAllAvailableSlotScreenState
   }
 
   onConfirmTap() {
-    Navigator.of(context).pushNamed(AppRoutes.bookingConfirmation,
-        arguments: SessionBookingArgument(
-            CommonUtils().getLoggedInUser(),
-            widget.studentSessionArgument.teacherId ?? "",
-            context
-                    .read<StudentSessionBloc>()
-                    .selectedDateTimeModel
-                    ?.currentSelectedDateTime ??
-                DateTime.now(),
-            (context
-                        .read<StudentSessionBloc>()
-                        .selectedDateTimeModel
-                        ?.currentSelectedDateTime ??
-                    DateTime.now())
-                .add(Duration(
-                    minutes: context.read<StudentSessionBloc>().sessionType ==
-                            "short"
-                        ? 15
-                        : 30)),
-            context.read<StudentSessionBloc>().sessionType ?? "",
-            context.read<StudentSessionBloc>().amount ?? 0));
+    Navigator.of(context).pushNamed(
+      AppRoutes.bookingConfirmation,
+      arguments: SessionBookingArgument(
+          CommonUtils().getLoggedInUser(),
+          widget.studentSessionArgument.teacherId ?? "",
+          context
+                  .read<StudentSessionBloc>()
+                  .selectedDateTimeModel
+                  ?.currentSelectedDateTime ??
+              DateTime.now(),
+          (context
+                      .read<StudentSessionBloc>()
+                      .selectedDateTimeModel
+                      ?.currentSelectedDateTime ??
+                  DateTime.now())
+              .add(Duration(
+                  minutes:
+                      context.read<StudentSessionBloc>().sessionType == "short"
+                          ? 15
+                          : 30)),
+          context.read<StudentSessionBloc>().sessionType ?? "",
+          context.read<StudentSessionBloc>().amount ?? 0,
+          context.read<StudentSessionBloc>().availabilityId ?? ""),
+    );
   }
 }

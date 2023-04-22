@@ -4,6 +4,7 @@ part 'availability_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class AvailabilityModel {
+  String? availabilityId;
   String? teacherId;
   DateTime? startDate;
   DateTime? endDate;
@@ -12,6 +13,7 @@ class AvailabilityModel {
   int? totalBooked;
 
   AvailabilityModel({
+    this.availabilityId,
     this.teacherId,
     this.startDate,
     this.endDate,
