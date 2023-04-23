@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:newversity/common/common_utils.dart';
 import 'package:newversity/di/di_initializer.dart';
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 
 import '../../../../../storage/preferences.dart';
 import '../../../webservice/teacher_base_repository.dart';

@@ -5,7 +5,7 @@ import 'package:newversity/common/mentor_personal_detail_card.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/session_bookin_argument.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/student_session_argument.dart';
 import 'package:newversity/flow/student/student_session/booking_session/view/review.dart';
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';

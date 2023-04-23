@@ -8,7 +8,7 @@ import '../../../../../themes/colors.dart';
 import '../../../../../themes/strings.dart';
 import '../../../../../utils/date_time_utils.dart';
 import '../../../../teacher/availability/data/model/availability_model.dart';
-import '../../../../teacher/data/model/teacher_details/teacher_details.dart';
+import '../../../../teacher/data/model/teacher_details/teacher_details_model.dart';
 import '../model/selected_datetime_model.dart';
 
 class AvailabilityTimingWidget extends StatefulWidget {

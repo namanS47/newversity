@@ -17,7 +17,7 @@ import 'package:newversity/flow/teacher/profile/model/tags_with_teacher_id_reque
 import 'package:retrofit/http.dart';
 
 import '../../flow/teacher/availability/data/model/add_availability_request_model.dart';
-import '../../flow/teacher/data/model/teacher_details/teacher_details.dart';
+import '../../flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import '../../flow/teacher/profile/model/education_response_model.dart';
 
 part 'teacher_api.g.dart';

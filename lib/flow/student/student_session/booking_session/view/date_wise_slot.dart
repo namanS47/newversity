@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/student/student_session/booking_session/bloc/student_session_bloc.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/date_availability_argument.dart';
 import 'package:newversity/flow/student/student_session/booking_session/view/avaiblity_timing_widget.dart';
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/utils/date_time_utils.dart';
 
 import '../../../../../common/common_utils.dart';

@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/common/complete_profile_card.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/flow/teacher/profile/view/bootom_sheet_view/profile_completeness.dart';
 import 'package:newversity/flow/teacher/profile/view/bootom_sheet_view/profile_set_session_rate.dart';
 import 'package:newversity/resources/images.dart';

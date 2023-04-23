@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/flow/teacher/profile/view/overview.dart';
 import 'package:newversity/flow/teacher/profile/view/review.dart';

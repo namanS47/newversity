@@ -6,7 +6,7 @@ import '../../../../../network/api/teacher_api.dart';
 import '../../../../../network/webservice/exception.dart';
 import '../../../../teacher/availability/data/model/availability_model.dart';
 import '../../../../teacher/availability/data/model/fetch_availability_request_model.dart';
-import '../../../../teacher/data/model/teacher_details/teacher_details.dart';
+import '../../../../teacher/data/model/teacher_details/teacher_details_model.dart';
 import '../../../../teacher/profile/model/education_response_model.dart';
 import '../../../../teacher/profile/model/experience_response_model.dart';
 

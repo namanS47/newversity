@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:newversity/flow/student/profile_dashboard/data/model/student_details_model.dart';
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_with_teacher_id_request_model.dart';
 
 import '../../../../common/common_utils.dart';

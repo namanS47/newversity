@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:newversity/di/di_initializer.dart';
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_with_teacher_id_request_model.dart';
 import 'package:newversity/network/api/student_api.dart';
 

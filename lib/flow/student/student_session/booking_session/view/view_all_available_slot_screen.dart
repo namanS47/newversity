@@ -14,7 +14,7 @@ import '../../../../../common/common_utils.dart';
 import '../../../../../utils/date_time_utils.dart';
 import '../../../../teacher/availability/data/model/availability_model.dart';
 import '../../../../teacher/availability/data/model/fetch_availability_request_model.dart';
-import '../../../../teacher/data/model/teacher_details/teacher_details.dart';
+import '../../../../teacher/data/model/teacher_details/teacher_details_model.dart';
 import '../bloc/student_session_bloc.dart';
 import '../model/session_bookin_argument.dart';
 

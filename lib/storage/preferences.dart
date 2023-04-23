@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/utils/enums.dart';
 import 'package:newversity/utils/string_extensions.dart';
 import 'package:shared_preferences/shared_preferences.dart';

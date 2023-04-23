@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/student/profile_dashboard/data/model/student_details_model.dart';
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/flow/teacher/home/bloc/home_session_bloc/home_session_details_bloc.dart';
 import 'package:newversity/flow/teacher/home/model/session_data.dart';
 import 'package:newversity/flow/teacher/home/model/session_response_model.dart';

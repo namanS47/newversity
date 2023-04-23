@@ -14,7 +14,7 @@ import '../../../resources/images.dart';
 import '../../../themes/strings.dart';
 import '../../../utils/utils.dart';
 import '../data/bloc/teacher_details/teacher_details_bloc.dart';
-import '../data/model/teacher_details/teacher_details.dart';
+import '../data/model/teacher_details/teacher_details_model.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
 class PersonalInformation extends StatefulWidget {

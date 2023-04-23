@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:newversity/di/di_initializer.dart';
 import 'package:newversity/flow/teacher/bank_account/model/bank_request_model.dart';
 import 'package:newversity/flow/teacher/bank_account/model/bank_response_model.dart';
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';

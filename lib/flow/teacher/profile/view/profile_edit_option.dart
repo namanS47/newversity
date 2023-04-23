@@ -6,7 +6,7 @@ import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 
 import '../../../../common/common_widgets.dart';
-import '../../data/model/teacher_details/teacher_details.dart';
+import '../../data/model/teacher_details/teacher_details_model.dart';
 import '../bloc/profile_bloc/profile_bloc.dart';
 
 class ProfileEditOption extends StatefulWidget {

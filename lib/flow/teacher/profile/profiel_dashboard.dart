@@ -14,7 +14,7 @@ import 'package:newversity/themes/colors.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../../common/common_utils.dart';
-import '../data/model/teacher_details/teacher_details.dart';
+import '../data/model/teacher_details/teacher_details_model.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
 class ProfileDashboard extends StatefulWidget {

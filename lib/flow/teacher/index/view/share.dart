@@ -8,7 +8,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../../../common/common_widgets.dart';
 import '../../../../resources/images.dart';
 import '../../data/bloc/teacher_details/teacher_details_bloc.dart';
-import '../../data/model/teacher_details/teacher_details.dart';
+import '../../data/model/teacher_details/teacher_details_model.dart';
 
 class ShareScreen extends StatefulWidget {
   const ShareScreen({Key? key}) : super(key: key);

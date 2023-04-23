@@ -8,7 +8,7 @@ import 'package:newversity/flow/student/home/bloc/student_home_bloc.dart';
 import 'package:newversity/flow/student/home/model/session_details.dart';
 import 'package:newversity/flow/student/profile_dashboard/data/model/student_details_model.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/student_session_argument.dart';
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_with_teacher_id_request_model.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/themes/colors.dart';

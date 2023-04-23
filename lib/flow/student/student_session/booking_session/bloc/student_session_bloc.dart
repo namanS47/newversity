@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/selected_datetime_model.dart';
 import 'package:newversity/flow/teacher/availability/data/model/fetch_availability_request_model.dart';
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/utils/date_time_utils.dart';
 
 import '../../../../../di/di_initializer.dart';

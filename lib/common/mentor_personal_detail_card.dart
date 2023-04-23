@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 
 import '../flow/student/student_session/booking_session/model/student_session_argument.dart';
 import '../navigation/app_routes.dart';

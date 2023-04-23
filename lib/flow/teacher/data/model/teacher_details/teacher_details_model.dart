@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'teacher_details.g.dart';
+part 'teacher_details_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class TeacherDetailsModel {
@@ -50,7 +50,7 @@ class TeacherDetailsModel {
     this.isNew
   });
 
-  factory TeacherDetailsModel.fromJson(Map<String, dynamic> json) => _$TeacherDetailsFromJson(json);
+  factory TeacherDetailsModel.fromJson(Map<String, dynamic> json) => _$TeacherDetailsModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$TeacherDetailsToJson(this);
+  Map<String, dynamic> toJson() => _$TeacherDetailsModelToJson(this);
 }
