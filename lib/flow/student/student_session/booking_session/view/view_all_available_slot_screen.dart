@@ -37,7 +37,7 @@ class _ViewAllAvailableSlotScreenState
   Map<String, List<AvailabilityModel>> lisOfAvailability = {};
   List<AvailabilityModel> lisOfTimings = [];
   bool isCalenderView = false;
-  TeacherDetails? teacherDetails;
+  TeacherDetailsModel? teacherDetails;
 
   @override
   void initState() {
@@ -496,7 +496,6 @@ class _ViewAllAvailableSlotScreenState
   }
 
   Widget getDateContainer(int index) {
-    print(" Check now $lisOfAvailability");
     return InkWell(
       onTap: () => onSlotDateTap(index),
       child: ClipRRect(

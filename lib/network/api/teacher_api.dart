@@ -30,7 +30,7 @@ abstract class TeacherApi {
   }
 
   @GET("/teacher")
-  Future<TeacherDetails?> getTeacherDetails(
+  Future<TeacherDetailsModel?> getTeacherDetails(
       @Header("teacherId") String teacherId);
 
   @GET("/session/id")
@@ -38,8 +38,8 @@ abstract class TeacherApi {
       @Header("id") String sessionId);
 
   @POST("/addTeacher")
-  Future<TeacherDetails?> sendTeacherDetails(
-      @Body() TeacherDetails teacherDetails,
+  Future<TeacherDetailsModel?> sendTeacherDetails(
+      @Body() TeacherDetailsModel teacherDetails,
       @Header("teacherId") String teacherId);
 
   @POST("/teacher/experience")
@@ -108,6 +108,6 @@ abstract class TeacherApi {
 
   @POST("/teacher/profileImage")
   @MultiPart()
-  Future<TeacherDetails?> uploadProfilePicture(
+  Future<TeacherDetailsModel?> uploadProfilePicture(
       @Part() File file, @Part() String teacherId);
 }

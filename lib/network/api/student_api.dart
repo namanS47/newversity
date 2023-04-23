@@ -56,7 +56,7 @@ abstract class StudentApi {
   Future<void> addListOfTags(@Body() AddTagRequestModel addTagRequestModel);
 
   @GET("/tag/allTeacher")
-  Future<List<TeacherDetails>?> getTeacherByTags(
+  Future<List<TeacherDetailsModel>?> getTeacherByTags(
       @Body() TagRequestModel addTagRequestModel);
 
   @POST("/student/profileImage")
@@ -68,7 +68,7 @@ abstract class StudentApi {
   Future<List<String>> fetchTagsListBySearchKeyword(@Query("tag") String tag);
 
   @GET("/tag/allTeacher")
-  Future<List<TeacherDetails>> fetchTeacherDetailsByTagName(
+  Future<List<TeacherDetailsModel>> fetchTeacherDetailsByTagName(
     @Body() TagRequestModel tagsList,
   );
 

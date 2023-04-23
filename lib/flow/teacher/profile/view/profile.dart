@@ -22,7 +22,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  TeacherDetails? teacherDetails;
+  TeacherDetailsModel? teacherDetails;
   ProfileCompletionPercentageResponse? profileCompletionPercentageResponse;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 

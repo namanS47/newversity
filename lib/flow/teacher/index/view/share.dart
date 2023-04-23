@@ -19,7 +19,7 @@ class ShareScreen extends StatefulWidget {
 
 class _ShareScreenState extends State<ShareScreen> {
   var profileUrlEditController = TextEditingController();
-  TeacherDetails? teacherDetails;
+  TeacherDetailsModel? teacherDetails;
   bool isProfileUrlEditMode = false;
 
   @override
@@ -176,7 +176,7 @@ class _ShareScreenState extends State<ShareScreen> {
       BlocProvider.of<TeacherDetailsBloc>(context).add(
         SaveTeacherDetailsEvent(
           teacherDetails:
-              TeacherDetails(profileUrl: profileUrlEditController.text),
+              TeacherDetailsModel(profileUrl: profileUrlEditController.text),
         ),
       );
     } else {

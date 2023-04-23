@@ -26,7 +26,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool isSessionBooked = true;
-  TeacherDetails? teacherDetails;
+  TeacherDetailsModel? teacherDetails;
   StudentDetail? studentDetails;
   List<SessionDetailsResponse>? listOfSessionDetailResponse = [];
   SessionDetailsResponse? nearestStartSession;
@@ -856,7 +856,7 @@ class _HomeState extends State<Home> {
 
 class HomeAppBar extends PreferredSize {
   final double appSizeHeight;
-  final TeacherDetails? teacherDetails;
+  final TeacherDetailsModel? teacherDetails;
 
   HomeAppBar(
       {Key? key, required this.appSizeHeight, required this.teacherDetails})

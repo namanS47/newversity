@@ -29,7 +29,7 @@ class DateWiseSlotViewScreen extends StatefulWidget {
 
 class _DateWiseSlotViewScreenState extends State<DateWiseSlotViewScreen> {
   List<AvailabilityModel> listOfSessionTimings = [];
-  TeacherDetails? teacherDetails;
+  TeacherDetailsModel? teacherDetails;
 
   @override
   void initState() {

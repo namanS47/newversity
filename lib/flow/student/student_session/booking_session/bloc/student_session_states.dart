@@ -10,7 +10,7 @@ class UpdatedTabBarState extends StudentSessionStates {}
 class FetchingTeacherDetailsState extends StudentSessionStates {}
 
 class FetchedTeacherDetailsState extends StudentSessionStates {
-  final TeacherDetails? teacherDetails;
+  final TeacherDetailsModel? teacherDetails;
   FetchedTeacherDetailsState({required this.teacherDetails});
 }
 

@@ -22,8 +22,8 @@ import '../home/model/session_response_model.dart';
 class TeacherBaseRepository extends BaseRepository {
   final TeacherApi _teacherApi = DI.inject<TeacherApi>();
 
-  Future<TeacherDetails?> addTeacherDetails(
-      TeacherDetails teacherDetails, String teacherId) async {
+  Future<TeacherDetailsModel?> addTeacherDetails(
+      TeacherDetailsModel teacherDetails, String teacherId) async {
     try {
       return await _teacherApi.sendTeacherDetails(teacherDetails, teacherId);
     } on DioError catch (exception) {
@@ -142,8 +142,8 @@ class TeacherBaseRepository extends BaseRepository {
     return listOfEducation;
   }
 
-  Future<TeacherDetails?> getTeachersDetail(String teacherId) async {
-    TeacherDetails? response = TeacherDetails();
+  Future<TeacherDetailsModel?> getTeachersDetail(String teacherId) async {
+    TeacherDetailsModel? response = TeacherDetailsModel();
     try {
       response = await _teacherApi.getTeacherDetails(teacherId);
     } on DioError catch (exception) {
@@ -185,7 +185,7 @@ class TeacherBaseRepository extends BaseRepository {
     }
   }
 
-  Future<TeacherDetails?> uploadTeacherProfileUrl(
+  Future<TeacherDetailsModel?> uploadTeacherProfileUrl(
       File file, String teacherId) async {
     try {
       return await _teacherApi.uploadProfilePicture(file, teacherId);

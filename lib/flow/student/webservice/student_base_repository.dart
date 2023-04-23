@@ -82,9 +82,9 @@ class StudentBaseRepository extends BaseRepository {
     return listOfSessionDetails;
   }
 
-  Future<List<TeacherDetails>?> getTeacherDetailsWithTags(
+  Future<List<TeacherDetailsModel>?> getTeacherDetailsWithTags(
       TagRequestModel addTagRequestModel) async {
-    List<TeacherDetails>? listOfTeacherDetails = [];
+    List<TeacherDetailsModel>? listOfTeacherDetails = [];
     try {
       listOfTeacherDetails =
           await _studentApi.getTeacherByTags(addTagRequestModel);

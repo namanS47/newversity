@@ -75,7 +75,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
         isLoading = false;
         context.read<ProfileBloc>().add(ChangeProfileCardIndexEvent());
       } else if (state is FetchTeacherDetailSuccessState) {
-        TeacherDetails? details =
+        TeacherDetailsModel? details =
             context.read<TeacherDetailsBloc>().teacherDetails;
         _nameController.text = details?.name ?? "";
         _titleController.text = details?.title ?? "";
@@ -540,7 +540,7 @@ class _PersonalInformationState extends State<PersonalInformation> {
       });
       BlocProvider.of<TeacherDetailsBloc>(context).add(
         SaveTeacherDetailsEvent(
-          teacherDetails: TeacherDetails(
+          teacherDetails: TeacherDetailsModel(
             teacherId: CommonUtils().getLoggedInUser(),
             name: _nameController.text,
             location: _locationController.text,

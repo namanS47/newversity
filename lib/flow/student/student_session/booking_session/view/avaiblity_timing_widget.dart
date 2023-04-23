@@ -26,7 +26,7 @@ class AvailabilityTimingWidget extends StatefulWidget {
 
 class _AvailabilityTimingWidgetState extends State<AvailabilityTimingWidget> {
   List<DateTime> currentIntervalSessionTimings = [];
-  TeacherDetails? teacherDetails;
+  TeacherDetailsModel? teacherDetails;
   SelectedDateTimeModel? selectedDateTimeModel;
 
   @override

@@ -17,7 +17,7 @@ class SearchRepository {
     }
   }
 
-  Future<List<TeacherDetails>?> fetchTeachersListByTagName(TagRequestModel tagsList) async {
+  Future<List<TeacherDetailsModel>?> fetchTeachersListByTagName(TagRequestModel tagsList) async {
     try {
       return await _studentApi.fetchTeacherDetailsByTagName(tagsList);
     } on DioError catch (exception) {

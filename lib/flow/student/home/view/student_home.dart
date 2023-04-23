@@ -34,7 +34,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   List<TargetFocus> targetFocus = [];
   GlobalKey key = GlobalKey();
   List<TagModel> lisOfTagRequestModel = [];
-  List<TeacherDetails> lisOfTeachersDetails = [];
+  List<TeacherDetailsModel> lisOfTeachersDetails = [];
 
   List<String> listOfStudentTag = [];
 

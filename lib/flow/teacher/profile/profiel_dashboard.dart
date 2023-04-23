@@ -149,7 +149,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
   onSkipTap() {
     BlocProvider.of<ProfileBloc>(context).add(
       SaveProfileDetailsEvent(
-        teacherDetails: TeacherDetails(
+        teacherDetails: TeacherDetailsModel(
           teacherId: CommonUtils().getLoggedInUser(),
         ),
       ),

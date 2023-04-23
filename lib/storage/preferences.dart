@@ -48,9 +48,9 @@ abstract class Preferences {
     }
   }
 
-  Future<TeacherDetails> getTeacherDetails();
+  Future<TeacherDetailsModel> getTeacherDetails();
 
-  Future<void> setTeacherDetails(TeacherDetails teacherDetails);
+  Future<void> setTeacherDetails(TeacherDetailsModel teacherDetails);
 
   Future<String> getMobileNumber();
 
@@ -81,12 +81,12 @@ class PreferencesImpl extends Preferences {
   }
 
   @override
-  Future<TeacherDetails> getTeacherDetails() async {
+  Future<TeacherDetailsModel> getTeacherDetails() async {
     return await getObjectPreference(PreferencesKey.teacherDetails);
   }
 
   @override
-  Future<void> setTeacherDetails(TeacherDetails teacherDetails) async {
+  Future<void> setTeacherDetails(TeacherDetailsModel teacherDetails) async {
     return setObjectPreference(PreferencesKey.teacherDetails, teacherDetails);
   }
 

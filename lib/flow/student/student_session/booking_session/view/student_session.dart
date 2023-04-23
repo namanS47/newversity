@@ -27,7 +27,7 @@ class StudentSessionScreen extends StatefulWidget {
 }
 
 class _StudentSessionScreenState extends State<StudentSessionScreen> {
-  TeacherDetails? teacherDetails;
+  TeacherDetailsModel? teacherDetails;
 
   @override
   void initState() {

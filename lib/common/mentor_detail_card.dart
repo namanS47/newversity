@@ -15,7 +15,7 @@ import 'common_widgets.dart';
 class MentorDetailCard extends StatefulWidget {
   const MentorDetailCard({Key? key, required this.mentorDetail, this.onTap})
       : super(key: key);
-  final TeacherDetails mentorDetail;
+  final TeacherDetailsModel mentorDetail;
   final void Function()? onTap;
 
   @override

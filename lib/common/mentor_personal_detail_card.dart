@@ -8,7 +8,7 @@ import '../utils/strings.dart';
 import 'common_widgets.dart';
 
 class MentorPersonalDetailCard extends StatelessWidget {
-  final TeacherDetails mentorDetail;
+  final TeacherDetailsModel mentorDetail;
   final bool showTrimTags;
 
   const MentorPersonalDetailCard(

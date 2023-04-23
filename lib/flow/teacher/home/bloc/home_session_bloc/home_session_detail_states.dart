@@ -44,7 +44,7 @@ class FetchingStudentDetailFailureState extends HomeSessionStates {
 class FetchingTeacherDetailsState extends HomeSessionStates {}
 
 class FetchedTeacherDetailState extends HomeSessionStates {
-  final TeacherDetails? teacherDetails;
+  final TeacherDetailsModel? teacherDetails;
   FetchedTeacherDetailState({required this.teacherDetails});
 }
 

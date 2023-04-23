@@ -17,7 +17,7 @@ class ProfileEditOption extends StatefulWidget {
 }
 
 class _ProfileEditOptionState extends State<ProfileEditOption> {
-  TeacherDetails? teacherDetails;
+  TeacherDetailsModel? teacherDetails;
 
   @override
   void initState() {

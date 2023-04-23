@@ -106,7 +106,7 @@ class _ProfileEditSessionRateState extends State<ProfileEditSessionRate> {
       };
       BlocProvider.of<TeacherDetailsBloc>(context).add(
         SaveTeacherDetailsEvent(
-          teacherDetails: TeacherDetails(sessionPricing: sessionPrice),
+          teacherDetails: TeacherDetailsModel(sessionPricing: sessionPrice),
         ),
       );
     } else {

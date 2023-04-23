@@ -16,7 +16,7 @@ import 'avaiblity_timing_widget.dart';
 
 class SessionAvailability extends StatefulWidget {
   final StudentSessionArgument studentSessionArgument;
-  final TeacherDetails? teacherDetails;
+  final TeacherDetailsModel? teacherDetails;
 
   const SessionAvailability(
       {Key? key,

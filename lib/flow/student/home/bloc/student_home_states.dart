@@ -34,7 +34,7 @@ class FetchingStudentUpcomingSessionFailureState extends StudentHomeStates {
 class FetchingMentorsWithTagState extends StudentHomeStates {}
 
 class FetchedMentorsWithTagState extends StudentHomeStates {
-  final List<TeacherDetails> lisOfTeacherDetails;
+  final List<TeacherDetailsModel> lisOfTeacherDetails;
   FetchedMentorsWithTagState({required this.lisOfTeacherDetails});
 }
 

@@ -64,5 +64,5 @@ class UploadDocumentEvent extends ProfileEvents {
 
 class SaveProfileDetailsEvent extends ProfileEvents {
   SaveProfileDetailsEvent({required this.teacherDetails});
-  final TeacherDetails teacherDetails;
+  final TeacherDetailsModel teacherDetails;
 }

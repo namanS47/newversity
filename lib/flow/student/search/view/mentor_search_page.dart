@@ -72,7 +72,7 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
     );
   }
 
-  Widget getResultedTeacherListWidget(List<TeacherDetails> teacherDetailsList) {
+  Widget getResultedTeacherListWidget(List<TeacherDetailsModel> teacherDetailsList) {
     return Expanded(
       child: ListView.builder(
         shrinkWrap: true,

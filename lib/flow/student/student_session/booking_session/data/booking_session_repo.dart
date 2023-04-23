@@ -46,8 +46,8 @@ class SessionBookingRepository extends StudentBaseRepository {
     return listOfEducation;
   }
 
-  Future<TeacherDetails?> getTeachersDetail(String teacherId) async {
-    TeacherDetails? response;
+  Future<TeacherDetailsModel?> getTeachersDetail(String teacherId) async {
+    TeacherDetailsModel? response;
     try {
       response = await _teacherApi.getTeacherDetails(teacherId);
     } on DioError catch (exception) {
