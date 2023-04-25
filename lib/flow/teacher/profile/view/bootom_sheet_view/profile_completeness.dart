@@ -8,7 +8,11 @@ import '../../../../../themes/strings.dart';
 import '../../model/profile_dashboard_arguments.dart';
 
 class ProfileCompletenessBottomSheet extends StatefulWidget {
-  const ProfileCompletenessBottomSheet({Key? key}) : super(key: key);
+  final String reason;
+  final bool isStudent;
+  const ProfileCompletenessBottomSheet(
+      {Key? key, required this.reason, required this.isStudent})
+      : super(key: key);
 
   @override
   State<ProfileCompletenessBottomSheet> createState() =>
@@ -46,15 +50,15 @@ class _ProfileCompletenessBottomSheetState
                       height: 16,
                     ),
                     const AppText(
-                      "Your profile is looking empty!",
+                      "Your profile is looking incomplete!",
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                     ),
                     const SizedBox(
                       height: 10,
                     ),
-                    const AppText(
-                      "We noticed that you haven't finished setting up your profile.\n Complete it to add fees and get your first student",
+                    AppText(
+                      widget.reason,
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       color: AppColors.grey55,
@@ -70,10 +74,14 @@ class _ProfileCompletenessBottomSheetState
     );
   }
 
-  onProfileCompletenessTap() {
-    Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
-        arguments:
-            ProfileDashboardArguments(directedIndex: 1, showBackButton: true));
+  onProfileCompletenessTap() async {
+    if (widget.isStudent) {
+      await Navigator.of(context).pushNamed(AppRoutes.editProfile);
+    } else {
+      Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
+          arguments: ProfileDashboardArguments(
+              directedIndex: 1, showBackButton: true));
+    }
   }
 
   Widget getProfileCompleteCTA() {

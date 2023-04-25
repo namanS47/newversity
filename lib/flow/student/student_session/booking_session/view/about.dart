@@ -58,60 +58,67 @@ class _AboutSessionState extends State<AboutSession> {
         if (state is FetchedTeacherDetailsState ||
             state is FetchedTeacherEducationState ||
             state is FetchedTeacherExperienceState) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              getAboutHeader(),
-              const SizedBox(
-                height: 10,
+          return Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  getAboutHeader(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  AppText(
+                    teacherDetails?.info ?? "",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  getLocationHeader(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  getLocationLayout(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  getLanguageHeader(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  teacherDetails?.language != null
+                      ? getLanguageLayout()
+                      : Container(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  getExperienceHeader(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  lisOfExperienceModel.isNotEmpty
+                      ? getExperienceLayout()
+                      : noDataFound(40),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  getEducationHeader(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  listOfEducationModel.isNotEmpty
+                      ? getEducationLayout()
+                      : noDataFound(40),
+                  const SizedBox(
+                    height: 150,
+                  ),
+                ],
               ),
-              AppText(
-                teacherDetails?.info ?? "",
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              getLocationHeader(),
-              const SizedBox(
-                height: 10,
-              ),
-              getLocationLayout(),
-              const SizedBox(
-                height: 20,
-              ),
-              getLanguageHeader(),
-              const SizedBox(
-                height: 10,
-              ),
-              teacherDetails?.language != null
-                  ? getLanguageLayout()
-                  : Container(),
-              const SizedBox(
-                height: 20,
-              ),
-              getExperienceHeader(),
-              const SizedBox(
-                height: 10,
-              ),
-              lisOfExperienceModel.isNotEmpty
-                  ? getExperienceLayout()
-                  : noDataFound(40),
-              const SizedBox(
-                height: 20,
-              ),
-              getEducationHeader(),
-              const SizedBox(
-                height: 10,
-              ),
-              listOfEducationModel.isNotEmpty
-                  ? getEducationLayout()
-                  : noDataFound(40),
-              const SizedBox(
-                height: 150,
-              ),
-            ],
+            ),
           );
         }
         return Column(

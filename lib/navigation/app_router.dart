@@ -58,7 +58,7 @@ import '../flow/student/payment/view/payment_processing.dart';
 import '../flow/student/payment/view/payment_scuccessfull.dart';
 import '../flow/student/student_session/booking_session/bloc/student_session_bloc.dart';
 import '../flow/student/student_session/booking_session/view/student_session.dart';
-import '../flow/teacher/availability/availability_route.dart';
+import '../flow/teacher/availability/availability_calender.dart';
 import '../flow/teacher/bank_account/earnings/view/earning_screen.dart';
 import '../flow/teacher/index/view/settings.dart';
 import '../flow/teacher/profile/bloc/profile_bloc/profile_bloc.dart';

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -8,46 +7,50 @@ import '../../../../../themes/colors.dart';
 import '../../../../teacher/profile/model/review_data.dart';
 
 class SessionReview extends StatelessWidget {
-   SessionReview({Key? key}) : super(key: key);
+  SessionReview({Key? key}) : super(key: key);
 
   final double _userRating = 4.1;
   List<ReviewData> listOfReviewData = ReviewData.listOfReview;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(
-          height: 20,
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            getReviewsHeading(),
+            const SizedBox(
+              height: 5,
+            ),
+            getRatingContainer(),
+            const SizedBox(
+              height: 5,
+            ),
+            getReviewLayout(context)
+          ],
         ),
-        getReviewsHeading(),
-        const SizedBox(
-          height: 20,
-        ),
-        getRatingContainer(),
-        const SizedBox(
-          height: 20,
-        ),
-        getReviewLayout(context)
-      ],
+      ),
     );
   }
 
   Widget getReviewLayout(BuildContext context) {
     return Wrap(
-      spacing: 30,
-      runSpacing: 12,
+      spacing: 15,
+      runSpacing: 5,
       children: List.generate(
         listOfReviewData.length,
-            (curIndex) {
-          return getReviewContainer(curIndex,context);
+        (curIndex) {
+          return getReviewContainer(curIndex, context);
         },
       ),
     );
   }
 
-  Widget getReviewContainer(int index,BuildContext context) {
+  Widget getReviewContainer(int index, BuildContext context) {
     return Container(
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
@@ -127,8 +130,6 @@ class SessionReview extends StatelessWidget {
           ),
         ));
   }
-
-
 
   Widget getRatingContainer() {
     return Container(

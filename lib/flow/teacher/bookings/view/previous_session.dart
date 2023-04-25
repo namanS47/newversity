@@ -10,7 +10,7 @@ import '../../../../common/common_widgets.dart';
 import '../../../../navigation/app_routes.dart';
 import '../../../../resources/images.dart';
 import '../../../../themes/colors.dart';
-import '../../home/model/session_response_model.dart';
+import '../../../student/student_session/my_session/model/session_detail_response_model.dart';
 
 class PreviousSessions extends StatefulWidget {
   const PreviousSessions({Key? key}) : super(key: key);
@@ -20,7 +20,7 @@ class PreviousSessions extends StatefulWidget {
 }
 
 class _PreviousSessionsState extends State<PreviousSessions> {
-  List<SessionDetailsResponse> listOfSessionDetailResponse = [];
+  List<SessionDetailResponseModel> listOfSessionDetailResponse = [];
 
   @override
   void initState() {
@@ -128,6 +128,36 @@ class _PreviousSessionsState extends State<PreviousSessions> {
             id: listOfSessionDetailResponse[index].id!, isPrevious: true));
   }
 
+  Widget getStudentProfilePic(String? profileUrl) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+        height: 66,
+        width: 66,
+        child: profileUrl == null
+            ? const AppImage(
+                image: ImageAsset.blueAvatar,
+              )
+            : Image.network(
+                profileUrl ?? "",
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: AppImage(
+                        image: ImageAsset.blueAvatar,
+                      ),
+                    ),
+                  );
+                },
+                fit: BoxFit.fill,
+              ),
+      ),
+    );
+  }
+
   Widget getPreviousSessionDataView(int index) {
     int durationInMin = getLeftTimeInSeconds(
         listOfSessionDetailResponse[index].startDate!,
@@ -138,17 +168,9 @@ class _PreviousSessionsState extends State<PreviousSessions> {
       onTap: () => onProfileTap(index),
       child: Row(
         children: [
-          SizedBox(
-            height: 66,
-            width: 66,
-            child: CircleAvatar(
-              radius: 200,
-              child: AppImage(
-                image: listOfSessionDetailResponse[index].paymentId ??
-                    ImageAsset.blueAvatar,
-              ),
-            ),
-          ),
+          getStudentProfilePic(listOfSessionDetailResponse[index]
+              .studentDetail
+              ?.profilePictureUrl),
           const SizedBox(
             width: 16,
           ),
@@ -158,7 +180,7 @@ class _PreviousSessionsState extends State<PreviousSessions> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
-                listOfSessionDetailResponse[index].studentId ?? "",
+                listOfSessionDetailResponse[index].studentDetail?.name ?? "",
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -168,10 +190,12 @@ class _PreviousSessionsState extends State<PreviousSessions> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AppText(
-                    listOfSessionDetailResponse[index].agenda ?? "",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                  Expanded(
+                    child: AppText(
+                      listOfSessionDetailResponse[index].agenda ?? "",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   AppText(
                     "${durationInMin.toString()} min call",
@@ -186,10 +210,12 @@ class _PreviousSessionsState extends State<PreviousSessions> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AppText(
-                    listOfSessionDetailResponse[index].id ?? "",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                  Flexible(
+                    child: AppText(
+                      listOfSessionDetailResponse[index].paymentId ?? "",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   AppText(
                     "On: $sessionDate",

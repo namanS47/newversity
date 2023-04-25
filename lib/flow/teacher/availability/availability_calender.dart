@@ -110,60 +110,64 @@ class _AvailabilityRouteState extends State<AvailabilityRoute> {
                         children: [
                           Column(
                             children: state.availabilityList
-                                .map((availability) => Container(
+                                .map((availability) => Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          vertical: 16, horizontal: 12),
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: AppColors.grey32),
-                                          borderRadius:
-                                              BorderRadius.circular(14)),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            StringsUtils
-                                                .getAvailabilityStartAndEndTimeString(
-                                              context,
-                                              availability.startDate!,
-                                              availability.endDate!,
+                                          vertical: 8.0),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 16, horizontal: 12),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: AppColors.grey32),
+                                            borderRadius:
+                                                BorderRadius.circular(14)),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              StringsUtils
+                                                  .getAvailabilityStartAndEndTimeString(
+                                                context,
+                                                availability.startDate!,
+                                                availability.endDate!,
+                                              ),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12,
+                                              ),
                                             ),
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,
+                                            const Spacer(),
+                                            Text(
+                                              "${availability.totalBooked ?? 0} Booked",
+                                              style: TextStyle(
+                                                  color: (availability
+                                                                  .totalBooked ??
+                                                              0) ==
+                                                          0
+                                                      ? AppColors.strongRed
+                                                      : AppColors.strongGreen,
+                                                  fontSize: 12),
                                             ),
-                                          ),
-                                          const Spacer(),
-                                          Text(
-                                            "${availability.totalBooked ?? 0} Booked",
-                                            style: TextStyle(
-                                                color:
-                                                    (availability.totalBooked ??
-                                                                0) ==
-                                                            0
-                                                        ? AppColors.strongRed
-                                                        : AppColors.strongGreen,
-                                                fontSize: 12),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          // Container(
-                                          //   padding: const EdgeInsets.symmetric(
-                                          //       horizontal: 16, vertical: 8),
-                                          //   decoration: BoxDecoration(
-                                          //     color: AppColors.colorGreen,
-                                          //     borderRadius:
-                                          //         BorderRadius.circular(12),
-                                          //   ),
-                                          //   child: const Center(
-                                          //     child: Text(
-                                          //       "Cancel Slot",
-                                          //       style: TextStyle(
-                                          //         fontSize: 12,
-                                          //         color: AppColors.whiteColor,
-                                          //       ),
-                                          //     ),
-                                          //   ),
-                                          // )
-                                        ],
+                                            const SizedBox(width: 8),
+                                            // Container(
+                                            //   padding: const EdgeInsets.symmetric(
+                                            //       horizontal: 16, vertical: 8),
+                                            //   decoration: BoxDecoration(
+                                            //     color: AppColors.colorGreen,
+                                            //     borderRadius:
+                                            //         BorderRadius.circular(12),
+                                            //   ),
+                                            //   child: const Center(
+                                            //     child: Text(
+                                            //       "Cancel Slot",
+                                            //       style: TextStyle(
+                                            //         fontSize: 12,
+                                            //         color: AppColors.whiteColor,
+                                            //       ),
+                                            //     ),
+                                            //   ),
+                                            // )
+                                          ],
+                                        ),
                                       ),
                                     ))
                                 .toList(),
@@ -352,77 +356,82 @@ class _AvailabilityRouteState extends State<AvailabilityRoute> {
           const SizedBox(
             height: 16,
           ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              color: AppColors.whiteColor,
-              height: 250,
-              child: SfCalendar(
-                monthCellBuilder:
-                    (BuildContext buildContext, MonthCellDetails details) {
-                  return Center(
-                    child: Container(
-                      height: 27,
-                      width: 27,
-                      decoration: BoxDecoration(
-                          color: compareDate(
-                                  context.read<AvailabilityBloc>().selectedDate,
-                                  details.date)
-                              ? AppColors.strongCyan
-                              : AppColors.whiteColor,
-                          shape: BoxShape.circle),
-                      child: Center(
-                        child: Text(
-                          details.date.day.toString(),
-                          style: TextStyle(
+          Visibility(
+            visible: true,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                color: AppColors.whiteColor,
+                height: 250,
+                child: SfCalendar(
+                  monthCellBuilder:
+                      (BuildContext buildContext, MonthCellDetails details) {
+                    return Center(
+                      child: Container(
+                        height: 27,
+                        width: 27,
+                        decoration: BoxDecoration(
                             color: compareDate(
                                     context
                                         .read<AvailabilityBloc>()
                                         .selectedDate,
                                     details.date)
-                                ? AppColors.whiteColor
-                                : todayDate.day > details.date.day
-                                    ? AppColors.grey55
-                                    : AppColors.cyanBlue,
-                            fontWeight: FontWeight.w500,
+                                ? AppColors.strongCyan
+                                : AppColors.whiteColor,
+                            shape: BoxShape.circle),
+                        child: Center(
+                          child: Text(
+                            details.date.day.toString(),
+                            style: TextStyle(
+                              color: compareDate(
+                                      context
+                                          .read<AvailabilityBloc>()
+                                          .selectedDate,
+                                      details.date)
+                                  ? AppColors.whiteColor
+                                  : todayDate.day > details.date.day
+                                      ? AppColors.grey55
+                                      : AppColors.cyanBlue,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
-                onTap: (val) {
-                  setState(() {
-                    context.read<AvailabilityBloc>().selectedDate =
-                        val.date ?? todayDate;
-                    context.read<AvailabilityBloc>().add(
-                        FetchAvailabilityArgumentEvent(
-                            date: val.date ?? todayDate));
-                  });
-                },
-                minDate: DateTime.now(),
-                view: CalendarView.month,
-                showNavigationArrow: true,
-                monthViewSettings: const MonthViewSettings(
-                  numberOfWeeksInView: 6,
-                  showTrailingAndLeadingDates: false,
-                  dayFormat: "EEE",
-                ),
-                selectionDecoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.transparent),
-                ),
-                todayTextStyle: const TextStyle(color: Colors.black),
-                cellBorderColor: Colors.transparent,
-                todayHighlightColor: Colors.transparent,
-                headerHeight: 50,
-                headerStyle: const CalendarHeaderStyle(
-                  backgroundColor: AppColors.cyanBlue,
-                  textStyle: TextStyle(
-                    color: AppColors.whiteColor,
+                    );
+                  },
+                  onTap: (val) {
+                    setState(() {
+                      context.read<AvailabilityBloc>().selectedDate =
+                          val.date ?? todayDate;
+                      context.read<AvailabilityBloc>().add(
+                          FetchAvailabilityArgumentEvent(
+                              date: val.date ?? todayDate));
+                    });
+                  },
+                  minDate: DateTime.now(),
+                  view: CalendarView.month,
+                  showNavigationArrow: true,
+                  monthViewSettings: const MonthViewSettings(
+                    numberOfWeeksInView: 6,
+                    showTrailingAndLeadingDates: false,
+                    dayFormat: "EEE",
                   ),
+                  selectionDecoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.transparent),
+                  ),
+                  todayTextStyle: const TextStyle(color: Colors.black),
+                  cellBorderColor: Colors.transparent,
+                  todayHighlightColor: Colors.transparent,
+                  headerHeight: 50,
+                  headerStyle: const CalendarHeaderStyle(
+                    backgroundColor: AppColors.cyanBlue,
+                    textStyle: TextStyle(
+                      color: AppColors.whiteColor,
+                    ),
+                  ),
+                  viewHeaderStyle: const ViewHeaderStyle(),
                 ),
-                viewHeaderStyle: const ViewHeaderStyle(),
               ),
             ),
           ),

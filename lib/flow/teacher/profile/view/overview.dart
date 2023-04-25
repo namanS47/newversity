@@ -6,6 +6,7 @@ import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/common/complete_profile_card.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/flow/teacher/profile/view/bootom_sheet_view/profile_completeness.dart';
 import 'package:newversity/flow/teacher/profile/view/bootom_sheet_view/profile_set_session_rate.dart';
 import 'package:newversity/resources/images.dart';
@@ -18,8 +19,9 @@ import '../model/experience_response_model.dart';
 import '../model/tags_response_model.dart';
 
 class ProfileOverview extends StatefulWidget {
-  double profilePercentage;
-  ProfileOverview({Key? key, required this.profilePercentage})
+  ProfileCompletionPercentageResponse percentageResponse;
+
+  ProfileOverview({Key? key, required this.percentageResponse})
       : super(key: key);
 
   @override
@@ -73,7 +75,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
                     const SizedBox(
                       height: 20,
                     ),
-                    widget.profilePercentage != 0
+                    widget.percentageResponse.completePercentage != 0
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -100,7 +102,9 @@ class _ProfileOverviewState extends State<ProfileOverview> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              getCompletenessCard(widget.profilePercentage),
+                              getCompletenessCard(widget
+                                      .percentageResponse.completePercentage ??
+                                  0),
                               getExperienceAndEducation(),
                               const SizedBox(
                                 height: 10,
@@ -108,7 +112,9 @@ class _ProfileOverviewState extends State<ProfileOverview> {
                             ],
                           )
                         : CompleteProfileCard(
-                            profilePercentage: widget.profilePercentage),
+                            profilePercentage:
+                                widget.percentageResponse.completePercentage ??
+                                    0),
                     getPerSessionRateLayout(),
                     const SizedBox(
                       height: 100,
@@ -125,7 +131,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getCompletenessCard(double profilePercentage) {
     return Visibility(
-        visible: widget.profilePercentage != 100,
+        visible: widget.percentageResponse.completePercentage != 100,
         child: CompleteProfileCard(profilePercentage: profilePercentage));
   }
 
@@ -156,7 +162,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   onAmountEditTap() async {
-    if (widget.profilePercentage == 0) {
+    if (widget.percentageResponse.completePercentage == 0) {
       await showModalBottomSheet<dynamic>(
           context: context,
           shape: const RoundedRectangleBorder(
@@ -169,8 +175,11 @@ class _ProfileOverviewState extends State<ProfileOverview> {
           builder: (_) {
             return Padding(
               padding: MediaQuery.of(context).viewInsets,
-              child: const AppAnimatedBottomSheet(
-                  bottomSheetWidget: ProfileCompletenessBottomSheet()),
+              child: AppAnimatedBottomSheet(
+                  bottomSheetWidget: ProfileCompletenessBottomSheet(
+                reason: widget.percentageResponse.reason ?? "",
+                isStudent: false,
+              )),
             );
             // your stateful widget
           }).whenComplete(() {
@@ -272,7 +281,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getExperienceAndEducation() {
     return Visibility(
-      visible: widget.profilePercentage == 100,
+      visible: widget.percentageResponse.completePercentage == 100,
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
@@ -518,7 +527,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getLanguagePreferences() {
     return Visibility(
-      visible: widget.profilePercentage == 100,
+      visible: widget.percentageResponse.completePercentage == 100,
       child: Container(
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
@@ -563,7 +572,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getTalkingPoints() {
     return Visibility(
-      visible: widget.profilePercentage == 100,
+      visible: widget.percentageResponse.completePercentage == 100,
       child: Container(
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
@@ -629,7 +638,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
 
   Widget getExpertise() {
     return Visibility(
-      visible: widget.profilePercentage == 100,
+      visible: widget.percentageResponse.completePercentage == 100,
       child: Container(
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(

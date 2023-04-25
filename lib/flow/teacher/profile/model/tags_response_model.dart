@@ -5,6 +5,12 @@ part 'tags_response_model.g.dart';
 @JsonSerializable(createToJson: false, fieldRename: FieldRename.snake)
 class TagsResponseModel {
   String? tagName;
+
+  @override
+  String toString() {
+    return 'TagsResponseModel{tagName: $tagName, tagCategory: $tagCategory, teacherTagDetailList: $teacherTagDetailList, teacherTagDetails: $teacherTagDetails}';
+  }
+
   String? tagCategory;
 
   Map<String, TeacherTagDetails>? teacherTagDetailList;

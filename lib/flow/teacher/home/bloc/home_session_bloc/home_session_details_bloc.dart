@@ -7,6 +7,7 @@ import 'package:newversity/network/webservice/exception.dart';
 
 import '../../../../../common/common_utils.dart';
 import '../../../../../di/di_initializer.dart';
+import '../../../../student/student_session/my_session/model/session_detail_response_model.dart';
 import '../../../../student/webservice/student_base_repository.dart';
 import '../../../profile/model/profile_completion_percentage_response.dart';
 import '../../../webservice/teacher_base_repository.dart';

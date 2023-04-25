@@ -31,13 +31,12 @@ class SessionAvailability extends StatefulWidget {
 class _SessionAvailabilityState extends State<SessionAvailability> {
   @override
   void initState() {
+    super.initState();
     BlocProvider.of<StudentSessionBloc>(context).add(
         FetchTeacherAvailabilityEvent(
             fetchAvailabilityRequestModel: FetchAvailabilityRequestModel(
-                teacherId: widget.teacherDetails?.teacherId
-                // widget.studentSessionArgument.teacherId
+                teacherId: widget.studentSessionArgument.teacherId
                 )));
-    super.initState();
   }
 
   bool _isRebuildWidgetState(StudentSessionStates state) {
@@ -57,7 +56,8 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
         buildWhen: (previous, current) => _isRebuildWidgetState(current),
         builder: (context, state) {
           if (state is FetchingTeacherAvailabilityState ||
-              state is UpdatedTabBarState || state is StudentSessionInitialState) {
+              state is UpdatedTabBarState ||
+              state is StudentSessionInitialState) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,47 +73,40 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
               ],
             );
           }
-          if (state is FetchedTeacherAvailabilityState || state is UpdatedAvailabilityIndexState) {
-            return context.read<StudentSessionBloc>().dateTimeMap.isNotEmpty
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      getAvailableSlotHeader(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      getAvailableSlotLayout(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      AvailabilityTimingWidget(
-                        teacherId:
-                            widget.studentSessionArgument.teacherId ?? "",
-                        listOfSessionTimings:
-                            context.read<StudentSessionBloc>().dateTimeMap[
-                                    context
-                                        .read<StudentSessionBloc>()
-                                        .dateTimeMap
-                                        .keys
-                                        .elementAt(context
-                                            .read<StudentSessionBloc>()
-                                            .selectedDateIndex)] ??
-                                [AvailabilityModel()],
-                      )
-                    ],
-                  )
-                : Column(
-                    children: const [
-                      SizedBox(
-                        height: 500,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            color: AppColors.cyanBlue,
-                          ),
-                        ),
-                      )
-                    ],
-                  );
+          if (state is FetchedTeacherAvailabilityState ||
+              state is UpdatedAvailabilityIndexState) {
+            return Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    getAvailableSlotHeader(),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    getAvailableSlotLayout(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    AvailabilityTimingWidget(
+                      teacherId: widget.studentSessionArgument.teacherId ?? "",
+                      listOfSessionTimings:
+                          context.read<StudentSessionBloc>().dateTimeMap[context
+                                  .read<StudentSessionBloc>()
+                                  .dateTimeMap
+                                  .keys
+                                  .elementAt(context
+                                      .read<StudentSessionBloc>()
+                                      .selectedDateIndex)] ??
+                              [AvailabilityModel()],
+                    )
+                  ],
+                ),
+              ),
+            );
           }
           if (state is NotTeacherSlotFoundState) {
             return Column(
@@ -157,7 +150,6 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
               ],
             );
           } else {
-            print("current state --- ${state.toString()}");
             throw ArgumentError("unsupported state");
           }
         });

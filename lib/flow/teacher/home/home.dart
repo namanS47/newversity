@@ -5,7 +5,6 @@ import 'package:newversity/flow/student/profile_dashboard/data/model/student_det
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/flow/teacher/home/bloc/home_session_bloc/home_session_details_bloc.dart';
 import 'package:newversity/flow/teacher/home/model/session_data.dart';
-import 'package:newversity/flow/teacher/home/model/session_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
@@ -15,6 +14,7 @@ import 'package:newversity/utils/date_time_utils.dart';
 import 'package:newversity/utils/enums.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
+import '../../student/student_session/my_session/model/session_detail_response_model.dart';
 import '../profile/model/profile_dashboard_arguments.dart';
 
 class Home extends StatefulWidget {
@@ -28,8 +28,8 @@ class _HomeState extends State<Home> {
   bool isSessionBooked = true;
   TeacherDetailsModel? teacherDetails;
   StudentDetail? studentDetails;
-  List<SessionDetailsResponse>? listOfSessionDetailResponse = [];
-  SessionDetailsResponse? nearestStartSession;
+  List<SessionDetailResponseModel>? listOfSessionDetailResponse = [];
+  SessionDetailResponseModel? nearestStartSession;
   ProfileCompletionPercentageResponse? profileCompletionPercentageResponse;
 
   @override
@@ -47,7 +47,7 @@ class _HomeState extends State<Home> {
         listOfSessionDetailResponse?.isNotEmpty == true) {
       int minSecond = getLeftTimeInSeconds(
           listOfSessionDetailResponse?[0].startDate ?? DateTime.now());
-      for (SessionDetailsResponse? sessionDetailsResponse
+      for (SessionDetailResponseModel? sessionDetailsResponse
           in listOfSessionDetailResponse!) {
         if (getLeftTimeInSeconds(
                 sessionDetailsResponse?.startDate ?? DateTime.now()) <
@@ -84,54 +84,57 @@ class _HomeState extends State<Home> {
       builder: (context, state) {
         return teacherDetails != null
             ? Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   teacherDetails != null
-                      ? HomeAppBar(
-                          teacherDetails: teacherDetails, appSizeHeight: 100)
+                      ? HomeAppBar(teacherDetails: teacherDetails)
                       : Container(),
                   Expanded(
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 5),
-                          child: Column(
-                            children: [
-                              profileCompletionPercentageResponse != null
-                                  ? getCompleteProfileContainer()
-                                  : Container(),
-                              profileCompletionPercentageResponse != null &&
-                                      listOfSessionDetailResponse != null &&
-                                      nearestStartSession != null
-                                  ? getNextSessionDetailsContainer()
-                                  : Container(),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              getDashBoardDetailContainers(),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              getHowItWorksContainer(),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              profileCompletionPercentageResponse != null &&
-                                      profileCompletionPercentageResponse
-                                              ?.completePercentage ==
-                                          100.0
-                                  ? listOfSessionDetailResponse != null
-                                      ? getScheduleList()
-                                      : const SizedBox(
-                                          width: double.infinity,
-                                          height: 200,
-                                          child: ShimmerEffectView())
-                                  : Container()
-                            ],
-                          ),
-                        )
-                      ],
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            profileCompletionPercentageResponse != null
+                                ? getCompleteProfileContainer()
+                                : Container(),
+                            profileCompletionPercentageResponse != null &&
+                                    listOfSessionDetailResponse != null &&
+                                    nearestStartSession != null
+                                ? getNextSessionDetailsContainer()
+                                : Container(),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            getDashBoardDetailContainers(),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            getHowItWorksContainer(),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            profileCompletionPercentageResponse != null &&
+                                    profileCompletionPercentageResponse
+                                            ?.completePercentage ==
+                                        100.0
+                                ? listOfSessionDetailResponse != null
+                                    ? getScheduleList()
+                                    : const SizedBox(
+                                        width: double.infinity,
+                                        height: 200,
+                                        child: ShimmerEffectView())
+                                : Container(),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -854,22 +857,21 @@ class _HomeState extends State<Home> {
   }
 }
 
-class HomeAppBar extends PreferredSize {
-  final double appSizeHeight;
+class HomeAppBar extends StatefulWidget {
   final TeacherDetailsModel? teacherDetails;
 
-  HomeAppBar(
-      {Key? key, required this.appSizeHeight, required this.teacherDetails})
-      : super(
-            key: key,
-            child: Container(),
-            preferredSize: Size.fromHeight(appSizeHeight));
+  const HomeAppBar({Key? key, required this.teacherDetails}) : super(key: key);
 
+  @override
+  State<HomeAppBar> createState() => _HomeAppBarState();
+}
+
+class _HomeAppBarState extends State<HomeAppBar> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: SizedBox(
           height: 70,
           child: Row(
@@ -894,7 +896,7 @@ class HomeAppBar extends PreferredSize {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           AppText(
-            "Hi ${teacherDetails?.name ?? "Guest"}",
+            "Hi ${widget.teacherDetails?.name ?? "Guest"}",
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -920,10 +922,10 @@ class HomeAppBar extends PreferredSize {
         width: 44,
         child: CircleAvatar(
           radius: 30.0,
-          foregroundImage: teacherDetails?.profilePictureUrl != null
-              ? NetworkImage(teacherDetails!.profilePictureUrl!)
+          foregroundImage: widget.teacherDetails?.profilePictureUrl != null
+              ? NetworkImage(widget.teacherDetails?.profilePictureUrl ?? "")
               : null,
-          child: teacherDetails?.profilePictureUrl == null
+          child: widget.teacherDetails?.profilePictureUrl == null
               ? const AppImage(
                   image: ImageAsset.blueAvatar,
                 )

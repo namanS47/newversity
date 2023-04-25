@@ -16,6 +16,7 @@ import 'package:newversity/network/api/teacher_api.dart';
 import 'package:newversity/network/webservice/exception.dart';
 
 import '../../../network/webservice/base_repository.dart';
+import '../../student/student_session/my_session/model/session_detail_response_model.dart';
 import '../home/model/session_request_model.dart';
 import '../home/model/session_response_model.dart';
 
@@ -48,9 +49,9 @@ class TeacherBaseRepository extends BaseRepository {
     }
   }
 
-  Future<List<SessionDetailsResponse>?> getSessionDetails(
+  Future<List<SessionDetailResponseModel>?> getSessionDetails(
       String teacherId, String type) async {
-    List<SessionDetailsResponse>? listOfSessionDetails = [];
+    List<SessionDetailResponseModel>? listOfSessionDetails = [];
     try {
       listOfSessionDetails =
           await _teacherApi.getSessionDetails(teacherId, type);

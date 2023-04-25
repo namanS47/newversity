@@ -18,9 +18,13 @@ class MentorSearchScreen extends StatefulWidget {
 class _MentorSearchScreenState extends State<MentorSearchScreen> {
   @override
   void initState() {
+    // context
+    //     .read<MentorSearchBloc>()
+    //     .add(GetTagsBySearchKeywordEvent(searchKeyword: ""));
+
     context
         .read<MentorSearchBloc>()
-        .add(GetTagsBySearchKeywordEvent(searchKeyword: ""));
+        .add(FetchTeacherListByTagNameEvent(tagName: ""));
     super.initState();
   }
 
@@ -88,17 +92,20 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
   }
 
   Widget getSearchSuggestionWidget() {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: ListView.builder(
-          physics: const ClampingScrollPhysics(),
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return getSuggestionView(
-                context.read<MentorSearchBloc>().resultedTags[index]);
-          },
-          itemCount: context.read<MentorSearchBloc>().resultedTags.length,
+    return Visibility(
+      visible: false,
+      child: Expanded(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: ListView.builder(
+            physics: const ClampingScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return getSuggestionView(
+                  context.read<MentorSearchBloc>().resultedTags[index]);
+            },
+            itemCount: context.read<MentorSearchBloc>().resultedTags.length,
+          ),
         ),
       ),
     );
@@ -186,9 +193,9 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
                 border: InputBorder.none,
               ),
               onChange: (value) {
-                context
-                    .read<MentorSearchBloc>()
-                    .add(GetTagsBySearchKeywordEvent(searchKeyword: value));
+                context.read<MentorSearchBloc>().add(
+                    FetchTeacherListByTagNameEvent(
+                        tagName: value.toString().toLowerCase()));
               },
             ),
           )

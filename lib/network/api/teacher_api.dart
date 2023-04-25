@@ -16,6 +16,7 @@ import 'package:newversity/flow/teacher/profile/model/tags_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_with_teacher_id_request_model.dart';
 import 'package:retrofit/http.dart';
 
+import '../../flow/student/student_session/my_session/model/session_detail_response_model.dart';
 import '../../flow/teacher/availability/data/model/add_availability_request_model.dart';
 import '../../flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import '../../flow/teacher/profile/model/education_response_model.dart';
@@ -98,7 +99,7 @@ abstract class TeacherApi {
   Future<void> removeAvailability(@Header("id") String id);
 
   @GET("/session/teacher")
-  Future<List<SessionDetailsResponse>?> getSessionDetails(
+  Future<List<SessionDetailResponseModel>?> getSessionDetails(
       @Header("teacherId") String teacherId, @Query("type") String type);
 
   @POST("/teacher/tags/verify")

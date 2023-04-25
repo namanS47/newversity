@@ -153,15 +153,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(
                         height: 10,
                       ),
+                      getProfileIncompletenessReasonView(),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       getProfileTab(),
                       context.read<ProfileBloc>().selectedProfileTab == 0
                           ? BlocProvider<ProfileBloc>(
                               create: (context) => ProfileBloc(),
                               child: ProfileOverview(
-                                profilePercentage:
-                                    profileCompletionPercentageResponse
-                                            ?.completePercentage ??
-                                        0,
+                                percentageResponse:
+                                    profileCompletionPercentageResponse ??
+                                        ProfileCompletionPercentageResponse(),
                               ))
                           : BlocProvider<ProfileBloc>(
                               create: (context) => ProfileBloc(),
@@ -175,6 +178,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+  Widget getProfileIncompletenessReasonView() {
+    return Visibility(
+        visible: profileCompletionPercentageResponse?.completePercentage != 100,
+        child: AppText(
+          profileCompletionPercentageResponse?.reason ??
+              "Please complete your profile first to interact with student",
+          fontSize: 12,
+          color: AppColors.appYellow,
+          fontWeight: FontWeight.w500,
+        ));
   }
 
   Widget getProfileTab() {

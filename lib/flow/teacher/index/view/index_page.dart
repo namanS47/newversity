@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/themes/colors.dart';
 
+import '../../profile/model/profile_completion_percentage_response.dart';
 import '../bloc/index_bloc.dart';
 
 class IndexPage extends StatefulWidget {
@@ -14,15 +15,30 @@ class IndexPage extends StatefulWidget {
 }
 
 class _IndexPageState extends State<IndexPage> {
+  ProfileCompletionPercentageResponse? profileCompletionPercentageResponse;
+
   @override
   void initState() {
     super.initState();
+
+    if (widget.isStudent) {
+      BlocProvider.of<IndexBloc>(context)
+          .add(FetchStudentProfileCompletenessPercentageEvent());
+    } else {
+      BlocProvider.of<IndexBloc>(context)
+          .add(FetchTeacherProfileCompletenessPercentageEvent());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<IndexBloc, IndexState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is FetchedProfileCompletionInfoState) {
+          profileCompletionPercentageResponse =
+              state.profileCompletionPercentageResponse;
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -51,8 +67,16 @@ class _IndexPageState extends State<IndexPage> {
   Widget getBottomNavigationBarItems(int index) {
     return GestureDetector(
       onTap: () {
-        BlocProvider.of<IndexBloc>(context)
-            .add(IndexPageUpdateEvent(index: index));
+        if (profileCompletionPercentageResponse?.completePercentage == 0) {
+          CommonWidgets.showProfileIncompletenessBottomSheet(
+              context,
+              profileCompletionPercentageResponse ??
+                  ProfileCompletionPercentageResponse(),
+              widget.isStudent);
+        } else {
+          BlocProvider.of<IndexBloc>(context)
+              .add(IndexPageUpdateEvent(index: index));
+        }
       },
       child: Container(
         height: 74,
@@ -84,15 +108,13 @@ class _IndexPageState extends State<IndexPage> {
             Column(
               children: [
                 AppImage(
-                  image: widget.isStudent ?? true
+                  image: widget.isStudent
                       ? context
-                                  .read<IndexBloc>()
-                                  .studentPagesNameWithImageIcon[index]
-                              ['image'] ??
-                          ""
-                      : context
                               .read<IndexBloc>()
-                              .pagesNameWithImageIcon[index]['image'] ??
+                              .studentPagesNameWithImageIcon[index]['image'] ??
+                          ""
+                      : context.read<IndexBloc>().pagesNameWithImageIcon[index]
+                              ['image'] ??
                           "",
                   color: context.read<IndexBloc>().selectedIndex == index
                       ? AppColors.primaryColor
@@ -103,14 +125,13 @@ class _IndexPageState extends State<IndexPage> {
                 ),
                 const SizedBox(height: 6),
                 AppText(
-                  widget.isStudent ?? true
+                  widget.isStudent
                       ? context
                               .read<IndexBloc>()
                               .studentPagesNameWithImageIcon[index]['name'] ??
                           ""
-                      : context
-                              .read<IndexBloc>()
-                              .pagesNameWithImageIcon[index]['name'] ??
+                      : context.read<IndexBloc>().pagesNameWithImageIcon[index]
+                              ['name'] ??
                           "",
                   color: context.read<IndexBloc>().selectedIndex == index
                       ? AppColors.primaryColor

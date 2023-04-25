@@ -17,6 +17,7 @@ class MentorPersonalDetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double size = 132;
     String sessionTags = StringsUtils.getTagListTextFromListOfTags(
         mentorDetail.tags ?? [],
         showTrimTagList: showTrimTags);
@@ -27,7 +28,7 @@ class MentorPersonalDetailCard extends StatelessWidget {
                 teacherId: mentorDetail.teacherId, pageIndex: 1));
       },
       child: SizedBox(
-        height: 132,
+        height: showTrimTags ? size : (size + sessionTags.length) / 2,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -56,9 +57,9 @@ class MentorPersonalDetailCard extends StatelessWidget {
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
-                    Text(
-                      sessionTags,
-                      style: const TextStyle(
+                    Flexible(
+                      child: AppText(
+                        sessionTags,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),

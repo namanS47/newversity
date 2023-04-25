@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:newversity/common/mentor_personal_detail_card.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
-import 'package:newversity/utils/strings.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
 import '../flow/student/student_session/booking_session/model/student_session_argument.dart';
@@ -95,7 +94,8 @@ class _MentorCardState extends State<MentorDetailCard> {
                       onTap: () {
                         Navigator.of(context).pushNamed(AppRoutes.bookSession,
                             arguments: StudentSessionArgument(
-                                teacherId: widget.mentorDetail.teacherId));
+                                teacherId: widget.mentorDetail.teacherId,
+                                pageIndex: 1));
                       },
                       child: Container(
                         height: 52,

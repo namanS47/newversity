@@ -334,6 +334,15 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                 height: 12,
               ),
               getPercentageIndicator(253),
+              const SizedBox(
+                height: 10,
+              ),
+              AppText(
+                profileCompletionPercentageResponse?.reason ?? "",
+                color: AppColors.appYellow,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              )
             ],
           ),
           getEditLayout()
@@ -637,9 +646,11 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
               Center(
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width - 200,
-                  child: const AppText(
-                    "Complete your profile, to know more about you for a mentor",
+                  child: AppText(
+                    profileCompletionPercentageResponse?.reason ??
+                        "Please complete your profile first to interact with mentor",
                     textAlign: TextAlign.center,
+                    color: AppColors.appYellow,
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                   ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newversity/flow/student/student_session/my_session/model/session_detail_response_model.dart';
 import 'package:newversity/flow/teacher/bookings/bloc/upcoming_session_bloc/upcoming_session_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
 import 'package:newversity/flow/teacher/bookings/view/bottom_sheets/sort_by_bottom_sheet_upcoming_session.dart';
@@ -7,10 +8,10 @@ import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/utils/enums.dart';
+import 'package:newversity/utils/strings.dart';
 
 import '../../../../common/common_widgets.dart';
 import '../../../../utils/date_time_utils.dart';
-import '../../home/model/session_response_model.dart';
 
 class UpcomingSessions extends StatefulWidget {
   const UpcomingSessions({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class UpcomingSessions extends StatefulWidget {
 }
 
 class _UpcomingSessionsState extends State<UpcomingSessions> {
-  List<SessionDetailsResponse> listOfSessionDetailResponse = [];
+  List<SessionDetailResponseModel> listOfSessionDetailResponse = [];
 
   @override
   void initState() {
@@ -121,22 +122,44 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
             id: listOfSessionDetailResponse[index].id!, isPrevious: false));
   }
 
+  Widget getStudentProfilePic(String? profileUrl) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+        height: 66,
+        width: 66,
+        child: profileUrl == null
+            ? const AppImage(
+                image: ImageAsset.blueAvatar,
+              )
+            : Image.network(
+                profileUrl ?? "",
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: AppImage(
+                        image: ImageAsset.blueAvatar,
+                      ),
+                    ),
+                  );
+                },
+                fit: BoxFit.fill,
+              ),
+      ),
+    );
+  }
+
   Widget getUpComingSessionDataView(int index) {
     return GestureDetector(
       onTap: () => onProfileTap(index),
       child: Row(
         children: [
-          SizedBox(
-            height: 66,
-            width: 66,
-            child: CircleAvatar(
-              radius: 200,
-              child: AppImage(
-                image: listOfSessionDetailResponse[index].paymentId ??
-                    ImageAsset.blueAvatar,
-              ),
-            ),
-          ),
+          getStudentProfilePic(listOfSessionDetailResponse[index]
+              .studentDetail
+              ?.profilePictureUrl),
           const SizedBox(
             width: 16,
           ),
@@ -148,10 +171,16 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AppText(
-                    listOfSessionDetailResponse[index].studentId ?? "",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: AppText(
+                      listOfSessionDetailResponse[index].studentDetail?.name ??
+                          "",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
                   ),
                   AppText(
                     "Starts at : ${getTimeText(index)}",
@@ -177,10 +206,20 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AppText(
-                    listOfSessionDetailResponse[index].id ?? "",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                  Flexible(
+                    child: AppText(
+                      StringsUtils.getTagListTextFromListOfTags(
+                          listOfSessionDetailResponse[index]
+                                  .studentDetail
+                                  ?.tags ??
+                              [],
+                          showTrimTagList: true),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
                   ),
                   getJoinNowCTA(index),
                 ],

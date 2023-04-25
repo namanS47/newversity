@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/common/mentor_detail_card.dart';
 import 'package:newversity/flow/student/home/bloc/student_home_bloc.dart';
@@ -16,7 +15,6 @@ import 'package:newversity/themes/strings.dart';
 import 'package:newversity/utils/date_time_utils.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../../resources/images.dart';
 import '../../../../utils/enums.dart';
@@ -30,9 +28,6 @@ class StudentHomeScreen extends StatefulWidget {
 
 class _StudentHomeScreenState extends State<StudentHomeScreen> {
   StudentDetail? studentDetail;
-  late TutorialCoachMark tutorialCoachMark;
-  List<TargetFocus> targetFocus = [];
-  GlobalKey key = GlobalKey();
   List<TagModel> lisOfTagRequestModel = [];
   List<TeacherDetailsModel> lisOfTeachersDetails = [];
 
@@ -40,30 +35,10 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
 
   @override
   void initState() {
-    // initTargets();
-    // WidgetsBinding.instance.addPostFrameCallback(_layout);
     super.initState();
     BlocProvider.of<StudentHomeBloc>(context).add(FetchStudentDetailEvent());
     BlocProvider.of<StudentHomeBloc>(context).add(FetchUpcomingSessionEvent(
         sessionType: getSessionType(SessionType.upcoming)));
-  }
-
-  void _layout(_) {
-    Future.delayed(const Duration(milliseconds: 100));
-    showTutorial();
-  }
-
-  void showTutorial() {
-    tutorialCoachMark = TutorialCoachMark(
-      hideSkip: true,
-      targets: targetFocus,
-      textSkip: "Got it",
-      opacityShadow: 0.1,
-      onFinish: () {},
-      onClickTarget: (target) {},
-      onSkip: () {},
-      onClickOverlay: (target) {},
-    )..show(context: context);
   }
 
   @override
@@ -93,8 +68,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
             },
             builder: (context, state) {
               return SafeArea(
-                child: ListView(
-                  shrinkWrap: true,
+                child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -115,59 +89,65 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                             height: 10,
                           ),
                           getFindMentorSearchWidget(),
-                          const SizedBox(
-                            height: 20,
-                          ),
                         ],
                       ),
                     ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(28),
-                              topRight: Radius.circular(28))),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          context
-                                  .read<StudentHomeBloc>()
-                                  .listOfUpcomingSessions
-                                  .isNotEmpty
-                              ? getNextSessionCarousel()
-                              : Container(),
-                          const SizedBox(
-                            height: 20,
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: const BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(28),
+                                    topRight: Radius.circular(28))),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                context
+                                        .read<StudentHomeBloc>()
+                                        .listOfUpcomingSessions
+                                        .isNotEmpty
+                                    ? getNextSessionCarousel()
+                                    : Container(),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                lisOfTeachersDetails.isNotEmpty
+                                    ? getNearByHeader()
+                                    : Container(),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                lisOfTeachersDetails.isNotEmpty
+                                    ? getNearbyMentorList()
+                                    : Container(),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                getMentorsReviewHeader(),
+                                const SizedBox(
+                                  height: 18,
+                                ),
+                                getMentorsReviewList(),
+                                const SizedBox(
+                                  height: 32,
+                                ),
+                                getStudentReviewHeader(),
+                                const SizedBox(
+                                  height: 18,
+                                ),
+                                getStudentReviewList(),
+                                getInviteContainer(),
+                                const SizedBox(
+                                  height: 100,
+                                ),
+                              ],
+                            ),
                           ),
-                          lisOfTeachersDetails.isNotEmpty ?getNearByHeader():Container(),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          lisOfTeachersDetails.isNotEmpty
-                              ? getNearbyMentorList()
-                              : Container(),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          getMentorsReviewHeader(),
-                          const SizedBox(
-                            height: 18,
-                          ),
-                          getMentorsReviewList(),
-                          const SizedBox(
-                            height: 32,
-                          ),
-                          getStudentReviewHeader(),
-                          const SizedBox(
-                            height: 18,
-                          ),
-                          getStudentReviewList(),
-                          getInviteContainer(),
-                          const SizedBox(
-                            height: 100,
-                          ),
-                        ],
+                        ),
                       ),
                     )
                   ],
@@ -748,7 +728,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
 
   Widget getNextSessionView(int index) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: Container(
@@ -757,7 +737,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
               color: AppColors.strongCyan,
             ),
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -780,18 +761,37 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      AppText(
-                        "${DateTimeUtils.getBirthFormattedDateTime(context.read<StudentHomeBloc>().listOfUpcomingSessions[index].startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(context.read<StudentHomeBloc>().listOfUpcomingSessions[index].startDate ?? DateTime.now())}",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                      ),
-                    ],
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: AppText(
+                            "${DateTimeUtils.getBirthFormattedDateTime(context.read<StudentHomeBloc>().listOfUpcomingSessions[index].startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(context.read<StudentHomeBloc>().listOfUpcomingSessions[index].startDate ?? DateTime.now())}",
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Container(
+                            decoration: BoxDecoration(
+                                color: AppColors.whiteColor,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 2, horizontal: 10),
+                              child: Row(
+                                children: [
+                                  const AppText(
+                                    "In",
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  getScheduleLeftTime(),
+                                ],
+                              ),
+                            ))
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -932,30 +932,6 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
     );
   }
 
-  Future<void> initTargets() async {
-    targetFocus.add(TargetFocus(
-      shape: ShapeLightFocus.Circle,
-      color: AppColors.whiteColor,
-      identify: "Target 0",
-      keyTarget: key,
-      contents: [
-        TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return CoachMarker(
-                text: "text",
-                onNext: () {
-                  controller.next();
-                },
-                onSkip: () {
-                  controller.skip();
-                },
-              );
-            })
-      ],
-    ));
-  }
-
   Widget getScheduleLeftTime() {
     int timeLeftInSeconds = getLeftTimeInSeconds(DateTime(2024));
     return SlideCountdown(
@@ -968,12 +944,12 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       separator: ":",
       textStyle: const TextStyle(
           fontSize: 12,
-          fontWeight: FontWeight.w400,
-          color: AppColors.whiteColor),
+          fontWeight: FontWeight.w700,
+          color: AppColors.blackMerlin),
       separatorStyle: const TextStyle(
           fontSize: 10,
-          fontWeight: FontWeight.w400,
-          color: AppColors.whiteColor),
+          fontWeight: FontWeight.w700,
+          color: AppColors.blackMerlin),
     );
   }
 
@@ -1037,6 +1013,33 @@ class _CoachMarkerState extends State<CoachMarker> {
           ],
         ),
       ),
+    );
+  }
+
+  int getLeftTimeInSeconds(DateTime dateTime) {
+    return (dateTime.difference(DateTime.now()).inSeconds);
+  }
+
+  Widget getScheduleLeftTime(int index) {
+    int timeLeftInSeconds = getLeftTimeInSeconds(context
+            .read<StudentHomeBloc>()
+            .listOfUpcomingSessions[index]
+            .startDate ??
+        DateTime.now());
+    return SlideCountdown(
+      duration: Duration(seconds: timeLeftInSeconds),
+      decoration: const BoxDecoration(
+        color: Colors.transparent,
+      ),
+      slideDirection: SlideDirection.down,
+      durationTitle: DurationTitle.id(),
+      separator: ":",
+      textStyle: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+      ),
+      separatorStyle:
+          const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
     );
   }
 

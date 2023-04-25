@@ -3,14 +3,12 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:slide_countdown/slide_countdown.dart';
 
-import '../flow/student/home/model/session_details.dart';
+import '../flow/teacher/profile/view/bootom_sheet_view/profile_completeness.dart';
 import '../resources/images.dart';
 import '../themes/colors.dart';
-import '../utils/date_time_utils.dart';
 
 class AppDropdownButton extends StatelessWidget {
   final String hint;
@@ -266,19 +264,18 @@ class AppImage extends StatelessWidget {
           )
         : !image.contains('.')
             ? Image.network(image,
-        height: webHeight,
-        width: webWidth,
-        fit: webFit ?? BoxFit.cover, errorBuilder: (BuildContext context,
-            Object exception, StackTrace? stackTrace) {
-          return const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Center(
-              child: AppImage(
-                image: ImageAsset.blueAvatar,
-              ),
-            ),
-          );
-        })
+                height: webHeight, width: webWidth, fit: webFit ?? BoxFit.cover,
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                return const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: AppImage(
+                      image: ImageAsset.blueAvatar,
+                    ),
+                  ),
+                );
+              })
             : image.split('.').last != 'svg'
                 ? Image.asset(
                     image,
@@ -698,6 +695,32 @@ class CommonWidgets {
             strokeWidth: 2,
           )),
     );
+  }
+
+  static showProfileIncompletenessBottomSheet(
+      BuildContext context,
+      ProfileCompletionPercentageResponse profileCompletionPercentageResponse,
+      bool isStudent) {
+    showModalBottomSheet<dynamic>(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(100.0),
+            topRight: Radius.circular(100.0),
+          ),
+        ),
+        isScrollControlled: true,
+        builder: (_) {
+          return Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: AppAnimatedBottomSheet(
+                bottomSheetWidget: ProfileCompletenessBottomSheet(
+              reason: profileCompletionPercentageResponse.reason ?? "",
+              isStudent: isStudent,
+            )),
+          );
+          // your stateful widget
+        });
   }
 
   static snackBarWidget(BuildContext context, String text) {

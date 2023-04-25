@@ -8,7 +8,7 @@ class SessionDetailInitialState extends HomeSessionStates {}
 class FetchingSessionDetailState extends SessionDetailInitialState {}
 
 class FetchedSessionDetailState extends HomeSessionStates {
-  final List<SessionDetailsResponse>? sessionDetailResponse;
+  final List<SessionDetailResponseModel>? sessionDetailResponse;
   FetchedSessionDetailState({required this.sessionDetailResponse});
 }
 

@@ -69,6 +69,14 @@ class _StudentBookingConfirmationScreenState
                         height: 30,
                       ),
                       getAgendaContainer(context),
+                      showError
+                          ? const AppText(
+                              "agenda can't be empty",
+                              color: AppColors.redColorShadow400,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            )
+                          : Container()
                     ],
                   )),
                   AppCta(
@@ -106,15 +114,15 @@ class _StudentBookingConfirmationScreenState
         BlocProvider.of<StudentSessionBloc>(context).add(
           SessionAddingEvent(
             sessionSaveRequest: SessionSaveRequest(
-              teacherId: widget.sessionBookingArgument.teacherId,
-              studentId: widget.sessionBookingArgument.studentId,
-              sessionType: widget.sessionBookingArgument.sessionType,
-              startDate: widget.sessionBookingArgument.startTime,
-              endDate: widget.sessionBookingArgument.endTime,
-              amount: widget.sessionBookingArgument.amount,
-              paymentId: paymentResult.paymentId,
-              orderId: paymentResult.orderId
-            ),
+                teacherId: widget.sessionBookingArgument.teacherId,
+                studentId: widget.sessionBookingArgument.studentId,
+                sessionType: widget.sessionBookingArgument.sessionType,
+                startDate: widget.sessionBookingArgument.startTime,
+                agenda: _agendaController.text,
+                endDate: widget.sessionBookingArgument.endTime,
+                amount: widget.sessionBookingArgument.amount,
+                paymentId: paymentResult.paymentId,
+                orderId: paymentResult.orderId),
           ),
         );
       } else {

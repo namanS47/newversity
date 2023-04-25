@@ -23,6 +23,9 @@ part 'profile_events.dart';
 part 'profile_states.dart';
 
 class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
+
+
+
   int currentProfileStep = 1;
   double sliderWidth = 195.0;
   double sliderPadding = 0.0;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_utils.dart';
-import 'package:newversity/common/mentor_personal_detail_card.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/session_bookin_argument.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/student_session_argument.dart';
 import 'package:newversity/flow/student/student_session/booking_session/view/review.dart';
@@ -12,6 +11,7 @@ import 'package:newversity/themes/strings.dart';
 
 import '../../../../../common/common_widgets.dart';
 import '../../../../../resources/images.dart';
+import '../../../../../utils/strings.dart';
 import '../bloc/student_session_bloc.dart';
 import 'about.dart';
 import 'availability.dart';
@@ -32,12 +32,10 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.studentSessionArgument.pageIndex == 0) {
-      BlocProvider.of<StudentSessionBloc>(context).add(FetchTeacherDetailsEvent(
-          teacherId: widget.studentSessionArgument.teacherId ?? ""));
-    } else {
+    BlocProvider.of<StudentSessionBloc>(context).add(FetchTeacherDetailsEvent(
+        teacherId: widget.studentSessionArgument.teacherId ?? ""));
+    if (widget.studentSessionArgument.pageIndex == 1) {
       context.read<StudentSessionBloc>().selectedTabIndex = 1;
-      context.read<StudentSessionBloc>().add(UpdateTabBarEvent(index: 1));
     }
   }
 
@@ -106,15 +104,96 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                   child: Container(
                     decoration: const BoxDecoration(
-                        color: AppColors.whiteColor,),
-                    child: MentorPersonalDetailCard(
-                      mentorDetail: teacherDetails!,
-                      showTrimTags: false,
+                      color: AppColors.whiteColor,
                     ),
+                    child: getMentorDetails(),
                   ),
                 )
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget getMentorsProfileImage() {
+    return SizedBox(
+      // height: MediaQuery.of(context).size.height,
+      width: 100,
+      child: teacherDetails?.profilePictureUrl == null ||
+              teacherDetails?.profilePictureUrl?.contains("https") == false
+          ? const Center(
+              child: AppImage(
+                image: ImageAsset.blueAvatar,
+              ),
+            )
+          : ClipRRect(
+              borderRadius: BorderRadius.circular(18),
+              child: Image.network(
+                teacherDetails?.profilePictureUrl ?? "",
+                fit: BoxFit.cover,
+                height: 132,
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return const Center(
+                    child: AppImage(
+                      image: ImageAsset.blueAvatar,
+                    ),
+                  );
+                },
+              ),
+            ),
+    );
+  }
+
+  Widget getMentorDetails() {
+    String sessionTags = StringsUtils.getTagListTextFromListOfTags(
+        teacherDetails?.tags ?? [],
+        showTrimTagList: false);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            getMentorsProfileImage(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10, top: 20, right: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AppText(
+                      teacherDetails?.name ?? "",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    AppText(
+                      teacherDetails?.education ?? "",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    AppText(
+                      teacherDetails?.title ?? "",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    Flexible(
+                      child: AppText(
+                        sessionTags,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -161,51 +240,43 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
   Widget getScreeContent() {
     return Stack(
       children: [
-        ListView(
+        Column(
           children: [
-            Column(
-              children: [
-                getTopBanner(),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      getCategoryTab(),
-                      const SizedBox(
-                        height: 20,
+            getTopBanner(),
+            const SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    getCategoryTab(),
+                    if (context.read<StudentSessionBloc>().selectedTabIndex ==
+                        0)
+                      AboutSession(
+                        studentSessionArgument: widget.studentSessionArgument,
                       ),
-                      const SizedBox(
-                        height: 20,
+                    if (context.read<StudentSessionBloc>().selectedTabIndex ==
+                        1)
+                      BlocBuilder<StudentSessionBloc, StudentSessionStates>(
+                        buildWhen: (previous, current) =>
+                            current is UpdatedTabBarState,
+                        builder: (context, state) {
+                          return SessionAvailability(
+                            studentSessionArgument:
+                                widget.studentSessionArgument,
+                            teacherDetails: teacherDetails,
+                          );
+                        },
                       ),
-                      if (context.read<StudentSessionBloc>().selectedTabIndex ==
-                          0)
-                        AboutSession(
-                          studentSessionArgument: widget.studentSessionArgument,
-                        ),
-                      if (context.read<StudentSessionBloc>().selectedTabIndex ==
-                          1)
-                        BlocBuilder<StudentSessionBloc, StudentSessionStates>(
-                          buildWhen: (previous, current) =>
-                              current is UpdatedTabBarState,
-                          builder: (context, state) {
-                            return SessionAvailability(
-                              studentSessionArgument:
-                                  widget.studentSessionArgument,
-                              teacherDetails: teacherDetails,
-                            );
-                          },
-                        ),
-                      if (context.read<StudentSessionBloc>().selectedTabIndex ==
-                          2)
-                        SessionReview()
-                    ],
-                  ),
+                    if (context.read<StudentSessionBloc>().selectedTabIndex ==
+                        2)
+                      SessionReview()
+                  ],
                 ),
-              ],
+              ),
             ),
           ],
         ),

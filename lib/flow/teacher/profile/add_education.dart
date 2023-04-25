@@ -145,12 +145,15 @@ class _AddEducationState extends State<AddEducation> {
                 Column(
                   children: [
                     Expanded(child: Container()),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AppCta(
-                        onTap: () => onAddingEducation(context),
-                        text: AppStrings.addEducation,
-                        isLoading: isLoading,
+                    Container(
+                      color: AppColors.whiteColor,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: AppCta(
+                          onTap: () => onAddingEducation(context),
+                          text: AppStrings.addEducation,
+                          isLoading: isLoading,
+                        ),
                       ),
                     )
                   ],
@@ -300,9 +303,9 @@ class _AddEducationState extends State<AddEducation> {
   Future<void> selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      firstDate: DateTime(DateTime.now().year - 100, 1),
-      lastDate: DateTime.now().subtract(const Duration(days: 6570)),
-      initialDate: DateTime.now().subtract(const Duration(days: 6570)),
+      firstDate: DateTime(1988),
+      lastDate: DateTime.now(),
+      initialDate: DateTime.now().subtract(const Duration(days: 1)),
       helpText: "Date of Birthdate",
       confirmText: "Okay",
       cancelText: "Cancel",
@@ -336,9 +339,9 @@ class _AddEducationState extends State<AddEducation> {
   Future<void> selectEndDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      firstDate: DateTime(DateTime.now().year - 100, 1),
-      lastDate: DateTime.now().subtract(const Duration(days: 6570)),
-      initialDate: DateTime.now().subtract(const Duration(days: 6570)),
+      firstDate: DateTime(1988),
+      lastDate: DateTime.now(),
+      initialDate: DateTime.now().subtract(const Duration(days: 1)),
       helpText: "Date of Birthdate",
       confirmText: "Okay",
       cancelText: "Cancel",
