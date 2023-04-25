@@ -1,9 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:retrofit/http.dart';
 
 part 'availability_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class AvailabilityModel {
+  @JsonKey(name: "id")
   String? availabilityId;
   String? teacherId;
   DateTime? startDate;

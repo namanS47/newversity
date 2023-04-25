@@ -10,6 +10,7 @@ import 'package:newversity/flow/teacher/profile/model/profile_completion_percent
 import 'package:newversity/flow/teacher/profile/view/bootom_sheet_view/profile_completeness.dart';
 import 'package:newversity/flow/teacher/profile/view/bootom_sheet_view/profile_set_session_rate.dart';
 import 'package:newversity/resources/images.dart';
+import 'package:newversity/storage/app_constants.dart';
 
 import '../../../../themes/colors.dart';
 import '../../../../utils/date_time_utils.dart';
@@ -758,15 +759,18 @@ class _ProfileOverviewState extends State<ProfileOverview> {
               onCameraClick: () async {
                 final image = await ImagePicker().pickImage(
                     source: ImageSource.camera,
-                    preferredCameraDevice: CameraDevice.front);
+                    preferredCameraDevice: CameraDevice.front,
+                    imageQuality: AppConstants.documentUploadQuality);
                 if (image != null) {
                   file = image;
                   Navigator.pop(context);
                 }
               },
               onGalleryClick: () async {
-                final image =
-                    await ImagePicker().pickImage(source: ImageSource.gallery);
+                final image = await ImagePicker().pickImage(
+                  source: ImageSource.gallery,
+                  imageQuality: AppConstants.documentUploadQuality,
+                );
                 if (image != null) {
                   file = image;
                   Navigator.pop(context);

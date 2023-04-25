@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:language_picker/language_picker_dialog.dart';
 import 'package:language_picker/languages.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
+import 'package:newversity/storage/app_constants.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -17,17 +18,20 @@ import '../data/bloc/teacher_details/teacher_details_bloc.dart';
 import '../data/model/teacher_details/teacher_details_model.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
-class PersonalInformation extends StatefulWidget {
+class TeacherPersonalInformation extends StatefulWidget {
   final ProfileDashboardArguments profileDashboardArguments;
 
-  const PersonalInformation({Key? key, required this.profileDashboardArguments})
+  const TeacherPersonalInformation(
+      {Key? key, required this.profileDashboardArguments})
       : super(key: key);
 
   @override
-  State<PersonalInformation> createState() => _PersonalInformationState();
+  State<TeacherPersonalInformation> createState() =>
+      _TeacherPersonalInformationState();
 }
 
-class _PersonalInformationState extends State<PersonalInformation> {
+class _TeacherPersonalInformationState
+    extends State<TeacherPersonalInformation> {
   final TextEditingController _nameController = TextEditingController();
 
   final TextEditingController _titleController = TextEditingController();
@@ -382,16 +386,19 @@ class _PersonalInformationState extends State<PersonalInformation> {
         return ImagePickerOptionBottomSheet(
           onCameraClick: () async {
             final image = await ImagePicker().pickImage(
-                source: ImageSource.camera,
-                preferredCameraDevice: CameraDevice.front);
+              source: ImageSource.camera,
+              preferredCameraDevice: CameraDevice.front,
+              imageQuality: AppConstants.imageUploadQuality,
+            );
             if (image != null) {
               file = image;
               Navigator.pop(context);
             }
           },
           onGalleryClick: () async {
-            final image =
-                await ImagePicker().pickImage(source: ImageSource.gallery);
+            final image = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+                imageQuality: AppConstants.imageUploadQuality);
             if (image != null) {
               file = image;
               Navigator.pop(context);
