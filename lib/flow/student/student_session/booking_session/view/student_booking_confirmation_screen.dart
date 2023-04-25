@@ -113,7 +113,8 @@ class _StudentBookingConfirmationScreenState
               endDate: widget.sessionBookingArgument.endTime,
               amount: widget.sessionBookingArgument.amount,
               paymentId: paymentResult.paymentId,
-              orderId: paymentResult.orderId
+              orderId: paymentResult.orderId,
+              availabilityId: widget.sessionBookingArgument.availabilityId
             ),
           ),
         );
