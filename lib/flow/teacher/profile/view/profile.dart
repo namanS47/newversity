@@ -184,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Visibility(
         visible: profileCompletionPercentageResponse?.completePercentage != 100,
         child: AppText(
-          profileCompletionPercentageResponse?.reason ??
+          profileCompletionPercentageResponse?.suggestion ??
               "Please complete your profile first to interact with student",
           fontSize: 12,
           color: AppColors.appYellow,

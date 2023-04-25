@@ -33,18 +33,20 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(
-          height: 10,
-        ), // getTimeFilter(),
-        const SizedBox(
-          height: 10,
-        ),
-        getListOfUpcomingSessions(),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(
+            height: 10,
+          ), // getTimeFilter(),
+          const SizedBox(
+            height: 10,
+          ),
+          getListOfUpcomingSessions(),
+        ],
+      ),
     );
   }
 

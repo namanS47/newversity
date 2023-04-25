@@ -327,11 +327,13 @@ class AppTextFormField extends StatefulWidget {
       this.inputFormatters,
       this.validator,
       this.decoration,
+      this.onSave,
       this.hintText,
       this.errorText,
       this.isDense,
       this.maxLines,
       this.onChange,
+      this.onEditComplete,
       this.hintTextStyle,
       this.fillColor,
       this.autofocus,
@@ -351,6 +353,8 @@ class AppTextFormField extends StatefulWidget {
   final bool isEnable;
   final int? maxLines;
   final Function? onChange;
+  final Function? onSave;
+  final Function? onEditComplete;
   final TextStyle? hintTextStyle;
   final Color? fillColor;
   final bool? autofocus;
@@ -380,7 +384,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction ?? TextInputAction.done,
       inputFormatters: formatters,
-      textCapitalization: TextCapitalization.words,
+      textCapitalization: TextCapitalization.sentences,
       autofocus: widget.autofocus ?? false,
       validator: widget.validator != null
           ? (value) {
@@ -390,6 +394,10 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       maxLines: widget.maxLines,
       onChanged: (v) {
         widget.onChange?.call(v);
+      },
+      onEditingComplete: () => widget.onEditComplete?.call(),
+      onSaved: (v) {
+        widget.onSave?.call(v);
       },
       decoration: widget.decoration ??
           InputDecoration(
@@ -715,7 +723,7 @@ class CommonWidgets {
             padding: MediaQuery.of(context).viewInsets,
             child: AppAnimatedBottomSheet(
                 bottomSheetWidget: ProfileCompletenessBottomSheet(
-              reason: profileCompletionPercentageResponse.reason ?? "",
+              reason: profileCompletionPercentageResponse.suggestion ?? "",
               isStudent: isStudent,
             )),
           );

@@ -74,65 +74,70 @@ class _StudentSessionDetailScreenState
                 ? Column(
                     children: [
                       Expanded(
-                        child: SingleChildScrollView(
-                          physics: const ClampingScrollPhysics(),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    GestureDetector(
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const AppImage(
-                                            image: ImageAsset.arrowBack)),
-                                    getRaiseAnIssueWidget()
-                                  ],
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const AppImage(
+                                          image: ImageAsset.arrowBack)),
+                                  getRaiseAnIssueWidget()
+                                ],
+                              ),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 20,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: const [
+                                          AppText(
+                                            "Session Details",
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      getDateTimeOfSession(),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      getMentorDetails(),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      getAgendaView(),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      getNoteByMentor(),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      getRateYourExperienceContainer(),
+                                      const SizedBox(
+                                        height: 100,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: const [
-                                    AppText(
-                                      "Session Details",
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                getDateTimeOfSession(),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                getMentorDetails(),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                getAgendaView(),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                getNoteByMentor(),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                getRateYourExperienceContainer(),
-                                const SizedBox(
-                                  height: 100,
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -577,6 +582,11 @@ class _StudentSessionDetailScreenState
       decoration: const BoxDecoration(
         color: Colors.transparent,
       ),
+      onChanged: (value) {
+        if (value.inSeconds < 1801) {
+          setState(() {});
+        }
+      },
       slideDirection: SlideDirection.down,
       durationTitle: DurationTitle.id(),
       separator: ":",

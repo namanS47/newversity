@@ -16,15 +16,14 @@ class MentorSearchScreen extends StatefulWidget {
 }
 
 class _MentorSearchScreenState extends State<MentorSearchScreen> {
+  final _searchController = TextEditingController();
+
   @override
   void initState() {
-    // context
-    //     .read<MentorSearchBloc>()
-    //     .add(GetTagsBySearchKeywordEvent(searchKeyword: ""));
-
     context
         .read<MentorSearchBloc>()
-        .add(FetchTeacherListByTagNameEvent(tagName: ""));
+        .add(GetTagsBySearchKeywordEvent(searchKeyword: ""));
+
     super.initState();
   }
 
@@ -76,7 +75,8 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
     );
   }
 
-  Widget getResultedTeacherListWidget(List<TeacherDetailsModel> teacherDetailsList) {
+  Widget getResultedTeacherListWidget(
+      List<TeacherDetailsModel> teacherDetailsList) {
     return Expanded(
       child: ListView.builder(
         shrinkWrap: true,
@@ -93,7 +93,6 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
 
   Widget getSearchSuggestionWidget() {
     return Visibility(
-      visible: false,
       child: Expanded(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -109,6 +108,14 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _searchController.dispose();
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 
   Widget getTopSearchedWidget() {
@@ -139,6 +146,7 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
       padding: const EdgeInsets.only(bottom: 12, right: 12),
       child: InkWell(
         onTap: () {
+          _searchController.text = text;
           context
               .read<MentorSearchBloc>()
               .add(FetchTeacherListByTagNameEvent(tagName: text));
@@ -183,19 +191,31 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
           ),
           Expanded(
             child: AppTextFormField(
+              controller: _searchController,
               hintTextStyle: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                   color: AppColors.black30),
               hintText: "Search exam name",
               autofocus: true,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-              ),
-              onChange: (value) {
+              onSave: (value) {
                 context.read<MentorSearchBloc>().add(
                     FetchTeacherListByTagNameEvent(
                         tagName: value.toString().toLowerCase()));
+              },
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+              ),
+              onEditComplete: () {
+                context.read<MentorSearchBloc>().add(
+                    FetchTeacherListByTagNameEvent(
+                        tagName:
+                            _searchController.text.toString().toLowerCase()));
+              },
+              onChange: (value) {
+                context.read<MentorSearchBloc>().add(
+                    GetTagsBySearchKeywordEvent(
+                        searchKeyword: value.toString().toLowerCase()));
               },
             ),
           )

@@ -195,6 +195,11 @@ class _MentorCardState extends State<MentorDetailCard> {
       slideDirection: SlideDirection.down,
       durationTitle: DurationTitle.id(),
       separator: ":",
+      onChanged: (value) {
+        if (value.inSeconds < 1801) {
+          setState(() {});
+        }
+      },
       textStyle: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w400,

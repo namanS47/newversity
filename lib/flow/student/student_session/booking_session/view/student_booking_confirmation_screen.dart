@@ -163,6 +163,7 @@ class _StudentBookingConfirmationScreenState
               padding: const EdgeInsets.only(right: 15.0),
               child: AppTextFormField(
                 hintText: "Specify your agenda here",
+                keyboardType: TextInputType.text,
                 controller: _agendaController,
                 maxLines: 3,
                 decoration: const InputDecoration(

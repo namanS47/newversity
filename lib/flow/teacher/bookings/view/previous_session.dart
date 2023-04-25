@@ -43,18 +43,20 @@ class _PreviousSessionsState extends State<PreviousSessions> {
         if (state is FetchingPreviousSessionState) {
           return getProgressIndicator();
         }
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 30,
-            ), // getTimeFilter(),
-            // const SizedBox(
-            //   height: 10,
-            // ),
-            getListOfPreviousSessions(),
-          ],
+        return SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 30,
+              ), // getTimeFilter(),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              getListOfPreviousSessions(),
+            ],
+          ),
         );
       },
     );
@@ -118,7 +120,7 @@ class _PreviousSessionsState extends State<PreviousSessions> {
   }
 
   int getLeftTimeInSeconds(DateTime startDate, DateTime endDate) {
-    return (startDate.difference(endDate).inMinutes);
+    return (endDate.difference(startDate).inMinutes);
   }
 
   onProfileTap(int index) {
@@ -160,10 +162,10 @@ class _PreviousSessionsState extends State<PreviousSessions> {
 
   Widget getPreviousSessionDataView(int index) {
     int durationInMin = getLeftTimeInSeconds(
-        listOfSessionDetailResponse[index].startDate!,
-        listOfSessionDetailResponse[index].endDate!);
+        listOfSessionDetailResponse[index].startDate ?? DateTime.now(),
+        listOfSessionDetailResponse[index].endDate ?? DateTime.now());
     String sessionDate = DateTimeUtils.getBirthFormattedDateTime(
-        listOfSessionDetailResponse[index].endDate!);
+        listOfSessionDetailResponse[index].endDate ?? DateTime.now());
     return GestureDetector(
       onTap: () => onProfileTap(index),
       child: Row(

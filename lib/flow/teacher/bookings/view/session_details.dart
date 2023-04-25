@@ -175,6 +175,11 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
             slideDirection: SlideDirection.down,
             durationTitle: DurationTitle.id(),
             separator: ":",
+            onChanged: (value) {
+              if (value.inSeconds < 1801) {
+                setState(() {});
+              }
+            },
             onDone: () {},
             textStyle: const TextStyle(
                 fontSize: 10,

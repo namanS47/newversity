@@ -786,7 +786,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                                     "In",
                                     fontWeight: FontWeight.w700,
                                   ),
-                                  getScheduleLeftTime(),
+                                  getScheduleLeftTime(index),
                                 ],
                               ),
                             ))
@@ -932,8 +932,12 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
     );
   }
 
-  Widget getScheduleLeftTime() {
-    int timeLeftInSeconds = getLeftTimeInSeconds(DateTime(2024));
+  Widget getScheduleLeftTime(int index) {
+    int timeLeftInSeconds = getLeftTimeInSeconds(context
+            .read<StudentHomeBloc>()
+            .listOfUpcomingSessions[index]
+            .startDate ??
+        DateTime.now());
     return SlideCountdown(
       duration: Duration(seconds: timeLeftInSeconds),
       decoration: const BoxDecoration(
@@ -941,6 +945,11 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       ),
       slideDirection: SlideDirection.down,
       durationTitle: DurationTitle.id(),
+      onChanged: (value) {
+        if (value.inSeconds < 1801) {
+          setState(() {});
+        }
+      },
       separator: ":",
       textStyle: const TextStyle(
           fontSize: 12,
@@ -1034,6 +1043,11 @@ class _CoachMarkerState extends State<CoachMarker> {
       slideDirection: SlideDirection.down,
       durationTitle: DurationTitle.id(),
       separator: ":",
+      onChanged: (value) {
+        if (value.inSeconds < 1801) {
+          setState(() {});
+        }
+      },
       textStyle: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w400,

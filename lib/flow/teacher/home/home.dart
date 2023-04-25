@@ -274,8 +274,10 @@ class _HomeState extends State<Home> {
                 slideDirection: SlideDirection.down,
                 durationTitle: DurationTitle.id(),
                 separator: ":",
-                onDone: () {
-                  isTimeUp = true;
+                onChanged: (value) {
+                  if (value.inSeconds < 1801) {
+                    setState(() {});
+                  }
                 },
                 textStyle: const TextStyle(
                   fontSize: 12,
@@ -322,8 +324,10 @@ class _HomeState extends State<Home> {
                 slideDirection: SlideDirection.down,
                 durationTitle: DurationTitle.id(),
                 separator: ":",
-                onDone: () {
-                  isTimeUp = true;
+                onChanged: (value) {
+                  if (value.inSeconds < 1801) {
+                    setState(() {});
+                  }
                 },
                 textStyle: const TextStyle(
                   fontSize: 12,

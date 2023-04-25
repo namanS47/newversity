@@ -60,8 +60,8 @@ class _ProfileCompletenessBottomSheetState
                     AppText(
                       widget.reason,
                       fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.grey55,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.appYellow,
                     ),
                   ],
                 ),

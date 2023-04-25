@@ -34,8 +34,7 @@ class MentorSearchBloc extends Bloc<MentorSearchEvents, MentorSearchStates> {
     on<FetchTeacherListByTagNameEvent>((event, emit) async {
       emit(FetchTeacherListByTagNameLoadingState());
       try {
-        final response = await _searchRepository.fetchTeachersListByTagName(
-            TagRequestModel(tagModelList: [TagModel(tagName: event.tagName)]));
+        final response = await _searchRepository.fetchTeachersListByTagName(event.tagName);
         emit(FetchTeacherListByTagNameSuccessState(teacherDetailsList: response ?? []));
       } catch (exception) {
         emit(FetchTeacherListByTagNameFailureState());

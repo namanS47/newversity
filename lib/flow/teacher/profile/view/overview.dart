@@ -178,7 +178,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
               padding: MediaQuery.of(context).viewInsets,
               child: AppAnimatedBottomSheet(
                   bottomSheetWidget: ProfileCompletenessBottomSheet(
-                reason: widget.percentageResponse.reason ?? "",
+                reason: widget.percentageResponse.suggestion ?? "",
                 isStudent: false,
               )),
             );

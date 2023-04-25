@@ -93,16 +93,18 @@ class _StudentUpcomingSessionScreenState
               ),
             );
           } else {
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                getMentorsList(),
-                const SizedBox(
-                  height: 20,
-                )
-              ],
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  getMentorsList(),
+                  const SizedBox(
+                    height: 20,
+                  )
+                ],
+              ),
             );
           }
         });

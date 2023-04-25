@@ -291,8 +291,8 @@ class _TeacherPersonalInformationState
     return AppTextFormField(
       controller: _infoController,
       hintText: "Enter here",
+      keyboardType: TextInputType.text,
       maxLines: 5,
-      textInputAction: TextInputAction.newline,
     );
   }
 
@@ -418,6 +418,7 @@ class _TeacherPersonalInformationState
   Widget getYourNameTextField() {
     return AppTextFormField(
       hintText: "Name",
+      keyboardType: TextInputType.text,
       controller: _nameController,
       isDense: true,
     );

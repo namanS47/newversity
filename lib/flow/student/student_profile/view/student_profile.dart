@@ -338,7 +338,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                 height: 10,
               ),
               AppText(
-                profileCompletionPercentageResponse?.reason ?? "",
+                profileCompletionPercentageResponse?.suggestion ?? "",
                 color: AppColors.appYellow,
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
@@ -647,7 +647,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width - 200,
                   child: AppText(
-                    profileCompletionPercentageResponse?.reason ??
+                    profileCompletionPercentageResponse?.suggestion ??
                         "Please complete your profile first to interact with mentor",
                     textAlign: TextAlign.center,
                     color: AppColors.appYellow,

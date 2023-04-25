@@ -95,16 +95,18 @@ class _StudentPreviousSessionScreenState
             ),
           );
         } else {
-          return Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              getMentorsList(),
-              const SizedBox(
-                height: 20,
-              ),
-            ],
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                getMentorsList(),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
           );
         }
       },
@@ -199,7 +201,8 @@ class _StudentPreviousSessionScreenState
 
   Widget getMentorDetailsView(int index) {
     String sessionTags = StringsUtils.getTagListTextFromListOfTags(
-        listOfPreviousSession[index].teacherDetail?.tags ?? [],showTrimTagList: true);
+        listOfPreviousSession[index].teacherDetail?.tags ?? [],
+        showTrimTagList: true);
     return GestureDetector(
       onTap: () => onSessionTap(index),
       child: ClipRRect(
