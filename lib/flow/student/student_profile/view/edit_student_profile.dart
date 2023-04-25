@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../../common/common_utils.dart';
 import '../../../../common/common_widgets.dart';
 import '../../../../resources/images.dart';
+import '../../../../storage/app_constants.dart';
 import '../../../../themes/colors.dart';
 import '../../../../utils/enums.dart';
 import '../../../teacher/profile/model/tags_response_model.dart';
@@ -77,16 +78,20 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
         return ImagePickerOptionBottomSheet(
           onCameraClick: () async {
             final image = await ImagePicker().pickImage(
-                source: ImageSource.camera,
-                preferredCameraDevice: CameraDevice.front);
+              source: ImageSource.camera,
+              preferredCameraDevice: CameraDevice.front,
+              imageQuality: AppConstants.imageUploadQuality,
+            );
             if (image != null) {
               file = image;
               Navigator.pop(context);
             }
           },
           onGalleryClick: () async {
-            final image =
-                await ImagePicker().pickImage(source: ImageSource.gallery);
+            final image = await ImagePicker().pickImage(
+              source: ImageSource.gallery,
+              imageQuality: AppConstants.imageUploadQuality,
+            );
             if (image != null) {
               file = image;
               Navigator.pop(context);

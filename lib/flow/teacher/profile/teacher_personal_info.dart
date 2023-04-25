@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:language_picker/language_picker_dialog.dart';
 import 'package:language_picker/languages.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
+import 'package:newversity/storage/app_constants.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -20,14 +21,17 @@ import 'bloc/profile_bloc/profile_bloc.dart';
 class TeacherPersonalInformation extends StatefulWidget {
   final ProfileDashboardArguments profileDashboardArguments;
 
-  const TeacherPersonalInformation({Key? key, required this.profileDashboardArguments})
+  const TeacherPersonalInformation(
+      {Key? key, required this.profileDashboardArguments})
       : super(key: key);
 
   @override
-  State<TeacherPersonalInformation> createState() => _TeacherPersonalInformationState();
+  State<TeacherPersonalInformation> createState() =>
+      _TeacherPersonalInformationState();
 }
 
-class _TeacherPersonalInformationState extends State<TeacherPersonalInformation> {
+class _TeacherPersonalInformationState
+    extends State<TeacherPersonalInformation> {
   final TextEditingController _nameController = TextEditingController();
 
   final TextEditingController _titleController = TextEditingController();
@@ -382,16 +386,19 @@ class _TeacherPersonalInformationState extends State<TeacherPersonalInformation>
         return ImagePickerOptionBottomSheet(
           onCameraClick: () async {
             final image = await ImagePicker().pickImage(
-                source: ImageSource.camera,
-                preferredCameraDevice: CameraDevice.front);
+              source: ImageSource.camera,
+              preferredCameraDevice: CameraDevice.front,
+              imageQuality: AppConstants.imageUploadQuality,
+            );
             if (image != null) {
               file = image;
               Navigator.pop(context);
             }
           },
           onGalleryClick: () async {
-            final image =
-                await ImagePicker().pickImage(source: ImageSource.gallery);
+            final image = await ImagePicker().pickImage(
+                source: ImageSource.gallery,
+                imageQuality: AppConstants.imageUploadQuality);
             if (image != null) {
               file = image;
               Navigator.pop(context);
