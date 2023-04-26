@@ -89,6 +89,9 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                             height: 10,
                           ),
                           getFindMentorSearchWidget(),
+                          const SizedBox(
+                            height: 20,
+                          ),
                         ],
                       ),
                     ),
@@ -728,17 +731,18 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
 
   Widget getNextSessionView(int index) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: Container(
+            height: 95,
             width: MediaQuery.of(context).size.width,
             decoration: const BoxDecoration(
               color: AppColors.strongCyan,
             ),
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -747,13 +751,13 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                             .read<StudentHomeBloc>()
                             .listOfUpcomingSessions[index]
                             .agenda ??
-                        "",
+                        "This is Agenda Section",
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 8,
                   ),
                   AppText(
                     "Next session with ${context.read<StudentHomeBloc>().listOfUpcomingSessions[index].teacherDetail?.name ?? ""}",
@@ -761,38 +765,39 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
                   ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: AppText(
-                            "${DateTimeUtils.getBirthFormattedDateTime(context.read<StudentHomeBloc>().listOfUpcomingSessions[index].startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(context.read<StudentHomeBloc>().listOfUpcomingSessions[index].startDate ?? DateTime.now())}",
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Container(
-                            decoration: BoxDecoration(
-                                color: AppColors.whiteColor,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 2, horizontal: 10),
-                              child: Row(
-                                children: [
-                                  const AppText(
-                                    "In",
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                  getScheduleLeftTime(index),
-                                ],
-                              ),
-                            ))
-                      ],
-                    ),
+                  SizedBox(
+                    height: 7,
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: AppText(
+                          "${DateTimeUtils.getBirthFormattedDateTime(context.read<StudentHomeBloc>().listOfUpcomingSessions[index].startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(context.read<StudentHomeBloc>().listOfUpcomingSessions[index].startDate ?? DateTime.now())}",
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Container(
+                          decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 2, horizontal: 10),
+                            child: Row(
+                              children: [
+                                const AppText(
+                                  "In",
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                getScheduleLeftTime(index),
+                              ],
+                            ),
+                          ))
+                    ],
+                  )
                 ],
               ),
             ),

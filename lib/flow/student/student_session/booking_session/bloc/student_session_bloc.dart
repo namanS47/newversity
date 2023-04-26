@@ -19,7 +19,6 @@ part 'student_session_states.dart';
 
 class StudentSessionBloc
     extends Bloc<StudentSessionEvents, StudentSessionStates> {
-
   double? amount = 0;
   String? sessionType = "short";
   DateTime selectedDate = DateTime.now();
@@ -35,7 +34,6 @@ class StudentSessionBloc
   List<String> sessionCategory = ["About", "Availability", "Reviews"];
 
   StudentSessionBloc() : super(StudentSessionInitialState()) {
-
     on<UpdateTabBarEvent>((event, emit) async {
       await onUpdateTabIndex(event, emit);
     });
@@ -88,7 +86,8 @@ class StudentSessionBloc
     }
   }
 
-  Future<void> onUpdateTabIndex(UpdateTabBarEvent event, Emitter<StudentSessionStates> emit) async {
+  Future<void> onUpdateTabIndex(
+      UpdateTabBarEvent event, Emitter<StudentSessionStates> emit) async {
     selectedTabIndex = event.index;
     emit(UpdatedTabBarState());
   }

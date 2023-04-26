@@ -103,7 +103,9 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
               return getSuggestionView(
                   context.read<MentorSearchBloc>().resultedTags[index]);
             },
-            itemCount: context.read<MentorSearchBloc>().resultedTags.length,
+            itemCount: context.read<MentorSearchBloc>().resultedTags.length > 5
+                ? 5
+                : context.read<MentorSearchBloc>().resultedTags.length,
           ),
         ),
       ),
@@ -115,7 +117,6 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
     // TODO: implement dispose
     super.dispose();
     _searchController.dispose();
-    FocusManager.instance.primaryFocus?.unfocus();
   }
 
   Widget getTopSearchedWidget() {
@@ -206,11 +207,10 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
               decoration: const InputDecoration(
                 border: InputBorder.none,
               ),
-              onEditComplete: () {
+              onFieldSubmitted: (value) {
                 context.read<MentorSearchBloc>().add(
                     FetchTeacherListByTagNameEvent(
-                        tagName:
-                            _searchController.text.toString().toLowerCase()));
+                        tagName: value.toString().toLowerCase()));
               },
               onChange: (value) {
                 context.read<MentorSearchBloc>().add(

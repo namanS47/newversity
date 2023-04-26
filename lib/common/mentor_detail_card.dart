@@ -29,7 +29,7 @@ class _MentorCardState extends State<MentorDetailCard> {
 
   Widget getMentorDetailsView() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
       width: MediaQuery.of(context).size.width - 50,
       height: 220,
       decoration: BoxDecoration(

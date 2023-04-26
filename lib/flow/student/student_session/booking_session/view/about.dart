@@ -70,11 +70,13 @@ class _AboutSessionState extends State<AboutSession> {
                   const SizedBox(
                     height: 10,
                   ),
-                  AppText(
-                    teacherDetails?.info ?? "",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
+                  teacherDetails?.info != null
+                      ? getAboutInfo()
+                      : const Center(child: AppText("Not Added yet!")),
+                  const SizedBox(
+                    height: 20,
                   ),
+                  getTalkToMeContainer(),
                   const SizedBox(
                     height: 20,
                   ),
@@ -82,7 +84,9 @@ class _AboutSessionState extends State<AboutSession> {
                   const SizedBox(
                     height: 10,
                   ),
-                  getLocationLayout(),
+                  teacherDetails?.location != null
+                      ? getLocationLayout()
+                      : const Center(child: AppText("Not Added yet!")),
                   const SizedBox(
                     height: 20,
                   ),
@@ -92,7 +96,7 @@ class _AboutSessionState extends State<AboutSession> {
                   ),
                   teacherDetails?.language != null
                       ? getLanguageLayout()
-                      : Container(),
+                      : const Center(child: AppText("Not Added yet!")),
                   const SizedBox(
                     height: 20,
                   ),
@@ -136,6 +140,90 @@ class _AboutSessionState extends State<AboutSession> {
           ],
         );
       },
+    );
+  }
+
+  Widget getAboutInfo() {
+    return AppText(
+      teacherDetails?.info ?? "",
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+    );
+  }
+
+  Widget getTalkToMeContainer() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        getHeader("Talk me about"),
+        const SizedBox(
+          height: 8,
+        ),
+        teacherDetails != null
+            ? teacherDetails?.tags != null
+                ? teacherDetails!.tags!.isNotEmpty
+                    ? getTargetExamViewList()
+                    : noDataFound(40)
+                : noDataFound(40)
+            : getProgressIndicator(40),
+      ],
+    );
+  }
+
+  Widget getProgressIndicator(double height) {
+    return SizedBox(
+      height: height,
+      child: const Center(
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
+  }
+
+  Widget getTagView(String tagName) {
+    return Container(
+      height: 27,
+      decoration: BoxDecoration(
+        color: AppColors.grey50.withOpacity(0.30),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppText(
+              tagName,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getTargetExamViewList() {
+    return Wrap(
+      spacing: 15,
+      runSpacing: 12,
+      children: List.generate(
+        teacherDetails?.tags?.length ?? 0,
+        (curIndex) {
+          return getTagView(teacherDetails?.tags?[curIndex] ?? "");
+        },
+      ),
+    );
+  }
+
+  Widget getHeader(String header) {
+    return AppText(
+      header,
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
     );
   }
 
@@ -365,7 +453,7 @@ class _AboutSessionState extends State<AboutSession> {
 
   Widget getLanguageLayout() {
     return SizedBox(
-      height: 45,
+      height: 36,
       child: ListView.separated(
         padding: const EdgeInsets.only(right: 16, top: 5),
         physics: const ClampingScrollPhysics(),
@@ -374,26 +462,30 @@ class _AboutSessionState extends State<AboutSession> {
         itemCount: teacherDetails?.language?.length ?? 0,
         itemBuilder: (context, index) => getLanguageView(index),
         separatorBuilder: (BuildContext context, int index) =>
-            const SizedBox(width: 24),
+            const SizedBox(width: 8),
       ),
     );
   }
 
   Widget getLanguageView(int index) {
     return Container(
-      height: 45,
+      height: 33,
       decoration: BoxDecoration(
-          color: AppColors.primaryColor,
-          borderRadius: BorderRadius.circular(25.0)),
+        color: AppColors.primaryColor,
+        borderRadius: BorderRadius.circular(100),
+      ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            AppText(teacherDetails?.language?[index] ?? "",
-                color: AppColors.whiteColor,
-                fontSize: 14,
-                fontWeight: FontWeight.w500),
+            AppText(
+              teacherDetails?.language?[index] ?? "",
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ],
         ),
       ),
@@ -407,12 +499,12 @@ class _AboutSessionState extends State<AboutSession> {
 
   Widget getLocationLayout() {
     return Container(
-      height: 45,
+      height: 33,
       decoration: BoxDecoration(
           color: AppColors.primaryColor,
           borderRadius: BorderRadius.circular(30.0)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

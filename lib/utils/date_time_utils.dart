@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../flow/teacher/availability/data/model/availability_model.dart';
 
 class DateTimeUtils {
-  static const secondsInOneDay = 60*60*24;
+  static const secondsInOneDay = 60 * 60 * 24;
 
   static String getFormattedDateTime(DateTime dateTime) {
     final DateFormat formatter = DateFormat('MMMM, yyyy');
@@ -62,14 +62,15 @@ class DateTimeUtils {
     return allTimes;
   }
 
-  static List<TimeOfDay> getSelectedAvailableTime(TimeOfDay startTime) {
+  static List<TimeOfDay> getSelectedAvailableTime(
+      TimeOfDay startTime, int minuteInterval) {
     List<TimeOfDay> allTimes = [];
-    int minutes = startTime.hour * 60 + startTime.minute + 15;
+    int minutes = startTime.hour * 60 + startTime.minute + minuteInterval;
     while (minutes < 1440) {
       TimeOfDay timeOfDay =
           TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60);
       allTimes.add(timeOfDay);
-      minutes += 15;
+      minutes += minuteInterval;
     }
     return allTimes;
   }
@@ -113,9 +114,28 @@ class DateTimeUtils {
     int minutes = totalMinute % 60;
     if (hour > 0 && minutes > 0) {
       timeLeft = "$hour Hrs $minutes Min";
-    } else if (hour > 0 && totalMinute <= 0) {
+    } else if (hour > 0 && minutes <= 0) {
       timeLeft = "$hour Hrs";
-    } else if (hour <= 0 && totalMinute > 0) {
+    } else if (hour <= 0 && minutes > 0) {
+      timeLeft = "$minutes Min";
+    }
+    return timeLeft;
+  }
+
+  static String getTotalDurationInDeci(List<AvailabilityModel> lisOfModel) {
+    String timeLeft = "";
+    int totalMinute = 0;
+    for (var element in lisOfModel) {
+      totalMinute = totalMinute +
+          element.endDate!.difference(element.startDate!).inMinutes;
+    }
+    int hour = totalMinute ~/ 60;
+    int minutes = totalMinute % 60;
+    if (hour > 0 && minutes > 0) {
+      timeLeft = "$hour.$minutes Hr";
+    } else if (hour > 0 && minutes <= 0) {
+      timeLeft = "$hour Hr";
+    } else if (hour <= 0 && minutes > 0) {
       timeLeft = "$minutes Min";
     }
     return timeLeft;

@@ -25,7 +25,9 @@ import 'package:newversity/flow/student/student_session/booking_session/view/vie
 import 'package:newversity/flow/student/student_session/student_session_detail/bloc/student_session_detail_bloc.dart';
 import 'package:newversity/flow/student/student_session/student_session_detail/view/raise_issue_screen.dart';
 import 'package:newversity/flow/student/student_session/student_session_detail/view/student_session_detail_screen.dart';
+import 'package:newversity/flow/teacher/availability/availabality.dart';
 import 'package:newversity/flow/teacher/availability/availability_bloc/availability_bloc.dart';
+import 'package:newversity/flow/teacher/availability/date_wise_calender_availability.dart';
 import 'package:newversity/flow/teacher/bank_account/bloc/bank_account_bloc.dart';
 import 'package:newversity/flow/teacher/bank_account/view/add_account.dart';
 import 'package:newversity/flow/teacher/bookings/bloc/session_details_bloc/booking_session_details_bloc.dart';
@@ -58,7 +60,6 @@ import '../flow/student/payment/view/payment_processing.dart';
 import '../flow/student/payment/view/payment_scuccessfull.dart';
 import '../flow/student/student_session/booking_session/bloc/student_session_bloc.dart';
 import '../flow/student/student_session/booking_session/view/student_session.dart';
-import '../flow/teacher/availability/availability_calender.dart';
 import '../flow/teacher/bank_account/earnings/view/earning_screen.dart';
 import '../flow/teacher/index/view/settings.dart';
 import '../flow/teacher/profile/bloc/profile_bloc/profile_bloc.dart';
@@ -305,7 +306,16 @@ class AppRouter {
     if (route.toString() == AppRoutes.availabilityRoute) {
       return BlocProvider<AvailabilityBloc>(
         create: (context) => AvailabilityBloc(),
-        child: const AvailabilityRoute(),
+        child: const Availability(),
+      );
+    }
+
+    if (route.toString() == AppRoutes.availabilityCalenderRoute) {
+      return BlocProvider<AvailabilityBloc>(
+        create: (context) => AvailabilityBloc(),
+        child: DateWiseCalenderAvailabilityScreen(
+          currentDateTime: params as DateTime,
+        ),
       );
     }
     if (route.toString() == AppRoutes.paymentRoute) {

@@ -149,7 +149,7 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
   Widget getMentorDetails() {
     String sessionTags = StringsUtils.getTagListTextFromListOfTags(
         teacherDetails?.tags ?? [],
-        showTrimTagList: false);
+        showTrimTagList: true);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -159,7 +159,8 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
             getMentorsProfileImage(),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(left: 10, top: 20, right: 10),
+                padding: const EdgeInsets.only(
+                    left: 14, top: 14, right: 15, bottom: 14),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -170,17 +171,23 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
                       fontWeight: FontWeight.w600,
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 7,
                     ),
                     AppText(
                       teacherDetails?.education ?? "",
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
+                    const SizedBox(
+                      height: 7,
+                    ),
                     AppText(
                       teacherDetails?.title ?? "",
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
+                    ),
+                    const SizedBox(
+                      height: 7,
                     ),
                     Flexible(
                       child: AppText(

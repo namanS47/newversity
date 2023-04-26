@@ -312,7 +312,8 @@ class _ViewAllAvailableSlotScreenState
                     FetchTeacherSessionTimingsEvent(
                         fetchAvailabilityRequestModel:
                             FetchAvailabilityRequestModel(
-                                teacherId: widget.studentSessionArgument.teacherId,
+                                teacherId:
+                                    widget.studentSessionArgument.teacherId,
                                 date: context
                                     .read<StudentSessionBloc>()
                                     .selectedDate)));

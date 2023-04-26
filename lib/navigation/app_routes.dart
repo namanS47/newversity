@@ -63,6 +63,7 @@ class AppRoutes {
   static const String roomPageRoute = "room_page_route";
 
   static const String availabilityRoute = "/availability_route";
+  static const String availabilityCalenderRoute = "/availability_calender_route";
 
   //Payment
   static const String paymentRoute = "/payment_route";

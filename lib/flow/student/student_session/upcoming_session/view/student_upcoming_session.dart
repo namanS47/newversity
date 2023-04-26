@@ -205,7 +205,7 @@ class _StudentUpcomingSessionScreenState
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
         child: Container(
-          height: MediaQuery.of(context).size.height / 3.5,
+          height: MediaQuery.of(context).size.height / 4,
           decoration: BoxDecoration(
             border: Border.all(width: 1, color: AppColors.grey32),
             borderRadius: BorderRadius.circular(18),
