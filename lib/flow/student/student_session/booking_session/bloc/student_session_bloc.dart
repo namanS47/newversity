@@ -170,6 +170,14 @@ class StudentSessionBloc
           }
         }
         dateTimeMap = mapOfDateTime;
+        List<MapEntry<String, List<AvailabilityModel>>> listOfEntries =
+            dateTimeMap.entries.toList();
+        listOfEntries.sort((a, b) => DateTimeUtils.getDateTime(a.key)
+            .month
+            .compareTo(DateTimeUtils.getDateTime(b.key).month));
+        listOfEntries.sort((a, b) => DateTimeUtils.getDateTime(a.key)
+            .compareTo(DateTimeUtils.getDateTime(b.key)));
+        dateTimeMap = Map.fromEntries(listOfEntries);
         emit(FetchedTeacherAvailabilityState(availabilityList: dateTimeMap));
       } else {
         emit(NotTeacherSlotFoundState());

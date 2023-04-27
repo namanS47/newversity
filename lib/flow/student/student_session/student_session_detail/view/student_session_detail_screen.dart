@@ -86,8 +86,14 @@ class _StudentSessionDetailScreenState
                                       onTap: () {
                                         Navigator.pop(context);
                                       },
-                                      child: const AppImage(
-                                          image: ImageAsset.arrowBack)),
+                                      child: const Padding(
+                                        padding: EdgeInsets.only(
+                                            right: 18.0, left: 10),
+                                        child: Center(
+                                          child: AppImage(
+                                              image: ImageAsset.arrowBack),
+                                        ),
+                                      )),
                                   getRaiseAnIssueWidget()
                                 ],
                               ),
@@ -97,7 +103,8 @@ class _StudentSessionDetailScreenState
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const SizedBox(height: 20,
+                                      const SizedBox(
+                                        height: 20,
                                       ),
                                       Row(
                                         mainAxisAlignment:
@@ -369,14 +376,10 @@ class _StudentSessionDetailScreenState
   }
 
   Widget getBottomView() {
-    return Stack(
+    return Column(
       children: [
-        AppImage(
-          width: MediaQuery.of(context).size.width,
-          image: ImageAsset.detailDesign,
-          fit: BoxFit.cover,
-        ),
         Container(
+          margin: const EdgeInsets.all(16),
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.only(left: 16, right: 16, top: 75),
           child: SizedBox(

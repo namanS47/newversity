@@ -61,40 +61,47 @@ class _DateWiseSlotViewScreenState extends State<DateWiseSlotViewScreen> {
               SafeArea(
                 child: Stack(
                   children: [
-                    SingleChildScrollView(
-                      primary: true,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          getAppHeader(),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          Container(
-                            height: MediaQuery.of(context).size.height,
-                            width: MediaQuery.of(context).size.width,
-                            decoration: const BoxDecoration(
-                              color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(25),
-                                  topRight: Radius.circular(25)),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: SingleChildScrollView(
-                                physics: const NeverScrollableScrollPhysics(),
-                                child: AvailabilityTimingWidget(
-                                  teacherId: widget
-                                          .dateAvailabilityArgument.teacherId ??
-                                      "",
-                                  listOfSessionTimings: listOfSessionTimings,
+                    Column(
+                      children: [
+                        getAppHeader(),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 25,
                                 ),
-                              ),
+                                Container(
+                                  height: MediaQuery.of(context).size.height,
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.whiteColor,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(25),
+                                        topRight: Radius.circular(25)),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: SingleChildScrollView(
+                                      primary: true,
+                                      child: AvailabilityTimingWidget(
+                                        teacherId: widget
+                                                .dateAvailabilityArgument
+                                                .teacherId ??
+                                            "",
+                                        listOfSessionTimings:
+                                            listOfSessionTimings,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     Column(
                       children: [
@@ -131,27 +138,26 @@ class _DateWiseSlotViewScreenState extends State<DateWiseSlotViewScreen> {
   onConfirmTap() {
     Navigator.of(context).pushNamed(AppRoutes.bookingConfirmation,
         arguments: SessionBookingArgument(
-          CommonUtils().getLoggedInUser(),
-          widget.dateAvailabilityArgument.teacherId ?? "",
-          context
-                  .read<StudentSessionBloc>()
-                  .selectedDateTimeModel
-                  ?.currentSelectedDateTime ??
-              DateTime.now(),
-          (context
-                      .read<StudentSessionBloc>()
-                      .selectedDateTimeModel
-                      ?.currentSelectedDateTime ??
-                  DateTime.now())
-              .add(Duration(
-                  minutes:
-                      context.read<StudentSessionBloc>().sessionType == "short"
-                          ? 15
-                          : 30)),
-          context.read<StudentSessionBloc>().sessionType ?? "",
-          context.read<StudentSessionBloc>().amount ?? 0,
-            context.read<StudentSessionBloc>().availabilityId ?? ""
-        ));
+            CommonUtils().getLoggedInUser(),
+            widget.dateAvailabilityArgument.teacherId ?? "",
+            context
+                    .read<StudentSessionBloc>()
+                    .selectedDateTimeModel
+                    ?.currentSelectedDateTime ??
+                DateTime.now(),
+            (context
+                        .read<StudentSessionBloc>()
+                        .selectedDateTimeModel
+                        ?.currentSelectedDateTime ??
+                    DateTime.now())
+                .add(Duration(
+                    minutes: context.read<StudentSessionBloc>().sessionType ==
+                            "short"
+                        ? 15
+                        : 30)),
+            context.read<StudentSessionBloc>().sessionType ?? "",
+            context.read<StudentSessionBloc>().amount ?? 0,
+            context.read<StudentSessionBloc>().availabilityId ?? ""));
   }
 
   Widget getAppHeader() {
@@ -161,7 +167,10 @@ class _DateWiseSlotViewScreenState extends State<DateWiseSlotViewScreen> {
         children: [
           InkWell(
               onTap: () => {Navigator.pop(context)},
-              child: AppImage(image: ImageAsset.arrowBack)),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Center(child: AppImage(image: ImageAsset.arrowBack)),
+              )),
           const SizedBox(
             width: 10,
           ),

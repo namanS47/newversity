@@ -49,7 +49,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       final teacherId = CommonUtils().getLoggedInUser();
       try {
         final response = await _teacherApi.getProfileCompletionInfo(teacherId);
-        if (response != null && response.completePercentage == 100) {
+        if (response != null && response.completePercentage != 0) {
           return emit(RedirectToTeacherHomeRoute());
         } else {
           return emit(RedirectToTeacherPersonalInformationRoute());
@@ -60,16 +60,3 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     }
   }
 }
-
-// String getTeacherRoute(TeacherDetails teacherDetails) {
-//   bool redirectToPersonalInformationPage = !(teacherDetails.name.isValid &&
-//       teacherDetails.profilePictureUrl.isValid &&
-//       teacherDetails.info.isValid &&
-//       teacherDetails.location.isValid);
-//
-//   bool redirectToExperienceAndQualificationPage = !(teacherDetails.title.isValid && teacherDetails.);
-//
-//   if (redirectToPersonalInformationPage) {
-//
-//   }
-// }

@@ -351,13 +351,13 @@ class _DateWiseCalenderAvailabilityScreenState
           children: [
             Row(
               children: [
-                GestureDetector(
+                InkWell(
                   onTap: () {
                     Navigator.pop(context);
                   },
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: AppImage(image: ImageAsset.arrowBack),
+                    child: Center(child: AppImage(image: ImageAsset.arrowBack)),
                   ),
                 ),
                 const SizedBox(
@@ -445,7 +445,9 @@ class _DateWiseCalenderAvailabilityScreenState
                               date: val.date ?? todayDate));
                     });
                   },
-                  minDate: context.read<AvailabilityBloc>().selectedDate,
+                  initialSelectedDate: widget.currentDateTime,
+                  initialDisplayDate: widget.currentDateTime,
+                  minDate: DateTime.now(),
                   view: CalendarView.month,
                   showNavigationArrow: true,
                   monthViewSettings: const MonthViewSettings(
