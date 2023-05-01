@@ -79,22 +79,24 @@ class _ExamsCrackedState extends State<ExamsCracked> {
       builder: (context, state) {
         if (state is FetchingTagsState) {
           return Expanded(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.cyanBlue,
-                ),
-              )
-            ],
-          ));
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.cyanBlue,
+                  ),
+                )
+              ],
+            ),
+          );
         }
         return Expanded(
           child: Stack(
             children: [
-              SizedBox(
+              Container(
+                margin: const EdgeInsets.only(bottom: 100),
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: SingleChildScrollView(
@@ -121,9 +123,6 @@ class _ExamsCrackedState extends State<ExamsCracked> {
                         ),
                         showSpecify ? getTitleHeader() : Container(),
                         const SizedBox(
-                          height: 10,
-                        ),
-                        const SizedBox(
                           height: 20,
                         ),
                         showSpecify ? getYourDesignation() : Container(),
@@ -146,21 +145,19 @@ class _ExamsCrackedState extends State<ExamsCracked> {
                   ),
                 ),
               ),
-              Column(
-                children: [
-                  Expanded(child: Container()),
-                  Container(
-                    color: AppColors.whiteColor,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: AppCta(
-                        isLoading: isLoading,
-                        onTap: () => onProceedTap(context),
-                        text: "Proceed",
-                      ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SizedBox(
+                  height: 100,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: AppCta(
+                      isLoading: isLoading,
+                      onTap: () => onProceedTap(context),
+                      text: "Proceed",
                     ),
-                  )
-                ],
+                  ),
+                ),
               )
             ],
           ),
@@ -178,6 +175,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
 
   Widget getYourDesignation() {
     return AppTextFormField(
+      autofocus: true,
       hintText: "PSC",
       controller: _specifyController,
       isDense: true,
@@ -185,18 +183,20 @@ class _ExamsCrackedState extends State<ExamsCracked> {
   }
 
   onProceedTap(BuildContext context) {
-    for (TagsResponseModel x in allSelectedTags) {
-      allRequestedTags
-          .add(TagModel(tagCategory: x.tagCategory, tagName: x.tagName));
-    }
     if (_specifyController.text.isNotEmpty) {
       allRequestedTags.add(
           TagModel(tagCategory: "exams", tagName: _specifyController.text));
     }
-    if (allRequestedTags.isNotEmpty) {
+    final List<TagModel> allSelectedTagModel = [];
+    for (TagsResponseModel x in allSelectedTags) {
+      allSelectedTagModel
+          .add(TagModel(tagCategory: x.tagCategory, tagName: x.tagName));
+    }
+
+    if (allRequestedTags.isNotEmpty || allSelectedTags.isNotEmpty) {
       isLoading = true;
       BlocProvider.of<ProfileBloc>(context)
-          .add(SaveTagsEvents(category: "exams", listOfTags: allRequestedTags));
+          .add(SaveTagsEvents(category: "exams", listOfTags: allRequestedTags + allSelectedTagModel));
     } else {
       showErrorText = true;
       setState(() {});

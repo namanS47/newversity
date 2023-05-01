@@ -85,22 +85,24 @@ class _SelectionDetailsState extends State<SelectionDetails> {
       builder: (context, state) {
         if (state is FetchingTagsState) {
           return Expanded(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.cyanBlue,
-                ),
-              )
-            ],
-          ));
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.cyanBlue,
+                  ),
+                )
+              ],
+            ),
+          );
         }
         return Expanded(
           child: Stack(
             children: [
-              SizedBox(
+              Container(
+                margin: const EdgeInsets.only(bottom: 100),
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: SingleChildScrollView(
@@ -149,23 +151,21 @@ class _SelectionDetailsState extends State<SelectionDetails> {
                   ),
                 ),
               ),
-              Column(
-                children: [
-                  Expanded(child: Container()),
-                  Container(
-                    color: AppColors.whiteColor,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: AppCta(
-                        isLoading: isLoading,
-                        onTap: () => onProceedTap(context),
-                        text: !widget.profileDashboardArguments.showBackButton
-                            ? AppStrings.update
-                            : AppStrings.proceed,
-                      ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SizedBox(
+                  height: 100,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: AppCta(
+                      isLoading: isLoading,
+                      onTap: () => onProceedTap(context),
+                      text: !widget.profileDashboardArguments.showBackButton
+                          ? AppStrings.update
+                          : AppStrings.proceed,
                     ),
-                  )
-                ],
+                  ),
+                ),
               )
             ],
           ),
@@ -175,18 +175,25 @@ class _SelectionDetailsState extends State<SelectionDetails> {
   }
 
   onProceedTap(BuildContext context) {
-    for (TagsResponseModel x in allSelectedTags) {
-      allRequestedTags
-          .add(TagModel(tagCategory: x.tagCategory, tagName: x.tagName));
-    }
+    // for (TagsResponseModel x in allSelectedTags) {
+    //   allRequestedTags
+    //       .add(TagModel(tagCategory: x.tagCategory, tagName: x.tagName));
+    // }
     if (_specifyController.text.isNotEmpty) {
       allRequestedTags.add(
           TagModel(tagCategory: "guidance", tagName: _specifyController.text));
     }
-    if (allRequestedTags.isNotEmpty) {
+
+    final List<TagModel> allSelectedTagModel = [];
+    for (TagsResponseModel x in allSelectedTags) {
+      allSelectedTagModel
+          .add(TagModel(tagCategory: x.tagCategory, tagName: x.tagName));
+    }
+
+    if (allRequestedTags.isNotEmpty || allSelectedTagModel.isNotEmpty) {
       isLoading = true;
       BlocProvider.of<ProfileBloc>(context).add(
-          SaveTagsEvents(category: "guidance", listOfTags: allRequestedTags));
+          SaveTagsEvents(category: "guidance", listOfTags: allRequestedTags + allSelectedTagModel));
     } else {
       showErrorText = true;
       setState(() {});
@@ -213,6 +220,7 @@ class _SelectionDetailsState extends State<SelectionDetails> {
 
   Widget getYourDesignation() {
     return AppTextFormField(
+      autofocus: true,
       hintText: "PSC",
       controller: _specifyController,
       isDense: true,
