@@ -23,9 +23,8 @@ class _AvailabilityRouteState extends State<AvailabilityRoute> {
 
   @override
   void initState() {
-    context
-        .read<AvailabilityBloc>()
-        .add(FetchAvailabilityArgumentEvent(date: todayDate));
+    context.read<AvailabilityBloc>().add(FetchAvailabilityArgumentEvent(
+        date: context.read<AvailabilityBloc>().selectedDate));
     super.initState();
   }
 

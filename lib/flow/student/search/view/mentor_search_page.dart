@@ -78,15 +78,37 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
   Widget getResultedTeacherListWidget(
       List<TeacherDetailsModel> teacherDetailsList) {
     return Expanded(
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: teacherDetailsList.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: MentorDetailCard(mentorDetail: teacherDetailsList[index]),
-          );
-        },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            AppText(
+              "Search result (${teacherDetailsList.length.toString()})",
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: teacherDetailsList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: MentorDetailCard(
+                        mentorDetail: teacherDetailsList[index]),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -151,6 +173,7 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
           context
               .read<MentorSearchBloc>()
               .add(FetchTeacherListByTagNameEvent(tagName: text));
+          FocusManager.instance.primaryFocus?.unfocus();
         },
         child: Row(
           children: [

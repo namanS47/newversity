@@ -64,21 +64,29 @@ class _ViewAllAvailableSlotScreenState
               SafeArea(
                 child: Stack(
                   children: [
-                    SingleChildScrollView(
-                      primary: true,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          getAppHeader(),
-                          const SizedBox(
-                            height: 25,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        getAppHeader(),
+                        Expanded(
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width,
+                            child: SingleChildScrollView(
+                              primary: true,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  isCalenderView
+                                      ? getCalenderView()
+                                      : getDateListWidget(),
+                                ],
+                              ),
+                            ),
                           ),
-                          isCalenderView
-                              ? getCalenderView()
-                              : getDateListWidget(),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     Column(
                       children: [
@@ -187,24 +195,25 @@ class _ViewAllAvailableSlotScreenState
   }
 
   Widget getCalenderView() {
-    return BlocConsumer<StudentSessionBloc, StudentSessionStates>(
-      buildWhen: (previous, current) => _isRebuildWidgetState(current),
-      listenWhen: (previous, current) => _isRebuildWidgetState(current),
-      listener: (context, state) {
-        if (state is FetchedTeacherSessionTimingsState) {
-          lisOfTimings = state.availabilityList;
-        }
-      },
-      builder: (context, state) {
-        if (state is FetchedTeacherSessionTimingsState) {
-          return Column(
-            children: [
-              getCalenderWidget(),
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height,
+    return Column(
+      children: [
+        getCalenderWidget(),
+        const SizedBox(
+          height: 20,
+        ),
+        BlocConsumer<StudentSessionBloc, StudentSessionStates>(
+          buildWhen: (previous, current) => _isRebuildWidgetState(current),
+          listenWhen: (previous, current) => _isRebuildWidgetState(current),
+          listener: (context, state) {
+            if (state is FetchedTeacherSessionTimingsState) {
+              lisOfTimings = state.availabilityList;
+            }
+          },
+          builder: (context, state) {
+            if (state is FetchedTeacherSessionTimingsState) {
+              return Container(
+                height: MediaQuery.of(context).size.height +
+                    lisOfTimings.length * 100,
                 width: MediaQuery.of(context).size.width,
                 decoration: const BoxDecoration(
                   color: AppColors.whiteColor,
@@ -222,25 +231,25 @@ class _ViewAllAvailableSlotScreenState
                     ),
                   ),
                 ),
-              ),
-            ],
-          );
-        }
-        return Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(color: AppColors.whiteColor),
-              child: const Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.cyanBlue,
+              );
+            }
+            return Column(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: const BoxDecoration(color: AppColors.whiteColor),
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.cyanBlue,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ],
-        );
-      },
+              ],
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -573,7 +582,10 @@ class _ViewAllAvailableSlotScreenState
             children: [
               InkWell(
                   onTap: () => {Navigator.pop(context)},
-                  child: const AppImage(image: ImageAsset.arrowBack)),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(child: AppImage(image: ImageAsset.arrowBack)),
+                  )),
               const SizedBox(
                 width: 10,
               ),

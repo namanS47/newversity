@@ -65,7 +65,7 @@ class _AvailabilityTimingWidgetState extends State<AvailabilityTimingWidget> {
             ),
             getNoteContainer(),
             const SizedBox(
-              height: 120,
+              height: 240,
             )
           ],
         );
