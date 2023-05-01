@@ -22,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String _phoneNumber = "";
   bool _fetchingOtp = false;
   bool? _phoneNumberValid;
-  UserType userType = UserType.teacher;
+  UserType userType = UserType.student;
 
   @override
   void initState() {
@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: getScreenContent(),
     );
   }
