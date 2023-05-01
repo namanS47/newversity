@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:newversity/config/app_config.dart';
 import 'package:newversity/flow/teacher/availability/data/model/availability_model.dart';
 import 'package:newversity/flow/teacher/availability/data/model/fetch_availability_request_model.dart';
+import 'package:newversity/flow/teacher/bank_account/model/bank_request_model.dart';
+import 'package:newversity/flow/teacher/bank_account/model/bank_response_model.dart';
 import 'package:newversity/flow/teacher/home/model/session_request_model.dart';
 import 'package:newversity/flow/teacher/home/model/session_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
@@ -14,8 +16,9 @@ import 'package:newversity/flow/teacher/profile/model/tags_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_with_teacher_id_request_model.dart';
 import 'package:retrofit/http.dart';
 
+import '../../flow/student/student_session/my_session/model/session_detail_response_model.dart';
 import '../../flow/teacher/availability/data/model/add_availability_request_model.dart';
-import '../../flow/teacher/data/model/teacher_details/teacher_details.dart';
+import '../../flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import '../../flow/teacher/profile/model/education_response_model.dart';
 
 part 'teacher_api.g.dart';
@@ -28,7 +31,7 @@ abstract class TeacherApi {
   }
 
   @GET("/teacher")
-  Future<TeacherDetails?> getTeacherDetails(
+  Future<TeacherDetailsModel?> getTeacherDetails(
       @Header("teacherId") String teacherId);
 
   @GET("/session/id")
@@ -36,8 +39,8 @@ abstract class TeacherApi {
       @Header("id") String sessionId);
 
   @POST("/addTeacher")
-  Future<TeacherDetails?> sendTeacherDetails(
-      @Body() TeacherDetails teacherDetails,
+  Future<TeacherDetailsModel?> sendTeacherDetails(
+      @Body() TeacherDetailsModel teacherDetails,
       @Header("teacherId") String teacherId);
 
   @POST("/teacher/experience")
@@ -80,6 +83,14 @@ abstract class TeacherApi {
   @POST("/session/add")
   Future<void>? addSessionDetail(@Body() SessionSaveRequest sessionSaveRequest);
 
+  @POST("/bankAccount")
+  Future<void> addBankAccount(@Header("teacherId") String teacherId,
+      @Body() AddBankRequestModel addBankRequestModel);
+
+  @GET("/bankAccount")
+  Future<BankResponseModel?>? getBankAccount(
+      @Header("teacherId") String teacherId);
+
   @GET("/teacher/availability")
   Future<List<AvailabilityModel>?> fetchAvailability(
       @Body() FetchAvailabilityRequestModel requestModel);
@@ -88,15 +99,16 @@ abstract class TeacherApi {
   Future<void> removeAvailability(@Header("id") String id);
 
   @GET("/session/teacher")
-  Future<List<SessionDetailsResponse>?> getSessionDetails(
+  Future<List<SessionDetailResponseModel>?> getSessionDetails(
       @Header("teacherId") String teacherId, @Query("type") String type);
 
   @POST("/teacher/tags/verify")
   @MultiPart()
-  Future<void> uploadTagDocument(@Part() File file, @Part() String teacherId, @Part() String tag);
+  Future<void> uploadTagDocument(
+      @Part() File file, @Part() String teacherId, @Part() String tag);
 
   @POST("/teacher/profileImage")
   @MultiPart()
-  Future<TeacherDetails?> uploadProfilePicture(@Part() File file, @Part() String teacherId);
-
+  Future<TeacherDetailsModel?> uploadProfilePicture(
+      @Part() File file, @Part() String teacherId);
 }

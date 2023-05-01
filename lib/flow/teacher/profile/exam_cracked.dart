@@ -17,7 +17,6 @@ class ExamsCracked extends StatefulWidget {
 }
 
 class _ExamsCrackedState extends State<ExamsCracked> {
-
   final _specifyController = TextEditingController();
   List<TagsResponseModel> allExamsTags = [];
   List<TagsResponseModel> allSelectedTags = [];
@@ -26,8 +25,13 @@ class _ExamsCrackedState extends State<ExamsCracked> {
   bool showErrorText = false;
 
   @override
-  void initState() {
+  void dispose() {
+    super.dispose();
+    _specifyController.dispose();
+  }
 
+  @override
+  void initState() {
     super.initState();
     BlocProvider.of<ProfileBloc>(context)
         .add(FetchExamTagsEvent(tagCat: getTagCategory(TagCategory.exams)));
@@ -36,8 +40,8 @@ class _ExamsCrackedState extends State<ExamsCracked> {
       if (_specifyController.text.replaceAll(" ", "").isNotEmpty &&
           _specifyController.text.contains(" ")) {
         setState(() {
-          allRequestedTags.add(TagModel(
-              tagCategory: "exams", tagName: _specifyController.text));
+          allRequestedTags.add(
+              TagModel(tagCategory: "exams", tagName: _specifyController.text));
           _specifyController.text = "";
         });
       }
@@ -62,7 +66,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
           allExamsTags = state.listOfTags;
           final teacherId = context.read<ProfileBloc>().teacherId;
           for (var element in allExamsTags) {
-            if(element.teacherTagDetailList?.containsKey(teacherId) == true) {
+            if (element.teacherTagDetailList?.containsKey(teacherId) == true) {
               allSelectedTags.add(element);
             }
           }
@@ -73,53 +77,90 @@ class _ExamsCrackedState extends State<ExamsCracked> {
         }
       },
       builder: (context, state) {
-        return Padding(
-          padding: const EdgeInsets.all(18.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        if (state is FetchingTagsState) {
+          return Expanded(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
+              Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.cyanBlue,
+                ),
+              )
+            ],
+          ));
+        }
+        return Expanded(
+          child: Stack(
             children: [
-              getExamCrackedHeader(),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        getExamCrackedHeader(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        selectExamNames(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        getExamsLayout(),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        getRequestedTagWidget(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        showSpecify ? getTitleHeader() : Container(),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        showSpecify ? getYourDesignation() : Container(),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        showErrorText
+                            ? const AppText(
+                                "Please select at least one",
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.redColorShadow400,
+                              )
+                            : Container(),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-              selectExamNames(),
-              const SizedBox(
-                height: 20,
-              ),
-              getExamsLayout(),
-              const SizedBox(
-                height: 8,
-              ),
-              getRequestedTagWidget(),
-              const SizedBox(
-                height: 20,
-              ),
-              showSpecify ? getTitleHeader() : Container(),
-              const SizedBox(
-                height: 10,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              showSpecify ? getYourDesignation() : Container(),
-              const SizedBox(
-                height: 10,
-              ),
-              showErrorText
-                  ? const AppText(
-                      "Please select at least one",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.redColorShadow400,
-                    )
-                  : Container(),
-              const SizedBox(
-                height: 10,
-              ),
-              AppCta(
-                isLoading: isLoading,
-                onTap: () => onProceedTap(context),
-                text: "Proceed",
+              Column(
+                children: [
+                  Expanded(child: Container()),
+                  Container(
+                    color: AppColors.whiteColor,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: AppCta(
+                        isLoading: isLoading,
+                        onTap: () => onProceedTap(context),
+                        text: "Proceed",
+                      ),
+                    ),
+                  )
+                ],
               )
             ],
           ),
@@ -162,16 +203,6 @@ class _ExamsCrackedState extends State<ExamsCracked> {
     }
   }
 
-  List<String> examsCracked = [
-    "SSC Board Exams",
-    "CBSE Board Exams",
-    "NEET",
-    "JEE Main",
-    "JEE Advance",
-    "HSC Board Exams",
-    "Others"
-  ];
-
   Widget getExamsLayout() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -205,7 +236,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
               Text(
                 allRequestedTags[curIndex].tagName ?? "",
                 style:
-                const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
               ),
               InkWell(
                   onTap: () {
@@ -231,7 +262,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
       runSpacing: 12,
       children: List.generate(
         allRequestedTags.length,
-            (curIndex) {
+        (curIndex) {
           return examsViewForRequestedTag(curIndex);
         },
       ),

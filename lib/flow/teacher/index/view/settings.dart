@@ -17,7 +17,7 @@ class _SettingsState extends State<Settings> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: const [
-          AppText("Coming soon"),
+          Center(child: AppText("Coming soon")),
         ],
       ),
     );

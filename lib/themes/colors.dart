@@ -14,7 +14,9 @@ class AppColors {
   static const cyanBlue = Color(0xff1E2C47);
   static const lightCyanBlue = Color(0xff5C56CE);
   static const strongCyan = Color(0xff079893);
+  static const mentorsAmountColor = Color(0xffFFEECF);
   static const lightCyan = Color(0xff9BD6D4);
+  static const searchColor = Color(0xffF0F0F0);
   static const availCyan = Color(0xff56CEFF);
   static const ligCyan = Color(0xffDAF0EF);
   static const worksColor = Color(0xffDBFDF5);
@@ -37,4 +39,9 @@ class AppColors {
   static const nextAvailabilityColor = Color(0xffE7F8FF);
   static const perSessionRate = Color(0xff9BD6D4);
   static const appYellow = Color(0xffFFCC00);
+
+  static const review_1 = Color(0xffFFF8ED);
+  static const review_2 = Color(0xffE9F2F2);
+  static const inviteColor = Color(0xffBFE8CF);
+
 }

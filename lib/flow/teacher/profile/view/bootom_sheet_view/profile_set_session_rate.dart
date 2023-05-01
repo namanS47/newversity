@@ -6,7 +6,7 @@ import 'package:newversity/themes/strings.dart';
 import 'package:newversity/utils/string_extensions.dart';
 
 import '../../../data/bloc/teacher_details/teacher_details_bloc.dart';
-import '../../../data/model/teacher_details/teacher_details.dart';
+import '../../../data/model/teacher_details/teacher_details_model.dart';
 
 class ProfileEditSessionRate extends StatefulWidget {
   const ProfileEditSessionRate({Key? key}) : super(key: key);
@@ -106,7 +106,7 @@ class _ProfileEditSessionRateState extends State<ProfileEditSessionRate> {
       };
       BlocProvider.of<TeacherDetailsBloc>(context).add(
         SaveTeacherDetailsEvent(
-          teacherDetails: TeacherDetails(sessionPricing: sessionPrice),
+          teacherDetails: TeacherDetailsModel(sessionPricing: sessionPrice),
         ),
       );
     } else {

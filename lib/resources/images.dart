@@ -20,6 +20,8 @@ class ImageAsset {
   static const String rupay = '${_svgPath}rupay.svg';
   static const String drawer = '${_svgPath}drawer.svg';
   static const String lock = '${_svgPath}lock.svg';
+  static const String zeroEarnings = '${_svgPath}zero_earnings.svg';
+  static const String search = '${_svgPath}search.svg';
   static const String filter = '${_svgPath}filter.svg';
   static const String edit = '${_svgPath}edit.svg';
   static const String editPrimary = '${_svgPath}edit_primary.svg';
@@ -29,6 +31,22 @@ class ImageAsset {
   static const String availability = '${_svgPath}availability.svg';
   static const String bookings = '${_svgPath}bookings.svg';
   static const String star = '${_svgPath}star.svg';
+  static const String session = '${_svgPath}session.svg';
+  static const String campus = '${_svgPath}campus.svg';
+  static const String invite = '${_svgPath}invite.svg';
+  static const String detailDesign = '${_svgPath}detail_design.svg';
+  static const String thumbsUp = '${_svgPath}thumbs_up.svg';
+  static const String chatBot = '${_svgPath}chat_bot.svg';
+  static const String icSuggestion = '${_svgPath}ic_suggestion.svg';
+  static const String icCompletenessWelcome =
+      '${_svgPath}ic_completeness_welcome.svg';
+  static const String icCamera = '${_svgPath}ic_camera.svg';
+  static const String icNewVersityLogo = '${_svgPath}new_versity_logo.svg';
+  static const String icGrowth = '${_svgPath}growth.svg';
+  static const String calenderIcon = '${_svgPath}calender_icon.svg';
+  static const String calenderUp = '${_svgPath}calender_up.svg';
+  static const String nothingFoundIcon = '${_svgPath}seo_bw.svg';
+  static const String profileCompleteInfo = '${_svgPath}profile_complete_info.svg';
 
   // Drawer strings
   static const user = "${_svgPath}user.svg";
@@ -45,7 +63,13 @@ class ImageAsset {
   static const mail = "${_svgPath}mail.svg";
   static const attach = "${_svgPath}attach.svg";
   static const editCheck = "${_svgPath}edit_check.svg";
+  static const paymentSuccessful = "${_svgPath}payment_successful.svg";
+  static const paymentProcessing = "${_svgPath}payment_processing.svg";
+  static const paymentError = "${_svgPath}payment_error.svg";
 
   //PNG Path
   static const mentor = "${_pngPath}mentor.jpeg";
+  static const icOnBoarding = '${_pngPath}ic_onboarding.png';
+  static const loginBanner = '${_pngPath}login_banner.png';
+  static const mentorLoginBanner = '${_pngPath}mentor_login_banner.png';
 }

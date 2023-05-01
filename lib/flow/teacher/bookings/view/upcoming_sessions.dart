@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newversity/flow/student/student_session/my_session/model/session_detail_response_model.dart';
 import 'package:newversity/flow/teacher/bookings/bloc/upcoming_session_bloc/upcoming_session_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
 import 'package:newversity/flow/teacher/bookings/view/bottom_sheets/sort_by_bottom_sheet_upcoming_session.dart';
@@ -7,10 +8,10 @@ import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/utils/enums.dart';
+import 'package:newversity/utils/strings.dart';
 
 import '../../../../common/common_widgets.dart';
 import '../../../../utils/date_time_utils.dart';
-import '../../home/model/session_response_model.dart';
 
 class UpcomingSessions extends StatefulWidget {
   const UpcomingSessions({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class UpcomingSessions extends StatefulWidget {
 }
 
 class _UpcomingSessionsState extends State<UpcomingSessions> {
-  List<SessionDetailsResponse> listOfSessionDetailResponse = [];
+  List<SessionDetailResponseModel> listOfSessionDetailResponse = [];
 
   @override
   void initState() {
@@ -32,112 +33,86 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(
-          height: 10,
-        ), // getTimeFilter(),
-        const SizedBox(
-          height: 10,
-        ),
-        getListOfUpcomingSessions(),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(
+            height: 10,
+          ), // getTimeFilter(),
+          const SizedBox(
+            height: 10,
+          ),
+          getListOfUpcomingSessions(),
+        ],
+      ),
     );
   }
 
   Widget getListOfUpcomingSessions() {
     return BlocConsumer<UpcomingSessionBloc, UpcomingSessionStates>(
       listener: (context, state) {
-        if (state is FetchedUpcomingSessionState && state.sessionDetailResponse != null) {
+        if (state is FetchedUpcomingSessionState &&
+            state.sessionDetailResponse != null) {
           listOfSessionDetailResponse = state.sessionDetailResponse!;
         }
         // TODO: implement listener
       },
       builder: (context, state) {
+        if (state is FetchingUpcomingSessionState) {
+          return getProgressIndicator();
+        }
         return listOfSessionDetailResponse.isNotEmpty
-                ? Wrap(
-                    spacing: 15,
-                    runSpacing: 12,
-                    children: List.generate(
-                      listOfSessionDetailResponse.length,
-                      (curIndex) {
-                        return getUpComingSessionDataView(curIndex);
-                      },
+            ? Wrap(
+                spacing: 15,
+                runSpacing: 12,
+                children: List.generate(
+                  listOfSessionDetailResponse.length,
+                  (curIndex) {
+                    return getUpComingSessionDataView(curIndex);
+                  },
+                ),
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height - 300,
+                      width: MediaQuery.of(context).size.width,
+                      child: const Center(
+                        child: AppText(
+                          "Data not Found",
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
                   )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Center(
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.height - 300,
-                          width: MediaQuery.of(context).size.width,
-                          child: const Center(
-                            child: AppText(
-                              "Data not Found",
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  );
+                ],
+              );
       },
     );
   }
 
-  Widget getStartingTime(
-      int hour, int min, int sec, bool crossedThreshHoldTime) {
-    return Row(
+  Widget getProgressIndicator() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const AppText(
-          "Starts at: ",
-          fontSize: 10,
-          fontWeight: FontWeight.w400,
-        ),
-        AppText(
-          hour.toString(),
-          fontSize: 10,
-          fontWeight: FontWeight.w400,
-        ),
-        AppText(
-          "H",
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-          color: crossedThreshHoldTime
-              ? AppColors.redColorShadow400
-              : AppColors.strongGreen,
-        ),
-        AppText(
-          ":$min",
-          fontSize: 10,
-          fontWeight: FontWeight.w400,
-        ),
-        AppText(
-          "M",
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-          color: crossedThreshHoldTime
-              ? AppColors.redColorShadow400
-              : AppColors.strongGreen,
-        ),
-        AppText(
-          ":$sec",
-          fontSize: 10,
-          fontWeight: FontWeight.w400,
-        ),
-        AppText(
-          "S",
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-          color: crossedThreshHoldTime
-              ? AppColors.redColorShadow400
-              : AppColors.strongGreen,
-        ),
+        Center(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height - 300,
+            width: MediaQuery.of(context).size.width,
+            child: const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.cyanBlue,
+              ),
+            ),
+          ),
+        )
       ],
     );
   }
@@ -149,22 +124,44 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
             id: listOfSessionDetailResponse[index].id!, isPrevious: false));
   }
 
+  Widget getStudentProfilePic(String? profileUrl) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+        height: 66,
+        width: 66,
+        child: profileUrl == null
+            ? const AppImage(
+                image: ImageAsset.blueAvatar,
+              )
+            : Image.network(
+                profileUrl ?? "",
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: AppImage(
+                        image: ImageAsset.blueAvatar,
+                      ),
+                    ),
+                  );
+                },
+                fit: BoxFit.fill,
+              ),
+      ),
+    );
+  }
+
   Widget getUpComingSessionDataView(int index) {
     return GestureDetector(
       onTap: () => onProfileTap(index),
       child: Row(
         children: [
-          SizedBox(
-            height: 66,
-            width: 66,
-            child: CircleAvatar(
-              radius: 200,
-              child: AppImage(
-                image: listOfSessionDetailResponse[index].paymentId ??
-                    ImageAsset.blueAvatar,
-              ),
-            ),
-          ),
+          getStudentProfilePic(listOfSessionDetailResponse[index]
+              .studentDetail
+              ?.profilePictureUrl),
           const SizedBox(
             width: 16,
           ),
@@ -176,10 +173,16 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AppText(
-                    listOfSessionDetailResponse[index].studentId ?? "",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: AppText(
+                      listOfSessionDetailResponse[index].studentDetail?.name ??
+                          "",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
                   ),
                   AppText(
                     "Starts at : ${getTimeText(index)}",
@@ -195,8 +198,7 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
                 height: 7,
               ),
               AppText(
-                listOfSessionDetailResponse[index].agenda ??
-                    "This is Agenda Section",
+                listOfSessionDetailResponse[index].agenda ?? "",
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
@@ -206,11 +208,20 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AppText(
-                    listOfSessionDetailResponse[index].id ??
-                        "This is Qualifucation Section",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                  Flexible(
+                    child: AppText(
+                      StringsUtils.getTagListTextFromListOfTags(
+                          listOfSessionDetailResponse[index]
+                                  .studentDetail
+                                  ?.tags ??
+                              [],
+                          showTrimTagList: true),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
                   ),
                   getJoinNowCTA(index),
                 ],
@@ -246,14 +257,17 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
     return text;
   }
 
-  onTapJoinNow() {}
+  onTapJoinNow(int index) {
+    Navigator.of(context).pushNamed(AppRoutes.roomPageRoute,
+        arguments: listOfSessionDetailResponse[index].teacherToken);
+  }
 
   Widget getJoinNowCTA(int index) {
     return GestureDetector(
       onTap: () =>
           getLeftTimeInSeconds(listOfSessionDetailResponse[index].startDate!) <
                   1801
-              ? onTapJoinNow()
+              ? onTapJoinNow(index)
               : null,
       child: Container(
         height: 32,

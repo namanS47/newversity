@@ -6,7 +6,6 @@ class StageAppConfig extends BaseAppConfig {
   String get newversityAPIBaseUrl => EnvironmentValues.newversityStagingUrl;
 
   @override
-  // TODO: implement razorPayKey
-  String get razorPayKey => throw UnimplementedError();
+  String get razorPayKey => EnvironmentValues.stagingRazorPayKey;
 
 }

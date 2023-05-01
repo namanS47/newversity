@@ -12,7 +12,7 @@ class UpdatedSortByIndexState extends PreviousSessionStates {}
 class FetchingPreviousSessionState extends PreviousSessionStates {}
 
 class FetchedPreviousSessionState extends PreviousSessionStates {
-  final List<SessionDetailsResponse>? listOfPreviousSession;
+  final List<SessionDetailResponseModel>? listOfPreviousSession;
   FetchedPreviousSessionState({required this.listOfPreviousSession});
 }
 

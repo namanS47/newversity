@@ -8,7 +8,9 @@ class AppStrings {
       "Breaking barriers and providing flexibility to your mentorship.";
   static const proceed = "Proceed";
   static const update = "Update";
+  static const completeProfile = "Complete profile";
   static const bookSession = "Book  Your Session";
+  static const confirm = "Confirm";
   static const addExperience = "Add Experience";
   static const addEducation = "Add Education";
   static const clickOnProceed = "By clicking on proceed, you agree to the ";
@@ -29,8 +31,9 @@ class AppStrings {
   static const about = "About";
   static const personalInfo = "Personal Information";
   static const selectExamsInfo = "Select exam names";
-  static const selectAtLeastOneInfo = "Select atleast 1 of these";
+  static const selectAtLeastOneInfo = "Select any 1 of these";
   static const examsCracked = "Exams that you have cracked";
+  static const whatAreYouPreparingFor = "What are you preparing for?";
   static const examsSelectionHeader = "Talk to me about";
   static const experienceAndEducation = "Experience & Qualification";
   static const title = "Title";
@@ -40,11 +43,13 @@ class AppStrings {
   static const locationType = "Location Type";
   static const homeTown = "Home Town";
   static const aboutYourSelf = "About Yourself";
+  static const language = "Language";
   static const uploadProfilePic = "Upload Profile Picture";
   static const yourName = "Your Name";
   static const availableSlot = "Available slots";
   static const availableTime = "Available times";
   static const perSession = "Per session";
+  static const zeroEarnings = "Oho zero earnings !";
   static const companyName = "Company Name";
   static const degree = "Degree";
   static const grade = "Grade";
@@ -61,8 +66,8 @@ class AppStrings {
   static const thirtyMin = "30 mins";
   static const location = "Location";
   static const myBookings = "My Bookings";
+  static const mySessions = "My Sessions";
   static const experience = "Experience";
-  static const completeProfile = "Complete profile";
   static const watchVideo = "Watch video";
   static const setAvailability = "Set your availability";
   static const howItWorks = "How it works?";
@@ -72,8 +77,19 @@ class AppStrings {
   static const enterOtp = "Please enter the 6-digit code sent to";
   static const correctOtp = "Please enter correct otp";
   static const emptyProfile = "Your profile is looking empty!";
+  static const findMentor = "Find a best mentor for you !";
   static const addingDetailsInst =
       "Add some details and personalize your experience. Complete it now and start enjoying our app!";
+
+  // payment
+
+  static const paymentSuccessfulInstruction =
+      "Your payment has been successfully done. we will send you a zoom link on your whatsapp or on covenient mode of conversation.";
+  static const paymentSuccessfulHeader =
+      "You have Successfully booked a session";
+  static const paymentErrorHeader = "Payment Error!";
+  static const paymentErrorInstruction =
+      "There has been an error while processing your request.";
 
   // Drawer strings
   static const share = "Share your profile";

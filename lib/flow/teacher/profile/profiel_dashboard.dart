@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/teacher/data/bloc/teacher_details/teacher_details_bloc.dart';
 import 'package:newversity/flow/teacher/profile/exam_cracked.dart';
 import 'package:newversity/flow/teacher/profile/experience_and_education.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
-import 'package:newversity/flow/teacher/profile/personal_info.dart';
+import 'package:newversity/flow/teacher/profile/teacher_personal_info.dart';
 import 'package:newversity/flow/teacher/profile/selection_details.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
@@ -13,7 +14,7 @@ import 'package:newversity/themes/colors.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../../common/common_utils.dart';
-import '../data/model/teacher_details/teacher_details.dart';
+import '../data/model/teacher_details/teacher_details_model.dart';
 import 'bloc/profile_bloc/profile_bloc.dart';
 
 class ProfileDashboard extends StatefulWidget {
@@ -40,7 +41,8 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
       body: BlocConsumer<ProfileBloc, ProfileStates>(
         listener: (context, state) {
           if (state is ProfileDetailsSavingSuccessState) {
-            Navigator.of(context).pushNamed(AppRoutes.teacherHomePageRoute);
+            Navigator.of(context)
+                .pushNamed(AppRoutes.teacherHomePageRoute, arguments: false);
           }
         },
         builder: (context, state) {
@@ -48,7 +50,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
             context.read<ProfileBloc>().profileCardList = [
               BlocProvider<TeacherDetailsBloc>(
                   create: (context) => TeacherDetailsBloc(),
-                  child: PersonalInformation(
+                  child: TeacherPersonalInformation(
                     profileDashboardArguments: widget.profileDashboardArguments,
                   )),
               ExperienceAndEducation(
@@ -61,12 +63,8 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
             ];
           }
           return SafeArea(
-            bottom: false,
-            child: ListView(
-              primary: true,
-              shrinkWrap: true,
+            child: Column(
               children: [
-                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: Row(
@@ -78,6 +76,7 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                             !(context.read<ProfileBloc>().currentProfileStep ==
                                 1),
                         child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
                           onTap: () async {
                             if (context.read<ProfileBloc>().currentProfileStep >
                                 1) {
@@ -120,21 +119,25 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
                           ],
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          onTap: () => onSkipTap(),
-                          child: const Text("Skip"),
+                      GestureDetector(
+                        onTap: () => onSkipTap(),
+                        child: const Padding(
+                          padding: EdgeInsets.all(18.0),
+                          child: Center(
+                              child: AppText(
+                            "Skip",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          )),
                         ),
                       )
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
                 if (context.read<ProfileBloc>().profileCardList.isNotEmpty) ...[
                   context.read<ProfileBloc>().profileCardList.elementAt(
                       context.read<ProfileBloc>().currentProfileStep - 1),
-                ],
+                ]
               ],
             ),
           );
@@ -144,9 +147,9 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
   }
 
   onSkipTap() {
-    BlocProvider.of<TeacherDetailsBloc>(context).add(
-      SaveTeacherDetailsEvent(
-        teacherDetails: TeacherDetails(
+    BlocProvider.of<ProfileBloc>(context).add(
+      SaveProfileDetailsEvent(
+        teacherDetails: TeacherDetailsModel(
           teacherId: CommonUtils().getLoggedInUser(),
         ),
       ),

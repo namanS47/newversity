@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:newversity/common/common_widgets.dart';
+import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
 import 'package:newversity/flow/teacher/index/view/bottom_sheet/contact_us.dart';
+import 'package:newversity/navigation/app_routes.dart';
 
 import '../../../../resources/images.dart';
 import '../../../../themes/colors.dart';
@@ -23,12 +25,16 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                children: const [
-                  AppImage(image: ImageAsset.arrowBack),
-                  SizedBox(
+                children:  [
+                  InkWell(
+                    onTap: ()=>{
+                      Navigator.pop(context)
+                    },
+                      child: const AppImage(image: ImageAsset.arrowBack)),
+                  const SizedBox(
                     width: 10,
                   ),
-                  AppText(
+                  const AppText(
                     "Help and Support",
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
@@ -89,9 +95,13 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
     );
   }
 
-  onTapOfRaiseIssueContainer() {}
+  onTapOfRaiseIssueContainer() {
+    Navigator.of(context).pushNamed(AppRoutes.raiseIssueRoute,arguments: SessionDetailArguments(id: "", isPrevious: false));
+  }
 
-  onTapOfFaqsContainer() {}
+  onTapOfFaqsContainer() {
+    Navigator.of(context).pushNamed(AppRoutes.faqs);
+  }
 
   Widget getFaqsContainer() {
     return GestureDetector(
@@ -150,7 +160,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              AppText(
+              const AppText(
                 "Wants to connect with us?",
                 fontSize: 14,
                 fontWeight: FontWeight.w500,

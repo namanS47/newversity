@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/utils/enums.dart';
 import 'package:newversity/utils/string_extensions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,9 +48,9 @@ abstract class Preferences {
     }
   }
 
-  Future<TeacherDetails> getTeacherDetails();
+  Future<TeacherDetailsModel> getTeacherDetails();
 
-  Future<void> setTeacherDetails(TeacherDetails teacherDetails);
+  Future<void> setTeacherDetails(TeacherDetailsModel teacherDetails);
 
   Future<String> getMobileNumber();
 
@@ -81,12 +81,12 @@ class PreferencesImpl extends Preferences {
   }
 
   @override
-  Future<TeacherDetails> getTeacherDetails() async {
+  Future<TeacherDetailsModel> getTeacherDetails() async {
     return await getObjectPreference(PreferencesKey.teacherDetails);
   }
 
   @override
-  Future<void> setTeacherDetails(TeacherDetails teacherDetails) async {
+  Future<void> setTeacherDetails(TeacherDetailsModel teacherDetails) async {
     return setObjectPreference(PreferencesKey.teacherDetails, teacherDetails);
   }
 

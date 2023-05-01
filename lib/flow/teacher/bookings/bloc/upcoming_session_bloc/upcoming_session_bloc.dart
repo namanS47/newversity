@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import '../../../../../common/common_utils.dart';
 import '../../../../../di/di_initializer.dart';
 import '../../../../../network/webservice/exception.dart';
+import '../../../../student/student_session/my_session/model/session_detail_response_model.dart';
 import '../../../home/model/session_response_model.dart';
 import '../../../webservice/teacher_base_repository.dart';
 

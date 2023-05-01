@@ -24,5 +24,10 @@ class TagModel {
   factory TagModel.fromJson(Map<String, dynamic> json) =>
       _$TagModelFromJson(json);
 
+  @override
+  String toString() {
+    return 'TagModel{tagName: $tagName, tagCategory: $tagCategory}';
+  }
+
   Map<String, dynamic> toJson() => _$TagModelToJson(this);
 }

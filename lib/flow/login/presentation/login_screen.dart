@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/navigation/app_routes.dart';
+import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
 import 'package:newversity/utils/enums.dart';
@@ -75,13 +76,20 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget getTopBanner() {
-    return Container(
-      height: 300,
-      decoration: const BoxDecoration(
-          color: Colors.red,
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20))),
+    return ClipRRect(
+      borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24)),
+      child: Container(
+        height: 375,
+        width: MediaQuery.of(context).size.width,
+        decoration: const BoxDecoration(color: AppColors.whiteColor),
+        child: AppImage(
+          image: userType == UserType.student
+              ? ImageAsset.loginBanner
+              : ImageAsset.mentorLoginBanner,
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 
@@ -167,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget getConfirmCta() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24),
+      padding: const EdgeInsets.only(top: 24, bottom: 16),
       child: AppCta(
         onTap: onButtonTap,
         text: AppStrings.proceed,
@@ -227,14 +235,17 @@ class _LoginScreenState extends State<LoginScreen> {
           AppStrings.clickOnProceed,
           textAlign: TextAlign.center,
           style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
             color: AppColors.blackMerlin,
           ),
         ),
         Text(
           AppStrings.termsAndConditions,
           style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
             color: AppColors.blackRussian,
-            fontWeight: FontWeight.bold,
           ),
         )
       ],

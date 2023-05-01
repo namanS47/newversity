@@ -27,7 +27,6 @@ Widget getTopBanner() {
 }
 
 class _BookingsState extends State<Bookings> {
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<TeacherBookingsBloc, TeacherBookingStates>(
@@ -35,63 +34,58 @@ class _BookingsState extends State<Bookings> {
         // TODO: implement listener
       },
       builder: (context, state) {
-        return CustomScrollView(
-          slivers: <Widget>[
-            SliverToBoxAdapter(
-              child: Stack(
+        return Stack(
+          children: [
+            getTopBanner(),
+            SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  getTopBanner(),
-                  SafeArea(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.all(18.0),
-                          child: AppText(
-                            AppStrings.myBookings,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        Container(
-                          decoration: const BoxDecoration(
-                              color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20))),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              children: [
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                getCategoryTab(),
-                                context
-                                            .read<TeacherBookingsBloc>()
-                                            .selectedIndex ==
-                                        0
-                                    ? BlocProvider<UpcomingSessionBloc>(
-                                        create: (context) =>
-                                            UpcomingSessionBloc(),
-                                        child: const UpcomingSessions())
-                                    : BlocProvider<PreviousSessionBloc>(
-                                        create: (context) =>
-                                            PreviousSessionBloc(),
-                                        child: const PreviousSessions()),
-                              ],
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(18.0),
+                    child: AppText(
+                      AppStrings.myBookings,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: MediaQuery.of(context).size.height,
+                      decoration: const BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
                             ),
-                          ),
-                        )
-                      ],
+                            getCategoryTab(),
+                            context.read<TeacherBookingsBloc>().selectedIndex ==
+                                    0
+                                ? BlocProvider<UpcomingSessionBloc>(
+                                    create: (context) => UpcomingSessionBloc(),
+                                    child: const Expanded(
+                                        child: UpcomingSessions()))
+                                : BlocProvider<PreviousSessionBloc>(
+                                    create: (context) => PreviousSessionBloc(),
+                                    child: const Expanded(
+                                        child: PreviousSessions())),
+                          ],
+                        ),
+                      ),
                     ),
                   )
                 ],
               ),
-            ),
+            )
           ],
         );
       },

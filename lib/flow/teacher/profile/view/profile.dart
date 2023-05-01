@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/flow/teacher/profile/view/overview.dart';
 import 'package:newversity/flow/teacher/profile/view/review.dart';
+import 'package:newversity/flow/teacher/profile_drawer/bloc/profile_drawer_bloc.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-import '../../index/view/profile_drawer_screen.dart';
+import '../../profile_drawer/profile_drawer_screen.dart';
 import '../bloc/profile_bloc/profile_bloc.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  TeacherDetails? teacherDetails;
+  TeacherDetailsModel? teacherDetails;
   ProfileCompletionPercentageResponse? profileCompletionPercentageResponse;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -53,7 +54,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (context, state) {
         return Scaffold(
           key: scaffoldKey,
-          endDrawer: const SizedBox(width: 240, child: ProfileDrawerScreen()),
+          endDrawer: SizedBox(
+              width: 240,
+              child: BlocProvider<ProfileDrawerBloc>(
+                create: (context) => ProfileDrawerBloc(),
+                child: const ProfileDrawerScreen(),
+              )),
           resizeToAvoidBottomInset: true,
           body: Stack(
             children: [
@@ -87,11 +93,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                           GestureDetector(
-                              behavior: HitTestBehavior.deferToChild,
+                              behavior: HitTestBehavior.translucent,
                               onTap: () => onDrawerTap(),
                               child: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: AppImage(image: ImageAsset.drawer),
+                                padding: EdgeInsets.all(18.0),
+                                child: Center(
+                                    child: AppImage(image: ImageAsset.drawer)),
                               )),
                         ],
                       ),
@@ -134,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   height: 10,
                                 ),
                                 AppText(
-                                    "Email : ${teacherDetails?.email ?? ""}"),
+                                    "Email : ${teacherDetails?.email ?? "Nil"}"),
                               ],
                             ),
                           ),
@@ -146,11 +153,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(
                         height: 10,
                       ),
+                      getProfileIncompletenessReasonView(),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       getProfileTab(),
                       context.read<ProfileBloc>().selectedProfileTab == 0
                           ? BlocProvider<ProfileBloc>(
                               create: (context) => ProfileBloc(),
-                              child: const ProfileOverview())
+                              child: ProfileOverview(
+                                percentageResponse:
+                                    profileCompletionPercentageResponse ??
+                                        ProfileCompletionPercentageResponse(),
+                              ))
                           : BlocProvider<ProfileBloc>(
                               create: (context) => ProfileBloc(),
                               child: const ProfileReview()),
@@ -163,6 +178,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+  Widget getProfileIncompletenessReasonView() {
+    return Visibility(
+        visible: profileCompletionPercentageResponse?.completePercentage != 100,
+        child: AppText(
+          profileCompletionPercentageResponse?.suggestion ??
+              "Please complete your profile first to interact with student",
+          fontSize: 12,
+          color: AppColors.appYellow,
+          fontWeight: FontWeight.w500,
+        ));
   }
 
   Widget getProfileTab() {

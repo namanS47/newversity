@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
-import 'package:newversity/flow/teacher/bookings/bloc/session_details_bloc/session_details_bloc.dart';
+import 'package:newversity/flow/teacher/bookings/bloc/session_details_bloc/booking_session_details_bloc.dart';
 
 import '../../../../../themes/colors.dart';
 
@@ -16,7 +16,7 @@ class _CancelBookingState extends State<CancelBooking> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SessionDetailsBloc, SessionDetailsStates>(
+    return BlocConsumer<BookingSessionDetailsBloc, BookingSessionDetailsStates>(
       listener: (context, state) {
         // TODO: implement listener
       },
@@ -52,7 +52,7 @@ class _CancelBookingState extends State<CancelBooking> {
               AppCta(
                   onTap: () => onCancelRequest(),
                   isEnable: context
-                      .read<SessionDetailsBloc>()
+                      .read<BookingSessionDetailsBloc>()
                       .selectedCancelRequest
                       .isNotEmpty,
                   isLoading: false,
@@ -69,7 +69,7 @@ class _CancelBookingState extends State<CancelBooking> {
   Widget getOtherReasonTextField() {
     return Visibility(
       visible: context
-          .read<SessionDetailsBloc>()
+          .read<BookingSessionDetailsBloc>()
           .selectedCancelRequest
           .contains("Others"),
       child: const AppTextFormField(
@@ -84,7 +84,7 @@ class _CancelBookingState extends State<CancelBooking> {
       spacing: 15,
       runSpacing: 12,
       children: List.generate(
-        context.read<SessionDetailsBloc>().listOfCancelRequest.length,
+        context.read<BookingSessionDetailsBloc>().listOfCancelRequest.length,
         (curIndex) {
           return cancelRequestView(curIndex);
         },
@@ -100,10 +100,10 @@ class _CancelBookingState extends State<CancelBooking> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             color: context
-                    .read<SessionDetailsBloc>()
+                    .read<BookingSessionDetailsBloc>()
                     .selectedCancelRequest
                     .contains(context
-                        .read<SessionDetailsBloc>()
+                        .read<BookingSessionDetailsBloc>()
                         .listOfCancelRequest[curIndex])
                 ? AppColors.lightCyan
                 : AppColors.grey35,
@@ -111,7 +111,7 @@ class _CancelBookingState extends State<CancelBooking> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            context.read<SessionDetailsBloc>().listOfCancelRequest[curIndex],
+            context.read<BookingSessionDetailsBloc>().listOfCancelRequest[curIndex],
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
           ),
         ),
@@ -120,8 +120,8 @@ class _CancelBookingState extends State<CancelBooking> {
   }
 
   onSelectedCancelRequest(int index) {
-    BlocProvider.of<SessionDetailsBloc>(context).add(CancelRequestSelectEvent(
-        item: context.read<SessionDetailsBloc>().listOfCancelRequest[index]));
+    BlocProvider.of<BookingSessionDetailsBloc>(context).add(CancelRequestSelectEvent(
+        item: context.read<BookingSessionDetailsBloc>().listOfCancelRequest[index]));
   }
 
   Widget getCancelHeader() {

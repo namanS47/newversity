@@ -10,7 +10,7 @@ import '../../../../common/common_widgets.dart';
 import '../../../../navigation/app_routes.dart';
 import '../../../../resources/images.dart';
 import '../../../../themes/colors.dart';
-import '../../home/model/session_response_model.dart';
+import '../../../student/student_session/my_session/model/session_detail_response_model.dart';
 
 class PreviousSessions extends StatefulWidget {
   const PreviousSessions({Key? key}) : super(key: key);
@@ -20,8 +20,7 @@ class PreviousSessions extends StatefulWidget {
 }
 
 class _PreviousSessionsState extends State<PreviousSessions> {
-
-  List<SessionDetailsResponse> listOfSessionDetailResponse = [];
+  List<SessionDetailResponseModel> listOfSessionDetailResponse = [];
 
   @override
   void initState() {
@@ -31,104 +30,149 @@ class _PreviousSessionsState extends State<PreviousSessions> {
             type: getSessionType(SessionType.previous)));
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PreviousSessionBloc, PreviousSessionStates>(
       listener: (context, state) {
-        if (state is FetchedPreviousSessionState && state.listOfPreviousSession != null) {
+        if (state is FetchedPreviousSessionState &&
+            state.listOfPreviousSession != null) {
           listOfSessionDetailResponse = state.listOfPreviousSession!;
         }
       },
       builder: (context, state) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 30,
-            ), // getTimeFilter(),
-            // const SizedBox(
-            //   height: 10,
-            // ),
-            getListOfPreviousSessions(),
-          ],
+        if (state is FetchingPreviousSessionState) {
+          return getProgressIndicator();
+        }
+        return SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 30,
+              ), // getTimeFilter(),
+              // const SizedBox(
+              //   height: 10,
+              // ),
+              getListOfPreviousSessions(),
+            ],
+          ),
         );
       },
     );
   }
 
+  Widget getProgressIndicator() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Center(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height - 300,
+            width: MediaQuery.of(context).size.width,
+            child: const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.cyanBlue,
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
   Widget getListOfPreviousSessions() {
     return listOfSessionDetailResponse.isNotEmpty
-            ? BlocBuilder<PreviousSessionBloc, PreviousSessionStates>(
-                builder: (context, state) {
-                  return Wrap(
-                    spacing: 15,
-                    runSpacing: 12,
-                    children: List.generate(
-                      listOfSessionDetailResponse.length,
-                      (curIndex) {
-                        return getPreviousSessionDataView(curIndex);
-                      },
-                    ),
-                  );
-                },
-              )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Center(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height - 300,
-                      width: MediaQuery.of(context).size.width,
-                      child: const Center(
-                        child: AppText(
-                          "Data not Found",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+        ? BlocBuilder<PreviousSessionBloc, PreviousSessionStates>(
+            builder: (context, state) {
+              return Wrap(
+                spacing: 15,
+                runSpacing: 12,
+                children: List.generate(
+                  listOfSessionDetailResponse.length,
+                  (curIndex) {
+                    return getPreviousSessionDataView(curIndex);
+                  },
+                ),
               );
+            },
+          )
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height - 300,
+                  width: MediaQuery.of(context).size.width,
+                  child: const Center(
+                    child: AppText(
+                      "Data not Found",
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          );
   }
 
   int getLeftTimeInSeconds(DateTime startDate, DateTime endDate) {
-    return (startDate.difference(endDate).inMinutes);
+    return (endDate.difference(startDate).inMinutes);
   }
 
   onProfileTap(int index) {
-
     //TODO: Naman remove force unwrapping
     Navigator.of(context).pushNamed(AppRoutes.sessionDetails,
         arguments: SessionDetailArguments(
             id: listOfSessionDetailResponse[index].id!, isPrevious: true));
   }
 
+  Widget getStudentProfilePic(String? profileUrl) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+        height: 66,
+        width: 66,
+        child: profileUrl == null
+            ? const AppImage(
+                image: ImageAsset.blueAvatar,
+              )
+            : Image.network(
+                profileUrl ?? "",
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: AppImage(
+                        image: ImageAsset.blueAvatar,
+                      ),
+                    ),
+                  );
+                },
+                fit: BoxFit.fill,
+              ),
+      ),
+    );
+  }
+
   Widget getPreviousSessionDataView(int index) {
     int durationInMin = getLeftTimeInSeconds(
-        listOfSessionDetailResponse[index].startDate!,
-        listOfSessionDetailResponse[index].endDate!);
+        listOfSessionDetailResponse[index].startDate ?? DateTime.now(),
+        listOfSessionDetailResponse[index].endDate ?? DateTime.now());
     String sessionDate = DateTimeUtils.getBirthFormattedDateTime(
-        listOfSessionDetailResponse[index].endDate!);
+        listOfSessionDetailResponse[index].endDate ?? DateTime.now());
     return GestureDetector(
       onTap: () => onProfileTap(index),
       child: Row(
         children: [
-          SizedBox(
-            height: 66,
-            width: 66,
-            child: CircleAvatar(
-              radius: 200,
-              child: AppImage(
-                image: listOfSessionDetailResponse[index].paymentId ??
-                    ImageAsset.blueAvatar,
-              ),
-            ),
-          ),
+          getStudentProfilePic(listOfSessionDetailResponse[index]
+              .studentDetail
+              ?.profilePictureUrl),
           const SizedBox(
             width: 16,
           ),
@@ -138,7 +182,7 @@ class _PreviousSessionsState extends State<PreviousSessions> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
-                listOfSessionDetailResponse[index].studentId ?? "",
+                listOfSessionDetailResponse[index].studentDetail?.name ?? "",
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -148,11 +192,12 @@ class _PreviousSessionsState extends State<PreviousSessions> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AppText(
-                    listOfSessionDetailResponse[index].agenda ??
-                        " This is Agenda section",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                  Expanded(
+                    child: AppText(
+                      listOfSessionDetailResponse[index].agenda ?? "",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   AppText(
                     "${durationInMin.toString()} min call",
@@ -167,11 +212,12 @@ class _PreviousSessionsState extends State<PreviousSessions> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AppText(
-                    listOfSessionDetailResponse[index].id ??
-                        "This is Qualification Section",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                  Flexible(
+                    child: AppText(
+                      listOfSessionDetailResponse[index].paymentId ?? "",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   AppText(
                     "On: $sessionDate",

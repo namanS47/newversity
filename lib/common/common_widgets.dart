@@ -1,14 +1,13 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:newversity/resources/images.dart';
+import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../flow/teacher/profile/view/bootom_sheet_view/profile_completeness.dart';
+import '../resources/images.dart';
 import '../themes/colors.dart';
 
 class AppDropdownButton extends StatelessWidget {
@@ -195,6 +194,39 @@ class AppAnimatedBottomSheet extends StatelessWidget {
   }
 }
 
+class NoResultFoundScreen extends StatelessWidget {
+  const NoResultFoundScreen({Key? key, required this.message})
+      : super(key: key);
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(
+          height: 30,
+        ),
+        SvgPicture.asset(ImageAsset.nothingFoundIcon),
+        const Padding(
+          padding: EdgeInsets.only(top: 40, bottom: 20),
+          child: Text(
+            "No result found",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+        ),
+        Text(
+          message,
+          style: const TextStyle(fontWeight: FontWeight.w500),
+          textAlign: TextAlign.center,
+        )
+      ],
+    );
+  }
+}
+
 class AppImage extends StatelessWidget {
   final String image;
   final double? height;
@@ -219,19 +251,32 @@ class AppImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return image.contains('http')
+    return image.startsWith('http')
         ? CachedNetworkImage(
             imageUrl: image,
             height: webHeight,
             width: webWidth,
             fit: webFit ?? BoxFit.cover,
-            placeholder: (context, url) => ShimmerEffectView(
-                height: webHeight ?? double.maxFinite,
-                width: webWidth ?? double.maxFinite),
+            placeholder: (context, url) =>
+                CommonWidgets.getCircularProgressIndicator(),
             errorWidget: (context, url, error) =>
                 const Icon(Icons.error, color: Colors.red),
           )
-        : image.split('.').last != 'svg'
+        : !image.contains('.')
+            ? Image.network(image,
+                height: webHeight, width: webWidth, fit: webFit ?? BoxFit.cover,
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                return const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: AppImage(
+                      image: ImageAsset.blueAvatar,
+                    ),
+                  ),
+                );
+              })
+            : image.split('.').last != 'svg'
                 ? Image.asset(
                     image,
                     fit: fit,
@@ -282,13 +327,17 @@ class AppTextFormField extends StatefulWidget {
       this.inputFormatters,
       this.validator,
       this.decoration,
+      this.onSave,
       this.hintText,
       this.errorText,
       this.isDense,
       this.maxLines,
       this.onChange,
+        this.onFieldSubmitted,
       this.hintTextStyle,
       this.fillColor,
+      this.autofocus,
+      this.isEnable = true,
       this.contentPadding,
       this.textInputAction})
       : super(key: key);
@@ -301,10 +350,14 @@ class AppTextFormField extends StatefulWidget {
   final String? hintText;
   final String? errorText;
   final bool? isDense;
+  final bool isEnable;
   final int? maxLines;
   final Function? onChange;
+  final Function? onSave;
+  final Function? onFieldSubmitted;
   final TextStyle? hintTextStyle;
   final Color? fillColor;
+  final bool? autofocus;
   final EdgeInsetsGeometry? contentPadding;
   final TextInputAction? textInputAction;
 
@@ -326,11 +379,13 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
     final List<TextInputFormatter> formatters = widget.inputFormatters ?? [];
 
     return TextFormField(
+      enabled: widget.isEnable,
       controller: _controller,
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction ?? TextInputAction.done,
       inputFormatters: formatters,
-      textCapitalization: TextCapitalization.words,
+      textCapitalization: TextCapitalization.sentences,
+      autofocus: widget.autofocus ?? false,
       validator: widget.validator != null
           ? (value) {
               return widget.validator!(value);
@@ -339,6 +394,10 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       maxLines: widget.maxLines,
       onChanged: (v) {
         widget.onChange?.call(v);
+      },
+      onFieldSubmitted: (v) => widget.onFieldSubmitted?.call(v),
+      onSaved: (v) {
+        widget.onSave?.call(v);
       },
       decoration: widget.decoration ??
           InputDecoration(
@@ -510,6 +569,7 @@ class AppCta extends StatelessWidget {
     this.text = "",
     this.isLoading = false,
     this.padding,
+    this.textColor,
     this.width,
     this.color,
     this.isEnable = true,
@@ -520,6 +580,7 @@ class AppCta extends StatelessWidget {
   final String text;
   final double? width;
   final Color? color;
+  final Color? textColor;
   final bool isEnable;
 
   final EdgeInsetsGeometry? padding;
@@ -541,9 +602,9 @@ class AppCta extends StatelessWidget {
               ? Center(
                   child: Text(
                     text,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 16,
-                        color: Colors.white,
+                        color: textColor ?? Colors.white,
                         fontWeight: FontWeight.w600),
                   ),
                 )
@@ -555,20 +616,20 @@ class AppCta extends StatelessWidget {
 }
 
 class ImagePickerOptionBottomSheet extends StatefulWidget {
-  const ImagePickerOptionBottomSheet({
-    Key? key,
-    required this.onCameraClick,
-    required this.onGalleryClick
-  }) : super(key: key);
+  const ImagePickerOptionBottomSheet(
+      {Key? key, required this.onCameraClick, required this.onGalleryClick})
+      : super(key: key);
 
   final void Function() onCameraClick;
   final void Function() onGalleryClick;
 
   @override
-  State<ImagePickerOptionBottomSheet> createState() => _ImagePickerOptionBottomSheetState();
+  State<ImagePickerOptionBottomSheet> createState() =>
+      _ImagePickerOptionBottomSheetState();
 }
 
-class _ImagePickerOptionBottomSheetState extends State<ImagePickerOptionBottomSheet> {
+class _ImagePickerOptionBottomSheetState
+    extends State<ImagePickerOptionBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -642,6 +703,32 @@ class CommonWidgets {
             strokeWidth: 2,
           )),
     );
+  }
+
+  static showProfileIncompletenessBottomSheet(
+      BuildContext context,
+      ProfileCompletionPercentageResponse profileCompletionPercentageResponse,
+      bool isStudent) {
+    showModalBottomSheet<dynamic>(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(100.0),
+            topRight: Radius.circular(100.0),
+          ),
+        ),
+        isScrollControlled: true,
+        builder: (_) {
+          return Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: AppAnimatedBottomSheet(
+                bottomSheetWidget: ProfileCompletenessBottomSheet(
+              reason: profileCompletionPercentageResponse.suggestion ?? "",
+              isStudent: isStudent,
+            )),
+          );
+          // your stateful widget
+        });
   }
 
   static snackBarWidget(BuildContext context, String text) {

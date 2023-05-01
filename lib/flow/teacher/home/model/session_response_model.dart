@@ -16,6 +16,8 @@ class SessionDetailsResponse {
   String? mentorNote;
   String? studentFeedback;
   int? studentRating;
+  String? teacherToken;
+  String? studentToken;
   bool? cancelled;
 
   SessionDetailsResponse(
@@ -31,6 +33,8 @@ class SessionDetailsResponse {
       this.mentorNote,
       this.studentFeedback,
       this.studentRating,
+      this.teacherToken,
+      this.studentToken,
       this.cancelled});
 
   factory SessionDetailsResponse.fromJson(Map<String, dynamic> json) =>

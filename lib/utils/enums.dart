@@ -4,7 +4,7 @@ enum Gender { male, female, other }
 
 enum SlotType { short, long, both }
 
-enum TagStatus { Verified, Unverified, Failed, InProcess}
+enum TagStatus { Verified, Unverified, Failed, InProcess }
 
 enum SessionType { upcoming, previous }
 
@@ -50,4 +50,20 @@ String getSessionType(SessionType sessionType) {
       break;
   }
   return sessionTp;
+}
+
+String getSessionTypeWithSlotType(SlotType type) {
+  String sessionType = "";
+  switch (type) {
+    case SlotType.short:
+      sessionType = "15 min session";
+      break;
+    case SlotType.long:
+      sessionType = "30 min session";
+      break;
+    case SlotType.both:
+      sessionType = "both sessions";
+      break;
+  }
+  return sessionType;
 }

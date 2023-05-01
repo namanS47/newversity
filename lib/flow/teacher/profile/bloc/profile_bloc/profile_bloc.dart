@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details.dart';
+import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
@@ -23,11 +23,13 @@ part 'profile_events.dart';
 part 'profile_states.dart';
 
 class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
+
+
+
   int currentProfileStep = 1;
   double sliderWidth = 195.0;
   double sliderPadding = 0.0;
   String teacherId = CommonUtils().getLoggedInUser();
-  int selectedSkinTone = 0;
   int selectedProfileTab = 0;
   List<String> listOfProfileSection = ["Overview", "Review"];
   List<Widget> profileCardList = <Widget>[];

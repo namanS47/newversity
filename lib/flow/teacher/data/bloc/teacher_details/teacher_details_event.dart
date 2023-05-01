@@ -5,7 +5,7 @@ abstract class TeacherDetailsEvent {}
 
 class SaveTeacherDetailsEvent extends TeacherDetailsEvent {
   SaveTeacherDetailsEvent({required this.teacherDetails});
-  final TeacherDetails teacherDetails;
+  final TeacherDetailsModel teacherDetails;
 }
 
 class UploadTeacherImageEvent extends TeacherDetailsEvent {
