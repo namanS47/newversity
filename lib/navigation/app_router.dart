@@ -9,7 +9,7 @@ import 'package:newversity/flow/student/payment/data/model/payment_argument.dart
 import 'package:newversity/flow/student/payment/payment_bloc/payment_bloc.dart';
 import 'package:newversity/flow/student/payment/view/payment_route.dart';
 import 'package:newversity/flow/student/profile_dashboard/bloc/profile_dahsbord_bloc.dart';
-import 'package:newversity/flow/student/profile_dashboard/view/profile_dashboard.dart';
+import 'package:newversity/flow/student/profile_dashboard/view/student_profile_dashboard.dart';
 import 'package:newversity/flow/student/search/bloc/mentor_search_bloc.dart';
 import 'package:newversity/flow/student/search/view/mentor_search_page.dart';
 import 'package:newversity/flow/student/student_feedback/feedback_screen.dart';
@@ -46,7 +46,7 @@ import 'package:newversity/flow/teacher/index/view/terms_and_condition.dart';
 import 'package:newversity/flow/teacher/profile/add_education.dart';
 import 'package:newversity/flow/teacher/profile/add_experience.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
-import 'package:newversity/flow/teacher/profile/profiel_dashboard.dart';
+import 'package:newversity/flow/teacher/profile/teacher_profile_dashboard.dart';
 import 'package:newversity/flow/teacher/profile/view/profile.dart';
 import 'package:newversity/flow/teacher/profile/view/profile_edit_option.dart';
 import 'package:newversity/navigation/app_routes.dart';
