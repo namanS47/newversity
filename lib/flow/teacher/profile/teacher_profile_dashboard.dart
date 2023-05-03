@@ -19,6 +19,7 @@ import 'bloc/profile_bloc/profile_bloc.dart';
 
 class ProfileDashboard extends StatefulWidget {
   final ProfileDashboardArguments profileDashboardArguments;
+
   const ProfileDashboard({Key? key, required this.profileDashboardArguments})
       : super(key: key);
 
@@ -41,8 +42,14 @@ class _ProfileDashboardState extends State<ProfileDashboard> {
       body: BlocConsumer<ProfileBloc, ProfileStates>(
         listener: (context, state) {
           if (state is ProfileDetailsSavingSuccessState) {
-            Navigator.of(context)
-                .pushNamed(AppRoutes.teacherHomePageRoute, arguments: false);
+            if (context.read<ProfileBloc>().currentProfileStep ==
+                context.read<ProfileBloc>().profileCardList.length) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  AppRoutes.teacherHomePageRoute, (route) => false,
+                  arguments: false);
+            } else {
+              context.read<ProfileBloc>().add(ChangeProfileCardIndexEvent());
+            }
           }
         },
         builder: (context, state) {
