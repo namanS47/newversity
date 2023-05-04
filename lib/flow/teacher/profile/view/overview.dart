@@ -20,9 +20,9 @@ import '../model/experience_response_model.dart';
 import '../model/tags_response_model.dart';
 
 class ProfileOverview extends StatefulWidget {
-  ProfileCompletionPercentageResponse percentageResponse;
+  final ProfileCompletionPercentageResponse percentageResponse;
 
-  ProfileOverview({Key? key, required this.percentageResponse})
+  const ProfileOverview({Key? key, required this.percentageResponse})
       : super(key: key);
 
   @override
@@ -202,7 +202,11 @@ class _ProfileOverviewState extends State<ProfileOverview> {
               child: AppAnimatedBottomSheet(
                   bottomSheetWidget: BlocProvider<TeacherDetailsBloc>(
                       create: (context) => TeacherDetailsBloc(),
-                      child: const ProfileEditSessionRate())),
+                      child: ProfileEditSessionRate(
+                        longSessionFee:
+                            teacherDetails?.sessionPricing?["session_type_b"],
+                        shortSessionFee: teacherDetails?.sessionPricing?["session_type_a"],
+                      ))),
             );
             // your stateful widget
           }).whenComplete(() {
@@ -227,26 +231,32 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getPerSessionRate() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        setYourFee(),
-        Row(
-          children: [
-            Expanded(
-                child: getSessionContainer(
-                    teacherDetails?.sessionPricing?["session_type_a"] ?? 0,
-                    15)),
-            const SizedBox(
-              width: 10,
-            ),
-            Expanded(
-                child: getSessionContainer(
-                    teacherDetails?.sessionPricing?["session_type_b"] ?? 0,
-                    30)),
-          ],
-        ),
-      ],
+    return InkWell(
+      onTap: () => onAmountEditTap(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          setYourFee(),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              Expanded(
+                  child: getSessionContainer(
+                      teacherDetails?.sessionPricing?["session_type_a"] ?? 0,
+                      15)),
+              const SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                  child: getSessionContainer(
+                      teacherDetails?.sessionPricing?["session_type_b"] ?? 0,
+                      30)),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -281,24 +291,21 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getExperienceAndEducation() {
-    return Visibility(
-      visible: widget.percentageResponse.completePercentage == 100,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
-          child: Column(
-            children: [
-              getExperienceLayout(),
-              const SizedBox(
-                height: 20,
-              ),
-              getEducationLayout()
-            ],
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
+        child: Column(
+          children: [
+            getExperienceLayout(),
+            const SizedBox(
+              height: 20,
+            ),
+            getEducationLayout()
+          ],
         ),
       ),
     );
@@ -527,32 +534,29 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getLanguagePreferences() {
-    return Visibility(
-      visible: widget.percentageResponse.completePercentage == 100,
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              getHeader("Language Preference"),
-              const SizedBox(
-                height: 5,
-              ),
-              teacherDetails != null
-                  ? teacherDetails!.language != null
-                      ? teacherDetails!.language!.isNotEmpty
-                          ? getLanguagePreferenceList()
-                          : noDataFound(40)
-                      : noDataFound(40)
-                  : getProgressIndicator(40),
-            ],
-          ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            getHeader("Language Preference"),
+            const SizedBox(
+              height: 5,
+            ),
+            teacherDetails != null
+                ? teacherDetails!.language != null
+                    ? teacherDetails!.language!.isNotEmpty
+                        ? getLanguagePreferenceList()
+                        : noDataFound(40)
+                    : noDataFound(40)
+                : getProgressIndicator(40),
+          ],
         ),
       ),
     );
@@ -572,28 +576,25 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getTalkingPoints() {
-    return Visibility(
-      visible: widget.percentageResponse.completePercentage == 100,
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              getHeader("Talk me about"),
-              const SizedBox(
-                height: 5,
-              ),
-              allMentorship.isNotEmpty
-                  ? getListOfTalkingPoints()
-                  : noDataFound(40),
-            ],
-          ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            getHeader("Talk me about"),
+            const SizedBox(
+              height: 5,
+            ),
+            allMentorship.isNotEmpty
+                ? getListOfTalkingPoints()
+                : noDataFound(40),
+          ],
         ),
       ),
     );
@@ -638,26 +639,23 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   }
 
   Widget getExpertise() {
-    return Visibility(
-      visible: widget.percentageResponse.completePercentage == 100,
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          color: AppColors.whiteColor,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              getHeader("Experts in"),
-              const SizedBox(
-                height: 5,
-              ),
-              allExpertise.isNotEmpty ? getListOfExperties() : noDataFound(40)
-            ],
-          ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            getHeader("Experts in"),
+            const SizedBox(
+              height: 5,
+            ),
+            allExpertise.isNotEmpty ? getListOfExperties() : noDataFound(40)
+          ],
         ),
       ),
     );

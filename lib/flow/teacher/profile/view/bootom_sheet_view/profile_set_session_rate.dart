@@ -9,7 +9,9 @@ import '../../../data/bloc/teacher_details/teacher_details_bloc.dart';
 import '../../../data/model/teacher_details/teacher_details_model.dart';
 
 class ProfileEditSessionRate extends StatefulWidget {
-  const ProfileEditSessionRate({Key? key}) : super(key: key);
+  const ProfileEditSessionRate({Key? key, this.longSessionFee, this.shortSessionFee}) : super(key: key);
+  final double? longSessionFee;
+  final double? shortSessionFee;
 
   @override
   State<ProfileEditSessionRate> createState() => _ProfileEditSessionRateState();
@@ -28,6 +30,24 @@ class _ProfileEditSessionRateState extends State<ProfileEditSessionRate> {
   bool isFormValid() {
     return session15minController.text.isNotEmpty &&
         session30minController.text.isNotEmpty;
+  }
+
+  @override
+  void initState() {
+    if(widget.shortSessionFee != null) {
+      session15minController.text = widget.shortSessionFee.toString();
+    }
+    if(widget.longSessionFee != null) {
+      session30minController.text = widget.longSessionFee.toString();
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    session15minController.dispose();
+    session30minController.dispose();
+    super.dispose();
   }
 
   @override
@@ -165,8 +185,8 @@ class _ProfileEditSessionRateState extends State<ProfileEditSessionRate> {
                     hintText: index == 0 ? "₹150" : "₹250",
                     hintStyle: const TextStyle(
                         fontSize: 16,
-                        color: AppColors.blackMerlin,
-                        fontWeight: FontWeight.w500),
+                        color: AppColors.grey55,
+                        fontWeight: FontWeight.w200),
                     border: InputBorder.none),
               ),
             ),

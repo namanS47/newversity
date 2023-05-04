@@ -47,16 +47,11 @@ class _AvailabilityRouteState extends State<AvailabilityRoute> {
                   height: 24,
                 ),
                 Container(
-                  height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   color: context.read<AvailabilityBloc>().isCalenderView
                       ? AppColors.whiteColor
                       : AppColors.lightCyan,
-                  child: Column(
-                    children: [
-                      updateAvailabilityWidget(),
-                    ],
-                  ),
+                  child: updateAvailabilityWidget(),
                 )
               ],
             ),
@@ -322,9 +317,11 @@ class _AvailabilityRouteState extends State<AvailabilityRoute> {
                                           .selectedDate,
                                       details.date)
                                   ? AppColors.whiteColor
-                                  : todayDate.day > details.date.day
-                                      ? AppColors.grey55
-                                      : AppColors.cyanBlue,
+                                  : todayDate.compareTo(details.date) < 0 ||
+                                          DateUtils.isSameDay(
+                                              todayDate, details.date)
+                                      ? AppColors.cyanBlue
+                                      : AppColors.grey55,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -587,7 +584,7 @@ class _AvailableSlotDurationState extends State<AvailableSlotDuration> {
   Widget selectEndTimeWidget() {
     final List<TimeOfDay> availableTimes =
         DateTimeUtils.getSelectedAvailableTime(
-            widget.arguments.selectedStartTime ?? allTimes[0], 15);
+            widget.arguments.selectedStartTime ?? allTimes[0], 30);
     return SizedBox(
       height: 40,
       width: 115,
@@ -743,7 +740,7 @@ class _SelectSlotDurationState extends State<SelectSlotDuration> {
   Widget selectEndTimeWidget() {
     final List<TimeOfDay> availableTimes =
         DateTimeUtils.getSelectedAvailableTime(
-            widget.arguments.selectedStartTime ?? allTimes[0], 15);
+            widget.arguments.selectedStartTime ?? allTimes[0], 30);
     return SizedBox(
       height: 40,
       width: 115,

@@ -57,7 +57,7 @@ class DateTimeUtils {
       TimeOfDay timeOfDay =
           TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60);
       allTimes.add(timeOfDay);
-      minutes += 15;
+      minutes += 30;
     }
     return allTimes;
   }

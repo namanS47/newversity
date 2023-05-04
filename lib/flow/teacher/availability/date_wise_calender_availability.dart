@@ -426,9 +426,11 @@ class _DateWiseCalenderAvailabilityScreenState
                                           .selectedDate,
                                       details.date)
                                   ? AppColors.whiteColor
-                                  : todayDate.day > details.date.day
-                                      ? AppColors.grey55
-                                      : AppColors.cyanBlue,
+                                  : todayDate.compareTo(details.date) < 0 ||
+                                          DateUtils.isSameDay(
+                                              todayDate, details.date)
+                                      ? AppColors.cyanBlue
+                                      : AppColors.grey55,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -743,7 +745,7 @@ class _AvailableSlotDurationState extends State<AvailableSlotDuration> {
   Widget selectEndTimeWidget() {
     final List<TimeOfDay> availableTimes =
         DateTimeUtils.getSelectedAvailableTime(
-            widget.arguments.selectedStartTime ?? allTimes[0], 15);
+            widget.arguments.selectedStartTime ?? allTimes[0], 30);
     return SizedBox(
       height: 40,
       width: 115,
@@ -910,7 +912,7 @@ class _SelectSlotDurationState extends State<SelectSlotDuration> {
   Widget selectEndTimeWidget() {
     final List<TimeOfDay> availableTimes =
         DateTimeUtils.getSelectedAvailableTime(
-            widget.arguments.selectedStartTime ?? allTimes[0], 15);
+            widget.arguments.selectedStartTime ?? allTimes[0], 30);
     return SizedBox(
       height: 40,
       width: 115,
