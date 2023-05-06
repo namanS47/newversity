@@ -66,66 +66,67 @@ class _ProfileOverviewState extends State<ProfileOverview> {
         }
       },
       builder: (context, state) {
-        return Expanded(
-          child: CustomScrollView(
-            slivers: <Widget>[
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    widget.percentageResponse.completePercentage != 0
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              getAboutMe(),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              getExpertise(),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              getTalkingPoints(),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              getLanguagePreferences(),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              getHomeTown(),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              getCompletenessCard(widget
-                                      .percentageResponse.completePercentage ??
-                                  0),
-                              getExperienceAndEducation(),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          )
-                        : CompleteProfileCard(
-                            profilePercentage:
-                                widget.percentageResponse.completePercentage ??
-                                    0),
-                    getPerSessionRateLayout(),
-                    const SizedBox(
-                      height: 100,
-                    ),
-                  ],
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            widget.percentageResponse.completePercentage != 0
+                ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-            ],
-          ),
+                getAboutMe(),
+                const SizedBox(
+                  height: 10,
+                ),
+                getExpertise(),
+                const SizedBox(
+                  height: 10,
+                ),
+                getTalkingPoints(),
+                const SizedBox(
+                  height: 10,
+                ),
+                getLanguagePreferences(),
+                const SizedBox(
+                  height: 10,
+                ),
+                getHomeTown(),
+                const SizedBox(
+                  height: 10,
+                ),
+                getCompletenessCard(widget
+                    .percentageResponse.completePercentage ??
+                    0),
+                getExperienceAndEducation(),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            )
+                : CompleteProfileCard(
+                profilePercentage:
+                widget.percentageResponse.completePercentage ??
+                    0),
+            getPerSessionRateLayout(),
+            const SizedBox(
+              height: 100,
+            ),
+          ],
         );
+        // return Expanded(
+        //   child: CustomScrollView(
+        //     slivers: <Widget>[
+        //       SliverToBoxAdapter(
+        //         child: ,
+        //       ),
+        //     ],
+        //   ),
+        // );
       },
     );
   }

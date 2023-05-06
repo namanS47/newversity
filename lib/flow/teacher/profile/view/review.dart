@@ -20,31 +20,32 @@ class _ProfileReviewState extends State<ProfileReview> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: CustomScrollView(
-        slivers: <Widget>[
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                getReviewsHeading(),
-                const SizedBox(
-                  height: 20,
-                ),
-                getRatingContainer(),
-                const SizedBox(
-                  height: 20,
-                ),
-                getReviewLayout()
-              ],
-            ),
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(
+          height: 20,
+        ),
+        getReviewsHeading(),
+        const SizedBox(
+          height: 20,
+        ),
+        getRatingContainer(),
+        const SizedBox(
+          height: 20,
+        ),
+        getReviewLayout()
+      ],
     );
+    // return Expanded(
+    //   child: CustomScrollView(
+    //     slivers: <Widget>[
+    //       SliverToBoxAdapter(
+    //         child: ,
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 
 

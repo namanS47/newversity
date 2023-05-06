@@ -52,82 +52,89 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          key: scaffoldKey,
-          endDrawer: SizedBox(
+        return SafeArea(
+          child: Scaffold(
+            key: scaffoldKey,
+            endDrawer: SizedBox(
               width: 240,
               child: BlocProvider<ProfileDrawerBloc>(
                 create: (context) => ProfileDrawerBloc(),
                 child: const ProfileDrawerScreen(),
-              )),
-          resizeToAvoidBottomInset: true,
-          body: Stack(
-            children: [
-              Column(
-                children: [
-                  Container(
-                    height: 133,
-                    decoration:
-                        const BoxDecoration(color: AppColors.perSessionRate),
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 30.0, left: 16, right: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
+              ),
+            ),
+            resizeToAvoidBottomInset: true,
+            body: ListView(
+              padding: const EdgeInsets.all(0),
+              children: [
+                SizedBox(
+                  height: 150,
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: 80,
+                        decoration:
+                            const BoxDecoration(color: AppColors.perSessionRate),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              GestureDetector(
-                                  behavior: HitTestBehavior.translucent,
-                                  onTap: () => {Navigator.pop(context)},
-                                  child: const AppImage(
-                                      image: ImageAsset.arrowBack)),
-                              const SizedBox(
-                                width: 20,
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                      behavior: HitTestBehavior.translucent,
+                                      onTap: () => {Navigator.pop(context)},
+                                      child: const AppImage(
+                                          image: ImageAsset.arrowBack)),
+                                  const SizedBox(
+                                    width: 20,
+                                  ),
+                                  const AppText(
+                                    "Profile",
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ],
                               ),
-                              const AppText(
-                                "Profile",
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
+                              GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () => onDrawerTap(),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(18.0),
+                                  child: Center(
+                                    child: AppImage(image: ImageAsset.drawer),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                          GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              onTap: () => onDrawerTap(),
-                              child: const Padding(
-                                padding: EdgeInsets.all(18.0),
-                                child: Center(
-                                    child: AppImage(image: ImageAsset.drawer)),
-                              )),
-                        ],
+                        ),
                       ),
-                    ),
+                      Positioned.fill(
+                        top: 60,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: InkWell(
+                            onTap: () => onEditTap(),
+                            child: Row(
+                              children: [
+                                getProfileImage(),
+                                const SizedBox(
+                                  width: 17,
+                                ),
+                                getDetailsWithEditLayout(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                ],
-              ),
-              Positioned.fill(
-                bottom: 10,
-                top: 10,
-                child: Padding(
+                ),
+                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
                     children: [
-                      const SizedBox(
-                        height: 110,
-                      ),
-                      Row(
-                        children: [
-                          getProfileImage(),
-                          const SizedBox(
-                            width: 17,
-                          ),
-                          getDetailsWithEditLayout(),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -172,8 +179,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -301,8 +308,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget getEditLayout() {
-    return GestureDetector(
-      onTap: () => onEditTap(),
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
       child: Row(
         children: const [
           AppText(
@@ -323,7 +330,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget getDetailsWithEditLayout() {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.only(top: 11.0),
+        padding: const EdgeInsets.only(top: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
