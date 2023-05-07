@@ -11,6 +11,12 @@ class RemoveAvailabilityArgumentsEvent extends AvailabilityEvent {
   final int index;
 }
 
+class RemoveAddedAvailabilityArgumentsEvent extends AvailabilityEvent {
+  RemoveAddedAvailabilityArgumentsEvent({required this.index});
+
+  final int index;
+}
+
 class SaveAvailabilityEvent extends AvailabilityEvent {}
 
 class SaveAlreadyAvailabilityEvent extends AvailabilityEvent {}
@@ -34,4 +40,7 @@ class UpdateEditedSlotEvent extends AvailabilityEvent {
   UpdateEditedSlotEvent({required this.index});
 }
 
-class UpdateAvailabilityPageEvent extends AvailabilityEvent {}
+class UpdateAvailabilityPageEvent extends AvailabilityEvent {
+  UpdateAvailabilityPageEvent({this.selectedDate});
+  final DateTime? selectedDate;
+}

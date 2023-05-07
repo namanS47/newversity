@@ -35,6 +35,17 @@ class AvailabilityBloc extends Bloc<AvailabilityEvent, AvailabilityState> {
       emit(RemoveAvailabilityArgumentsState());
     });
 
+    on<RemoveAddedAvailabilityArgumentsEvent>((event, emit) async {
+      try {
+        emit(RemoveAddedAvailabilityLoadingState());
+        await availabilityRepository.removeAvailability(alreadyAvailableList[event.index].availabilityId!);
+        alreadyAvailableList.removeAt(event.index);
+        emit(RemoveAddedAvailabilitySuccessState());
+      } catch(e) {
+        emit(RemoveAddedAvailabilityFailureState());
+      }
+    });
+
     on<AddAvailabilityArgumentsEvent>((event, emit) {
       availabilityList.add(AvailabilityArguments(sessionType: sessionType));
       showUpdateAvailabilityWidget = true;
@@ -51,6 +62,9 @@ class AvailabilityBloc extends Bloc<AvailabilityEvent, AvailabilityState> {
 
     on<UpdateAvailabilityPageEvent>((event, emit) async {
       isCalenderView = !isCalenderView;
+      if(isCalenderView) {
+        selectedDate = event.selectedDate ?? DateTime.now();
+      }
       emit(UpdatedAvailabilityPageState());
     });
 
@@ -121,6 +135,7 @@ class AvailabilityBloc extends Bloc<AvailabilityEvent, AvailabilityState> {
     try {
       await availabilityRepository.saveAvailability(
           AddAvailabilityRequestModel(availabilityList: availabilityModelList));
+      availabilityList.clear();
       emit(SaveAvailabilitySuccessSate());
     } catch (exception) {
       if (exception is BadRequestException) {

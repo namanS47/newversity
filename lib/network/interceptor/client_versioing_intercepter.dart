@@ -23,7 +23,7 @@ class ClientVersioningInterceptor extends Interceptor {
     var sessionQueryMap = CommonUtils().getQueryParameters(AppConfig.sessionQueryParams);
     options.queryParameters.addAll(sessionQueryMap);
 
-    log("uri: ${options.uri} \n body: ${options.data} \n headers: ${options.headers}");
+    log("method: ${options.method} uri: ${options.uri} \n body: ${options.data.toString()} \n headers: ${options.headers}");
 
     return handler.next(options);
   }
@@ -31,6 +31,6 @@ class ClientVersioningInterceptor extends Interceptor {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     super.onResponse(response, handler);
-    log("uri: ${response.realUri} \n data: ${response.data} \n statusCode ${response.statusCode}");
+    log("uri: ${response.realUri} \n data: ${response.data.toString()} \n statusCode ${response.statusCode}");
   }
 }

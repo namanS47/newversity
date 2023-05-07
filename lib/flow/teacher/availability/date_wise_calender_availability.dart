@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:newversity/resources/images.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../../../common/common_widgets.dart';
@@ -11,11 +10,7 @@ import 'availability_bloc/availability_bloc.dart';
 import 'data/availability_arguments.dart';
 
 class DateWiseCalenderAvailabilityScreen extends StatefulWidget {
-  final DateTime? currentDateTime;
-
-  const DateWiseCalenderAvailabilityScreen(
-      {Key? key, required this.currentDateTime})
-      : super(key: key);
+  const DateWiseCalenderAvailabilityScreen({Key? key}) : super(key: key);
 
   @override
   State<DateWiseCalenderAvailabilityScreen> createState() =>
@@ -26,68 +21,40 @@ class _DateWiseCalenderAvailabilityScreenState
     extends State<DateWiseCalenderAvailabilityScreen> {
   late Size size;
   late DateTime todayDate;
+  DateTime? currentDateTime;
 
   @override
   void initState() {
     super.initState();
-    context.read<AvailabilityBloc>().selectedDate =
-        widget.currentDateTime ?? DateTime.now();
+    currentDateTime = context.read<AvailabilityBloc>().selectedDate;
+    todayDate =  DateTime.now();
     context.read<AvailabilityBloc>().add(FetchAvailabilityArgumentEvent(
-        date: widget.currentDateTime ?? DateTime.now()));
+        date: currentDateTime ?? DateTime.now()));
   }
 
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
-    todayDate = widget.currentDateTime ?? DateTime.now();
     return BlocConsumer<AvailabilityBloc, AvailabilityState>(
       listener: (context, state) {
         // TODO: implement listener
       },
       builder: (context, state) {
-        return Scaffold(
-          body: SafeArea(
-            child: Stack(
+        return SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  children: [
-                    getAppHeader(),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            getCalendarWidget(),
-                            const SizedBox(
-                              height: 24,
-                            ),
-                            Container(
-                              height: MediaQuery.of(context).size.height,
-                              width: MediaQuery.of(context).size.width,
-                              color: AppColors.whiteColor,
-                              child: Column(
-                                children: [
-                                  updateAvailabilityWidget(),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                getCalendarWidget(),
+                const SizedBox(
+                  height: 24,
                 ),
-                Column(
-                  children: [
-                    Expanded(child: Container()),
-                    Container(
-                      color: AppColors.whiteColor,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: getUpdateCta(),
-                      ),
-                    )
-                  ],
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  color: context.read<AvailabilityBloc>().isCalenderView
+                      ? AppColors.whiteColor
+                      : AppColors.lightCyan,
+                  child: updateAvailabilityWidget(),
                 )
               ],
             ),
@@ -95,46 +62,6 @@ class _DateWiseCalenderAvailabilityScreenState
         );
       },
     );
-  }
-
-  bool updateLoading = false;
-
-  Widget getUpdateCta() {
-    return BlocConsumer<AvailabilityBloc, AvailabilityState>(
-      listener: (context, state) {
-        if (state is SavingAlreadyAvailabilityFailureState) {
-          CommonWidgets.snackBarWidget(context, state.msg);
-        }
-        if (state is SavedAlreadyAvailabilityState) {
-          updateLoading = false;
-          CommonWidgets.snackBarWidget(
-              context, "Updated Availability interval!");
-          context.read<AvailabilityBloc>().editedSlotIndex = -1;
-          context.read<AvailabilityBloc>().add(FetchAvailabilityArgumentEvent(
-              date: widget.currentDateTime ?? DateTime.now()));
-        }
-      },
-      builder: (context, state) {
-        return Visibility(
-          visible: context.read<AvailabilityBloc>().editedSlotIndex != -1,
-          child: AppCta(
-            onTap: () => onUpdateTap(),
-            isLoading: updateLoading,
-            text: "Update",
-          ),
-        );
-      },
-    );
-  }
-
-  onUpdateTap() {
-    updateLoading = true;
-    if (context.read<AvailabilityBloc>().alreadyAvailableList.isEmpty ||
-        !context.read<AvailabilityBloc>().isAddedAlreadyAvailabilityValid()) {
-      CommonWidgets.snackBarWidget(context, "Please add availability");
-    } else {
-      context.read<AvailabilityBloc>().add(SaveAlreadyAvailabilityEvent());
-    }
   }
 
   Widget availableTimeWidget() {
@@ -341,41 +268,6 @@ class _DateWiseCalenderAvailabilityScreenState
     );
   }
 
-  Widget getAppHeader() {
-    return Container(
-      color: AppColors.lightCyan,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(child: AppImage(image: ImageAsset.arrowBack)),
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                const AppText(
-                  "Availability",
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                )
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget getCalendarWidget() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -390,9 +282,6 @@ class _DateWiseCalenderAvailabilityScreenState
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
-            height: 20,
-          ),
           Visibility(
             visible: true,
             child: ClipRRect(
@@ -447,8 +336,8 @@ class _DateWiseCalenderAvailabilityScreenState
                               date: val.date ?? todayDate));
                     });
                   },
-                  initialSelectedDate: widget.currentDateTime,
-                  initialDisplayDate: widget.currentDateTime,
+                  initialSelectedDate: currentDateTime,
+                  initialDisplayDate: currentDateTime,
                   minDate: DateTime.now(),
                   view: CalendarView.month,
                   showNavigationArrow: true,
@@ -583,9 +472,11 @@ class _AvailableSlotDurationState extends State<AvailableSlotDuration> {
   final List<TimeOfDay> allTimes = DateTimeUtils.getAllAvailableTime();
   int start = 0;
   int end = 1;
+  late Size size;
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
     return BlocConsumer<AvailabilityBloc, AvailabilityState>(
       listener: (context, state) {
         // TODO: implement listener
@@ -650,7 +541,7 @@ class _AvailableSlotDurationState extends State<AvailableSlotDuration> {
                     InkWell(
                       onTap: () {
                         context.read<AvailabilityBloc>().add(
-                            RemoveAvailabilityArgumentsEvent(
+                            RemoveAddedAvailabilityArgumentsEvent(
                                 index: widget.index));
                       },
                       child: Padding(
@@ -672,7 +563,16 @@ class _AvailableSlotDurationState extends State<AvailableSlotDuration> {
                 height: 10,
               ),
               context.read<AvailabilityBloc>().editedSlotIndex == widget.index
-                  ? Container()
+                  ? Container(
+                    color: AppColors.whiteColor,
+                    child: Row(
+                      children: [
+                        getCancelUpdateCta(),
+                        const Spacer(),
+                        getUpdateCta(),
+                      ],
+                    ),
+                  )
                   : GestureDetector(
                       onTap: () {
                         context
@@ -687,15 +587,70 @@ class _AvailableSlotDurationState extends State<AvailableSlotDuration> {
                                 bottomLeft: Radius.circular(20),
                                 bottomRight: Radius.circular(20))),
                         child: const Center(
-                            child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5.0),
-                          child: AppText("Edit slot"),
-                        )),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5.0),
+                            child: AppText("Edit slot"),
+                          ),
+                        ),
                       ),
                     )
             ],
           ),
         );
+      },
+    );
+  }
+
+  Widget getUpdateCta() {
+    return BlocConsumer<AvailabilityBloc, AvailabilityState>(
+      listener: (context, state) {
+        if (state is SavingAlreadyAvailabilityFailureState) {
+          updateLoading = false;
+          CommonWidgets.snackBarWidget(context, state.msg);
+        }
+        if (state is SavedAlreadyAvailabilityState) {
+          updateLoading = false;
+          CommonWidgets.snackBarWidget(
+              context, "Updated Availability interval!");
+          context.read<AvailabilityBloc>().editedSlotIndex = -1;
+          context.read<AvailabilityBloc>().add(FetchAvailabilityArgumentEvent(
+              date: context.read<AvailabilityBloc>().selectedDate));
+        }
+      },
+      builder: (context, state) {
+        return Visibility(
+          visible: context.read<AvailabilityBloc>().editedSlotIndex != -1,
+          child: AppCta(
+            width: (size.width - 32 - 16) / 2,
+            onTap: () => onUpdateTap(),
+            isLoading: updateLoading,
+            text: "Update",
+          ),
+        );
+      },
+    );
+  }
+
+  bool updateLoading = false;
+
+  onUpdateTap() {
+    updateLoading = true;
+    if (context.read<AvailabilityBloc>().alreadyAvailableList.isEmpty ||
+        !context.read<AvailabilityBloc>().isAddedAlreadyAvailabilityValid()) {
+      CommonWidgets.snackBarWidget(context, "Please add availability");
+    } else {
+      context.read<AvailabilityBloc>().add(SaveAlreadyAvailabilityEvent());
+    }
+  }
+
+  Widget getCancelUpdateCta() {
+    return AppCta(
+      text: "Cancel",
+      width: (size.width - 32 - 16) / 2,
+      onTap: () {
+        context
+            .read<AvailabilityBloc>()
+            .add(UpdateEditedSlotEvent(index: -1));
       },
     );
   }

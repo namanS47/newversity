@@ -36,7 +36,6 @@ class _DateWiseAvailabilityRouteState extends State<DateWiseAvailabilityRoute> {
             borderRadius: const BorderRadius.only(
                 topRight: Radius.circular(20), topLeft: Radius.circular(20)),
             child: Container(
-              height: MediaQuery.of(context).size.height,
               decoration: const BoxDecoration(
                 color: AppColors.whiteColor,
               ),
@@ -58,12 +57,10 @@ class _DateWiseAvailabilityRouteState extends State<DateWiseAvailabilityRoute> {
                     );
                   }
                   if (state is NotFoundTeacherAvailabilityDateState) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Center(
-                            child: Column(
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 80),
+                        child: Column(
                           children: const [
                             AppImage(image: ImageAsset.nothingFoundIcon),
                             SizedBox(
@@ -76,8 +73,8 @@ class _DateWiseAvailabilityRouteState extends State<DateWiseAvailabilityRoute> {
                               fontSize: 14,
                             )
                           ],
-                        )),
-                      ],
+                        ),
+                      ),
                     );
                   }
                   if (state is FetchedTeacherAvailabilityDateState) {
@@ -126,11 +123,9 @@ class _DateWiseAvailabilityRouteState extends State<DateWiseAvailabilityRoute> {
   }
 
   onSlotDateTap(int index) {
-    Navigator.of(context).pushNamed(
-      AppRoutes.availabilityCalenderRoute,
-      arguments:
-          DateTimeUtils.getDateTime(lisOfAvailability.keys.elementAt(index)),
-    );
+    context.read<AvailabilityBloc>().add(UpdateAvailabilityPageEvent(
+        selectedDate: DateTimeUtils.getDateTime(
+            lisOfAvailability.keys.elementAt(index))));
   }
 
   Widget getDateContainer(int index) {

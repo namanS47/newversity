@@ -7,7 +7,6 @@ import 'package:newversity/flow/student/home/view/student_home.dart';
 import 'package:newversity/flow/student/student_session/my_session/bloc/my_session_bloc.dart';
 import 'package:newversity/flow/student/student_session/my_session/view/my_sessession_screen.dart';
 import 'package:newversity/flow/teacher/availability/availabality.dart';
-import 'package:newversity/flow/teacher/availability/availability_calender.dart';
 import 'package:newversity/flow/teacher/bookings/bloc/teacher_bookings_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/view/bookings.dart';
 import 'package:newversity/flow/teacher/home/bloc/home_session_bloc/home_session_details_bloc.dart';

@@ -9,6 +9,12 @@ class AddAvailabilityArgumentsState extends AvailabilityState {}
 
 class RemoveAvailabilityArgumentsState extends AvailabilityState {}
 
+class RemoveAddedAvailabilityLoadingState extends AvailabilityState {}
+
+class RemoveAddedAvailabilitySuccessState extends AvailabilityState {}
+
+class RemoveAddedAvailabilityFailureState extends AvailabilityState {}
+
 class SaveAvailabilityLoadingSate extends AvailabilityState {}
 
 class SaveAvailabilitySuccessSate extends AvailabilityState {}

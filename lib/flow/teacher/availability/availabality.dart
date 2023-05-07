@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:newversity/flow/teacher/availability/availability_calender.dart';
 import 'package:newversity/flow/teacher/availability/date_slot_availability_route.dart';
 
 import '../../../common/common_widgets.dart';
 import '../../../resources/images.dart';
 import '../../../themes/colors.dart';
 import 'availability_bloc/availability_bloc.dart';
+import 'date_wise_calender_availability.dart';
 
 class Availability extends StatefulWidget {
   const Availability({Key? key}) : super(key: key);
@@ -16,8 +16,6 @@ class Availability extends StatefulWidget {
 }
 
 class _AvailabilityState extends State<Availability> {
-  bool isCalenderView = false;
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AvailabilityBloc, AvailabilityState>(
@@ -50,8 +48,7 @@ class _AvailabilityState extends State<Availability> {
                     Expanded(
                       child: SingleChildScrollView(
                         primary: true,
-                        child:
-                            BlocConsumer<AvailabilityBloc, AvailabilityState>(
+                        child: BlocConsumer<AvailabilityBloc, AvailabilityState>(
                           listener: (context, state) {},
                           builder: (context, state) {
                             return Column(
@@ -59,7 +56,7 @@ class _AvailabilityState extends State<Availability> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 context.read<AvailabilityBloc>().isCalenderView
-                                    ? const AvailabilityRoute()
+                                    ?  const DateWiseCalenderAvailabilityScreen()
                                     : const DateWiseAvailabilityRoute(),
                               ],
                             );

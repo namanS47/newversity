@@ -53,7 +53,7 @@ class DateTimeUtils {
   static List<TimeOfDay> getAllAvailableTime() {
     List<TimeOfDay> allTimes = [];
     int minutes = 0;
-    for (int i = 0; i < 96; i++) {
+    for (int i = 0; i < 48; i++) {
       TimeOfDay timeOfDay =
           TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60);
       allTimes.add(timeOfDay);

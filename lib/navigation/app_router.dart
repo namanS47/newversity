@@ -313,9 +313,7 @@ class AppRouter {
     if (route.toString() == AppRoutes.availabilityCalenderRoute) {
       return BlocProvider<AvailabilityBloc>(
         create: (context) => AvailabilityBloc(),
-        child: DateWiseCalenderAvailabilityScreen(
-          currentDateTime: params as DateTime,
-        ),
+        child: const DateWiseCalenderAvailabilityScreen(),
       );
     }
     if (route.toString() == AppRoutes.paymentRoute) {
