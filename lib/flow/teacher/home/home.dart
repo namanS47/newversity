@@ -214,7 +214,7 @@ class _HomeState extends State<Home> {
             Padding(
               padding: const EdgeInsets.only(right: 100.0),
               child: AppText(
-                "Next session with ${studentDetails?.name ?? "Mahesh"}",
+                "Next session with ${studentDetails?.name ?? ""}",
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),

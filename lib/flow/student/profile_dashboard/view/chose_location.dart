@@ -19,6 +19,7 @@ class _StudentProfileLocationState extends State<StudentProfileLocation> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
+        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           getFindMentorHeader(),
@@ -33,12 +34,7 @@ class _StudentProfileLocationState extends State<StudentProfileLocation> {
           const SizedBox(
             height: 20,
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 600,
-            child:
-                Align(alignment: Alignment.bottomCenter, child: getNextCTA()),
-          ),
+          Align(alignment: Alignment.bottomCenter, child: getNextCTA()),
         ],
       ),
     );
@@ -98,6 +94,6 @@ class _StudentProfileLocationState extends State<StudentProfileLocation> {
   }
 
   onNextTap() {
-    Navigator.of(context).pushNamed(AppRoutes.studentHome, arguments: true);
+    Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.studentHome, (route) => false, arguments: true);
   }
 }

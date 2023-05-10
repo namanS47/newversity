@@ -17,10 +17,11 @@ class TeacherDetailsModel {
   String? email;
   String? gender;
   List<String>? uploadedDocuments;
+  DateTime? nextAvailable;
 
   @override
   String toString() {
-    return 'TeacherDetails{teacherId: $teacherId, name: $name, mobileNumber: $mobileNumber, introVideoUrl: $introVideoUrl, location: $location, title: $title, info: $info, profileUrl: $profileUrl, profilePictureUrl: $profilePictureUrl, language: $language, email: $email, gender: $gender, uploadedDocuments: $uploadedDocuments, tags: $tags, education: $education, designation: $designation, sessionPricing: $sessionPricing, isNew: $isNew}';
+    return 'TeacherDetails{teacherId: $teacherId, name: $name, mobileNumber: $mobileNumber, introVideoUrl: $introVideoUrl, location: $location, title: $title, info: $info, profileUrl: $profileUrl, profilePictureUrl: $profilePictureUrl, language: $language, email: $email, gender: $gender, uploadedDocuments: $uploadedDocuments, tags: $tags, education: $education, designation: $designation, sessionPricing: $sessionPricing, isNew: $isNew , nextAvailability: $nextAvailable}';
   }
 
   List<String>? tags;
@@ -47,7 +48,8 @@ class TeacherDetailsModel {
     this.profilePictureUrl,
     this.sessionPricing,
     this.language,
-    this.isNew
+    this.isNew,
+    this.nextAvailable
   });
 
   factory TeacherDetailsModel.fromJson(Map<String, dynamic> json) => _$TeacherDetailsModelFromJson(json);

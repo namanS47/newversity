@@ -113,7 +113,7 @@ class _MentorCardState extends State<MentorDetailCard> {
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.whiteColor,
                               ),
-                              getNextAvailabilityWidget()
+                              if(widget.mentorDetail.nextAvailable != null) getNextAvailabilityWidget()
                             ],
                           ),
                         ),
@@ -161,10 +161,9 @@ class _MentorCardState extends State<MentorDetailCard> {
   }
 
   Widget getNextAvailabilityWidget() {
-    DateTime date = DateTime(2024);
-    int timeLeftInSeconds = getLeftTimeInSeconds(date);
+    int timeLeftInSeconds = getLeftTimeInSeconds(widget.mentorDetail.nextAvailable!);
     if (timeLeftInSeconds > DateTimeUtils.secondsInOneDay) {
-      String weekday = DateFormat('EEEE').format(date);
+      String weekday = DateFormat('EEEE').format(widget.mentorDetail.nextAvailable!);
       return AppText(
         "Available: Next $weekday",
         fontSize: 10,
@@ -175,13 +174,13 @@ class _MentorCardState extends State<MentorDetailCard> {
 
     return Row(
       children: [
-        const AppText(
-          "Available in:",
+        AppText(
+          "Available at: ${DateTimeUtils.getTimeInAMOrPM(widget.mentorDetail.nextAvailable!)}",
           fontSize: 10,
           fontWeight: FontWeight.w400,
           color: AppColors.whiteColor,
         ),
-        getScheduleLeftTime(timeLeftInSeconds),
+        // getScheduleLeftTime(timeLeftInSeconds),
       ],
     );
   }

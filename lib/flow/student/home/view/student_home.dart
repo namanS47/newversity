@@ -696,7 +696,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
             return getNextSessionView(index);
           },
           options: CarouselOptions(
-              height: 136,
+              height: 150,
               viewportFraction: 1,
               enableInfiniteScroll: false,
               autoPlay: true,
@@ -735,7 +735,6 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: Container(
-            height: 95,
             width: MediaQuery.of(context).size.width,
             decoration: const BoxDecoration(
               color: AppColors.strongCyan,
@@ -755,6 +754,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(
                     height: 8,
