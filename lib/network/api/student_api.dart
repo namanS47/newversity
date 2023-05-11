@@ -26,13 +26,16 @@ abstract class StudentApi {
   }
 
   @GET("/student")
+  @NoBody()
   Future<StudentDetail?> getStudentDetails(
       @Header("studentId") String studentId);
 
   @GET("/tags")
+  @NoBody()
   Future<List<TagsResponseModel>?> getTags();
 
   @GET("/session/student")
+  @NoBody()
   Future<List<SessionDetailResponseModel>?> getSessionsByType(
       @Header("studentId") String studentId, @Query("type") String type);
 
@@ -42,6 +45,7 @@ abstract class StudentApi {
       @Header("studentId") String studentId);
 
   @GET("/session/id")
+  @NoBody()
   Future<SessionDetailResponseModel?> getSessionWithId(
       @Header("id") String sessionId);
 
@@ -49,13 +53,14 @@ abstract class StudentApi {
   Future<void>? addSessionDetail(@Body() SessionSaveRequest sessionSaveRequest);
 
   @GET("/student/completion")
+  @NoBody()
   Future<ProfileCompletionPercentageResponse?> getProfileCompletionInfo(
       @Header("studentId") String studentId);
 
   @POST("/tags")
   Future<void> addListOfTags(@Body() AddTagRequestModel addTagRequestModel);
 
-  @GET("/tag/allTeacher")
+  @POST("/tag/allTeacher")
   Future<List<TeacherDetailsModel>?> getTeacherByTags(
       @Body() TagRequestModel addTagRequestModel);
 
@@ -65,13 +70,15 @@ abstract class StudentApi {
       @Part() File file, @Part() String studentId);
 
   @GET("/tag/search")
+  @NoBody()
   Future<List<String>> fetchTagsListBySearchKeyword(@Query("tag") String tag);
 
   @GET("/search/teacher")
+  @NoBody()
   Future<List<TeacherDetailsModel>> fetchTeacherDetailsByTagName(
       @Query("searchKeyword") String searchKeyword);
 
-  @GET("/order")
+  @POST("/order")
   Future<CreateOrderResponseModel?> createPaymentOrder(
       @Body() PaymentArgument paymentArgument);
 }

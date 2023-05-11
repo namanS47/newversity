@@ -16,7 +16,7 @@ class SessionBookingRepository extends StudentBaseRepository {
   Future<List<AvailabilityModel>?> fetchAvailability(
       FetchAvailabilityRequestModel request) async {
     try {
-      return await _teacherApi.fetchAvailability(request);
+      return await _teacherApi.fetchAvailability(request.teacherId!, request.date);
     } on DioError catch (exception) {
       throw AppException.forException(exception.response);
     }

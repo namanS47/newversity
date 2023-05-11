@@ -31,10 +31,12 @@ abstract class TeacherApi {
   }
 
   @GET("/teacher")
+  @NoBody()
   Future<TeacherDetailsModel?> getTeacherDetails(
       @Header("teacherId") String teacherId);
 
   @GET("/session/id")
+  @NoBody()
   Future<SessionDetailsResponse?> getSessionDetailById(
       @Header("id") String sessionId);
 
@@ -49,17 +51,21 @@ abstract class TeacherApi {
       @Header("teacherId") String teacherId);
 
   @GET("/tags")
+  @NoBody()
   Future<List<TagsResponseModel>?> getTags();
 
   @GET("/teacher/tags")
+  @NoBody()
   Future<List<TagsResponseModel>?> getAllTagsByTeacherId(
       @Header("teacherId") String teacherId);
 
   @GET("/teacher/experience")
+  @NoBody()
   Future<List<ExperienceResponseModel>?> getExperiencesWithTeacherId(
       @Header("teacherId") String teacherId);
 
   @GET("/teacher/completion")
+  @NoBody()
   Future<ProfileCompletionPercentageResponse?> getProfileCompletionInfo(
       @Header("teacherId") String teacherId);
 
@@ -73,6 +79,7 @@ abstract class TeacherApi {
       @Body() TagRequestModel tagsList, @Header("teacherId") String teacherId);
 
   @GET("/teacher/education")
+  @NoBody()
   Future<List<EducationResponseModel>?> getEducationsWithTeacherId(
       @Header("teacherId") String teacherId);
 
@@ -88,17 +95,22 @@ abstract class TeacherApi {
       @Body() AddBankRequestModel addBankRequestModel);
 
   @GET("/bankAccount")
+  @NoBody()
   Future<BankResponseModel?>? getBankAccount(
       @Header("teacherId") String teacherId);
 
   @GET("/teacher/availability")
+  @NoBody()
   Future<List<AvailabilityModel>?> fetchAvailability(
-      @Body() FetchAvailabilityRequestModel requestModel);
+      @Header("teacherId") String teacherId,
+      @Header("date") DateTime? date
+  );
 
   @DELETE("/teacher/availability")
   Future<void> removeAvailability(@Header("id") String id);
 
   @GET("/session/teacher")
+  @NoBody()
   Future<List<SessionDetailResponseModel>?> getSessionDetails(
       @Header("teacherId") String teacherId, @Query("type") String type);
 

@@ -15,6 +15,7 @@ abstract class CommonApi{
   }
 
   @GET("/getUserType")
+  @NoBody()
   Future<String> getUserType(
       @Header("userId") String userId
       );

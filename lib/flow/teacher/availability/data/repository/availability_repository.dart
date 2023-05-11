@@ -12,7 +12,7 @@ class AvailabilityRepository extends TeacherBaseRepository {
   final TeacherApi _teacherApi = DI.inject<TeacherApi>();
   Future<void> saveAvailability(AddAvailabilityRequestModel availabilityRequestModel) async {
     try{
-       final response = await _teacherApi.addAvailabilities(availabilityRequestModel);
+      await _teacherApi.addAvailabilities(availabilityRequestModel);
     } on DioError catch (exception) {
       throw AppException.forException(exception.response);
     }
@@ -20,7 +20,7 @@ class AvailabilityRepository extends TeacherBaseRepository {
 
   Future<List<AvailabilityModel>?> fetchAvailability(FetchAvailabilityRequestModel request) async {
     try{
-      return await _teacherApi.fetchAvailability(request);
+      return await _teacherApi.fetchAvailability(request.teacherId!, request.date);
     } on DioError catch (exception) {
       throw AppException.forException(exception.response);
     }
