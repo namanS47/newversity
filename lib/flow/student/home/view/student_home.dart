@@ -780,29 +780,59 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                           color: Colors.white,
                         ),
                       ),
-                      Container(
-                          decoration: BoxDecoration(
-                              color: AppColors.whiteColor,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 2, horizontal: 10),
-                            child: Row(
-                              children: [
-                                const AppText(
-                                  "In",
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                getScheduleLeftTime(index),
-                              ],
-                            ),
-                          ))
+                      getTimerOrJoinButton(index)
                     ],
                   )
                 ],
               ),
             ),
           )),
+    );
+  }
+
+  Widget getTimerOrJoinButton(int index) {
+    int timeLeftInSeconds = getLeftTimeInSeconds(context
+        .read<StudentHomeBloc>()
+        .listOfUpcomingSessions[index]
+        .startDate!);
+
+    if (timeLeftInSeconds < 120) {
+      return InkWell(
+        onTap: () {
+          Navigator.of(context).pushNamed(AppRoutes.roomPageRoute,
+              arguments: context
+                  .read<StudentHomeBloc>()
+                  .listOfUpcomingSessions[index].studentToken);
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          height: 30,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10), color: AppColors.cyanBlue),
+          child: const Center(
+            child: Text(
+              "Join Now",
+              style: TextStyle(color: AppColors.whiteColor),
+            ),
+          ),
+        ),
+      );
+    }
+    return Container(
+      decoration: BoxDecoration(
+          color: AppColors.whiteColor, borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+        child: Row(
+          children: [
+            const AppText(
+              "In",
+              fontWeight: FontWeight.w700,
+            ),
+            getScheduleLeftTime(index),
+          ],
+        ),
+      ),
     );
   }
 

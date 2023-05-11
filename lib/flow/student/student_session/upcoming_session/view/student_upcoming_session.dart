@@ -220,7 +220,7 @@ class _StudentUpcomingSessionScreenState
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 20),
+                            horizontal: 10.0, vertical: 12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
