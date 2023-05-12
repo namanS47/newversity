@@ -182,7 +182,7 @@ class _AvailabilityTimingWidgetState extends State<AvailabilityTimingWidget> {
                       spacing: 30,
                       runSpacing: 12,
                       children: List.generate(
-                        currentIntervalSessionTimings.length,
+                        currentIntervalSessionTimings.length -1,
                         (curIndex) {
                           return getSessionTimingView(curIndex, index);
                         },
