@@ -124,9 +124,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                lisOfTeachersDetails.isNotEmpty
-                                    ? getNearbyMentorList()
-                                    : Container(),
+                                getNearbyMentorList(),
                                 const SizedBox(
                                   height: 20,
                                 ),
@@ -442,16 +440,41 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   Widget getNearbyMentorList() {
     return SizedBox(
       height: 220,
-      child: ListView.separated(
-        physics: const BouncingScrollPhysics(),
-        scrollDirection: Axis.horizontal,
-        itemCount: lisOfTeachersDetails.length,
-        itemBuilder: (context, index) => MentorDetailCard(
-          mentorDetail: lisOfTeachersDetails[index],
-        ),
-        separatorBuilder: (BuildContext context, int index) => const SizedBox(
-          width: 0,
-        ),
+      child: BlocBuilder<StudentHomeBloc, StudentHomeStates>(
+        buildWhen: (previous, current) {
+          return current is FetchingMentorsWithTagState ||
+              current is FetchedMentorsWithTagState ||
+              current is FetchingMentorsWithTagFailureState;
+        },
+        builder: (context, state) {
+          if (state is FetchingMentorsWithTagState) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.colorBlack,
+              ),
+            );
+          }
+          if (state is FetchedMentorsWithTagState) {
+            return ListView.separated(
+              physics: const BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              itemCount: lisOfTeachersDetails.length,
+              itemBuilder: (context, index) => MentorDetailCard(
+                mentorDetail: lisOfTeachersDetails[index],
+              ),
+              separatorBuilder: (BuildContext context, int index) =>
+                  const SizedBox(
+                width: 0,
+              ),
+            );
+          }
+          if (state is FetchingMentorsWithTagFailureState) {
+            return Center(
+              child: Text(state.msg ?? "Something went wrong"),
+            );
+          }
+          return Container();
+        },
       ),
     );
   }
@@ -673,7 +696,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.of(context).pushNamed(AppRoutes.searchMentor, arguments: true);
+              Navigator.of(context)
+                  .pushNamed(AppRoutes.searchMentor, arguments: true);
             },
             child: const AppText(
               "See all",
@@ -807,13 +831,15 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
           Navigator.of(context).pushNamed(AppRoutes.roomPageRoute,
               arguments: context
                   .read<StudentHomeBloc>()
-                  .listOfUpcomingSessions[index].studentToken);
+                  .listOfUpcomingSessions[index]
+                  .studentToken);
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           height: 30,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10), color: AppColors.cyanBlue),
+              borderRadius: BorderRadius.circular(10),
+              color: AppColors.cyanBlue),
           child: const Center(
             child: Text(
               "Join Now",
