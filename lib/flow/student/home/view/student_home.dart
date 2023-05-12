@@ -665,16 +665,21 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          AppText(
-            "Nearby mentors",
+        children: [
+          const AppText(
+            "Relevant mentors",
             fontSize: 18,
             fontWeight: FontWeight.w700,
           ),
-          AppText(
-            "See all",
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(AppRoutes.searchMentor, arguments: true);
+            },
+            child: const AppText(
+              "See all",
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),

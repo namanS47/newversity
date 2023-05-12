@@ -13,3 +13,5 @@ class FetchTeacherListByTagNameEvent extends MentorSearchEvents {
   FetchTeacherListByTagNameEvent({required this.tagName});
   final String tagName;
 }
+
+class FetchAllMentorsListEvent extends MentorSearchEvents{}

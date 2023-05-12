@@ -333,7 +333,8 @@ class AppTextFormField extends StatefulWidget {
       this.isDense,
       this.maxLines,
       this.onChange,
-        this.onFieldSubmitted,
+      this.onEditingComplete,
+      this.onFieldSubmitted,
       this.hintTextStyle,
       this.fillColor,
       this.autofocus,
@@ -353,6 +354,7 @@ class AppTextFormField extends StatefulWidget {
   final bool isEnable;
   final int? maxLines;
   final Function? onChange;
+  final Function? onEditingComplete;
   final Function? onSave;
   final Function? onFieldSubmitted;
   final TextStyle? hintTextStyle;
@@ -395,6 +397,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       onChanged: (v) {
         widget.onChange?.call(v);
       },
+      onEditingComplete: widget.onEditingComplete?.call(),
       onFieldSubmitted: (v) => widget.onFieldSubmitted?.call(v),
       onSaved: (v) {
         widget.onSave?.call(v);

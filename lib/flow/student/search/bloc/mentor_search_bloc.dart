@@ -14,12 +14,12 @@ class MentorSearchBloc extends Bloc<MentorSearchEvents, MentorSearchStates> {
 
   List<String> resultedTags = [];
 
-  MentorSearchBloc() :super(MentorSearchInitialState()) {
+  MentorSearchBloc() : super(MentorSearchInitialState()) {
     on<GetTagsBySearchKeywordEvent>((event, emit) async {
       emit(FetchingTagBySearchKeywordLoadingState());
       try {
-        final response = await _searchRepository.fetchTagsListBySearchKeyword(
-            event.searchKeyword);
+        final response = await _searchRepository
+            .fetchTagsListBySearchKeyword(event.searchKeyword);
         resultedTags = response ?? [];
         if (response?.isNotEmpty == true) {
           emit(FetchingTagBySearchKeywordSuccessState());
@@ -34,10 +34,24 @@ class MentorSearchBloc extends Bloc<MentorSearchEvents, MentorSearchStates> {
     on<FetchTeacherListByTagNameEvent>((event, emit) async {
       emit(FetchTeacherListByTagNameLoadingState());
       try {
-        final response = await _searchRepository.fetchTeachersListByTagName(event.tagName);
-        emit(FetchTeacherListByTagNameSuccessState(teacherDetailsList: response ?? []));
+        final response =
+            await _searchRepository.fetchTeachersListByTagName(event.tagName);
+        emit(FetchTeacherListByTagNameSuccessState(
+            teacherDetailsList: response ?? []));
       } catch (exception) {
         emit(FetchTeacherListByTagNameFailureState());
+      }
+    });
+
+    on<FetchAllMentorsListEvent>((event, emit) async {
+      emit(FetchTeacherListByTagNameLoadingState());
+      try {
+        final response = await _searchRepository
+            .getTeacherDetailsWithTags(TagRequestModel(tagModelList: []));
+        emit(FetchAllTeacherListSuccessState(
+            teacherDetailsList: response ?? []));
+      } catch (exception) {
+        emit(FetchAllTeacherListFailureState());
       }
     });
   }

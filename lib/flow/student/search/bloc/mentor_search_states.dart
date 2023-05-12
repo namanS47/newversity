@@ -20,3 +20,12 @@ class FetchTeacherListByTagNameSuccessState extends MentorSearchStates {
 }
 
 class FetchTeacherListByTagNameFailureState extends MentorSearchStates {}
+
+class FetchAllTeacherListLoadingState extends MentorSearchStates {}
+
+class FetchAllTeacherListSuccessState extends MentorSearchStates {
+  FetchAllTeacherListSuccessState({required this.teacherDetailsList});
+  final List<TeacherDetailsModel> teacherDetailsList;
+}
+
+class FetchAllTeacherListFailureState extends MentorSearchStates {}

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
@@ -9,7 +11,9 @@ import 'package:newversity/themes/colors.dart';
 import '../../../../common/mentor_detail_card.dart';
 
 class MentorSearchScreen extends StatefulWidget {
-  const MentorSearchScreen({Key? key}) : super(key: key);
+  const MentorSearchScreen({Key? key, this.getAllMentors}) : super(key: key);
+
+  final bool? getAllMentors;
 
   @override
   State<MentorSearchScreen> createState() => _MentorSearchScreenState();
@@ -17,14 +21,35 @@ class MentorSearchScreen extends StatefulWidget {
 
 class _MentorSearchScreenState extends State<MentorSearchScreen> {
   final _searchController = TextEditingController();
+  Timer? getTagsBySearchKeywordEventTimer;
 
   @override
   void initState() {
-    context
-        .read<MentorSearchBloc>()
-        .add(GetTagsBySearchKeywordEvent(searchKeyword: ""));
+    if (widget.getAllMentors == true) {
+      context.read<MentorSearchBloc>().add(FetchAllMentorsListEvent());
+    } else {
+      context
+          .read<MentorSearchBloc>()
+          .add(GetTagsBySearchKeywordEvent(searchKeyword: ""));
+    }
 
     super.initState();
+  }
+
+  void callGetTagsBySearchKeywordEvent(String val) {
+    if (getTagsBySearchKeywordEventTimer != null) {
+      getTagsBySearchKeywordEventTimer?.cancel();
+    }
+    getTagsBySearchKeywordEventTimer = Timer(
+      const Duration(seconds: 1),
+      () {
+        context.read<MentorSearchBloc>().add(
+              GetTagsBySearchKeywordEvent(
+                searchKeyword: val.toString().toLowerCase(),
+              ),
+            );
+      },
+    );
   }
 
   @override
@@ -47,7 +72,8 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
                     message: "Please check spelling or try different key words",
                   ));
                 }
-                if (state is FetchingTagBySearchKeywordLoadingState) {
+                if (state is FetchingTagBySearchKeywordLoadingState ||
+                    state is FetchTeacherListByTagNameLoadingState) {
                   return const Padding(
                     padding: EdgeInsets.only(top: 200),
                     child: Center(child: CircularProgressIndicator()),
@@ -62,6 +88,18 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
                       child: NoResultFoundScreen(
                           message:
                               "No teacher is available for this tag, please try a different tag"),
+                    );
+                  }
+                }
+                if (state is FetchAllTeacherListSuccessState) {
+                  if (state.teacherDetailsList.isNotEmpty) {
+                    return getResultedTeacherListWidget(
+                        state.teacherDetailsList);
+                  } else {
+                    return const Center(
+                      child: NoResultFoundScreen(
+                          message:
+                          "No teacher is available for this tag, please try a different tag"),
                     );
                   }
                 }
@@ -136,8 +174,8 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
+    getTagsBySearchKeywordEventTimer?.cancel();
     _searchController.dispose();
   }
 
@@ -216,6 +254,7 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
           Expanded(
             child: AppTextFormField(
               controller: _searchController,
+              textInputAction: TextInputAction.search,
               hintTextStyle: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
@@ -235,11 +274,7 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
                     FetchTeacherListByTagNameEvent(
                         tagName: value.toString().toLowerCase()));
               },
-              onChange: (value) {
-                context.read<MentorSearchBloc>().add(
-                    GetTagsBySearchKeywordEvent(
-                        searchKeyword: value.toString().toLowerCase()));
-              },
+              onChange: callGetTagsBySearchKeywordEvent,
             ),
           )
         ],
