@@ -196,6 +196,7 @@ class _StudentPreviousSessionScreenState
         arguments: SessionDetailArguments(
           id: listOfPreviousSession[index].id.toString(),
           isPrevious: true,
+          sessionDetails: listOfPreviousSession[index]
         ));
   }
 

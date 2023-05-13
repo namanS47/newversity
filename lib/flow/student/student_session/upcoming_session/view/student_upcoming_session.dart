@@ -194,6 +194,7 @@ class _StudentUpcomingSessionScreenState
         arguments: SessionDetailArguments(
           id: listOfUpcomingSessions[index].id.toString(),
           isPrevious: false,
+          sessionDetails: listOfUpcomingSessions[index]
         ));
   }
 

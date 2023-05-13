@@ -1,6 +1,9 @@
-class SessionDetailArguments {
-  String id;
-  bool isPrevious;
+import '../../../student/student_session/my_session/model/session_detail_response_model.dart';
 
-  SessionDetailArguments({required this.id, required this.isPrevious});
+class SessionDetailArguments {
+  final String id;
+  final bool isPrevious;
+  final SessionDetailResponseModel sessionDetails;
+
+  SessionDetailArguments({required this.id, required this.isPrevious, required this.sessionDetails});
 }

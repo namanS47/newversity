@@ -35,10 +35,11 @@ class _StudentSessionDetailScreenState
 
   @override
   void initState() {
+    sessionDetailResponseModel = widget.sessionDetailArguments.sessionDetails;
     super.initState();
-    BlocProvider.of<StudentSessionDetailBloc>(context).add(
-        FetchStudentSessionDetailEvent(
-            sessionId: widget.sessionDetailArguments.id));
+    // BlocProvider.of<StudentSessionDetailBloc>(context).add(
+    //     FetchStudentSessionDetailEvent(
+    //         sessionId: widget.sessionDetailArguments.id));
   }
 
   onMentorDetailsTap() {
@@ -252,6 +253,7 @@ class _StudentSessionDetailScreenState
         onTap: () => {
           Navigator.of(context).pushNamed(AppRoutes.raiseIssueRoute,
               arguments: SessionDetailArguments(
+                sessionDetails: sessionDetailResponseModel!,
                   id: widget.sessionDetailArguments.id, isPrevious: true))
         },
         child: const AppText(
