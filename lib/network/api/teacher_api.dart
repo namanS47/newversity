@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:newversity/config/app_config.dart';
 import 'package:newversity/flow/teacher/availability/data/model/availability_model.dart';
-import 'package:newversity/flow/teacher/availability/data/model/fetch_availability_request_model.dart';
 import 'package:newversity/flow/teacher/bank_account/model/bank_request_model.dart';
 import 'package:newversity/flow/teacher/bank_account/model/bank_response_model.dart';
 import 'package:newversity/flow/teacher/home/model/session_request_model.dart';
