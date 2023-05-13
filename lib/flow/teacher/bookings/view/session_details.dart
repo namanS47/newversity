@@ -11,6 +11,7 @@ import 'package:newversity/themes/colors.dart';
 import 'package:newversity/utils/date_time_utils.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
+import '../../../student/student_session/my_session/model/session_detail_response_model.dart';
 import '../bloc/session_details_bloc/booking_session_details_bloc.dart';
 import 'bottom_sheets/cancel_bottom_sheet.dart';
 
@@ -25,7 +26,7 @@ class SessionDetailsScreen extends StatefulWidget {
 }
 
 class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
-  SessionDetailsResponse? sessionDetailsResponse;
+  SessionDetailResponseModel? sessionDetailsResponse;
   bool showError = false;
   bool isSendLoading = false;
   bool toReset = false;
@@ -35,8 +36,9 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<BookingSessionDetailsBloc>(context)
-        .add(FetchSessionDetailByIdEvent(id: widget.sessionDetailArguments.id));
+    sessionDetailsResponse = widget.sessionDetailArguments.sessionDetails;
+    // BlocProvider.of<BookingSessionDetailsBloc>(context)
+    //     .add(FetchSessionDetailByIdEvent(id: widget.sessionDetailArguments.id));
   }
 
   @override
@@ -50,7 +52,7 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
               BookingSessionDetailsStates>(
             listener: (context, state) {
               if (state is FetchedSessionDetailByIdState) {
-                sessionDetailsResponse = state.sessionDetails;
+                // sessionDetailsResponse = state.sessionDetails;
               }
               if (state is SavedSessionDetails) {
                 isSendLoading = false;
@@ -393,62 +395,59 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
   Widget getFeedBackView() {
     return Visibility(
       visible: widget.sessionDetailArguments.isPrevious,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const AppText(
-            "Feedback by Student",
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const AppText(
-                "\"It was an awesome session\"",
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-              Container(
-                width: 43,
-                height: 23,
-                decoration: BoxDecoration(
-                  color: AppColors.grey32,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      AppImage(image: ImageAsset.star),
-                      SizedBox(
-                        width: 3,
-                      ),
-                      AppText(
-                        "5",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ],
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AppText(
+              "Feedback by Student",
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: AppText(
+                    sessionDetailsResponse!.studentFeedback ?? "",
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          AppText(
-            sessionDetailsResponse!.studentFeedback ??
-                "This is Feedback Section",
-            fontSize: 12,
-            fontWeight: FontWeight.w400,
-          ),
-        ],
+                Container(
+                  width: 43,
+                  height: 23,
+                  decoration: BoxDecoration(
+                    color: AppColors.grey32,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const AppImage(image: ImageAsset.star),
+                        const SizedBox(
+                          width: 3,
+                        ),
+                        if(sessionDetailsResponse?.studentRating != null) AppText(
+                          sessionDetailsResponse!.studentRating.toString(),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

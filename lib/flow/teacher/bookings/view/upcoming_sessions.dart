@@ -122,7 +122,9 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
   onProfileTap(int index) {
     Navigator.of(context).pushNamed(AppRoutes.sessionDetails,
         arguments: SessionDetailArguments(
-            id: listOfSessionDetailResponse[index].id!, isPrevious: false));
+            id: listOfSessionDetailResponse[index].id!,
+            isPrevious: false,
+            sessionDetails: listOfSessionDetailResponse[index]));
   }
 
   Widget getStudentProfilePic(String? profileUrl) {

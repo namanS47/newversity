@@ -124,10 +124,11 @@ class _PreviousSessionsState extends State<PreviousSessions> {
   }
 
   onProfileTap(int index) {
-    //TODO: Naman remove force unwrapping
     Navigator.of(context).pushNamed(AppRoutes.sessionDetails,
         arguments: SessionDetailArguments(
-            id: listOfSessionDetailResponse[index].id!, isPrevious: true));
+            id: listOfSessionDetailResponse[index].id!,
+            isPrevious: true,
+            sessionDetails: listOfSessionDetailResponse[index]));
   }
 
   Widget getStudentProfilePic(String? profileUrl) {
@@ -142,7 +143,7 @@ class _PreviousSessionsState extends State<PreviousSessions> {
                 image: ImageAsset.blueAvatar,
               )
             : Image.network(
-                profileUrl ?? "",
+                profileUrl,
                 errorBuilder: (BuildContext context, Object exception,
                     StackTrace? stackTrace) {
                   return const Padding(
@@ -166,7 +167,7 @@ class _PreviousSessionsState extends State<PreviousSessions> {
         listOfSessionDetailResponse[index].endDate ?? DateTime.now());
     String sessionDate = DateTimeUtils.getBirthFormattedDateTime(
         listOfSessionDetailResponse[index].endDate ?? DateTime.now());
-    return GestureDetector(
+    return InkWell(
       onTap: () => onProfileTap(index),
       child: Row(
         children: [
@@ -197,6 +198,7 @@ class _PreviousSessionsState extends State<PreviousSessions> {
                       listOfSessionDetailResponse[index].agenda ?? "",
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
+                      maxLines: 2,
                     ),
                   ),
                   AppText(
@@ -212,13 +214,13 @@ class _PreviousSessionsState extends State<PreviousSessions> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Flexible(
-                    child: AppText(
-                      listOfSessionDetailResponse[index].paymentId ?? "",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  // Flexible(
+                  //   child: AppText(
+                  //     listOfSessionDetailResponse[index].paymentId ?? "",
+                  //     fontSize: 12,
+                  //     fontWeight: FontWeight.w500,
+                  //   ),
+                  // ),
                   AppText(
                     "On: $sessionDate",
                     fontSize: 10,
