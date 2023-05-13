@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:newversity/flow/student/student_session/my_session/model/session_detail_response_model.dart';
+import 'package:newversity/navigation/app_routes.dart';
+import 'package:newversity/room/model/room_argument.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class RoomPage extends StatelessWidget {
-  final String? sessionToken;
-  const RoomPage({super.key, required this.sessionToken});
+  final RoomArguments roomArguments;
+
+  const RoomPage({super.key, required this.roomArguments});
 
   Future<bool> getPermissions() async {
     await Permission.camera.request();
@@ -38,13 +42,18 @@ class RoomPage extends StatelessWidget {
             // Function to push to meeting page
             onPressed: () async {
               await getPermissions();
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                    builder: (_) => MeetingPage(
-                          sessionToken: sessionToken ?? "",
-                        )),
-              );
+              if (context.mounted) {
+                Navigator.pushReplacement(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (_) => MeetingPage(
+                            sessionToken: roomArguments.forStudents
+                                ? roomArguments.sessionDetails.studentToken!
+                                : roomArguments.sessionDetails.teacherToken!,
+                            roomArguments: roomArguments,
+                          )),
+                );
+              }
             },
             child: const Padding(
               padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -61,8 +70,11 @@ class RoomPage extends StatelessWidget {
 }
 
 class MeetingPage extends StatefulWidget {
+  final RoomArguments roomArguments;
   final String sessionToken;
-  const MeetingPage({super.key, required this.sessionToken});
+
+  const MeetingPage(
+      {super.key, required this.sessionToken, required this.roomArguments});
 
   @override
   State<MeetingPage> createState() => _MeetingPageState();
@@ -296,7 +308,13 @@ class _MeetingPageState extends State<MeetingPage>
                 child: RawMaterialButton(
                   onPressed: () {
                     hmsSDK.leave();
-                    Navigator.pop(context);
+                    if (widget.roomArguments.forStudents) {
+                      Navigator.of(context).pushReplacementNamed(
+                          AppRoutes.congratulationFeedback,
+                          arguments: widget.roomArguments.sessionDetails);
+                    } else {
+                      Navigator.of(context).pop();
+                    }
                   },
                   elevation: 2.0,
                   fillColor: Colors.red,

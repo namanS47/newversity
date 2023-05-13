@@ -8,8 +8,8 @@ import '../../../../../../themes/colors.dart';
 import '../../../../../teacher/home/model/session_request_model.dart';
 
 class StudentReviewSheet extends StatefulWidget {
-  SessionDetailResponseModel? sessionDetailResponseModel;
-  StudentReviewSheet({Key? key, required this.sessionDetailResponseModel})
+  final SessionDetailResponseModel? sessionDetailResponseModel;
+  const StudentReviewSheet({Key? key, required this.sessionDetailResponseModel})
       : super(key: key);
 
   @override
@@ -32,63 +32,55 @@ class _StudentReviewSheetState extends State<StudentReviewSheet> {
         }
       },
       builder: (context, state) {
-        return Padding(
-          padding: MediaQuery.of(context).viewInsets,
+        return Container(
+          // height: 300,
+          color: Colors.transparent,
           child: Container(
-            height: 300,
-            color: Colors.transparent,
-            child: Container(
-              decoration: const BoxDecoration(
-                  color: AppColors.whiteColor,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    topLeft: Radius.circular(10),
-                  )),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const AppText(
-                            "Give a review",
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          const AppText(
-                            "please tell us your experience",
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey55,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          getReviewEditContainer(),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          showError
-                              ? const AppText(
-                                  "Review cannot be empty!",
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.redColorShadow400,
-                                )
-                              : Container(),
-                        ],
+            decoration: const BoxDecoration(
+                color: AppColors.whiteColor,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(10),
+                  topLeft: Radius.circular(10),
+                )),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const AppText(
+                        "Give a review",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      const AppText(
+                        "please tell us your experience",
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.grey55,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      getReviewEditContainer(),
+                      showError
+                          ? const AppText(
+                              "Review cannot be empty!",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.redColorShadow400,
+                            )
+                          : Container(),
+                    ],
                   ),
-                  getBottomView(),
-                ],
-              ),
+                ),
+                getBottomView(),
+              ],
             ),
           ),
         );

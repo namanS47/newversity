@@ -6,6 +6,7 @@ import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.
 import 'package:newversity/flow/teacher/bookings/view/bottom_sheets/sort_by_bottom_sheet_upcoming_session.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
+import 'package:newversity/room/model/room_argument.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/utils/enums.dart';
 import 'package:newversity/utils/strings.dart';
@@ -259,7 +260,9 @@ class _UpcomingSessionsState extends State<UpcomingSessions> {
 
   onTapJoinNow(int index) {
     Navigator.of(context).pushNamed(AppRoutes.roomPageRoute,
-        arguments: listOfSessionDetailResponse[index].teacherToken);
+        arguments: RoomArguments(
+            sessionDetails: listOfSessionDetailResponse[index],
+            forStudents: false));
   }
 
   Widget getJoinNowCTA(int index) {

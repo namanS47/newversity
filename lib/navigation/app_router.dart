@@ -50,6 +50,7 @@ import 'package:newversity/flow/teacher/profile/teacher_profile_dashboard.dart';
 import 'package:newversity/flow/teacher/profile/view/profile.dart';
 import 'package:newversity/flow/teacher/profile/view/profile_edit_option.dart';
 import 'package:newversity/navigation/app_routes.dart';
+import 'package:newversity/room/model/room_argument.dart';
 import 'package:newversity/room/room.dart';
 
 import '../flow/login/login_arguments.dart';
@@ -60,6 +61,7 @@ import '../flow/student/payment/view/payment_processing.dart';
 import '../flow/student/payment/view/payment_scuccessfull.dart';
 import '../flow/student/student_session/booking_session/bloc/student_session_bloc.dart';
 import '../flow/student/student_session/booking_session/view/student_session.dart';
+import '../flow/student/student_session/my_session/model/session_detail_response_model.dart';
 import '../flow/teacher/bank_account/earnings/view/earning_screen.dart';
 import '../flow/teacher/index/view/settings.dart';
 import '../flow/teacher/profile/bloc/profile_bloc/profile_bloc.dart';
@@ -90,7 +92,7 @@ class AppRouter {
     }
 
     if (route.toString() == AppRoutes.congratulationFeedback) {
-      return const StudentFeedBackScreen();
+      return StudentFeedBackScreen(sessionDetails: params as SessionDetailResponseModel,);
     }
 
     if (route.toString() == AppRoutes.bookingConfirmation) {
@@ -174,7 +176,7 @@ class AppRouter {
     if (route.toString() == AppRoutes.searchMentor) {
       return BlocProvider<MentorSearchBloc>(
         create: (context) => MentorSearchBloc(),
-        child: const MentorSearchScreen(),
+        child: MentorSearchScreen(getAllMentors: params as bool?,),
       );
     }
 
@@ -300,7 +302,7 @@ class AppRouter {
 
     if (route.toString() == AppRoutes.roomPageRoute) {
       return RoomPage(
-        sessionToken: params as String?,
+        roomArguments: params as RoomArguments,
       );
     }
     if (route.toString() == AppRoutes.availabilityRoute) {

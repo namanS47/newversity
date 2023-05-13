@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/student/student_session/upcoming_session/bloc/student_upcoming_session_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
 import 'package:newversity/navigation/app_routes.dart';
+import 'package:newversity/room/model/room_argument.dart';
 import 'package:newversity/utils/strings.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
@@ -353,7 +354,9 @@ class _StudentUpcomingSessionScreenState
 
   onJoinNowTap(int index) {
     Navigator.of(context).pushNamed(AppRoutes.roomPageRoute,
-        arguments: listOfUpcomingSessions[index].studentToken);
+        arguments: RoomArguments(
+            sessionDetails: listOfUpcomingSessions[index],
+            forStudents: true));
   }
 
   int getLeftTimeInSeconds(DateTime dateTime) {

@@ -140,6 +140,7 @@ class _StudentSessionDetailScreenState
                                       const SizedBox(
                                         height: 100,
                                       ),
+                                      getBottomView(),
                                     ],
                                   ),
                                 ),
@@ -148,7 +149,6 @@ class _StudentSessionDetailScreenState
                           ),
                         ),
                       ),
-                      getBottomView(),
                     ],
                   )
                 : Column(
@@ -364,11 +364,13 @@ class _StudentSessionDetailScreenState
           borderRadius: BorderRadius.circular(10),
         ),
         child: const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 18),
-          child: AppText(
-            "Give a review",
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+          padding: EdgeInsets.symmetric(horizontal: 18),
+          child: Center(
+            child: AppText(
+              "Give a review",
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
@@ -379,9 +381,8 @@ class _StudentSessionDetailScreenState
     return Column(
       children: [
         Container(
-          margin: const EdgeInsets.all(16),
           width: MediaQuery.of(context).size.width,
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 75),
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 0),
           child: SizedBox(
             width: MediaQuery.of(context).size.width - 40,
             child: Column(

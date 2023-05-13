@@ -10,7 +10,10 @@ import 'package:newversity/themes/strings.dart';
 import '../../../utils/date_time_utils.dart';
 
 class StudentFeedBackScreen extends StatefulWidget {
-  const StudentFeedBackScreen({Key? key}) : super(key: key);
+  final SessionDetailResponseModel sessionDetails;
+
+  const StudentFeedBackScreen({Key? key, required this.sessionDetails})
+      : super(key: key);
 
   @override
   State<StudentFeedBackScreen> createState() => _StudentFeedBackScreenState();
@@ -19,7 +22,6 @@ class StudentFeedBackScreen extends StatefulWidget {
 class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
   bool showError = false;
   bool isLoading = false;
-  SessionDetailResponseModel? sessionDetailResponseModel;
   final _studentReviewController = TextEditingController();
 
   @override
@@ -70,9 +72,9 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
                     const SizedBox(
                       height: 17,
                     ),
-                    const Center(
+                    Center(
                       child: AppText(
-                        "Congratulation you have successfully completed a session with IITian Mentor",
+                        "Congratulation you have successfully completed a session with ${widget.sessionDetails.studentDetail?.name ?? ""}",
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         textAlign: TextAlign.center,
@@ -274,7 +276,7 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
             half: Container()),
         minRating: 1,
         maxRating: 5,
-        initialRating: sessionDetailResponseModel?.studentRating ?? 0,
+        initialRating: widget.sessionDetails.studentRating ?? 0,
         itemSize: 25,
         updateOnDrag: true,
         glow: true,
@@ -307,10 +309,10 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
     String text = "";
     if (isPrevious) {
       text =
-          "${DateTimeUtils.getBirthFormattedDateTime(sessionDetailResponseModel?.endDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(sessionDetailResponseModel?.endDate ?? DateTime.now())}";
+          "${DateTimeUtils.getBirthFormattedDateTime(widget.sessionDetails.endDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(widget.sessionDetails.endDate ?? DateTime.now())}";
     } else {
       text =
-          "${DateTimeUtils.getBirthFormattedDateTime(sessionDetailResponseModel?.startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(sessionDetailResponseModel?.startDate ?? DateTime.now())} - ${DateTimeUtils.getTimeInAMOrPM(sessionDetailResponseModel?.endDate ?? DateTime.now())}";
+          "${DateTimeUtils.getBirthFormattedDateTime(widget.sessionDetails.startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(widget.sessionDetails.startDate ?? DateTime.now())} - ${DateTimeUtils.getTimeInAMOrPM(widget.sessionDetails.endDate ?? DateTime.now())}";
     }
     return text;
   }
@@ -324,13 +326,13 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
         height: 92,
         width: 70,
-        child: sessionDetailResponseModel?.teacherDetail?.profilePictureUrl ==
+        child: widget.sessionDetails.teacherDetail?.profilePictureUrl ==
                 null
             ? const AppImage(
                 image: ImageAsset.blueAvatar,
               )
             : Image.network(
-                sessionDetailResponseModel?.teacherDetail?.profilePictureUrl ??
+                widget.sessionDetails.teacherDetail?.profilePictureUrl ??
                     "",
                 errorBuilder: (BuildContext context, Object exception,
                     StackTrace? stackTrace) {
@@ -374,7 +376,7 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AppText(
-                        sessionDetailResponseModel?.teacherDetail?.name ??
+                        widget.sessionDetails.teacherDetail?.name ??
                             "Kanhaiya",
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -396,7 +398,7 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
                                 color: Colors.amber,
                               ),
                               AppText(
-                                "${sessionDetailResponseModel?.studentRating}",
+                                "${widget.sessionDetails.studentRating}",
                                 fontSize: 10,
                               )
                             ],
@@ -409,7 +411,7 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
                     height: 5,
                   ),
                   AppText(
-                    "${sessionDetailResponseModel?.teacherDetail?.education ?? "IIT BHU"}, ${sessionDetailResponseModel?.teacherDetail?.title ?? "Professional Teacher"}",
+                    "${widget.sessionDetails.teacherDetail?.education ?? "IIT BHU"}, ${widget.sessionDetails.teacherDetail?.title ?? "Professional Teacher"}",
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
@@ -417,7 +419,7 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
                     height: 5,
                   ),
                   AppText(
-                    sessionDetailResponseModel?.teacherDetail?.info ??
+                    widget.sessionDetails.teacherDetail?.info ??
                         AppStrings.loremText,
                     fontSize: 12,
                     fontWeight: FontWeight.w400,

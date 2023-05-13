@@ -10,6 +10,7 @@ import 'package:newversity/flow/student/student_session/booking_session/model/st
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_with_teacher_id_request_model.dart';
 import 'package:newversity/navigation/app_routes.dart';
+import 'package:newversity/room/model/room_argument.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
 import 'package:newversity/utils/date_time_utils.dart';
@@ -829,10 +830,11 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       return InkWell(
         onTap: () {
           Navigator.of(context).pushNamed(AppRoutes.roomPageRoute,
-              arguments: context
-                  .read<StudentHomeBloc>()
-                  .listOfUpcomingSessions[index]
-                  .studentToken);
+              arguments: RoomArguments(
+                  sessionDetails: context
+                      .read<StudentHomeBloc>()
+                      .listOfUpcomingSessions[index],
+                  forStudents: true));
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),

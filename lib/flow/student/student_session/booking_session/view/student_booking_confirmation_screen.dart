@@ -82,7 +82,7 @@ class _StudentBookingConfirmationScreenState
                   AppCta(
                     onTap: () => onTapPayConfirm(),
                     text: "Pay ₹${widget.sessionBookingArgument.amount}",
-                    isLoading: false,
+                    isLoading: isLoading,
                   )
                 ],
               ),
@@ -110,28 +110,30 @@ class _StudentBookingConfirmationScreenState
                 availabilityId: widget.sessionBookingArgument.availabilityId,
               )) as PaymentCompletionArgument;
 
-      if (paymentResult.isPaymentSuccess) {
-        BlocProvider.of<StudentSessionBloc>(context).add(SessionAddingEvent(
-          sessionSaveRequest: SessionSaveRequest(
-              teacherId: widget.sessionBookingArgument.teacherId,
-              studentId: widget.sessionBookingArgument.studentId,
-              sessionType: widget.sessionBookingArgument.sessionType,
-              startDate: widget.sessionBookingArgument.startTime,
-              agenda: _agendaController.text,
-              endDate: widget.sessionBookingArgument.endTime,
-              amount: widget.sessionBookingArgument.amount,
-              paymentId: paymentResult.paymentId,
-              orderId: paymentResult.orderId,
-              availabilityId: widget.sessionBookingArgument.availabilityId),
-        ));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              "Something went wrong",
+      if(context.mounted) {
+        if (paymentResult.isPaymentSuccess) {
+          BlocProvider.of<StudentSessionBloc>(context).add(SessionAddingEvent(
+            sessionSaveRequest: SessionSaveRequest(
+                teacherId: widget.sessionBookingArgument.teacherId,
+                studentId: widget.sessionBookingArgument.studentId,
+                sessionType: widget.sessionBookingArgument.sessionType,
+                startDate: widget.sessionBookingArgument.startTime,
+                agenda: _agendaController.text,
+                endDate: widget.sessionBookingArgument.endTime,
+                amount: widget.sessionBookingArgument.amount,
+                paymentId: paymentResult.paymentId,
+                orderId: paymentResult.orderId,
+                availabilityId: widget.sessionBookingArgument.availabilityId),
+          ));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Something went wrong",
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     } else {
       isLoading = false;
