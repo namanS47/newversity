@@ -317,6 +317,7 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
 
   Widget getDateTimeOfSession() {
     String timeText = getTimeText();
+    String durationText = widget.sessionDetails.sessionType == "long" ? "30 min" : "15 min";
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -325,8 +326,8 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
           fontSize: 14,
           fontWeight: FontWeight.w400,
         ),
-        const AppText(
-          "Duration : 30 min",
+        AppText(
+          "Duration : $durationText",
           fontSize: 14,
           fontWeight: FontWeight.w400,
         ),

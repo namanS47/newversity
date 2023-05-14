@@ -37,6 +37,7 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
   void initState() {
     super.initState();
     sessionDetailsResponse = widget.sessionDetailArguments.sessionDetails;
+    _noteSenderController.text = widget.sessionDetailArguments.sessionDetails.mentorNote ?? "";
     // BlocProvider.of<BookingSessionDetailsBloc>(context)
     //     .add(FetchSessionDetailByIdEvent(id: widget.sessionDetailArguments.id));
   }
@@ -368,6 +369,7 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
   @override
   void dispose() {
     super.dispose();
+    _noteSenderController.dispose();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
@@ -435,11 +437,12 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
                         const SizedBox(
                           width: 3,
                         ),
-                        if(sessionDetailsResponse?.studentRating != null) AppText(
-                          sessionDetailsResponse!.studentRating.toString(),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                        ),
+                        if (sessionDetailsResponse?.studentRating != null)
+                          AppText(
+                            sessionDetailsResponse!.studentRating.toString(),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
                       ],
                     ),
                   ),
@@ -647,10 +650,8 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
   String getTimeText() {
     String text = "";
     if (widget.sessionDetailArguments.isPrevious) {
-      text = DateTimeUtils.getBirthFormattedDateTime(
-              sessionDetailsResponse!.endDate ?? DateTime.now()) +
-          DateTimeUtils.getTimeInAMOrPM(
-              sessionDetailsResponse!.endDate ?? DateTime.now());
+      text =
+          "${DateTimeUtils.getBirthFormattedDateTime(sessionDetailsResponse!.startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(sessionDetailsResponse!.startDate ?? DateTime.now())}";
     } else {
       text =
           "${DateTimeUtils.getBirthFormattedDateTime(sessionDetailsResponse!.startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(sessionDetailsResponse!.startDate ?? DateTime.now())} - ${DateTimeUtils.getTimeInAMOrPM(sessionDetailsResponse!.endDate ?? DateTime.now())}";
@@ -672,7 +673,9 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
           return AppAnimatedBottomSheet(
               bottomSheetWidget: BlocProvider<BookingSessionDetailsBloc>(
             create: (context) => BookingSessionDetailsBloc(),
-            child:  ProfileBottomSheet(studentId: sessionDetailsResponse?.studentId ?? "",),
+            child: ProfileBottomSheet(
+              studentId: sessionDetailsResponse?.studentId ?? "",
+            ),
           )); // your stateful widget
         });
   }
@@ -706,37 +709,26 @@ class _SessionDetailsScreenState extends State<SessionDetailsScreen> {
                 width: 16,
               ),
               Expanded(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppText(
-                    sessionDetailsResponse!.studentId ?? "",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  const SizedBox(
-                    height: 7,
-                  ),
-                  AppText(
-                    sessionDetailsResponse?.agenda ?? "JEE main",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  AppText(
-                    sessionDetailsResponse?.paymentId ??
-                        "This is Qualification Section",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  const SizedBox(
-                    height: 11,
-                  ),
-                ],
-              ))
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppText(
+                      sessionDetailsResponse!.studentDetail?.name ?? "",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    const SizedBox(
+                      height: 7,
+                    ),
+                    AppText(
+                      sessionDetailsResponse?.agenda ?? "",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ),

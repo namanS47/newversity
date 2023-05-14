@@ -66,6 +66,7 @@ class ImageAsset {
   static const paymentSuccessful = "${_svgPath}payment_successful.svg";
   static const paymentProcessing = "${_svgPath}payment_processing.svg";
   static const paymentError = "${_svgPath}payment_error.svg";
+  static const successIcon = "${_svgPath}success.svg";
 
   //PNG Path
   static const mentor = "${_pngPath}mentor.jpeg";

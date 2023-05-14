@@ -47,6 +47,7 @@ class AppRoutes {
   static const String profileScreen = "profile_screen";
   static const String addExperience = "add_experience";
   static const String addEducation = "add_education";
+  static const String teacherFeedbackRoute = "/teacher_feedback_route";
 
   // Drawer screen constant
   static const share = "share_profile";

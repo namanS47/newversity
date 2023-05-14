@@ -313,7 +313,9 @@ class _MeetingPageState extends State<MeetingPage>
                           AppRoutes.congratulationFeedback,
                           arguments: widget.roomArguments.sessionDetails);
                     } else {
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pushReplacementNamed(
+                          AppRoutes.teacherFeedbackRoute,
+                          arguments: widget.roomArguments.sessionDetails);
                     }
                   },
                   elevation: 2.0,

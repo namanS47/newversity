@@ -12,6 +12,7 @@ import 'package:newversity/flow/student/profile_dashboard/bloc/profile_dahsbord_
 import 'package:newversity/flow/student/profile_dashboard/view/student_profile_dashboard.dart';
 import 'package:newversity/flow/student/search/bloc/mentor_search_bloc.dart';
 import 'package:newversity/flow/student/search/view/mentor_search_page.dart';
+import 'package:newversity/flow/student/student_feedback/bloc/student_feedback_bloc.dart';
 import 'package:newversity/flow/student/student_feedback/feedback_screen.dart';
 import 'package:newversity/flow/student/student_profile/bloc/student_profile_bloc.dart';
 import 'package:newversity/flow/student/student_profile/view/edit_student_profile.dart';
@@ -49,6 +50,7 @@ import 'package:newversity/flow/teacher/profile/model/profile_dashboard_argument
 import 'package:newversity/flow/teacher/profile/teacher_profile_dashboard.dart';
 import 'package:newversity/flow/teacher/profile/view/profile.dart';
 import 'package:newversity/flow/teacher/profile/view/profile_edit_option.dart';
+import 'package:newversity/flow/teacher/teacher_feedback/teacher_feedback_route.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/room/model/room_argument.dart';
 import 'package:newversity/room/room.dart';
@@ -92,7 +94,21 @@ class AppRouter {
     }
 
     if (route.toString() == AppRoutes.congratulationFeedback) {
-      return StudentFeedBackScreen(sessionDetails: params as SessionDetailResponseModel,);
+      return BlocProvider<StudentFeedbackBloc>(
+        create: (context) => StudentFeedbackBloc(),
+        child: StudentFeedBackScreen(
+          sessionDetails: params as SessionDetailResponseModel,
+        ),
+      );
+    }
+
+    if (route.toString() == AppRoutes.teacherFeedbackRoute) {
+      return BlocProvider<StudentFeedbackBloc>(
+        create: (context) => StudentFeedbackBloc(),
+        child: TeacherFeedbackRoute(
+          sessionDetails: params as SessionDetailResponseModel,
+        ),
+      );
     }
 
     if (route.toString() == AppRoutes.bookingConfirmation) {
@@ -176,7 +192,9 @@ class AppRouter {
     if (route.toString() == AppRoutes.searchMentor) {
       return BlocProvider<MentorSearchBloc>(
         create: (context) => MentorSearchBloc(),
-        child: MentorSearchScreen(getAllMentors: params as bool?,),
+        child: MentorSearchScreen(
+          getAllMentors: params as bool?,
+        ),
       );
     }
 
