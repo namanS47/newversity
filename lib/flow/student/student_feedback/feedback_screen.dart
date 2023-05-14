@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/student/student_session/my_session/model/session_detail_response_model.dart';
@@ -8,6 +9,8 @@ import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
 
 import '../../../utils/date_time_utils.dart';
+import '../../teacher/home/model/session_request_model.dart';
+import 'bloc/student_feedback_bloc.dart';
 
 class StudentFeedBackScreen extends StatefulWidget {
   final SessionDetailResponseModel sessionDetails;
@@ -25,97 +28,126 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
   final _studentReviewController = TextEditingController();
 
   @override
+  void initState() {
+    _studentReviewController.text = widget.sessionDetails.studentFeedback ?? "";
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _studentReviewController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-                child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(child: Container()),
-                        Row(
-                          children: const [
-                            AppImage(
-                              image: ImageAsset.share,
-                              color: AppColors.blackMerlin,
-                              height: 25,
-                              width: 25,
-                            ),
-                            SizedBox(
-                              width: 35,
-                            ),
-                            AppImage(
+        child: BlocConsumer<StudentFeedbackBloc, StudentFeedbackState>(
+          listener: (context, state) {
+            if (state is SaveStudentFeedbackSuccessState && state.shouldPopScreen) {
+              Navigator.pop(context);
+            }
+          },
+          builder: (context, state) {
+            return _getScreenContent();
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _getScreenContent() {
+    return Column(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(child: Container()),
+                      Row(
+                        children: [
+                          const AppImage(
+                            image: ImageAsset.share,
+                            color: AppColors.blackMerlin,
+                            height: 25,
+                            width: 25,
+                          ),
+                          const SizedBox(
+                            width: 35,
+                          ),
+                          InkWell(
+                            onTap: () => Navigator.pop(context),
+                            child: const AppImage(
                               image: ImageAsset.close,
                               color: AppColors.blackMerlin,
                               height: 25,
                               width: 25,
                             ),
-                          ],
-                        )
-                      ],
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 28,
+                  ),
+                  const Center(
+                    child: AppImage(
+                      image: ImageAsset.icGrowth,
                     ),
-                    const SizedBox(
-                      height: 28,
-                    ),
-                    const Center(
-                      child: AppImage(
-                        image: ImageAsset.icGrowth,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 17,
-                    ),
-                    Center(
-                      child: AppText(
-                        "Congratulation you have successfully completed a session with ${widget.sessionDetails.studentDetail?.name ?? ""}",
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        textAlign: TextAlign.center,
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    getMentorDetails(),
-                    const SizedBox(
-                      height: 24,
-                    ),
-                    const AppText(
-                      "Session Details",
+                  ),
+                  const SizedBox(
+                    height: 17,
+                  ),
+                  Center(
+                    child: AppText(
+                      "Congratulation you have successfully completed a session with ${widget.sessionDetails.studentDetail?.name ?? ""}",
                       fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w700,
+                      textAlign: TextAlign.center,
+                      color: AppColors.primaryColor,
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    getDateTimeOfSession(),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    getRateYourExperienceContainer(),
-                    const SizedBox(
-                      height: 22,
-                    ),
-                    getReviewEditLayout(),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  getMentorDetails(),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  const AppText(
+                    "Session Details",
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  getDateTimeOfSession(),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  getRateYourExperienceContainer(),
+                  const SizedBox(
+                    height: 22,
+                  ),
+                  getReviewEditLayout(),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                ],
               ),
-            )),
-            getBottomView(),
-          ],
+            ),
+          ),
         ),
-      ),
+        getBottomView(),
+      ],
     );
   }
 
@@ -167,9 +199,7 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
             border: Border.all(width: 1, color: AppColors.cyanBlue)),
         child: Center(
             child: isLoading
-                ? const CircularProgressIndicator(
-                    color: AppColors.whiteColor,
-                  )
+                ? CommonWidgets.getCircularProgressIndicator()
                 : const AppText(
                     "Submit",
                     fontSize: 16,
@@ -187,13 +217,14 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
   onSubmitTap() {
     if (isFormValid()) {
       isLoading = true;
-      // BlocProvider.of<StudentSessionDetailBloc>(context).add(
-      //     SaveStudentReviewForSessionEvent(
-      //         sessionSaveRequest: SessionSaveRequest(
-      //             id: widget.sessionDetailResponseModel?.id,
-      //             teacherId: widget.sessionDetailResponseModel?.teacherId,
-      //             studentId: widget.sessionDetailResponseModel?.studentId,
-      //             studentFeedback: _studentReviewContainer.text)));
+      BlocProvider.of<StudentFeedbackBloc>(context).add(
+          SaveStudentFeedbackEvent(
+              forRating: false,
+              sessionSaveRequest: SessionSaveRequest(
+                  id: widget.sessionDetails.id,
+                  teacherId: widget.sessionDetails.teacherId,
+                  studentId: widget.sessionDetails.studentId,
+                  studentFeedback: _studentReviewController.text)));
     } else {
       isLoading = false;
       showError = true;
@@ -253,13 +284,13 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
   }
 
   _saveRating(double updatedRate) {
-    // BlocProvider.of<StudentSessionDetailBloc>(context).add(
-    //     SaveStudentRatingForSessionEvent(
-    //         sessionSaveRequest: SessionSaveRequest(
-    //             id: sessionDetailResponseModel?.id,
-    //             teacherId: sessionDetailResponseModel?.teacherId,
-    //             studentId: sessionDetailResponseModel?.studentId,
-    //             studentRating: updatedRate)));
+    BlocProvider.of<StudentFeedbackBloc>(context).add(SaveStudentFeedbackEvent(
+        forRating: true,
+        sessionSaveRequest: SessionSaveRequest(
+            id: widget.sessionDetails.id,
+            teacherId: widget.sessionDetails.teacherId,
+            studentId: widget.sessionDetails.studentId,
+            studentRating: updatedRate)));
   }
 
   Widget getRatingBar() {
@@ -309,7 +340,7 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
     String text = "";
     if (isPrevious) {
       text =
-          "${DateTimeUtils.getBirthFormattedDateTime(widget.sessionDetails.endDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(widget.sessionDetails.endDate ?? DateTime.now())}";
+          "${DateTimeUtils.getBirthFormattedDateTime(widget.sessionDetails.startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(widget.sessionDetails.endDate ?? DateTime.now())}";
     } else {
       text =
           "${DateTimeUtils.getBirthFormattedDateTime(widget.sessionDetails.startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(widget.sessionDetails.startDate ?? DateTime.now())} - ${DateTimeUtils.getTimeInAMOrPM(widget.sessionDetails.endDate ?? DateTime.now())}";
@@ -326,14 +357,12 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
         height: 92,
         width: 70,
-        child: widget.sessionDetails.teacherDetail?.profilePictureUrl ==
-                null
+        child: widget.sessionDetails.teacherDetail?.profilePictureUrl == null
             ? const AppImage(
                 image: ImageAsset.blueAvatar,
               )
             : Image.network(
-                widget.sessionDetails.teacherDetail?.profilePictureUrl ??
-                    "",
+                widget.sessionDetails.teacherDetail?.profilePictureUrl ?? "",
                 errorBuilder: (BuildContext context, Object exception,
                     StackTrace? stackTrace) {
                   return const Padding(
@@ -376,8 +405,7 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AppText(
-                        widget.sessionDetails.teacherDetail?.name ??
-                            "Kanhaiya",
+                        widget.sessionDetails.teacherDetail?.name ?? "",
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
@@ -411,9 +439,10 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
                     height: 5,
                   ),
                   AppText(
-                    "${widget.sessionDetails.teacherDetail?.education ?? "IIT BHU"}, ${widget.sessionDetails.teacherDetail?.title ?? "Professional Teacher"}",
+                    "${widget.sessionDetails.teacherDetail?.education ?? ""}, ${widget.sessionDetails.teacherDetail?.title ?? ""}",
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
+                    maxLines: 1,
                   ),
                   const SizedBox(
                     height: 5,
@@ -423,6 +452,7 @@ class _StudentFeedBackScreenState extends State<StudentFeedBackScreen> {
                         AppStrings.loremText,
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
+                    maxLines: 1,
                   ),
                   const SizedBox(
                     height: 5,
