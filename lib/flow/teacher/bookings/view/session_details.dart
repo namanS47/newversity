@@ -5,7 +5,6 @@ import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
 import 'package:newversity/flow/teacher/bookings/view/bottom_sheets/profile_bottom_sheet.dart';
 import 'package:newversity/flow/teacher/home/model/session_request_model.dart';
-import 'package:newversity/flow/teacher/home/model/session_response_model.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/utils/date_time_utils.dart';
