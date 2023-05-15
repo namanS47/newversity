@@ -657,17 +657,29 @@ class _ImagePickerOptionBottomSheetState
               children: [
                 GestureDetector(
                   onTap: widget.onCameraClick,
-                  child: const Text(
-                    "Camera",
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                  child: Column(
+                    children: [
+                      Image.asset(ImageAsset.cameraIcon, width: 50, height: 50,),
+                      const SizedBox(height: 8,),
+                      const Text(
+                        "Camera",
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ],
                   ),
                 ),
                 const Spacer(),
                 GestureDetector(
                   onTap: widget.onGalleryClick,
-                  child: const Text(
-                    "Gallery",
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                  child: Column(
+                    children: [
+                      Image.asset(ImageAsset.galleryIcon, width: 50, height: 50,),
+                      const SizedBox(height: 8,),
+                      const Text(
+                        "Gallery",
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ],
                   ),
                 )
               ],

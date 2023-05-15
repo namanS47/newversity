@@ -73,4 +73,6 @@ class ImageAsset {
   static const icOnBoarding = '${_pngPath}ic_onboarding.png';
   static const loginBanner = '${_pngPath}login_banner.png';
   static const mentorLoginBanner = '${_pngPath}mentor_login_banner.png';
+  static const cameraIcon = '${_pngPath}camera.png';
+  static const galleryIcon = '${_pngPath}gallery.png';
 }
