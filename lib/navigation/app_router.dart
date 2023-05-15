@@ -54,6 +54,7 @@ import 'package:newversity/flow/teacher/teacher_feedback/teacher_feedback_route.
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/room/model/room_argument.dart';
 import 'package:newversity/room/room.dart';
+import 'package:newversity/room/room_bloc/room_bloc.dart';
 
 import '../flow/login/login_arguments.dart';
 import '../flow/login/presentation/login_screen.dart';
@@ -323,6 +324,20 @@ class AppRouter {
         roomArguments: params as RoomArguments,
       );
     }
+
+    if (route.toString() == AppRoutes.meetingPageRoute) {
+      RoomArguments roomArguments = params as RoomArguments;
+      return BlocProvider(
+        create: (context) => RoomBloc(),
+        child: MeetingPage(
+          sessionToken: roomArguments.forStudents
+              ? roomArguments.sessionDetails.studentToken!
+              : roomArguments.sessionDetails.teacherToken!,
+          roomArguments: roomArguments,
+        ),
+      );
+    }
+
     if (route.toString() == AppRoutes.availabilityRoute) {
       return BlocProvider<AvailabilityBloc>(
         create: (context) => AvailabilityBloc(),

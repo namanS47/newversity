@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
-import 'package:newversity/flow/student/student_session/my_session/model/session_detail_response_model.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/room/model/room_argument.dart';
+import 'package:newversity/room/room_bloc/room_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class RoomPage extends StatelessWidget {
@@ -43,15 +44,10 @@ class RoomPage extends StatelessWidget {
             onPressed: () async {
               await getPermissions();
               if (context.mounted) {
-                Navigator.pushReplacement(
+                Navigator.pushReplacementNamed(
                   context,
-                  CupertinoPageRoute(
-                      builder: (_) => MeetingPage(
-                            sessionToken: roomArguments.forStudents
-                                ? roomArguments.sessionDetails.studentToken!
-                                : roomArguments.sessionDetails.teacherToken!,
-                            roomArguments: roomArguments,
-                          )),
+                  AppRoutes.meetingPageRoute,
+                  arguments: roomArguments
                 );
               }
             },
@@ -85,11 +81,6 @@ class _MeetingPageState extends State<MeetingPage>
   //SDK
   late HMSSDK hmsSDK;
 
-  // Variables required for joining a room
-  String authToken =
-      "eyJhbGciOiJIUzI1NiJ9.eyJyb29tX2lkIjoiNjQwYTVhZjlkYjEwNGM0YzQ0YmVmZGY4Iiwicm9sZSI6Imd1ZXN0IiwidXNlcl9pZCI6Im5hbWFuVXNlcklkIiwiYWNjZXNzX2tleSI6IjY0MDlkNDRiZWRjN2M4ZjM2NzRjMGQzYiIsInR5cGUiOiJhcHAiLCJ2ZXJzaW9uIjoyLCJqdGkiOiI0M2E4MzlkNS04YWZhLTRjZWItYjljMi0yMTQ0YjM3Nzc3YmQiLCJleHAiOjE2Nzg0ODkzMjUsImlhdCI6MTY3ODQwMjg2NSwibmJmIjoxNjc4NDAyOTI1fQ.G8yEfE5cm75OkzN0g7pkQRzSH3h0A8fc67qNdAmmNK4";
-  String userName = "test_user";
-
   // Variables required for rendering video and peer info
   HMSPeer? localPeer, remotePeer;
   HMSVideoTrack? localPeerVideoTrack, remotePeerVideoTrack;
@@ -102,11 +93,16 @@ class _MeetingPageState extends State<MeetingPage>
   }
 
   void initHMSSDK() async {
+    String? userName = widget.roomArguments.forStudents == true
+        ? widget.roomArguments.sessionDetails.studentDetail?.name
+        : widget.roomArguments.sessionDetails.teacherDetail?.name;
     hmsSDK = HMSSDK();
     await hmsSDK.build(); // ensure to await while invoking the `build` method
     hmsSDK.addUpdateListener(listener: this);
     hmsSDK.join(
-        config: HMSConfig(authToken: widget.sessionToken, userName: userName));
+      config:
+          HMSConfig(authToken: widget.sessionToken, userName: userName ?? ""),
+    );
   }
 
   // Clear all variables
@@ -240,6 +236,8 @@ class _MeetingPageState extends State<MeetingPage>
           // Actual widget to render video
           ? HMSVideoView(
               track: videoTrack,
+              setMirror: true,
+              matchParent: true,
             )
           : Center(
               child: Container(
@@ -279,60 +277,100 @@ class _MeetingPageState extends State<MeetingPage>
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.black,
-          body: Stack(
-            children: [
-              // Grid of peer tiles
-              Container(
-                height: MediaQuery.of(context).size.height,
-                child: GridView(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisExtent: (remotePeerVideoTrack == null)
-                          ? MediaQuery.of(context).size.height
-                          : MediaQuery.of(context).size.height / 2,
-                      crossAxisCount: 1),
-                  children: [
-                    if (remotePeerVideoTrack != null && remotePeer != null)
-                      peerTile(
-                          Key(remotePeerVideoTrack?.trackId ?? "" "mainVideo"),
-                          remotePeerVideoTrack,
-                          remotePeer),
-                    peerTile(
-                        Key(localPeerVideoTrack?.trackId ?? "" "mainVideo"),
-                        localPeerVideoTrack,
-                        localPeer)
-                  ],
-                ),
-              ), // End button to leave the room
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: RawMaterialButton(
-                  onPressed: () {
-                    hmsSDK.leave();
-                    if (widget.roomArguments.forStudents) {
-                      Navigator.of(context).pushReplacementNamed(
-                          AppRoutes.congratulationFeedback,
-                          arguments: widget.roomArguments.sessionDetails);
-                    } else {
-                      Navigator.of(context).pushReplacementNamed(
-                          AppRoutes.teacherFeedbackRoute,
-                          arguments: widget.roomArguments.sessionDetails);
-                    }
-                  },
-                  elevation: 2.0,
-                  fillColor: Colors.red,
-                  padding: const EdgeInsets.all(15.0),
-                  shape: const CircleBorder(),
-                  child: const Icon(
-                    Icons.call_end,
-                    size: 25.0,
-                    color: Colors.white,
+          body: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: GridView(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  mainAxisExtent: (remotePeerVideoTrack == null)
+                      ? MediaQuery.of(context).size.height
+                      : MediaQuery.of(context).size.height / 2,
+                  crossAxisCount: 1),
+              children: [
+                if (remotePeerVideoTrack != null && remotePeer != null)
+                  peerTile(Key(remotePeerVideoTrack?.trackId ?? "" "mainVideo"),
+                      remotePeerVideoTrack, remotePeer),
+                peerTile(Key(localPeerVideoTrack?.trackId ?? "" "mainVideo"),
+                    localPeerVideoTrack, localPeer)
+              ],
+            ),
+          ),
+          bottomNavigationBar: BlocBuilder<RoomBloc, RoomState>(
+            builder: (context, state) {
+              return BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: Colors.black,
+                selectedItemColor: Colors.grey,
+                unselectedItemColor: Colors.grey,
+                items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(context.read<RoomBloc>().isAudioOn
+                        ? Icons.mic_off
+                        : Icons.mic),
+                    label: 'Mic',
                   ),
-                ),
-              ),
-            ],
+                  BottomNavigationBarItem(
+                    icon: Icon(context.read<RoomBloc>().isVideoOn
+                        ? Icons.videocam_off
+                        : Icons.videocam),
+                    label: 'Camera',
+                  ),
+                  BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.screen_share,
+                        color: context.read<RoomBloc>().isScreenShareActive
+                            ? Colors.green
+                            : Colors.grey,
+                      ),
+                      label: "ScreenShare"),
+                  const BottomNavigationBarItem(
+                    icon: Icon(Icons.cancel),
+                    label: 'Leave Meeting',
+                  ),
+                ],
+
+                //New
+                onTap: (index) => _onItemTapped(index, context),
+              );
+            },
           ),
         ),
       ),
     );
+  }
+
+  void _onItemTapped(int index, BuildContext context) {
+    switch (index) {
+      case 0:
+        context
+            .read<RoomBloc>()
+            .add(RoomOverviewLocalPeerAudioToggled(hmsSDK: hmsSDK));
+        break;
+
+      case 1:
+        context
+            .read<RoomBloc>()
+
+            .add(RoomOverviewLocalPeerVideoToggled(hmsSDK: hmsSDK));
+        break;
+
+      case 2:
+        context
+            .read<RoomBloc>()
+            .add(RoomOverviewLocalPeerScreenShareToggled(hmsSDK: hmsSDK));
+        break;
+
+      case 3:
+        hmsSDK.leave();
+        if (widget.roomArguments.forStudents) {
+          Navigator.of(context).pushReplacementNamed(
+              AppRoutes.congratulationFeedback,
+              arguments: widget.roomArguments.sessionDetails);
+        } else {
+          Navigator.of(context).pushReplacementNamed(
+              AppRoutes.teacherFeedbackRoute,
+              arguments: widget.roomArguments.sessionDetails);
+        }
+        break;
+    }
   }
 }
