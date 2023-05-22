@@ -1,7 +1,7 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:newversity/di/di_initializer.dart';
 import 'package:newversity/navigation/app_routes.dart';
@@ -30,6 +30,10 @@ class CommonUtils {
 
   Future<String> getAuthToken() async {
     return await FirebaseAuth.instance.currentUser?.getIdToken() ?? "";
+  }
+
+  Future<String> getFcmToken() async {
+    return await FirebaseMessaging.instance.getToken() ?? "";
   }
 
   Future<String> getInitialRoute() async {

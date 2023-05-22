@@ -10,12 +10,15 @@ import 'package:newversity/themes/app_theme.dart';
 
 import 'bloc_observer/app_bloc_observer.dart';
 import 'di/di_initializer.dart';
+import 'firebase/firebase_messaging.dart';
 import 'flow/login/presentation/login_screen.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DI.initializeDependencies();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  final firebaseMessagingService = FirebaseMessagingService();
+  await firebaseMessagingService.initialize();
   setupLocator();
   BlocOverrides.runZoned(
     () async {
