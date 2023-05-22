@@ -1,5 +1,4 @@
 import 'package:flutter_simple_dependency_injection/injector.dart';
-import 'package:newversity/firestore/data/firestore_repository.dart';
 import 'package:newversity/flow/student/payment/data/payment_repository.dart';
 import 'package:newversity/flow/student/profile_dashboard/data/repo/profile_dashboard_repository.dart';
 import 'package:newversity/flow/student/search/data/search_repository.dart';
@@ -18,7 +17,6 @@ class DI {
   DI();
 
   factory DI.initializeDependencies() {
-    addDependency<FireStoreRepository>(FireStoreRepository(), true);
     addDependency<Preferences>(PreferencesImpl(), true);
     addDependency(CommonApi(DioClient.getDio()), true);
     addDependency(TeacherApi(DioClient.getDio()), true);
