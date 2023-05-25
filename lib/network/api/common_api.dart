@@ -1,22 +1,22 @@
 import 'package:dio/dio.dart';
+import 'package:newversity/flow/initial_route/model/common_details_model.dart';
 import 'package:retrofit/http.dart';
 
-import '../../utils/enums.dart';
+import '../../config/app_config.dart';
 
 part 'common_api.g.dart';
 
-@RestApi(baseUrl: "http://localhost:8080/" "/")
-abstract class CommonApi{
+@RestApi(baseUrl: EnvironmentValues.newversityStagingUrl)
+abstract class CommonApi {
   factory CommonApi(Dio dio, {String? baseUrl}) {
-    return _CommonApi(
-        dio,
-        baseUrl: baseUrl ?? "/"
-    );
+    return _CommonApi(dio,
+        baseUrl: baseUrl ?? AppConfig.instance.config.newversityAPIBaseUrl);
   }
 
   @GET("/getUserType")
   @NoBody()
-  Future<String> getUserType(
-      @Header("userId") String userId
-      );
+  Future<String> getUserType(@Header("userId") String userId);
+
+  @POST("/fcmToken")
+  Future<void> sendFcmToken(@Body() CommonDetailsModel commonDetailsModel);
 }
