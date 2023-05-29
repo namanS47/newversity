@@ -1,6 +1,14 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../storage/app_constants.dart';
+
+///Uncomment it if you want to run a process when app is in background or terminated
+// @pragma('vm:entry-point')
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   print("Handling a background FCM message: ${message.messageId}");
+// }
+
 class FirebaseMessagingService {
   static const AndroidNotificationChannel _channel = AndroidNotificationChannel(
       "high_importance_channel", "High importance notifications",
@@ -9,26 +17,42 @@ class FirebaseMessagingService {
       playSound: true);
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+  late FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 
   // Initialize FCM and configure callbacks
   Future<void> initialize() async {
+    _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     await _firebaseMessaging.requestPermission();
     await _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(_channel);
+
+    initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 
     FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
         alert: true, badge: true, sound: true);
 
     FirebaseMessaging.onMessage.listen(_onMessageReceived);
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenedApp);
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+
+    const InitializationSettings initSettings = InitializationSettings(
+        android: AndroidInitializationSettings("@mipmap/app_icon"),
+    );
+    
+    _flutterLocalNotificationsPlugin.initialize(initSettings, onDidReceiveNotificationResponse: onTapNotification);
+  }
+
+  /// when app is in the foreground
+  static Future<void> onTapNotification(NotificationResponse? response) async {
+    print("onForeground tap FCM message");
   }
 
   // Callback for handling a received message
   Future<void> _onMessageReceived(RemoteMessage message) async {
+    print('on received FCM message: ${message.data}');
     RemoteNotification? remoteNotification = message.notification;
     AndroidNotification? androidNotification = message.notification?.android;
 
@@ -38,15 +62,13 @@ class FirebaseMessagingService {
         remoteNotification.title,
         remoteNotification.body,
         NotificationDetails(
-            android:AndroidNotificationDetails(
-              _channel.id,
-              _channel.name,
+          android: AndroidNotificationDetails(_channel.id, _channel.name,
               channelDescription: _channel.description,
               importance: _channel.importance,
               playSound: _channel.playSound,
-              icon: '@mipmap/app_icon'
-            )
-        ));
+              icon: '@mipmap/app_icon'),
+        ),
+      );
     }
   }
 
