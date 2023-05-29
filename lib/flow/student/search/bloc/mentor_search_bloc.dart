@@ -21,11 +21,7 @@ class MentorSearchBloc extends Bloc<MentorSearchEvents, MentorSearchStates> {
         final response = await _searchRepository
             .fetchTagsListBySearchKeyword(event.searchKeyword);
         resultedTags = response ?? [];
-        if (response?.isNotEmpty == true) {
-          emit(FetchingTagBySearchKeywordSuccessState());
-        } else {
-          emit(FetchingTagBySearchKeywordFailureState());
-        }
+        emit(FetchingTagBySearchKeywordSuccessState());
       } catch (exception) {
         emit(FetchingTagBySearchKeywordFailureState());
       }

@@ -152,21 +152,19 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
   }
 
   Widget getSearchSuggestionWidget() {
-    return Visibility(
-      child: Expanded(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: ListView.builder(
-            physics: const ClampingScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return getSuggestionView(
-                  context.read<MentorSearchBloc>().resultedTags[index]);
-            },
-            itemCount: context.read<MentorSearchBloc>().resultedTags.length > 5
-                ? 5
-                : context.read<MentorSearchBloc>().resultedTags.length,
-          ),
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: ListView.builder(
+          physics: const ClampingScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return getSuggestionView(
+                context.read<MentorSearchBloc>().resultedTags[index]);
+          },
+          itemCount: context.read<MentorSearchBloc>().resultedTags.length > 5
+              ? 5
+              : context.read<MentorSearchBloc>().resultedTags.length,
         ),
       ),
     );
