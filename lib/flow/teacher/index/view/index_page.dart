@@ -21,10 +21,7 @@ class _IndexPageState extends State<IndexPage> {
   void initState() {
     super.initState();
 
-    if (widget.isStudent) {
-      BlocProvider.of<IndexBloc>(context)
-          .add(FetchStudentProfileCompletenessPercentageEvent());
-    } else {
+    if (!widget.isStudent) {
       BlocProvider.of<IndexBloc>(context)
           .add(FetchTeacherProfileCompletenessPercentageEvent());
     }

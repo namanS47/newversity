@@ -85,10 +85,6 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
     on<FetchTeacherProfileCompletenessPercentageEvent>((event, emit) async {
       await getTeacherProfileCompletenessInfo(event, emit);
     });
-
-    on<FetchStudentProfileCompletenessPercentageEvent>((event, emit) async {
-      await getTeacherProfileCompletenessInfo(event, emit);
-    });
   }
 
   Future<void> updatePageIndex(event, emit) async {
