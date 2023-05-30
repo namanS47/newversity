@@ -49,7 +49,11 @@ class BankAccountBloc extends Bloc<BankAccountEvents, BankAccountStates> {
       emit(FetchingBankDetailsState());
       try {
         final response = await _teacherBaseRepository.getBankDetails(teacherId);
-        emit(FetchedBankDetailsState(bankResponseModel: response));
+        if(response?.id != null) {
+          emit(FetchedBankDetailsState(bankResponseModel: response));
+        } else {
+          FetchingBankDetailsFailureState(msg: "please add bank account");
+        }
       } catch (exception) {
         if (exception is BadRequestException) {
           emit(FetchingBankDetailsFailureState(

@@ -443,25 +443,29 @@ class _HomeState extends State<Home> {
         Row(
           children: [
             Expanded(
-                child: GestureDetector(
-              onTap: () => onTapOfTotalEarning(),
-              child: getDetailsContainer(
+              child: GestureDetector(
+                onTap: () => onTapOfTotalEarning(),
+                child: getDetailsContainer(
                   AppColors.lightCyanBlue,
                   ImageAsset.rupay,
                   AppColors.totalEarningColor,
                   "00",
-                  "Total Earnings"),
-            )),
+                  "Total Earnings",
+                ),
+              ),
+            ),
             const SizedBox(
               width: 16,
             ),
             Expanded(
-                child: getDetailsContainer(
-                    AppColors.lightRedColorShadow400,
-                    ImageAsset.bookings,
-                    AppColors.totalBookingsColor,
-                    "00",
-                    "Total Bookings")),
+              child: getDetailsContainer(
+                AppColors.lightRedColorShadow400,
+                ImageAsset.bookings,
+                AppColors.totalBookingsColor,
+                "00",
+                "Total Bookings",
+              ),
+            ),
           ],
         ),
         const SizedBox(
@@ -470,12 +474,14 @@ class _HomeState extends State<Home> {
         Row(
           children: [
             Expanded(
-                child: getDetailsContainer(
-                    AppColors.lightGreen,
-                    ImageAsset.upcoming,
-                    AppColors.upcomingScheduleColor,
-                    "00",
-                    "Upcoming Schedule")),
+              child: getDetailsContainer(
+                AppColors.lightGreen,
+                ImageAsset.upcoming,
+                AppColors.upcomingScheduleColor,
+                "00",
+                "Upcoming Schedule",
+              ),
+            ),
             const SizedBox(
               width: 16,
             ),
