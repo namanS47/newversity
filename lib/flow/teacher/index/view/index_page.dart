@@ -48,10 +48,10 @@ class _IndexPageState extends State<IndexPage> {
             ),
           ),
           body: widget.isStudent
-              ? context
-                  .read<IndexBloc>()
-                  .studentIndexPage
-                  .elementAt(context.read<IndexBloc>().selectedIndex)
+              ? IndexedStack(
+                  index: context.read<IndexBloc>().selectedIndex,
+                  children: context.read<IndexBloc>().studentIndexPage,
+                )
               : context
                   .read<IndexBloc>()
                   .indexPages

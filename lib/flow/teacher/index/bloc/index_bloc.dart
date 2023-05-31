@@ -49,20 +49,9 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
     )
   ];
 
-  List<Widget> studentIndexPage = <Widget>[
-    BlocProvider<StudentHomeBloc>(
-      create: (context) => StudentHomeBloc(),
-      child: const StudentHomeScreen(),
-    ),
-    BlocProvider<MySessionBloc>(
-      create: (context) => MySessionBloc(),
-      child: const MySessionScreen(),
-    ),
-    BlocProvider<StudentCampusBloc>(
-      create: (context) => StudentCampusBloc(),
-      child: const StudentCampusScreen(),
-    )
-  ];
+  List<bool> indexPageLoadedList = [true, false, false];
+
+  List<Widget> studentIndexPage = <Widget>[];
 
   List<Map<String, String>> pagesNameWithImageIcon = <Map<String, String>>[
     {'image': ImageAsset.home, 'name': 'Home'},
@@ -78,6 +67,8 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
   ];
 
   IndexBloc() : super(IndexInitialState()) {
+    updateIndexPageList();
+
     on<IndexPageUpdateEvent>((event, emit) async {
       updatePageIndex(event, emit);
     });
@@ -89,6 +80,8 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
 
   Future<void> updatePageIndex(event, emit) async {
     if (event is IndexPageUpdateEvent) {
+      indexPageLoadedList[event.index] = true;
+      updateIndexPageList();
       selectedIndex = event.index;
       emit(PageUpdatedState());
     }
@@ -115,5 +108,22 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
             msg: exception.message.toString()));
       }
     }
+  }
+
+  updateIndexPageList() {
+    studentIndexPage = [
+      BlocProvider<StudentHomeBloc>(
+        create: (context) => StudentHomeBloc(),
+        child: const StudentHomeScreen(),
+      ),
+      indexPageLoadedList[1] ? BlocProvider<MySessionBloc>(
+        create: (context) => MySessionBloc(),
+        child: const MySessionScreen(),
+      ) : Container(),
+      indexPageLoadedList[2] ? BlocProvider<StudentCampusBloc>(
+        create: (context) => StudentCampusBloc(),
+        child: const StudentCampusScreen(),
+      ) : Container()
+    ];
   }
 }
