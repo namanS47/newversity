@@ -68,91 +68,100 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
               }
             },
             builder: (context, state) {
-              return SafeArea(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          studentDetail != null
-                              ? getProfileWidget()
-                              : Container(),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          getFindMentorHeader(),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          getFindMentorSearchWidget(),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                        ],
+              return RefreshIndicator(
+                onRefresh: () {
+                  return Future.delayed(const Duration(seconds: 1), () {
+                    BlocProvider.of<StudentHomeBloc>(context).add(FetchStudentDetailEvent());
+                    BlocProvider.of<StudentHomeBloc>(context).add(FetchUpcomingSessionEvent(
+                        sessionType: getSessionType(SessionType.upcoming)));
+                  });
+                },
+                child: SafeArea(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            studentDetail != null
+                                ? getProfileWidget()
+                                : Container(),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            getFindMentorHeader(),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            getFindMentorSearchWidget(),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 20.0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            decoration: const BoxDecoration(
-                                color: AppColors.whiteColor,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(28),
-                                    topRight: Radius.circular(28))),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                context
-                                        .read<StudentHomeBloc>()
-                                        .listOfUpcomingSessions
-                                        .isNotEmpty
-                                    ? getNextSessionCarousel()
-                                    : Container(),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                lisOfTeachersDetails.isNotEmpty
-                                    ? getNearByHeader()
-                                    : Container(),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                getNearbyMentorList(),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                getMentorsReviewHeader(),
-                                const SizedBox(
-                                  height: 18,
-                                ),
-                                getMentorsReviewList(),
-                                const SizedBox(
-                                  height: 32,
-                                ),
-                                getStudentReviewHeader(),
-                                const SizedBox(
-                                  height: 18,
-                                ),
-                                getStudentReviewList(),
-                                getInviteContainer(),
-                                const SizedBox(
-                                  height: 100,
-                                ),
-                              ],
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 20.0),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              decoration: const BoxDecoration(
+                                  color: AppColors.whiteColor,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(28),
+                                      topRight: Radius.circular(28))),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  context
+                                          .read<StudentHomeBloc>()
+                                          .listOfUpcomingSessions
+                                          .isNotEmpty
+                                      ? getNextSessionCarousel()
+                                      : Container(),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  lisOfTeachersDetails.isNotEmpty
+                                      ? getNearByHeader()
+                                      : Container(),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  getNearbyMentorList(),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  getMentorsReviewHeader(),
+                                  const SizedBox(
+                                    height: 18,
+                                  ),
+                                  getMentorsReviewList(),
+                                  const SizedBox(
+                                    height: 32,
+                                  ),
+                                  getStudentReviewHeader(),
+                                  const SizedBox(
+                                    height: 18,
+                                  ),
+                                  getStudentReviewList(),
+                                  getInviteContainer(),
+                                  const SizedBox(
+                                    height: 100,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               );
             },
