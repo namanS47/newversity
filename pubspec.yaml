@@ -33,6 +33,8 @@ dependencies:
   # url launcher
   url_launcher: ^6.1.7
 
+  webview_flutter: ^4.2.1
+
   # firebase
   firebase_auth: ^4.2.4
   firebase_core: ^2.4.1
