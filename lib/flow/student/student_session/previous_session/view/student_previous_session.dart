@@ -45,71 +45,76 @@ class _StudentPreviousSessionScreenState
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<StudentPreviousSessionBloc,
-        StudentPreviousSessionState>(
-      buildWhen: (previous, current) => isRebuildWidgetState(current),
-      listenWhen: (previous, current) => isRebuildWidgetState(current),
-      listener: (context, state) {
-        if (state is FetchedStudentPreviousSessionState) {
-          listOfPreviousSession = state.listOfPreviousSession;
-        }
+    return RefreshIndicator(
+      onRefresh: () {
+        return Future.delayed(const Duration(seconds: 0), () {
+          BlocProvider.of<StudentPreviousSessionBloc>(context).add(
+              FetchStudentPreviousSessionEvent(
+                  sessionType: getSessionType(SessionType.previous)));
+        });
       },
-      builder: (context, state) {
-        if (state is FetchingStudentPreviousSessionState) {
-          return SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.cyanBlue,
+      child: ListView(
+        children: [
+          BlocConsumer<StudentPreviousSessionBloc,
+              StudentPreviousSessionState>(
+            buildWhen: (previous, current) => isRebuildWidgetState(current),
+            listenWhen: (previous, current) => isRebuildWidgetState(current),
+            listener: (context, state) {
+              if (state is FetchedStudentPreviousSessionState) {
+                listOfPreviousSession = state.listOfPreviousSession;
+              }
+            },
+            builder: (context, state) {
+              if (state is FetchingStudentPreviousSessionState) {
+                return const Padding(
+                  padding: EdgeInsets.only(top: 150),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.cyanBlue,
+                    ),
                   ),
-                )
-              ],
-            ),
-          );
-        } else if (state is PreviousDataNotFoundState) {
-          return SizedBox(
-            height: 400,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                Center(
-                  child: AppText("No Previous Session Found"),
-                )
-              ],
-            ),
-          );
-        } else if (state is FetchingStudentPreviousSessionFailureState) {
-          return SizedBox(
-            height: 400,
-            child: Column(
-              children: [
-                Center(
-                  child: AppText(state.msg ?? ""),
-                )
-              ],
-            ),
-          );
-        } else {
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                getMentorsList(),
-                const SizedBox(
-                  height: 20,
-                ),
-              ],
-            ),
-          );
-        }
-      },
+                );
+              } else if (state is PreviousDataNotFoundState) {
+                return SizedBox(
+                  height: 400,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Center(
+                        child: AppText("No Previous Session Found"),
+                      )
+                    ],
+                  ),
+                );
+              } else if (state is FetchingStudentPreviousSessionFailureState) {
+                return SizedBox(
+                  height: 400,
+                  child: Column(
+                    children: [
+                      Center(
+                        child: AppText(state.msg ?? ""),
+                      )
+                    ],
+                  ),
+                );
+              } else {
+                return Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    getMentorsList(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 

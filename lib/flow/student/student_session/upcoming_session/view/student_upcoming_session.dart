@@ -42,73 +42,78 @@ class _StudentUpcomingSessionScreenState
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<StudentUpcomingSessionBloc,
-            StudentUpcomingSessionStates>(
-        buildWhen: (previous, current) => isRebuildWidgetState(current),
-        listenWhen: (previous, current) => isRebuildWidgetState(current),
-        listener: (context, state) {
-          if (state is FetchedStudentUpcomingSessionState) {
-            listOfUpcomingSessions = state.listOfUpcomingSession;
-          }
-        },
-        builder: (context, state) {
-          if (state is FetchingStudentUpcomingSessionState) {
-            return SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
-                  Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.cyanBlue,
-                    ),
-                  )
-                ],
-              ),
-            );
-          } else if (state is UpcomingDataNotFoundState) {
-            return SizedBox(
-              height: 400,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
-                  Center(
-                    child: AppText(
-                      "No Upcoming Session Found",
-                    ),
-                  )
-                ],
-              ),
-            );
-          } else if (state is FetchingStudentUpcomingSessionFailureState) {
-            return SizedBox(
-              height: 400,
-              child: Column(
-                children: [
-                  Center(
-                    child: AppText(state.msg),
-                  )
-                ],
-              ),
-            );
-          } else {
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  getMentorsList(),
-                  const SizedBox(
-                    height: 20,
-                  )
-                ],
-              ),
-            );
-          }
+    return RefreshIndicator(
+      onRefresh: () {
+        return Future.delayed(Duration(seconds: 0), () {
+          BlocProvider.of<StudentUpcomingSessionBloc>(context).add(
+              FetchStudentUpcomingSessionEvent(
+                  sessionType: getSessionType(SessionType.upcoming)));
         });
+      },
+      child: ListView(
+        children: [
+          BlocConsumer<StudentUpcomingSessionBloc,
+                  StudentUpcomingSessionStates>(
+              buildWhen: (previous, current) => isRebuildWidgetState(current),
+              listenWhen: (previous, current) => isRebuildWidgetState(current),
+              listener: (context, state) {
+                if (state is FetchedStudentUpcomingSessionState) {
+                  listOfUpcomingSessions = state.listOfUpcomingSession;
+                }
+              },
+              builder: (context, state) {
+                if (state is FetchingStudentUpcomingSessionState) {
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 150),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.cyanBlue,
+                      ),
+                    ),
+                  );
+                } else if (state is UpcomingDataNotFoundState) {
+                  return SizedBox(
+                    height: 400,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Center(
+                          child: AppText(
+                            "No Upcoming Session Found",
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                } else if (state is FetchingStudentUpcomingSessionFailureState) {
+                  return SizedBox(
+                    height: 400,
+                    child: Column(
+                      children: [
+                        Center(
+                          child: AppText(state.msg),
+                        )
+                      ],
+                    ),
+                  );
+                } else {
+                  return Column(
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      getMentorsList(),
+                      const SizedBox(
+                        height: 20,
+                      )
+                    ],
+                  );
+                }
+              }),
+        ],
+      ),
+    );
   }
 
   Widget getMentorsList() {
