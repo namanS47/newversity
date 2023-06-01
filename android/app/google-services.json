@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "186919330891-4iajaindci5vof7imti22op1qhlndmrk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.newversity.android",
+            "certificate_hash": "16f83779f4f06e2df08fe016d74fae77871aa2a0"
+          }
+        },
+        {
+          "client_id": "186919330891-62vbqn6pjbeco587dvhjk9v0n6cvubgr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.newversity.android",
+            "certificate_hash": "45d7f2c5a837c029b757958649d90cf63ea8f873"
+          }
+        },
+        {
           "client_id": "186919330891-d8kb83va52mvbs5prsp3d5a14s2nbl8n.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +45,13 @@
             {
               "client_id": "186919330891-d8kb83va52mvbs5prsp3d5a14s2nbl8n.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "186919330891-hcfpn9nc5vncqiab1p7vu4relboo6vu9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.newversity.newversity"
+              }
             }
           ]
         }
