@@ -23,7 +23,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   AppBloc() : super(AppInitial()) {
     on<FetchInitialRouteEvent>((event, emit) async {
       emit(FetchingInitialRouteLoadingState());
-      sendFcmToken();
       await fetchInitialRoute(emit);
     });
   }
@@ -38,6 +37,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     if (initialMessage != null) {
       print("naman--- initial fcm message ${initialMessage?.data}");
     }
+
+    sendFcmToken();
 
     final isStudent = await CommonUtils().isUserStudent();
     if (isStudent) {
