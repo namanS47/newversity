@@ -708,13 +708,13 @@ class CommonWidgets {
     );
   }
 
-  static Widget getCircularProgressIndicator() {
-    return const Center(
+  static Widget getCircularProgressIndicator({Color? color}) {
+    return Center(
       child: SizedBox(
           height: 20,
           width: 20,
           child: CircularProgressIndicator(
-            color: AppColors.whiteColor,
+            color: color ?? AppColors.whiteColor,
             strokeWidth: 2,
           )),
     );

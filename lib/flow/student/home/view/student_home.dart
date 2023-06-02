@@ -54,7 +54,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
             listener: (context, state) {
               if (state is FetchedStudentDetailsState) {
                 studentDetail = state.studentDetail;
-                listOfStudentTag = studentDetail!.tags!;
+                listOfStudentTag = studentDetail?.tags ?? [];
                 for (String element in listOfStudentTag) {
                   lisOfTagRequestModel.add(TagModel(tagName: element));
                 }

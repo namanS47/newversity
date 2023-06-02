@@ -5,6 +5,8 @@ import 'package:newversity/utils/enums.dart';
 import 'package:newversity/utils/string_extensions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../flow/student/profile_dashboard/data/model/student_details_model.dart';
+
 abstract class Preferences {
   static SharedPreferences? sharedPreferences;
 
@@ -59,6 +61,10 @@ abstract class Preferences {
   Future<UserType?> getUserType();
 
   Future<void> setUserType(UserType userType);
+
+  Future<void> setStudentDetails(StudentDetail studentDetail);
+
+  Future<StudentDetail> getStudentDetails();
 }
 
 class PreferencesImpl extends Preferences {
@@ -99,12 +105,24 @@ class PreferencesImpl extends Preferences {
   Future<void> setMobileNumber(String mobileNumber) {
     return setObjectPreference(PreferencesKey.mobileNumber, mobileNumber);
   }
+
+  @override
+  Future<StudentDetail> getStudentDetails() async {
+    final studentDetailJson = await getObjectPreference(PreferencesKey.studentDetails);
+    return StudentDetail.fromJson(studentDetailJson);
+  }
+
+  @override
+  Future<void> setStudentDetails(StudentDetail studentDetail) {
+    return setObjectPreference(PreferencesKey.studentDetails, studentDetail);
+  }
 }
 
 abstract class PreferencesKey {
   static const String userType = "userType";
   static const String teacherDetails = "teacherDetails";
   static const String mobileNumber = "mobileNumber";
+  static const String studentDetails = "studentDetails";
 
   static List<String> persistentKeys = [];
 }

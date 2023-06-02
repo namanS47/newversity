@@ -152,7 +152,10 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget getMobileNumberWidget() {
     return AppTextFormField(
       keyboardType: TextInputType.phone,
-      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(10),
+      ],
       validator: PhoneNumberValidator(isOptional: false),
       onChange: (value) {
         _phoneNumber = value;
