@@ -5,6 +5,7 @@ class AppRoutes {
   static const String otpRoute = "otp_route";
   static const String onBoarding = "on_boarding";
   static const String somethingWentWrongRoute = "something_went_wrong_route";
+  static const String webViewRoute = "webview_route";
 
   //Student Flow
   static const String studentHome = "student_home";

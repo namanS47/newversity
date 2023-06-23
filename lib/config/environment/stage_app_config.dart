@@ -8,4 +8,9 @@ class StageAppConfig extends BaseAppConfig {
   @override
   String get razorPayKey => EnvironmentValues.stagingRazorPayKey;
 
+  @override
+  String get termsAndConditionsUrl => EnvironmentValues.termsAndConditionsUrl;
+
+  @override
+  String get privacyPolicyUrl => EnvironmentValues.privacyPolicyUrl;
 }

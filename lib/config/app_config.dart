@@ -60,14 +60,17 @@ class AppConfig {
 }
 
 class EnvironmentValues {
-  //Staging
-  // static const String newversityStagingUrl =
-  //     "http://newversity-env.eba-w8mvmik7.ap-south-1.elasticbeanstalk.com/";
 
-  static const String newversityStagingUrl = "http://192.168.1.12:8080/";
+  static const String newversityStagingUrl = "https://api.newversity.in/";
+  // static const String newversityStagingUrl = "http://192.168.1.8:8080/";
+
+
   static const String stagingRazorPayKey = "rzp_test_C4quaG5XBcUQDb";
 
   // Production
   static const String newversityProductionUrl =
       "http://newversity-env.eba-w8mvmik7.ap-south-1.elasticbeanstalk.com/";
+
+  static const String termsAndConditionsUrl = "https://termify.io/terms-and-conditions/VFg48qjAGJ";
+  static const String privacyPolicyUrl = "https://termify.io/privacy-policy/H8CgMiE5yx";
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newversity/common/webview_route.dart';
 import 'package:newversity/flow/error_routes/error_route.dart';
 import 'package:newversity/flow/initial_route/app_bloc/app_bloc.dart';
 import 'package:newversity/flow/initial_route/ui/initial_route.dart';
@@ -256,6 +257,11 @@ class AppRouter {
         create: (context) => StudentProfileBloc(),
         child: const StudentProfileScreen(),
       );
+    }
+
+    if(route.toString() == AppRoutes.webViewRoute) {
+      String webUrl = params as String;
+      return WebViewRoute(webUrl: webUrl);
     }
 
     if (route.toString() == AppRoutes.editProfile) {

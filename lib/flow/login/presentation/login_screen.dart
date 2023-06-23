@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:newversity/common/common_widgets.dart';
+import 'package:newversity/config/app_config.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
@@ -231,28 +233,61 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget getTAndC() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
-        Text(
-          AppStrings.clickOnProceed,
-          textAlign: TextAlign.center,
-          style: TextStyle(
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+          text: AppStrings.clickOnProceed,
+          style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
             color: AppColors.blackMerlin,
           ),
-        ),
-        Text(
-          AppStrings.termsAndConditions,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: AppColors.blackRussian,
-          ),
-        )
-      ],
+          children: [
+            TextSpan(
+                text: AppStrings.termsAndCondition,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.blackRussian,
+                ),
+                recognizer: TapGestureRecognizer()..onTap = () {
+                  Navigator.of(context).pushNamed(AppRoutes.webViewRoute, arguments: AppConfig.instance.config.termsAndConditionsUrl);
+                }),
+            const TextSpan(text: " & "),
+            TextSpan(
+                text: AppStrings.privacyPolicy,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.blackRussian,
+                ),
+                recognizer: TapGestureRecognizer()..onTap = () {
+                  Navigator.of(context).pushNamed(AppRoutes.webViewRoute, arguments: AppConfig.instance.config.privacyPolicyUrl);
+                }),
+          ]),
     );
+    // return Row(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: const [
+    //     Text(
+    //       AppStrings.clickOnProceed,
+    //       textAlign: TextAlign.center,
+    //       style: TextStyle(
+    //         fontSize: 14,
+    //         fontWeight: FontWeight.w400,
+    //         color: AppColors.blackMerlin,
+    //       ),
+    //     ),
+    //     Text(
+    //       AppStrings.termsAndConditions,
+    //       style: TextStyle(
+    //         fontSize: 14,
+    //         fontWeight: FontWeight.w700,
+    //         color: AppColors.blackRussian,
+    //       ),
+    //     )
+    //   ],
+    // );
   }
 
   Widget changeUserTypeBottomWidget() {

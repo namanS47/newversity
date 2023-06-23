@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/flow/student/student_profile/bloc/student_profile_bloc.dart';
 
 import '../../../../common/common_widgets.dart';
+import '../../../../config/app_config.dart';
 import '../../../../navigation/app_routes.dart';
 import '../../../../resources/images.dart';
 import '../../../../themes/colors.dart';
@@ -155,10 +156,10 @@ class _StudentProfileDrawerScreenState
         Navigator.of(context).pushNamed(AppRoutes.settings);
         break;
       case 1:
-        Navigator.of(context).pushNamed(AppRoutes.privacyPolicy);
+        Navigator.of(context).pushNamed(AppRoutes.webViewRoute, arguments: AppConfig.instance.config.privacyPolicyUrl);
         break;
       case 2:
-        Navigator.of(context).pushNamed(AppRoutes.termsAndCondition);
+        Navigator.of(context).pushNamed(AppRoutes.webViewRoute, arguments: AppConfig.instance.config.termsAndConditionsUrl);
         break;
       case 3:
         Navigator.of(context).pushNamed(AppRoutes.helpAndSupport);

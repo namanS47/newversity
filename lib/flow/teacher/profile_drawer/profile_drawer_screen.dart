@@ -7,6 +7,8 @@ import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
 
+import '../../../config/app_config.dart';
+
 class ProfileDrawerScreen extends StatefulWidget {
   const ProfileDrawerScreen({Key? key}) : super(key: key);
 
@@ -164,10 +166,10 @@ class _ProfileDrawerScreenState extends State<ProfileDrawerScreen> {
         Navigator.of(context).pushNamed(AppRoutes.settings);
         break;
       case 3:
-        Navigator.of(context).pushNamed(AppRoutes.privacyPolicy);
+        Navigator.of(context).pushNamed(AppRoutes.webViewRoute, arguments: AppConfig.instance.config.privacyPolicyUrl);
         break;
       case 4:
-        Navigator.of(context).pushNamed(AppRoutes.termsAndCondition);
+        Navigator.of(context).pushNamed(AppRoutes.webViewRoute, arguments: AppConfig.instance.config.termsAndConditionsUrl);
         break;
       case 5:
         Navigator.of(context).pushNamed(AppRoutes.helpAndSupport);
