@@ -156,7 +156,7 @@ class _ProfileDrawerScreenState extends State<ProfileDrawerScreen> {
       //   Navigator.of(context).pushNamed(AppRoutes.share);
       //   break;
       case 0:
-        Navigator.of(context).pushNamed(AppRoutes.bank);
+        Navigator.of(context).pushNamed(AppRoutes.addBankAccount);
         break;
       // case 2:
       //   Navigator.of(context).pushNamed(AppRoutes.settings);

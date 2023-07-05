@@ -17,6 +17,7 @@ class AddBankAccount extends StatefulWidget {
 class _AddBankAccountState extends State<AddBankAccount> {
   bool isLoading = false;
   bool isShowError = false;
+  String errorText = "";
 
   final TextEditingController _accountNumberController =
       TextEditingController();
@@ -25,6 +26,12 @@ class _AddBankAccountState extends State<AddBankAccount> {
   final TextEditingController _ifscCodeController = TextEditingController();
   final TextEditingController _accountHolderNameController =
       TextEditingController();
+
+  @override
+  void initState() {
+    BlocProvider.of<BankAccountBloc>(context).add(FetchBankDetailsEvent());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +43,19 @@ class _AddBankAccountState extends State<AddBankAccount> {
           if (state is AddedBankAccountState) {
             isLoading = false;
             Navigator.pop(context);
-          }else if(state is AddingBankAccountFailureState){
-            print(" see the error ${state.msg}");
-          }
+          } else if (state is AddingBankAccountFailureState) {}
         },
         builder: (context, state) {
+          if (state is FetchedBankDetailsState) {
+            _accountNumberController.text =
+                state.bankResponseModel?.accountNumber ?? "";
+            _accountHolderNameController.text =
+                state.bankResponseModel?.accountName ?? "";
+            _ifscCodeController.text = state.bankResponseModel?.ifscCode ?? "";
+          }
           return SafeArea(
             child: Padding(
-              padding:  const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,8 +170,8 @@ class _AddBankAccountState extends State<AddBankAccount> {
   Widget getErrorWidget() {
     return Visibility(
       visible: isShowError,
-      child: const AppText(
-        "Please fill all the compulsary details.",
+      child: AppText(
+        errorText,
         fontSize: 12,
         fontWeight: FontWeight.w400,
         color: AppColors.redColorShadow400,
@@ -186,9 +198,9 @@ class _AddBankAccountState extends State<AddBankAccount> {
   bool isFormValid() {
     return _accountNumberController.text.isNotEmpty &&
         _reEnterAccountNumberController.text.isNotEmpty &&
-        _ifscCodeController.text.isNotEmpty;
+        _ifscCodeController.text.isNotEmpty &&
+        _accountNumberController.text == _reEnterAccountNumberController.text;
   }
-
 
   onAddingAccountTap() {
     if (isFormValid()) {
@@ -203,6 +215,11 @@ class _AddBankAccountState extends State<AddBankAccount> {
         ),
       );
     } else {
+      if(_accountNumberController.text != _reEnterAccountNumberController.text) {
+        errorText = "account number entered is not same";
+      } else {
+        errorText = "Please fill all the compulsory details.";
+      }
       isShowError = true;
       setState(() {});
     }
