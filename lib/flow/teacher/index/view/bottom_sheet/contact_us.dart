@@ -11,8 +11,8 @@ class ContactUsScreen extends StatelessWidget {
 
   final CallsAndMessagesService _service = getIt<CallsAndMessagesService>();
 
-  final String number = "7024860732";
-  final String email = "dancamdev@example.com";
+  final String number = "8949704799";
+  final String email = "contact@newversity.in";
 
   @override
   Widget build(BuildContext context) {

@@ -49,15 +49,15 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
               const SizedBox(
                 height: 30,
               ),
-              getFaqsContainer(),
-              const SizedBox(
-                height: 20,
-              ),
+              // getFaqsContainer(),
+              // const SizedBox(
+              //   height: 20,
+              // ),
               getConnectContainer(),
-              const SizedBox(
-                height: 20,
-              ),
-              getIssueRaiseContainer(),
+              // const SizedBox(
+              //   height: 20,
+              // ),
+              // getIssueRaiseContainer(),
             ],
           ),
         ),
