@@ -917,7 +917,12 @@ class _HomeAppBarState extends State<HomeAppBar> {
   }
 
   Widget getNotificationIcon() {
-    return const AppImage(image: ImageAsset.notification);
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).pushNamed(AppRoutes.notificationRoute);
+      },
+      child: const AppImage(image: ImageAsset.notification),
+    );
   }
 
   navigateToProfileScreen(BuildContext context) {

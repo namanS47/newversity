@@ -44,7 +44,9 @@ class _StudentNotificationScreenState extends State<StudentNotificationScreen> {
                     const SizedBox(
                       height: 50,
                     ),
-                    getNotificationListLayout(),
+                    listOfNotification.isNotEmpty
+                        ? getNotificationListLayout()
+                        : noNotificationWidget(),
                   ],
                 ),
               ),
@@ -57,6 +59,10 @@ class _StudentNotificationScreenState extends State<StudentNotificationScreen> {
 
   List<StudentNotificationModel> listOfNotification =
       StudentNotificationModel.listOfStudentNotificationModel;
+
+  Widget noNotificationWidget() {
+    return Text("No Notification");
+  }
 
   Widget getNotificationListLayout() {
     return Wrap(
