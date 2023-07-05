@@ -136,18 +136,14 @@ class _ProfileDrawerScreenState extends State<ProfileDrawerScreen> {
   String getDrawerOptionTitle(BuildContext context, int index) {
     switch (index) {
       case 0:
-        return AppStrings.share;
-      case 1:
         return AppStrings.bank;
-      case 2:
-        return AppStrings.settings;
-      case 3:
+      case 1:
         return AppStrings.privacyPolicy;
-      case 4:
+      case 2:
         return AppStrings.termsAndCondition;
-      case 5:
+      case 3:
         return AppStrings.helpAndSupport;
-      case 6:
+      case 4:
         return AppStrings.faqs;
       default:
         return '';
@@ -156,25 +152,25 @@ class _ProfileDrawerScreenState extends State<ProfileDrawerScreen> {
 
   void getDrawerScreen(int index) {
     switch (index) {
+      // case 0:
+      //   Navigator.of(context).pushNamed(AppRoutes.share);
+      //   break;
       case 0:
-        Navigator.of(context).pushNamed(AppRoutes.share);
-        break;
-      case 1:
         Navigator.of(context).pushNamed(AppRoutes.bank);
         break;
-      case 2:
-        Navigator.of(context).pushNamed(AppRoutes.settings);
-        break;
-      case 3:
+      // case 2:
+      //   Navigator.of(context).pushNamed(AppRoutes.settings);
+      //   break;
+      case 1:
         Navigator.of(context).pushNamed(AppRoutes.webViewRoute, arguments: AppConfig.instance.config.privacyPolicyUrl);
         break;
-      case 4:
+      case 2:
         Navigator.of(context).pushNamed(AppRoutes.webViewRoute, arguments: AppConfig.instance.config.termsAndConditionsUrl);
         break;
-      case 5:
+      case 3:
         Navigator.of(context).pushNamed(AppRoutes.helpAndSupport);
         return;
-      case 6:
+      case 4:
         Navigator.of(context).pushNamed(AppRoutes.faqs);
         return;
       case 7:

@@ -12,9 +12,7 @@ part 'profile_drawer_states.dart';
 
 class ProfileDrawerBloc extends Bloc<ProfileDrawerEvents, ProfileDrawerStates> {
   List<String> drawerOptions = <String>[
-    ImageAsset.user,
     ImageAsset.bank,
-    ImageAsset.settings,
     ImageAsset.privacyPolicy,
     ImageAsset.termsAndCondition,
     ImageAsset.helpAndSupport,
