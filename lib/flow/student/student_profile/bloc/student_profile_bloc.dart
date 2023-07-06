@@ -32,7 +32,7 @@ class StudentProfileBloc
       DI.inject<ProfileDashboardRepository>();
 
   List<String> drawerOptions = <String>[
-    ImageAsset.settings,
+    // ImageAsset.settings,
     ImageAsset.privacyPolicy,
     ImageAsset.termsAndCondition,
     ImageAsset.helpAndSupport,

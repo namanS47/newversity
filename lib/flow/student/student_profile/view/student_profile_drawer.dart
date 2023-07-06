@@ -136,14 +136,12 @@ class _StudentProfileDrawerScreenState
   String getDrawerOptionTitle(BuildContext context, int index) {
     switch (index) {
       case 0:
-        return AppStrings.settings;
-      case 1:
         return AppStrings.privacyPolicy;
-      case 2:
+      case 1:
         return AppStrings.termsAndCondition;
-      case 3:
+      case 2:
         return AppStrings.helpAndSupport;
-      case 4:
+      case 3:
         return AppStrings.faqs;
       default:
         return '';
@@ -152,24 +150,20 @@ class _StudentProfileDrawerScreenState
 
   void getDrawerScreen(int index) {
     switch (index) {
+      // case 0:
+      //   Navigator.of(context).pushNamed(AppRoutes.settings);
+      //   break;
       case 0:
-        Navigator.of(context).pushNamed(AppRoutes.settings);
-        break;
-      case 1:
         Navigator.of(context).pushNamed(AppRoutes.webViewRoute, arguments: AppConfig.instance.config.privacyPolicyUrl);
         break;
-      case 2:
+      case 1:
         Navigator.of(context).pushNamed(AppRoutes.webViewRoute, arguments: AppConfig.instance.config.termsAndConditionsUrl);
         break;
-      case 3:
+      case 2:
         Navigator.of(context).pushNamed(AppRoutes.helpAndSupport);
         return;
-      case 4:
+      case 3:
         Navigator.of(context).pushNamed(AppRoutes.faqs);
-        return;
-      case 5:
-        return;
-      case 6:
         return;
       default:
         return;
