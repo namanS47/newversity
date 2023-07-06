@@ -91,11 +91,11 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
                     GestureDetector(
                         onTap: () => {Navigator.pop(context)},
                         child: const AppImage(image: ImageAsset.arrowBack)),
-                    const AppImage(
-                      image: ImageAsset.share,
-                      height: 19,
-                      width: 16,
-                    ),
+                    // const AppImage(
+                    //   image: ImageAsset.share,
+                    //   height: 19,
+                    //   width: 16,
+                    // ),
                   ],
                 ),
               ),
