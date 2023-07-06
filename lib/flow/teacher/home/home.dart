@@ -12,7 +12,9 @@ import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
 import 'package:newversity/utils/date_time_utils.dart';
 import 'package:newversity/utils/enums.dart';
+import 'package:newversity/utils/event_broadcast.dart';
 import 'package:slide_countdown/slide_countdown.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../student/student_session/my_session/model/session_detail_response_model.dart';
 import '../profile/model/profile_dashboard_arguments.dart';
@@ -412,21 +414,33 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Future<void> _launchAppWorkingVideo() async {
+    final Uri url = Uri.parse("https://youtu.be/r6IYQTj5Qe8");
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
   Widget getWatchVideoCTA() {
-    return Container(
-      height: 25,
-      width: 89,
-      decoration: BoxDecoration(
-        color: AppColors.whiteColor,
-        borderRadius: BorderRadius.circular(5),
-      ),
-      child: const Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-          child: AppText(
-            AppStrings.watchVideo,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
+    return InkWell(
+      onTap: () {
+        _launchAppWorkingVideo();
+      },
+      child: Container(
+        height: 25,
+        width: 89,
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: const Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+            child: AppText(
+              AppStrings.watchVideo,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
@@ -474,12 +488,17 @@ class _HomeState extends State<Home> {
         Row(
           children: [
             Expanded(
-              child: getDetailsContainer(
-                AppColors.lightGreen,
-                ImageAsset.upcoming,
-                AppColors.upcomingScheduleColor,
-                "00",
-                "Upcoming Schedule",
+              child: GestureDetector(
+                onTap: () {
+                  EventsBroadcast.get().send(ChangeMentorPageIndexEvent(index: 1));
+                },
+                child: getDetailsContainer(
+                  AppColors.lightGreen,
+                  ImageAsset.upcoming,
+                  AppColors.upcomingScheduleColor,
+                  "00",
+                  "Upcoming Schedule",
+                ),
               ),
             ),
             const SizedBox(
@@ -493,96 +512,108 @@ class _HomeState extends State<Home> {
   }
 
   Widget getConditionalDetailContainer() {
-    return Column(
-      children: [
-        Visibility(
-          visible:
-              profileCompletionPercentageResponse?.completePercentage == 100.0,
-          child: Container(
-            height: 180,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: AppColors.nextAvailabilityColor,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 28.0, top: 25, bottom: 25),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const CircleAvatar(
-                    radius: 25,
-                    backgroundColor: AppColors.availCyan,
-                    child: AppImage(
-                      image: ImageAsset.availability,
-                      color: AppColors.whiteColor,
+    return GestureDetector(
+      onTap: () {
+        if(profileCompletionPercentageResponse?.completePercentage == 100.0) {
+          EventsBroadcast.get().send(ChangeMentorPageIndexEvent(index: 2));
+        } else {
+          const snackBar = SnackBar(
+            content: Text('Please complete your profile'),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      },
+      child: Column(
+        children: [
+          Visibility(
+            visible:
+                profileCompletionPercentageResponse?.completePercentage == 100.0,
+            child: Container(
+              height: 180,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: AppColors.nextAvailabilityColor,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 28.0, top: 25, bottom: 25),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CircleAvatar(
+                      radius: 25,
+                      backgroundColor: AppColors.availCyan,
+                      child: AppImage(
+                        image: ImageAsset.availability,
+                        color: AppColors.whiteColor,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  getSetAvailabilityCTA(),
-                  getSessionDateAndTime(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    getSetAvailabilityCTA(),
+                    getSessionDateAndTime(),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        Visibility(
-            visible: profileCompletionPercentageResponse?.completePercentage !=
-                100.0,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  height: 170,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                        color: AppColors.grey50,
-                        blurRadius: 2.0,
-                        offset: const Offset(2.0, 2.0),
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(left: 28.0, top: 25, bottom: 25),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const CircleAvatar(
-                          radius: 25,
-                          backgroundColor: AppColors.availCyan,
-                          child: AppImage(
-                            image: ImageAsset.availability,
-                            color: AppColors.whiteColor,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        getSetAvailabilityCTA(),
-                        getSessionDateAndTime(),
-                        const SizedBox(
-                          height: 10,
+          Visibility(
+              visible: profileCompletionPercentageResponse?.completePercentage !=
+                  100.0,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    height: 170,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: AppColors.grey50,
+                          blurRadius: 2.0,
+                          offset: const Offset(2.0, 2.0),
                         ),
                       ],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(left: 28.0, top: 25, bottom: 25),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const CircleAvatar(
+                            radius: 25,
+                            backgroundColor: AppColors.availCyan,
+                            child: AppImage(
+                              image: ImageAsset.availability,
+                              color: AppColors.whiteColor,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getSetAvailabilityCTA(),
+                          getSessionDateAndTime(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const Positioned(
-                    child: AppImage(
-                  image: ImageAsset.lock,
-                ))
-              ],
-            ))
-      ],
+                  const Positioned(
+                      child: AppImage(
+                    image: ImageAsset.lock,
+                  ))
+                ],
+              ))
+        ],
+      ),
     );
   }
 

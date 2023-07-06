@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/themes/colors.dart';
+import 'package:newversity/utils/event_broadcast.dart';
 
 import '../../profile/model/profile_completion_percentage_response.dart';
 import '../bloc/index_bloc.dart';
@@ -20,6 +21,12 @@ class _IndexPageState extends State<IndexPage> {
   @override
   void initState() {
     super.initState();
+
+    EventsBroadcast.get().on().listen((event) {
+      if(event is ChangeMentorPageIndexEvent) {
+        context.read<IndexBloc>().add(IndexPageUpdateEvent(index: event.index));
+      }
+    });
 
     if (!widget.isStudent) {
       BlocProvider.of<IndexBloc>(context)
