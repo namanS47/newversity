@@ -62,7 +62,7 @@ class AppConfig {
 class EnvironmentValues {
 
   static const String newversityStagingUrl = "https://api.newversity.in/";
-  // static const String newversityStagingUrl = "http://192.168.1.8:8080/";
+  // static const String newversityStagingUrl = "http://192.168.29.61:8080/";
 
 
   static const String stagingRazorPayKey = "rzp_test_C4quaG5XBcUQDb";
