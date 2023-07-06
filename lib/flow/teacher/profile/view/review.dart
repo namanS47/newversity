@@ -15,7 +15,7 @@ class ProfileReview extends StatefulWidget {
 
 class _ProfileReviewState extends State<ProfileReview> {
 
-  final double _userRating = 4.1;
+  // final double _userRating = 4.1;
   List<ReviewData> listOfReviewData = ReviewData.listOfReview;
 
   @override
@@ -30,7 +30,7 @@ class _ProfileReviewState extends State<ProfileReview> {
         const SizedBox(
           height: 20,
         ),
-        getRatingContainer(),
+        // getRatingContainer(),
         const SizedBox(
           height: 20,
         ),
@@ -146,57 +146,57 @@ class _ProfileReviewState extends State<ProfileReview> {
 
 
 
-  Widget getRatingContainer() {
-    return Container(
-      height: 100,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(14.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                children: [
-                  AppText(
-                    "$_userRating",
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  RatingBarIndicator(
-                    rating: _userRating,
-                    itemBuilder: (context, index) => const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    itemCount: 5,
-                    itemSize: 9.0,
-                    unratedColor: Colors.amber.withAlpha(50),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  const AppText(
-                    "total 150 session",
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Expanded(child: Container())
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget getRatingContainer() {
+  //   return Container(
+  //     height: 100,
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(10),
+  //     ),
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(14.0),
+  //       child: Row(
+  //         children: [
+  //           Expanded(
+  //             child: Column(
+  //               children: [
+  //                 AppText(
+  //                   "$_userRating",
+  //                   fontSize: 24,
+  //                   fontWeight: FontWeight.w700,
+  //                 ),
+  //                 const SizedBox(
+  //                   height: 5,
+  //                 ),
+  //                 RatingBarIndicator(
+  //                   rating: _userRating,
+  //                   itemBuilder: (context, index) => const Icon(
+  //                     Icons.star,
+  //                     color: Colors.amber,
+  //                   ),
+  //                   itemCount: 5,
+  //                   itemSize: 9.0,
+  //                   unratedColor: Colors.amber.withAlpha(50),
+  //                 ),
+  //                 const SizedBox(
+  //                   height: 5,
+  //                 ),
+  //                 const AppText(
+  //                   "total 150 session",
+  //                   fontSize: 10,
+  //                   fontWeight: FontWeight.w500,
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           const SizedBox(
+  //             width: 10,
+  //           ),
+  //           Expanded(child: Container())
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget getReviewsHeading() {
     return const AppText(
