@@ -8,5 +8,5 @@ class MethodArgumentsKeys {
 
 class MethodNames {
   //PhonePePG
-  static const openPhonePePG = "startNewActivity";
+  static const openPhonePePG = "openPhonePePG";
 }
