@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newversity/channel/native_bridge.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/common/mentor_detail_card.dart';
 import 'package:newversity/flow/student/home/bloc/student_home_bloc.dart';
@@ -941,8 +942,9 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
               ),
               InkWell(
                   onTap: () {
-                    Navigator.of(context)
-                        .pushNamed(AppRoutes.notificationRoute);
+                    NativeBridge.openPhonePePG();
+                    // Navigator.of(context)
+                    //     .pushNamed(AppRoutes.notificationRoute);
                   },
                   child: const AppImage(image: ImageAsset.notification)),
             ],
