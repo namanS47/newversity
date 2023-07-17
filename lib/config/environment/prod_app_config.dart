@@ -9,8 +9,7 @@ class ProdAppConfig extends BaseAppConfig {
   String get razorPayKey => throw UnimplementedError();
 
   @override
-  // TODO: implement newversityAPIBaseUrl
-  String get newversityAPIBaseUrl => throw UnimplementedError();
+  String get newversityAPIBaseUrl => EnvironmentValues.newversityProductionUrl;
 
   @override
   String get termsAndConditionsUrl => EnvironmentValues.termsAndConditionsUrl;

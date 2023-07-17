@@ -8,12 +8,12 @@ import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/services/service_locator.dart';
 import 'package:newversity/themes/app_theme.dart';
 
-import 'bloc_observer/app_bloc_observer.dart';
-import 'di/di_initializer.dart';
-import 'firebase/firebase_messaging.dart';
-import 'flow/login/presentation/login_screen.dart';
+import '../bloc_observer/app_bloc_observer.dart';
+import '../di/di_initializer.dart';
+import '../firebase/firebase_messaging.dart';
+import '../flow/login/presentation/login_screen.dart';
 
-Future main() async {
+defaultMain() async {
   WidgetsFlutterBinding.ensureInitialized();
   DI.initializeDependencies();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
