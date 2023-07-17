@@ -25,8 +25,6 @@ class _AddExperienceState extends State<AddExperience> {
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
 
-  final List<String> locationTypeList = ['Home', 'Office'];
-  String? locationTypeValue;
   final List<String> employmentTypeList = ['Salaried', 'Self Employed'];
   String? employmentTypeValue;
 
@@ -104,14 +102,6 @@ class _AddExperienceState extends State<AddExperience> {
                       const SizedBox(
                         height: 20,
                       ),
-                      getLocationHeader(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      getLocationDropDownLayout(locationTypeList),
-                      const SizedBox(
-                        height: 20,
-                      ),
                       getStartDateHeader(),
                       const SizedBox(
                         height: 10,
@@ -183,7 +173,6 @@ class _AddExperienceState extends State<AddExperience> {
             employmentType: employmentTypeValue,
             companyName: _companyController.text,
             endDate: selectedEndDate,
-            location: locationTypeValue,
             startDate: selectedStartDate,
             currentlyWorkingHere: isCurrentlyWorkingHere,
           ),
@@ -200,7 +189,6 @@ class _AddExperienceState extends State<AddExperience> {
     return _titleController.text.isNotEmpty &&
         employmentTypeValue.isValid &&
         _companyController.text.isNotEmpty &&
-        locationTypeValue.isValid &&
         _startDateController.text.isNotEmpty &&
         (_endDateController.text.isValid || isCurrentlyWorkingHere);
   }
@@ -296,27 +284,6 @@ class _AddExperienceState extends State<AddExperience> {
     );
   }
 
-  Widget getLocationDropDownLayout(List<String> nameList) {
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-        color: AppColors.grey35,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: AppDropdownButton(
-            hint: '-Select-',
-            value: locationTypeValue,
-            dropdownItems: nameList,
-            onChanged: (value) => changeLocationType(value ?? ""),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget getEmploymentDropDownLayout(List<String> nameList) {
     return Container(
       height: 50,
@@ -340,11 +307,6 @@ class _AddExperienceState extends State<AddExperience> {
 
   void changeEmploymentType(String value) {
     employmentTypeValue = value;
-    setState(() {});
-  }
-
-  void changeLocationType(String value) {
-    locationTypeValue = value;
     setState(() {});
   }
 

@@ -232,8 +232,6 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
               Row(
                 children: [
                   getDuration(index),
-                  const Spacer(),
-                  getMode(index),
                 ],
               ),
               const SizedBox(
@@ -273,19 +271,6 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
     return Text(
       "${listOfEducationModel[index].name}",
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-    );
-  }
-
-  Widget getMode(int index) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Text(
-        "${lisOfExperienceModel[index].location}",
-        style: const TextStyle(
-            color: AppColors.secColor,
-            fontSize: 12,
-            fontWeight: FontWeight.w400),
-      ),
     );
   }
 
