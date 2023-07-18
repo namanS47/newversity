@@ -340,7 +340,8 @@ class AppTextFormField extends StatefulWidget {
       this.autofocus,
       this.isEnable = true,
       this.contentPadding,
-      this.textInputAction})
+      this.textInputAction,
+      this.focusNode})
       : super(key: key);
 
   final TextEditingController? controller;
@@ -362,6 +363,7 @@ class AppTextFormField extends StatefulWidget {
   final bool? autofocus;
   final EdgeInsetsGeometry? contentPadding;
   final TextInputAction? textInputAction;
+  final FocusNode? focusNode;
 
   @override
   State<AppTextFormField> createState() => _AppTextFormFieldState();
@@ -387,6 +389,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       textInputAction: widget.textInputAction ?? TextInputAction.done,
       inputFormatters: formatters,
       textCapitalization: TextCapitalization.sentences,
+      focusNode: widget.focusNode,
       autofocus: widget.autofocus ?? false,
       validator: widget.validator != null
           ? (value) {
