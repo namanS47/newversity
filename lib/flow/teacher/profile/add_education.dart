@@ -204,7 +204,6 @@ class _AddEducationState extends State<AddEducation> {
   bool isFormValid() {
     return _schoolController.text.isNotEmpty &&
         _degreeController.text.isNotEmpty &&
-        _gradeController.text.isNotEmpty &&
         _startDateController.text.isNotEmpty &&
         (_endDateController.text.isNotEmpty || isCurrentlyWorkingHere);
   }
@@ -448,7 +447,7 @@ class _AddEducationState extends State<AddEducation> {
 
   Widget getCgpaHeader() {
     return const Text(
-      AppStrings.grade,
+      "${AppStrings.grade} (optional)",
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
     );
   }

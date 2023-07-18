@@ -275,14 +275,17 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
   }
 
   Widget getCGPA(int index) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Text(
-        "CGPA-${listOfEducationModel[index].grade}",
-        style: const TextStyle(
-            color: AppColors.secColor,
-            fontSize: 12,
-            fontWeight: FontWeight.w400),
+    return Visibility(
+      visible: listOfEducationModel[index].grade?.isNotEmpty == true,
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Text(
+          "CGPA-${listOfEducationModel[index].grade}",
+          style: const TextStyle(
+              color: AppColors.secColor,
+              fontSize: 12,
+              fontWeight: FontWeight.w400),
+        ),
       ),
     );
   }
