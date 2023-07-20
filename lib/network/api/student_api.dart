@@ -12,6 +12,9 @@ import 'package:retrofit/http.dart';
 
 import '../../config/app_config.dart';
 import '../../flow/student/payment/data/model/create_order_response_model.dart';
+import '../../flow/student/payment/data/model/phonepe/phone_pe_callback_url_request_model.dart';
+import '../../flow/student/payment/data/model/phonepe/phone_pe_callback_url_response_model.dart';
+import '../../flow/student/payment/data/model/phonepe/phone_pe_transaction_status_response_model.dart';
 import '../../flow/teacher/home/model/session_request_model.dart';
 import '../../flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import '../../flow/teacher/profile/model/tags_response_model.dart';
@@ -81,4 +84,12 @@ abstract class StudentApi {
   @POST("/order")
   Future<CreateOrderResponseModel?> createPaymentOrder(
       @Body() PaymentArgument paymentArgument);
+
+  @POST("/getPhonePePGUrl")
+  Future<PhonePeCallbackUrlResponseModel?> getPhonePePGUrl(
+      @Body() PhonePeCallbackUrlRequestModel request);
+
+  @GET("/phonePeTransactionStatus")
+  Future<PhonePeTransactionStatusResponseModel> getPhonePeTransactionStatus(
+      @Query("merchantTransactionId") String merchantTransactionId);
 }

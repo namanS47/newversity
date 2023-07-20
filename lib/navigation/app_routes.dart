@@ -70,4 +70,5 @@ class AppRoutes {
 
   //Payment
   static const String paymentRoute = "/payment_route";
+  static const String phonePePaymentRoute = "/phone_pe_payment_route";
 }

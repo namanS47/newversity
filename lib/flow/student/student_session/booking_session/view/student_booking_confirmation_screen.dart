@@ -103,14 +103,23 @@ class _StudentBookingConfirmationScreenState
     if (isFormValid()) {
       isLoading = true;
 
+      /// For Razorpay PG page
+      // final paymentResult =
+      //     await Navigator.of(context).pushNamed(AppRoutes.paymentRoute,
+      //         arguments: PaymentArgument(
+      //           amount: widget.sessionBookingArgument.amount.toInt() * 100,
+      //           availabilityId: widget.sessionBookingArgument.availabilityId,
+      //         )) as PaymentCompletionArgument;
+
+      /// For PhonePe PG page
       final paymentResult =
-          await Navigator.of(context).pushNamed(AppRoutes.paymentRoute,
+          await Navigator.of(context).pushNamed(AppRoutes.phonePePaymentRoute,
               arguments: PaymentArgument(
                 amount: widget.sessionBookingArgument.amount.toInt() * 100,
                 availabilityId: widget.sessionBookingArgument.availabilityId,
               )) as PaymentCompletionArgument;
 
-      if(context.mounted) {
+      if (context.mounted) {
         if (paymentResult.isPaymentSuccess) {
           BlocProvider.of<StudentSessionBloc>(context).add(SessionAddingEvent(
             sessionSaveRequest: SessionSaveRequest(
@@ -123,7 +132,9 @@ class _StudentBookingConfirmationScreenState
                 amount: widget.sessionBookingArgument.amount,
                 paymentId: paymentResult.paymentId,
                 orderId: paymentResult.orderId,
-                availabilityId: widget.sessionBookingArgument.availabilityId),
+                availabilityId: widget.sessionBookingArgument.availabilityId,
+                paymentMedium: paymentResult.paymentMedium,
+                merchantTransactionId: paymentResult.merchantTransactionId),
           ));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

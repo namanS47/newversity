@@ -20,6 +20,8 @@ class SessionSaveRequest {
   double? studentRating;
   bool? cancelled;
   List<String>? issueRaised;
+  String? merchantTransactionId;
+  String? paymentMedium;
 
   SessionSaveRequest(
       {this.id,
@@ -37,7 +39,9 @@ class SessionSaveRequest {
       this.studentFeedback,
       this.studentRating,
       this.issueRaised,
-      this.cancelled});
+      this.cancelled,
+      this.merchantTransactionId,
+      this.paymentMedium});
 
   factory SessionSaveRequest.fromJson(Map<String, dynamic> json) =>
       _$SessionSaveRequestFromJson(json);

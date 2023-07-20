@@ -9,6 +9,7 @@ import 'package:newversity/flow/student/notification/view/student_notification.d
 import 'package:newversity/flow/student/payment/data/model/payment_argument.dart';
 import 'package:newversity/flow/student/payment/payment_bloc/payment_bloc.dart';
 import 'package:newversity/flow/student/payment/view/payment_route.dart';
+import 'package:newversity/flow/student/payment/view/phonepe_payment_route.dart';
 import 'package:newversity/flow/student/profile_dashboard/bloc/profile_dahsbord_bloc.dart';
 import 'package:newversity/flow/student/profile_dashboard/view/student_profile_dashboard.dart';
 import 'package:newversity/flow/student/search/bloc/mentor_search_bloc.dart';
@@ -361,6 +362,12 @@ class AppRouter {
       return BlocProvider<PaymentBloc>(
         create: (context) => PaymentBloc(),
         child: PaymentRoute(paymentArgument: params as PaymentArgument),
+      );
+    }
+    if(route.toString() == AppRoutes.phonePePaymentRoute) {
+      return BlocProvider<PaymentBloc>(
+        create: (context) => PaymentBloc(),
+        child: PhonePePaymentRoute(paymentArgument: params as PaymentArgument),
       );
     }
     if (route.toString() == AppRoutes.somethingWentWrongRoute) {

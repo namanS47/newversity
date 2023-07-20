@@ -12,3 +12,10 @@ class CreatePaymentOrderEvent extends PaymentEvent {
 class OnPaymentSuccessEvent extends PaymentEvent {}
 
 class OnPaymentFailureEvent extends PaymentEvent {}
+
+class FetchPhonePePGUrlEvent extends PaymentEvent {
+  FetchPhonePePGUrlEvent({required this.paymentArgument});
+  final PaymentArgument paymentArgument;
+}
+
+class FetchPhonePeTransactionStatusEvent extends PaymentEvent {}
