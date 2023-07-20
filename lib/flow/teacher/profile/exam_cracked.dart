@@ -23,6 +23,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
   List<TagModel> allRequestedTags = [];
   bool isLoading = false;
   bool showErrorText = false;
+  late Size _screenSize;
 
   @override
   void dispose() {
@@ -35,17 +36,6 @@ class _ExamsCrackedState extends State<ExamsCracked> {
     super.initState();
     BlocProvider.of<ProfileBloc>(context)
         .add(FetchExamTagsEvent(tagCat: getTagCategory(TagCategory.exams)));
-
-    _specifyController.addListener(() {
-      if (_specifyController.text.replaceAll(" ", "").isNotEmpty &&
-          _specifyController.text.contains(" ")) {
-        setState(() {
-          allRequestedTags.add(
-              TagModel(tagCategory: "exams", tagName: _specifyController.text));
-          _specifyController.text = "";
-        });
-      }
-    });
   }
 
   bool isRebuildWidgetState(ProfileStates state) {
@@ -58,6 +48,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
 
   @override
   Widget build(BuildContext context) {
+    _screenSize = MediaQuery.of(context).size;
     return BlocConsumer<ProfileBloc, ProfileStates>(
       buildWhen: (previous, current) => isRebuildWidgetState(current),
       listenWhen: (previous, current) => isRebuildWidgetState(current),
@@ -97,8 +88,8 @@ class _ExamsCrackedState extends State<ExamsCracked> {
             children: [
               Container(
                 margin: const EdgeInsets.only(bottom: 100),
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
+                height: _screenSize.height,
+                width: _screenSize.width,
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(18.0),
@@ -121,11 +112,8 @@ class _ExamsCrackedState extends State<ExamsCracked> {
                         const SizedBox(
                           height: 20,
                         ),
-                        showSpecify ? getTitleHeader() : Container(),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        showSpecify ? getYourDesignation() : Container(),
+                        getTitleHeader(),
+                        getYourDesignation(),
                         const SizedBox(
                           height: 10,
                         ),
@@ -174,11 +162,31 @@ class _ExamsCrackedState extends State<ExamsCracked> {
   }
 
   Widget getYourDesignation() {
-    return AppTextFormField(
-      autofocus: true,
-      hintText: "PSC",
-      controller: _specifyController,
-      isDense: true,
+    return Row(
+      children: [
+        SizedBox(
+          width: _screenSize.width/2+16,
+          child: AppTextFormField(
+            hintText: "Exam",
+            controller: _specifyController,
+            isDense: true,
+          ),
+        ),
+        const SizedBox(width: 8,),
+        SizedBox(
+          width: _screenSize.width/2- 64,
+          child: AppCta(
+            text: "Add",
+            onTap: () {
+              setState(() {
+                allRequestedTags.add(
+                    TagModel(tagCategory: "exams", tagName: _specifyController.text.trim()));
+                _specifyController.text = "";
+              });
+            },
+          ),
+        )
+      ],
     );
   }
 
@@ -269,12 +277,8 @@ class _ExamsCrackedState extends State<ExamsCracked> {
     );
   }
 
-  bool showSpecify = false;
-
   onSelectedSession(int index) {
-    if (index == allExamsTags.length - 1) {
-      showSpecify = !showSpecify;
-    } else if (allSelectedTags.contains(allExamsTags[index])) {
+    if (allSelectedTags.contains(allExamsTags[index])) {
       allSelectedTags.remove(allExamsTags[index]);
     } else {
       allSelectedTags.add(allExamsTags[index]);

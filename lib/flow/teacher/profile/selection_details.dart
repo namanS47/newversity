@@ -22,36 +22,17 @@ class SelectionDetails extends StatefulWidget {
 }
 
 class _SelectionDetailsState extends State<SelectionDetails> {
-  final _specifyController = TextEditingController();
   List<TagsResponseModel> allMentorsTags = [];
   List<TagsResponseModel> allSelectedTags = [];
   List<TagModel> allRequestedTags = [];
   bool isLoading = false;
   bool showErrorText = false;
-  bool showSpecify = false;
-
-  @override
-  void dispose() {
-    super.dispose();
-    _specifyController.dispose();
-  }
 
   @override
   void initState() {
     super.initState();
     BlocProvider.of<ProfileBloc>(context)
         .add(FetchMentorshipTag(tagCat: getTagCategory(TagCategory.guidance)));
-
-    _specifyController.addListener(() {
-      if (_specifyController.text.replaceAll(" ", "").isNotEmpty &&
-          _specifyController.text.contains(" ")) {
-        setState(() {
-          allRequestedTags.add(TagModel(
-              tagCategory: "guidance", tagName: _specifyController.text));
-          _specifyController.text = "";
-        });
-      }
-    });
   }
 
   bool isRebuildWidgetState(ProfileStates state) {
@@ -119,7 +100,7 @@ class _SelectionDetailsState extends State<SelectionDetails> {
                         const SizedBox(
                           height: 20,
                         ),
-                        getSelectedComptetiveExams(),
+                        getSelectedCompetitiveExams(),
                         const SizedBox(
                           height: 8,
                         ),
@@ -127,14 +108,6 @@ class _SelectionDetailsState extends State<SelectionDetails> {
                         const SizedBox(
                           height: 20,
                         ),
-                        showSpecify ? getTitleHeader() : Container(),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        showSpecify ? getYourDesignation() : Container(),
                         const SizedBox(
                           height: 10,
                         ),
@@ -175,14 +148,6 @@ class _SelectionDetailsState extends State<SelectionDetails> {
   }
 
   onProceedTap(BuildContext context) {
-    // for (TagsResponseModel x in allSelectedTags) {
-    //   allRequestedTags
-    //       .add(TagModel(tagCategory: x.tagCategory, tagName: x.tagName));
-    // }
-    if (_specifyController.text.isNotEmpty) {
-      allRequestedTags.add(
-          TagModel(tagCategory: "guidance", tagName: _specifyController.text));
-    }
 
     final List<TagModel> allSelectedTagModel = [];
     for (TagsResponseModel x in allSelectedTags) {
@@ -201,9 +166,7 @@ class _SelectionDetailsState extends State<SelectionDetails> {
   }
 
   onSelectedSession(int index) {
-    if (index == allMentorsTags.length - 1) {
-      showSpecify = !showSpecify;
-    } else if (allSelectedTags.contains(allMentorsTags[index])) {
+    if (allSelectedTags.contains(allMentorsTags[index])) {
       allSelectedTags.remove(allMentorsTags[index]);
     } else {
       allSelectedTags.add(allMentorsTags[index]);
@@ -218,16 +181,7 @@ class _SelectionDetailsState extends State<SelectionDetails> {
     );
   }
 
-  Widget getYourDesignation() {
-    return AppTextFormField(
-      autofocus: true,
-      hintText: "PSC",
-      controller: _specifyController,
-      isDense: true,
-    );
-  }
-
-  Widget getSelectedComptetiveExams() {
+  Widget getSelectedCompetitiveExams() {
     return Wrap(
       spacing: 15,
       runSpacing: 12,
@@ -264,7 +218,6 @@ class _SelectionDetailsState extends State<SelectionDetails> {
 
   Widget examsViewForRequestedTag(int curIndex) {
     return GestureDetector(
-      // onTap: () => onSelectedSession(curIndex),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
@@ -321,7 +274,7 @@ class _SelectionDetailsState extends State<SelectionDetails> {
 
   Widget selectExamNames() {
     return const Text(
-      AppStrings.selectExamsInfo,
+      AppStrings.selectExpertise,
       style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,

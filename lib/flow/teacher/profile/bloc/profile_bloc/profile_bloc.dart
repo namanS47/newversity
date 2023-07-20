@@ -214,8 +214,6 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
               allTags.add(x);
             }
           }
-          allTags
-              .add(TagsResponseModel(tagName: "others", tagCategory: "exams"));
           emit(FetchedExamTagsState(listOfTags: allTags));
         } else if (event is FetchMentorshipTag) {
           for (TagsResponseModel x in response) {
@@ -223,8 +221,6 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
               allTags.add(x);
             }
           }
-          allTags.add(
-              TagsResponseModel(tagName: "others", tagCategory: "guidance"));
           emit(FetchedMentorshipTagsState(listOfMentorshipTags: allTags));
         }
       }
