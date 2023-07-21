@@ -35,3 +35,7 @@ String getCurrentDayName(){
 String getDayNameByDiffrence(int afterDay){
   return DateFormat('EEEE').format(DateTime.now().add(Duration(days: afterDay)));
 }
+
+String enumToString(String enumString) {
+  return enumString.split('.')[1];
+}
