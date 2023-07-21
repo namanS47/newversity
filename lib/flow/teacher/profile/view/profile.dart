@@ -194,7 +194,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           profileCompletionPercentageResponse?.suggestion ??
               "Please complete your profile first to interact with student",
           fontSize: 12,
-          color: AppColors.appYellow,
+          color: AppColors.lightRed,
           fontWeight: FontWeight.w500,
         ));
   }
