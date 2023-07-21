@@ -102,10 +102,10 @@ class TeacherDetailForSession {
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class SessionPricing {
-  double? sessionTypeA;
-  double? sessionTypeB;
+  double? short;
+  double? long;
 
-  SessionPricing({this.sessionTypeA, this.sessionTypeB});
+  SessionPricing({this.short, this.long});
 
   factory SessionPricing.fromJson(Map<String, dynamic> json) =>
       _$SessionPricingFromJson(json);
