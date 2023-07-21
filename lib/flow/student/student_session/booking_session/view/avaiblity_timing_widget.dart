@@ -7,6 +7,7 @@ import '../../../../../common/common_widgets.dart';
 import '../../../../../themes/colors.dart';
 import '../../../../../themes/strings.dart';
 import '../../../../../utils/date_time_utils.dart';
+import '../../../../../utils/enums.dart';
 import '../../../../teacher/availability/data/model/availability_model.dart';
 import '../../../../teacher/data/model/teacher_details/teacher_details_model.dart';
 import '../model/selected_datetime_model.dart';
@@ -203,8 +204,8 @@ class _AvailabilityTimingWidgetState extends State<AvailabilityTimingWidget> {
     context.read<StudentSessionBloc>().availabilityId =
         widget.listOfSessionTimings[dateSlotIndex].availabilityId;
     context.read<StudentSessionBloc>().amount = (switchEnable
-        ? teacherDetails?.sessionPricing!["session_type_b"]
-        : teacherDetails?.sessionPricing!["session_type_a"]);
+        ? teacherDetails?.sessionPricing![SlotType.long.toString().split(".")[1]]
+        : teacherDetails?.sessionPricing![SlotType.short.toString().split(".")[1]]);
   }
 
   Widget getSessionTimingView(int index, int dateSlotIndex) {
@@ -258,8 +259,8 @@ class _AvailabilityTimingWidgetState extends State<AvailabilityTimingWidget> {
         ),
         Text(
           switchEnable
-              ? "${teacherDetails?.sessionPricing?["session_type_b"]} /-"
-              : "${teacherDetails?.sessionPricing?["session_type_a"]} /-",
+              ? "${teacherDetails?.sessionPricing?[SlotType.long.toString().split(".")[1]]} /-"
+              : "${teacherDetails?.sessionPricing?[SlotType.short.toString().split(".")[1]]} /-",
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
         ),
       ],

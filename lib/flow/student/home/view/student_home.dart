@@ -578,7 +578,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                             Row(
                               children: [
                                 AppText(
-                                  "₹ ${lisOfTeachersDetails[index].sessionPricing?["session_type_a"]}",
+                                  "₹ ${lisOfTeachersDetails[index].sessionPricing?[SlotType.short.toString().split(".")[1]]}",
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -595,7 +595,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                             Row(
                               children: [
                                 AppText(
-                                  "₹ ${lisOfTeachersDetails[index].sessionPricing?["session_type_b"]}",
+                                  "₹ ${lisOfTeachersDetails[index].sessionPricing?[SlotType.long.toString().split(".")[1]]}",
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                 ),

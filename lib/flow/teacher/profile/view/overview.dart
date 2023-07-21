@@ -14,6 +14,7 @@ import 'package:newversity/storage/app_constants.dart';
 
 import '../../../../themes/colors.dart';
 import '../../../../utils/date_time_utils.dart';
+import '../../../../utils/enums.dart';
 import '../bloc/profile_bloc/profile_bloc.dart';
 import '../model/education_response_model.dart';
 import '../model/experience_response_model.dart';
@@ -205,8 +206,8 @@ class _ProfileOverviewState extends State<ProfileOverview> {
                       create: (context) => TeacherDetailsBloc(),
                       child: ProfileEditSessionRate(
                         longSessionFee:
-                            teacherDetails?.sessionPricing?["session_type_b"],
-                        shortSessionFee: teacherDetails?.sessionPricing?["session_type_a"],
+                            teacherDetails?.sessionPricing?[SlotType.long.toString().split(".")[1]],
+                        shortSessionFee: teacherDetails?.sessionPricing?[SlotType.short.toString().split(".")[1]],
                       ))),
             );
             // your stateful widget
@@ -245,14 +246,14 @@ class _ProfileOverviewState extends State<ProfileOverview> {
             children: [
               Expanded(
                   child: getSessionContainer(
-                      teacherDetails?.sessionPricing?["session_type_a"] ?? 0,
+                      teacherDetails?.sessionPricing?[SlotType.short.toString().split(".")[1]] ?? 0,
                       15)),
               const SizedBox(
                 width: 10,
               ),
               Expanded(
                   child: getSessionContainer(
-                      teacherDetails?.sessionPricing?["session_type_b"] ?? 0,
+                      teacherDetails?.sessionPricing?[SlotType.long.toString().split(".")[1]] ?? 0,
                       30)),
             ],
           ),

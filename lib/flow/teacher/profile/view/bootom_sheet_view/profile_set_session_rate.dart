@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
+import 'package:newversity/utils/enums.dart';
 import 'package:newversity/utils/string_extensions.dart';
 
 import '../../../data/bloc/teacher_details/teacher_details_bloc.dart';
@@ -121,8 +122,8 @@ class _ProfileEditSessionRateState extends State<ProfileEditSessionRate> {
         showErrorText = false;
       });
       Map<String, double> sessionPrice = {
-        "session_type_a": session15minController.text.toDouble,
-        "session_type_b": session30minController.text.toDouble,
+        SlotType.short.toString().split(".")[1]: session15minController.text.toDouble,
+        SlotType.long.toString().split(".")[1]: session30minController.text.toDouble,
       };
       BlocProvider.of<TeacherDetailsBloc>(context).add(
         SaveTeacherDetailsEvent(
