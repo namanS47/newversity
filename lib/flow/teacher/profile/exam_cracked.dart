@@ -35,7 +35,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
   void initState() {
     super.initState();
     BlocProvider.of<ProfileBloc>(context)
-        .add(FetchExamTagsEvent(tagCat: getTagCategory(TagCategory.exams)));
+        .add(FetchExamTagsEvent(tagCat: getTagCategory(TagCategory.expertise)));
   }
 
   bool isRebuildWidgetState(ProfileStates state) {
@@ -180,7 +180,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
             onTap: () {
               setState(() {
                 allRequestedTags.add(
-                    TagModel(tagCategory: "exams", tagName: _specifyController.text.trim()));
+                    TagModel(tagCategory: "expertise", tagName: _specifyController.text.trim()));
                 _specifyController.text = "";
               });
             },
@@ -193,7 +193,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
   onProceedTap(BuildContext context) {
     if (_specifyController.text.isNotEmpty) {
       allRequestedTags.add(
-          TagModel(tagCategory: "exams", tagName: _specifyController.text));
+          TagModel(tagCategory: "expertise", tagName: _specifyController.text));
     }
     final List<TagModel> allSelectedTagModel = [];
     for (TagsResponseModel x in allSelectedTags) {
@@ -204,7 +204,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
     if (allRequestedTags.isNotEmpty || allSelectedTags.isNotEmpty) {
       isLoading = true;
       BlocProvider.of<ProfileBloc>(context)
-          .add(SaveTagsEvents(category: "exams", listOfTags: allRequestedTags + allSelectedTagModel));
+          .add(SaveTagsEvents(category: "expertise", listOfTags: allRequestedTags + allSelectedTagModel));
     } else {
       showErrorText = true;
       setState(() {});

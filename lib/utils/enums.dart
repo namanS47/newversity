@@ -8,16 +8,16 @@ enum TagStatus { Verified, Unverified, Failed, InProcess }
 
 enum SessionType { upcoming, previous }
 
-enum TagCategory { exams, guidance }
+enum TagCategory { expertise, scope }
 
 String getTagCategory(TagCategory tagCat) {
   String tagCategory = "";
   switch (tagCat) {
-    case TagCategory.exams:
-      tagCategory = "exams";
+    case TagCategory.expertise:
+      tagCategory = "expertise";
       break;
-    case TagCategory.guidance:
-      tagCategory = "guidance";
+    case TagCategory.scope:
+      tagCategory = "scope";
       break;
   }
   return tagCategory;

@@ -35,7 +35,7 @@ class _ExamsPreparingForState extends State<ExamsPreparingFor> {
   void initState() {
     super.initState();
     BlocProvider.of<ProfileDashboardBloc>(context)
-        .add(FetchExamTagEvent(tagCat: getTagCategory(TagCategory.exams)));
+        .add(FetchExamTagEvent(tagCat: getTagCategory(TagCategory.expertise)));
     BlocProvider.of<ProfileDashboardBloc>(context)
         .add(FetchStudentDetailEvent());
 
@@ -79,7 +79,7 @@ class _ExamsPreparingForState extends State<ExamsPreparingFor> {
         if (state is StudentDetailsSavedState) {
           for (var element in allSelectedTags) {
             allNewTags
-                .add(TagModelList(tagName: element, tagCategory: "exams"));
+                .add(TagModelList(tagName: element, tagCategory: "expertise"));
           }
           BlocProvider.of<ProfileDashboardBloc>(context).add(AddTagsEvent(
               addTagRequestModel:

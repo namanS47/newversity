@@ -107,7 +107,7 @@ class ProfileDashboardBloc
             }
           }
           allTags
-              .add(TagsResponseModel(tagName: "others", tagCategory: "exams"));
+              .add(TagsResponseModel(tagName: "others", tagCategory: "expertise"));
           await emit(FetchedExamTagState(listOfExamsTags: allTags));
         }
       } catch (exception) {

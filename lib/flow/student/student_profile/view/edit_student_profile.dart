@@ -57,7 +57,7 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
   void initState() {
     super.initState();
     BlocProvider.of<StudentProfileBloc>(context)
-        .add(FetchExamTagEvent(tagCat: getTagCategory(TagCategory.exams)));
+        .add(FetchExamTagEvent(tagCat: getTagCategory(TagCategory.expertise)));
     BlocProvider.of<StudentProfileBloc>(context).add(FetchStudentEvent());
   }
 

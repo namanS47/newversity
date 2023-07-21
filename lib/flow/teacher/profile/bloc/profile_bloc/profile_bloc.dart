@@ -153,7 +153,7 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
           await _teacherBaseRepository.fetchAllTagsWithTeacherId(teacherId);
       if (response != null) {
         for (TagsResponseModel x in response) {
-          if (x.tagCategory == "exams") {
+          if (x.tagCategory == "expertise") {
             listOfExpertise.add(x);
           } else {
             listOfMentorship.add(x);

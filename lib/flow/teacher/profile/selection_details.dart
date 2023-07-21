@@ -32,7 +32,7 @@ class _SelectionDetailsState extends State<SelectionDetails> {
   void initState() {
     super.initState();
     BlocProvider.of<ProfileBloc>(context)
-        .add(FetchMentorshipTag(tagCat: getTagCategory(TagCategory.guidance)));
+        .add(FetchMentorshipTag(tagCat: getTagCategory(TagCategory.scope)));
   }
 
   bool isRebuildWidgetState(ProfileStates state) {
@@ -158,7 +158,7 @@ class _SelectionDetailsState extends State<SelectionDetails> {
     if (allRequestedTags.isNotEmpty || allSelectedTagModel.isNotEmpty) {
       isLoading = true;
       BlocProvider.of<ProfileBloc>(context).add(
-          SaveTagsEvents(category: "guidance", listOfTags: allRequestedTags + allSelectedTagModel));
+          SaveTagsEvents(category: "scope", listOfTags: allRequestedTags + allSelectedTagModel));
     } else {
       showErrorText = true;
       setState(() {});
