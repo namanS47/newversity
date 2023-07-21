@@ -718,6 +718,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
             }
             if (state is UploadDocumentSuccessState &&
                 state.tag == allExpertise[index]) {
+              allExpertise[index].teacherTagDetails?.tagStatus = "InProcess";
               return const Text(
                 "Verifying",
                 style: TextStyle(color: AppColors.lightRedColorShadow400),
