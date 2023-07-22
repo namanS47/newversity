@@ -271,7 +271,9 @@ class _EarningScreenState extends State<EarningScreen> {
 
   onTapOnAccountAddCTA() async {
     await Navigator.of(context).pushNamed(AppRoutes.addBankAccount);
-    BlocProvider.of<BankAccountBloc>(context).add(FetchBankDetailsEvent());
+    if(context.mounted) {
+      BlocProvider.of<BankAccountBloc>(context).add(FetchBankDetailsEvent());
+    }
   }
 
   Widget getBankAccountAddCTA() {

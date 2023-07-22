@@ -97,6 +97,7 @@ class _AddBankAccountState extends State<AddBankAccount> {
                       AppTextFormField(
                         hintText: "Enter account number",
                         controller: _accountNumberController,
+                        keyboardType: TextInputType.number,
                       ),
                       const SizedBox(
                         height: 25,
@@ -116,6 +117,7 @@ class _AddBankAccountState extends State<AddBankAccount> {
                       AppTextFormField(
                         hintText: "Enter Re-enter account number",
                         controller: _reEnterAccountNumberController,
+                        keyboardType: TextInputType.number,
                       ),
                       const SizedBox(
                         height: 25,
