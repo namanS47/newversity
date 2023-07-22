@@ -879,7 +879,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  onTapCompleteProfileCTA() {
+  onTapCompleteProfileCTA() async {
     final completionStageStatus =
         profileCompletionPercentageResponse?.profileCompletionStageStatus;
     int directedIndex = -1;
@@ -899,6 +899,8 @@ class _HomeState extends State<Home> {
           !completionStageStatus[
               ProfileCompletionStage.Experience.toString().split(".")[1]]!) {
         directedIndex = 2;
+      } else if (completionStageStatus.containsKey(ProfileCompletionStage.Pricing.toString().split(".")[1]) && !completionStageStatus[ProfileCompletionStage.Pricing.toString().split(".")[1]]!) {
+        setPricing = true;
       } else if (completionStageStatus.containsKey(
               ProfileCompletionStage.SelectTags.toString().split(".")[1]) &&
           !completionStageStatus[
@@ -908,25 +910,28 @@ class _HomeState extends State<Home> {
               .containsKey(ProfileCompletionStage.VerifiedTags.toString().split(".")[1]) &&
           !completionStageStatus[ProfileCompletionStage.VerifiedTags.toString().split(".")[1]]!) {
         verifyTags = true;
-      } else if (completionStageStatus.containsKey(ProfileCompletionStage.Pricing.toString().split(".")[1]) && !completionStageStatus[ProfileCompletionStage.Pricing.toString().split(".")[1]]!) {
-        setPricing = true;
       }
     }
 
     if (directedIndex != -1) {
-      Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
+      await Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
           arguments: ProfileDashboardArguments(
               directedIndex: directedIndex, showBackButton: true));
+
     } else {
       if (verifyTags) {
-        Navigator.of(context).pushNamed(AppRoutes.profileScreen);
+        await Navigator.of(context).pushNamed(AppRoutes.profileScreen);
       } else if (setPricing) {
-        setFees();
+        await setFees();
       }
+    }
+    if(context.mounted){
+      BlocProvider.of<HomeSessionBloc>(context)
+          .add(FetchProfilePercentageInfoEvent());
     }
   }
 
-  void setFees() async {
+  Future<void> setFees() async {
     await showModalBottomSheet<dynamic>(
         context: context,
         shape: const RoundedRectangleBorder(
