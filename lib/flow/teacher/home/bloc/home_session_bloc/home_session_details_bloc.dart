@@ -34,7 +34,7 @@ class HomeSessionBloc extends Bloc<HomeSessionDetailEvents, HomeSessionStates> {
       await fetchStudentDetails(event, emit);
     });
 
-    on<FetchTeacherDetailEvent>((event, emit) async {
+    on<FetchTeacherDetailsEvent>((event, emit) async {
       teacherId = CommonUtils().getLoggedInUser();
       await fetchTeacherDetail(event, emit);
     });
@@ -102,7 +102,7 @@ class HomeSessionBloc extends Bloc<HomeSessionDetailEvents, HomeSessionStates> {
   Future<void> fetchTeacherDetail(event, emit) async {
     emit(FetchingTeacherDetailsState());
     try {
-      if (event is FetchTeacherDetailEvent) {
+      if (event is FetchTeacherDetailsEvent) {
         final teacherDetails =
             await _teacherBaseRepository.getTeachersDetail(teacherId);
         emit(FetchedTeacherDetailState(teacherDetails: teacherDetails));

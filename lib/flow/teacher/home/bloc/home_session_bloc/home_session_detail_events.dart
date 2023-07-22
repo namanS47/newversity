@@ -13,8 +13,8 @@ class FetchStudentDetailsEvent extends HomeSessionDetailEvents {
   FetchStudentDetailsEvent({required this.studentId});
 }
 
-class FetchTeacherDetailEvent extends HomeSessionDetailEvents {
-  FetchTeacherDetailEvent();
+class FetchTeacherDetailsEvent extends HomeSessionDetailEvents {
+  FetchTeacherDetailsEvent();
 }
 
 class FetchProfilePercentageInfoEvent extends HomeSessionDetailEvents {}

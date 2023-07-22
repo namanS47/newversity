@@ -28,10 +28,10 @@ class _IndexPageState extends State<IndexPage> {
       }
     });
 
-    if (!widget.isStudent) {
-      BlocProvider.of<IndexBloc>(context)
-          .add(FetchTeacherProfileCompletenessPercentageEvent());
-    }
+    // if (!widget.isStudent) {
+    //   BlocProvider.of<IndexBloc>(context)
+    //       .add(FetchTeacherProfileCompletenessPercentageEvent());
+    // }
   }
 
   @override
@@ -45,7 +45,7 @@ class _IndexPageState extends State<IndexPage> {
       },
       builder: (context, state) {
         return Scaffold(
-          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: true,
           bottomNavigationBar: Row(
             children: List.generate(
               widget.isStudent

@@ -17,7 +17,9 @@ import 'package:slide_countdown/slide_countdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../student/student_session/my_session/model/session_detail_response_model.dart';
+import '../data/bloc/teacher_details/teacher_details_bloc.dart';
 import '../profile/model/profile_dashboard_arguments.dart';
+import '../profile/view/bootom_sheet_view/profile_set_session_rate.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -39,7 +41,7 @@ class _HomeState extends State<Home> {
     super.initState();
     BlocProvider.of<HomeSessionBloc>(context)
         .add(FetchProfilePercentageInfoEvent());
-    BlocProvider.of<HomeSessionBloc>(context).add(FetchTeacherDetailEvent());
+    BlocProvider.of<HomeSessionBloc>(context).add(FetchTeacherDetailsEvent());
     BlocProvider.of<HomeSessionBloc>(context).add(
         FetchSessionDetailEvent(type: getSessionType(SessionType.upcoming)));
   }
@@ -93,48 +95,60 @@ class _HomeState extends State<Home> {
                       ? HomeAppBar(teacherDetails: teacherDetails)
                       : Container(),
                   Expanded(
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            profileCompletionPercentageResponse != null
-                                ? getCompleteProfileContainer()
-                                : Container(),
-                            profileCompletionPercentageResponse != null &&
-                                    listOfSessionDetailResponse != null &&
-                                    nearestStartSession != null
-                                ? getNextSessionDetailsContainer()
-                                : Container(),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            getDashBoardDetailContainers(),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            getHowItWorksContainer(),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            profileCompletionPercentageResponse != null &&
-                                    profileCompletionPercentageResponse
-                                            ?.completePercentage ==
-                                        100.0
-                                ? listOfSessionDetailResponse != null
-                                    ? getScheduleList()
-                                    : const SizedBox(
-                                        width: double.infinity,
-                                        height: 200,
-                                        child: ShimmerEffectView())
-                                : Container(),
-                          ],
+                    child: RefreshIndicator(
+                      onRefresh: () {
+                        return Future.delayed(const Duration(seconds: 0), () {
+                          BlocProvider.of<HomeSessionBloc>(context)
+                              .add(FetchProfilePercentageInfoEvent());
+                          BlocProvider.of<HomeSessionBloc>(context).add(FetchTeacherDetailsEvent());
+                          BlocProvider.of<HomeSessionBloc>(context).add(
+                              FetchSessionDetailEvent(type: getSessionType(SessionType.upcoming)));
+                        });
+                      },
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              if (profileCompletionPercentageResponse
+                                      ?.completePercentage !=
+                                  100)
+                                getCompleteProfileContainer(),
+                              profileCompletionPercentageResponse != null &&
+                                      listOfSessionDetailResponse != null &&
+                                      nearestStartSession != null
+                                  ? getNextSessionDetailsContainer()
+                                  : Container(),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              getDashBoardDetailContainers(),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              getHowItWorksContainer(),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              profileCompletionPercentageResponse != null &&
+                                      profileCompletionPercentageResponse
+                                              ?.completePercentage ==
+                                          100.0
+                                  ? listOfSessionDetailResponse != null
+                                      ? getScheduleList()
+                                      : const SizedBox(
+                                          width: double.infinity,
+                                          height: 200,
+                                          child: ShimmerEffectView())
+                                  : Container(),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -490,7 +504,8 @@ class _HomeState extends State<Home> {
             Expanded(
               child: GestureDetector(
                 onTap: () {
-                  EventsBroadcast.get().send(ChangeMentorPageIndexEvent(index: 1));
+                  EventsBroadcast.get()
+                      .send(ChangeMentorPageIndexEvent(index: 1));
                 },
                 child: getDetailsContainer(
                   AppColors.lightGreen,
@@ -514,7 +529,7 @@ class _HomeState extends State<Home> {
   Widget getConditionalDetailContainer() {
     return GestureDetector(
       onTap: () {
-        if(profileCompletionPercentageResponse?.completePercentage == 100.0) {
+        if (profileCompletionPercentageResponse?.completePercentage == 100.0) {
           EventsBroadcast.get().send(ChangeMentorPageIndexEvent(index: 2));
         } else {
           const snackBar = SnackBar(
@@ -526,8 +541,8 @@ class _HomeState extends State<Home> {
       child: Column(
         children: [
           Visibility(
-            visible:
-                profileCompletionPercentageResponse?.completePercentage == 100.0,
+            visible: profileCompletionPercentageResponse?.completePercentage ==
+                100.0,
             child: Container(
               height: 180,
               width: MediaQuery.of(context).size.width,
@@ -562,8 +577,9 @@ class _HomeState extends State<Home> {
             ),
           ),
           Visibility(
-              visible: profileCompletionPercentageResponse?.completePercentage !=
-                  100.0,
+              visible:
+                  profileCompletionPercentageResponse?.completePercentage !=
+                      100.0,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -581,8 +597,8 @@ class _HomeState extends State<Home> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 28.0, top: 25, bottom: 25),
+                      padding: const EdgeInsets.only(
+                          left: 28.0, top: 25, bottom: 25),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -821,56 +837,120 @@ class _HomeState extends State<Home> {
   }
 
   Widget getCompleteProfileContainer() {
-    return Visibility(
-      visible: profileCompletionPercentageResponse?.completePercentage != 100,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: AppColors.primaryColor,
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 5,
-                ),
-                const AppText(
-                  AppStrings.emptyProfile,
-                  fontSize: 14,
-                  color: AppColors.whiteColor,
-                  fontWeight: FontWeight.w700,
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 100.0),
-                  child: AppText(
-                    AppStrings.addingDetailsInst,
-                    fontSize: 12,
-                    color: AppColors.whiteColor,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                getCompleteProfileCTA()
-              ],
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: AppColors.primaryColor,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 5,
             ),
-          ),
+            const AppText(
+              AppStrings.emptyProfile,
+              fontSize: 14,
+              color: AppColors.whiteColor,
+              fontWeight: FontWeight.w700,
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 100.0),
+              child: AppText(
+                profileCompletionPercentageResponse?.suggestion ?? "",
+                fontSize: 12,
+                color: AppColors.whiteColor,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            const SizedBox(
+              height: 14,
+            ),
+            getCompleteProfileCTA()
+          ],
         ),
       ),
     );
   }
 
   onTapCompleteProfileCTA() {
-    Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
-        arguments:
-            ProfileDashboardArguments(directedIndex: 1, showBackButton: true));
+    final completionStageStatus =
+        profileCompletionPercentageResponse?.profileCompletionStageStatus;
+    int directedIndex = -1;
+    bool setPricing = false;
+    bool verifyTags = false;
+
+    if (completionStageStatus != null) {
+      if (completionStageStatus.containsKey(ProfileCompletionStage.Profile.toString().split(".")[1]) &&
+          !completionStageStatus[
+              ProfileCompletionStage.Profile.toString().split(".")[1]]!) {
+        directedIndex = 1;
+      } else if (completionStageStatus.containsKey(ProfileCompletionStage.Education.toString().split(".")[1]) &&
+          !completionStageStatus[
+              ProfileCompletionStage.Education.toString().split(".")[1]]!) {
+        directedIndex = 2;
+      } else if (completionStageStatus.containsKey(ProfileCompletionStage.Experience.toString().split(".")[1]) &&
+          !completionStageStatus[
+              ProfileCompletionStage.Experience.toString().split(".")[1]]!) {
+        directedIndex = 2;
+      } else if (completionStageStatus.containsKey(
+              ProfileCompletionStage.SelectTags.toString().split(".")[1]) &&
+          !completionStageStatus[
+              ProfileCompletionStage.SelectTags.toString().split(".")[1]]!) {
+        directedIndex = 3;
+      } else if (completionStageStatus
+              .containsKey(ProfileCompletionStage.VerifiedTags.toString().split(".")[1]) &&
+          !completionStageStatus[ProfileCompletionStage.VerifiedTags.toString().split(".")[1]]!) {
+        verifyTags = true;
+      } else if (completionStageStatus.containsKey(ProfileCompletionStage.Pricing.toString().split(".")[1]) && !completionStageStatus[ProfileCompletionStage.Pricing.toString().split(".")[1]]!) {
+        setPricing = true;
+      }
+    }
+
+    if (directedIndex != -1) {
+      Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard,
+          arguments: ProfileDashboardArguments(
+              directedIndex: directedIndex, showBackButton: true));
+    } else {
+      if (verifyTags) {
+        Navigator.of(context).pushNamed(AppRoutes.profileScreen);
+      } else if (setPricing) {
+        setFees();
+      }
+    }
+  }
+
+  void setFees() async {
+    await showModalBottomSheet<dynamic>(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(100.0),
+            topRight: Radius.circular(100.0),
+          ),
+        ),
+        isScrollControlled: true,
+        builder: (_) {
+          return Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: AppAnimatedBottomSheet(
+                bottomSheetWidget: BlocProvider<TeacherDetailsBloc>(
+                    create: (context) => TeacherDetailsBloc(),
+                    child: ProfileEditSessionRate(
+                      longSessionFee: teacherDetails?.sessionPricing?[
+                          SlotType.long.toString().split(".")[1]],
+                      shortSessionFee: teacherDetails?.sessionPricing?[
+                          SlotType.short.toString().split(".")[1]],
+                    ))),
+          );
+          // your stateful widget
+        });
   }
 
   Widget getCompleteProfileCTA() {
