@@ -74,7 +74,7 @@ abstract class StudentApi {
 
   @GET("/tag/search")
   @NoBody()
-  Future<List<String>> fetchTagsListBySearchKeyword(@Query("tag") String tag);
+  Future<List<TagsResponseModel>?> fetchTagsListBySearchKeyword(@Query("tag") String tag);
 
   @GET("/search/teacher")
   @NoBody()

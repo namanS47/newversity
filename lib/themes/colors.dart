@@ -46,4 +46,5 @@ class AppColors {
   static const lightBlue = Color(0xffECF0F9);
   static const peacefulGreen = Color(0xffEBF9EB);
   static const dimGray = Color(0xff636363);
+  static const whisperGrey = Color(0xffEAEAEA);
 }

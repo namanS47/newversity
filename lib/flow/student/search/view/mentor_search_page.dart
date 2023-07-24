@@ -99,7 +99,7 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
                     return const Center(
                       child: NoResultFoundScreen(
                           message:
-                          "No teacher is available for this tag, please try a different tag"),
+                              "No teacher is available for this tag, please try a different tag"),
                     );
                   }
                 }
@@ -154,17 +154,28 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
   Widget getSearchSuggestionWidget() {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: ListView.builder(
-          physics: const ClampingScrollPhysics(),
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return getSuggestionView(
-                context.read<MentorSearchBloc>().resultedTags[index]);
-          },
-          itemCount: context.read<MentorSearchBloc>().resultedTags.length > 5
-              ? 5
-              : context.read<MentorSearchBloc>().resultedTags.length,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Expertise",
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.blackRussian),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Wrap(
+              runSpacing: 12,
+              spacing: 10,
+              children: List.generate(
+                  context.read<MentorSearchBloc>().resultedTags.length,
+                  (index) => getTagContainerWithIconWidget(index, context.read<MentorSearchBloc>().resultedTags[index]!)),
+            ),
+          ],
         ),
       ),
     );
@@ -175,6 +186,34 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
     super.dispose();
     getTagsBySearchKeywordEventTimer?.cancel();
     _searchController.dispose();
+  }
+
+  Widget getTagContainerWithIconWidget(int index, String tagName) {
+    return InkWell(
+      onTap: () {
+        _searchController.text = tagName;
+        context
+            .read<MentorSearchBloc>()
+            .add(FetchTeacherListByTagNameEvent(tagName: tagName));
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+        decoration: BoxDecoration(
+          color: AppColors.whisperGrey,
+          borderRadius: BorderRadius.circular(50)
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(ImageAsset.tagIcon(index % 10 + 1), width: 16, height: 16,),
+            const SizedBox(width: 6,),
+            Text(context.read<MentorSearchBloc>().resultedTags[index] ?? "", style:
+              const TextStyle(fontWeight: FontWeight.w500, color: AppColors.cyanBlue),)
+          ],
+        ),
+      ),
+    );
   }
 
   Widget getTopSearchedWidget() {
@@ -194,38 +233,6 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
               height: 20,
             ),
             getSearchSuggestionWidget(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget getSuggestionView(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12, right: 12),
-      child: InkWell(
-        onTap: () {
-          _searchController.text = text;
-          context
-              .read<MentorSearchBloc>()
-              .add(FetchTeacherListByTagNameEvent(tagName: text));
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        child: Row(
-          children: [
-            const SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: AppText(
-                text,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: AppColors.colorBlack,
-                overflow: TextOverflow.clip,
-              ),
-            ),
-            const AppImage(image: ImageAsset.icSuggestion),
           ],
         ),
       ),
