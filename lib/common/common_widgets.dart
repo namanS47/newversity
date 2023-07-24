@@ -699,9 +699,10 @@ class CommonWidgets {
       {bool isSelected = false,
       Color? selectedColor,
       Color? color,
+      EdgeInsetsGeometry? padding,
       required String text}) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      padding: padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
           color: isSelected
               ? selectedColor ?? Colors.grey

@@ -43,5 +43,7 @@ class AppColors {
   static const review_1 = Color(0xffFFF8ED);
   static const review_2 = Color(0xffE9F2F2);
   static const inviteColor = Color(0xffBFE8CF);
-
+  static const lightBlue = Color(0xffECF0F9);
+  static const peacefulGreen = Color(0xffEBF9EB);
+  static const dimGray = Color(0xff636363);
 }
