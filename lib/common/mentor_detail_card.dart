@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:newversity/common/mentor_personal_detail_card.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
+import 'package:newversity/utils/enums.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
 import '../flow/student/student_session/booking_session/model/student_session_argument.dart';
@@ -31,157 +33,122 @@ class _MentorCardState extends State<MentorDetailCard> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       width: MediaQuery.of(context).size.width - 50,
-      height: 220,
+      // height: 220,
       decoration: BoxDecoration(
         border: Border.all(width: 1, color: AppColors.grey32),
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
         children: [
-          MentorPersonalDetailCard(mentorDetail: widget.mentorDetail),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(18),
-                bottomLeft: Radius.circular(18),
-              ),
-              color: AppColors.mentorsAmountColor,
-            ),
-            child: Center(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: [
-                        Row(
-                          children: const [
-                            AppText(
-                              "₹ 250",
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            AppText(
-                              "/ 30 min session",
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: const [
-                            AppText(
-                              "₹ 150",
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            AppText(
-                              "/ 15 min session",
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(AppRoutes.bookSession,
-                            arguments: StudentSessionArgument(
-                                teacherId: widget.mentorDetail.teacherId,
-                                pageIndex: 1));
-                      },
-                      child: Container(
-                        height: 52,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: AppColors.cyanBlue),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const AppText(
-                                "Book Session",
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.whiteColor,
-                              ),
-                              if(widget.mentorDetail.nextAvailable != null) getNextAvailabilityWidget()
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+          MentorPersonalDetailCard(mentorDetail: widget.mentorDetail, showScopeTags: true,),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            child: SizedBox(
+              height: 40,
+              child: Row(
+                children: [
+                  Container(
+                    color: AppColors.peacefulGreen,
+                    child: widget.mentorDetail.nextAvailable != null
+                        ? getNextAvailabilityWidget()
+                        : Container(),
+                  ),
+                  const Spacer(),
+                  getBookSlotCta()
+                ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  Widget getMentorsProfileImage() {
-    return SizedBox(
-      // height: MediaQuery.of(context).size.height,
-      width: 100,
-      child: widget.mentorDetail.profilePictureUrl == null ||
-              widget.mentorDetail.profilePictureUrl?.contains("https") == false
-          ? const Center(
-              child: AppImage(
-                image: ImageAsset.blueAvatar,
-              ),
-            )
-          : ClipRRect(
-              borderRadius:
-                  const BorderRadius.only(topLeft: Radius.circular(18)),
-              child: Image.network(
-                widget.mentorDetail.profilePictureUrl ?? "",
-                fit: BoxFit.cover,
-                height: 132,
-                errorBuilder: (BuildContext context, Object exception,
-                    StackTrace? stackTrace) {
-                  return const Center(
-                    child: AppImage(
-                      image: ImageAsset.blueAvatar,
-                    ),
-                  );
-                },
-              ),
+  Widget getBookSlotCta() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed(AppRoutes.bookSession,
+            arguments: StudentSessionArgument(
+                teacherId: widget.mentorDetail.teacherId,
+                pageIndex: 1));
+      },
+      child: Container(
+        height: 52,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: AppColors.cyanBlue),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "₹ ${widget.mentorDetail.sessionPricing?[SlotType.long.toString().split(".")[1]]?.toInt()}",
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: AppColors.whiteColor
+                  ),
+                ),
+                const Text(
+                  "per session",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 8,
+                      color: AppColors.whiteColor
+                  ),
+                ),
+              ],
             ),
+            const VerticalDivider(color: AppColors.whiteColor, indent: 16, endIndent: 16, thickness: 2,),
+            const AppText(
+              "Book a Slot",
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppColors.whiteColor,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   Widget getNextAvailabilityWidget() {
-    int timeLeftInSeconds = getLeftTimeInSeconds(widget.mentorDetail.nextAvailable!);
-    if (timeLeftInSeconds > DateTimeUtils.secondsInOneDay) {
-      String weekday = DateFormat('EEEE').format(widget.mentorDetail.nextAvailable!);
-      return AppText(
-        "Available: Next $weekday",
-        fontSize: 10,
-        fontWeight: FontWeight.w400,
-        color: AppColors.whiteColor,
-      );
+    String weekday = "";
+    if (!DateTimeUtils().isDaySame(widget.mentorDetail.nextAvailable!, DateTime.now())) {
+      weekday = DateFormat('dd MMM').format(widget.mentorDetail.nextAvailable!);
     }
-
-    return Row(
-      children: [
-        AppText(
-          "Available at: ${DateTimeUtils.getTimeInAMOrPM(widget.mentorDetail.nextAvailable!)}",
-          fontSize: 10,
-          fontWeight: FontWeight.w400,
-          color: AppColors.whiteColor,
-        ),
-        // getScheduleLeftTime(timeLeftInSeconds),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 3, bottom: 3, left: 6),
+      child: Row(
+        children: [
+          SvgPicture.asset(ImageAsset.clockCircle),
+          const SizedBox(
+            width: 6,
+          ),
+          RichText(
+              text: const TextSpan(children: [
+                TextSpan(
+                    text: "Available - ",
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.blackRussian,
+                    ))
+              ])),
+          AppText(
+            weekday.isNotEmpty
+                ? "$weekday  "
+                : "${DateTimeUtils.getTimeInAMOrPM(
+                widget.mentorDetail.nextAvailable!)}  ",
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: AppColors.blackRussian,
+          ),
+        ],
+      ),
     );
   }
 
