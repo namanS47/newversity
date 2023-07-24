@@ -213,7 +213,7 @@ class _AboutSessionState extends State<AboutSession> {
       children: List.generate(
         teacherDetails?.tags?.length ?? 0,
         (curIndex) {
-          return getTagView(teacherDetails?.tags?[curIndex] ?? "");
+          return getTagView(teacherDetails?.tags?[curIndex].tagName ?? "");
         },
       ),
     );

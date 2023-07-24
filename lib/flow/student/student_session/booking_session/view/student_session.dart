@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_utils.dart';
+import 'package:newversity/common/mentor_personal_detail_card.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/session_bookin_argument.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/student_session_argument.dart';
 import 'package:newversity/flow/student/student_session/booking_session/view/review.dart';
@@ -11,7 +12,6 @@ import 'package:newversity/themes/strings.dart';
 
 import '../../../../../common/common_widgets.dart';
 import '../../../../../resources/images.dart';
-import '../../../../../utils/strings.dart';
 import '../bloc/student_session_bloc.dart';
 import 'about.dart';
 import 'availability.dart';
@@ -79,36 +79,33 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
               bottomRight: Radius.circular(20))),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          // padding: const EdgeInsets.all(8.0),
+          padding:
+          const EdgeInsets.symmetric(horizontal: 18.0, vertical: 18),
           child: Column(
             children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 18.0, vertical: 18),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                        onTap: () => {Navigator.pop(context)},
-                        child: const AppImage(image: ImageAsset.arrowBack)),
-                    // const AppImage(
-                    //   image: ImageAsset.share,
-                    //   height: 19,
-                    //   width: 16,
-                    // ),
-                  ],
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                      onTap: () => {Navigator.pop(context)},
+                      child: const AppImage(image: ImageAsset.arrowBack)),
+                  // const AppImage(
+                  //   image: ImageAsset.share,
+                  //   height: 19,
+                  //   width: 16,
+                  // ),
+                ],
               ),
+              const SizedBox(height: 18,),
               if (teacherDetails != null)
                 ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: AppColors.whiteColor,
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(18),
+                      bottomRight: Radius.circular(18),
                     ),
-                    child: getMentorDetails(),
-                  ),
-                )
+                    child:
+                        MentorPersonalDetailCard(mentorDetail: teacherDetails!))
             ],
           ),
         ),
@@ -143,66 +140,6 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
                 },
               ),
             ),
-    );
-  }
-
-  Widget getMentorDetails() {
-    String sessionTags = StringsUtils.getTagListTextFromListOfTags(
-        teacherDetails?.tags ?? [],
-        showTrimTagList: true);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            getMentorsProfileImage(),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 14, top: 14, right: 15, bottom: 14),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AppText(
-                      teacherDetails?.name ?? "",
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    const SizedBox(
-                      height: 7,
-                    ),
-                    AppText(
-                      teacherDetails?.education ?? "",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    const SizedBox(
-                      height: 7,
-                    ),
-                    AppText(
-                      teacherDetails?.title ?? "",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    const SizedBox(
-                      height: 7,
-                    ),
-                    Flexible(
-                      child: AppText(
-                        sessionTags,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
     );
   }
 

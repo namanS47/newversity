@@ -4,10 +4,10 @@ import 'package:newversity/flow/student/student_session/upcoming_session/bloc/st
 import 'package:newversity/flow/teacher/bookings/model/session_detail_arguments.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/room/model/room_argument.dart';
-import 'package:newversity/utils/strings.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
 import '../../../../../common/common_widgets.dart';
+import '../../../../../common/mentor_personal_detail_card.dart';
 import '../../../../../resources/images.dart';
 import '../../../../../themes/colors.dart';
 import '../../../../../utils/enums.dart';
@@ -86,7 +86,8 @@ class _StudentUpcomingSessionScreenState
                       ],
                     ),
                   );
-                } else if (state is FetchingStudentUpcomingSessionFailureState) {
+                } else if (state
+                    is FetchingStudentUpcomingSessionFailureState) {
                   return SizedBox(
                     height: 400,
                     child: Column(
@@ -197,163 +198,103 @@ class _StudentUpcomingSessionScreenState
   onSessionTap(int index) {
     Navigator.of(context).pushNamed(AppRoutes.studentSessionDetailRoute,
         arguments: SessionDetailArguments(
-          id: listOfUpcomingSessions[index].id.toString(),
-          isPrevious: false,
-          sessionDetails: listOfUpcomingSessions[index]
-        ));
+            id: listOfUpcomingSessions[index].id.toString(),
+            isPrevious: false,
+            sessionDetails: listOfUpcomingSessions[index]));
   }
 
   Widget getMentorDetailsView(int index) {
-    String sessionTags = StringsUtils.getTagListTextFromListOfTags(
-        listOfUpcomingSessions[index].teacherDetail?.tags ?? [],
-        showTrimTagList: true);
-    return GestureDetector(
-      onTap: () => onSessionTap(index),
-      child: ClipRRect(
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(width: 1, color: AppColors.grey32),
         borderRadius: BorderRadius.circular(18),
-        child: Container(
-          height: MediaQuery.of(context).size.height / 4,
-          decoration: BoxDecoration(
-            border: Border.all(width: 1, color: AppColors.grey32),
-            borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        children: [
+          MentorPersonalDetailCard(
+            mentorDetail: listOfUpcomingSessions[index].teacherDetail!,
+            onCardTap: () => onSessionTap(index),
           ),
-          child: Column(
-            children: [
-              Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    getMentorsProfileImage(index),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AppText(
-                              listOfUpcomingSessions[index]
-                                      .teacherDetail
-                                      ?.name ??
-                                  "",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            AppText(
-                              listOfUpcomingSessions[index]
-                                      .teacherDetail
-                                      ?.education ??
-                                  "",
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            AppText(
-                              listOfUpcomingSessions[index]
-                                      .teacherDetail
-                                      ?.title ??
-                                  "",
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: AppText(
-                                sessionTags,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
+          GestureDetector(
+            onTap: () => onSessionTap(index),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: const BoxDecoration(
+                color: AppColors.mentorsAmountColor,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(18),
+                  bottomRight: Radius.circular(18),
                 ),
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: const BoxDecoration(
-                  color: AppColors.mentorsAmountColor,
-                ),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12.0, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                AppText(
-                                  "₹ ${listOfUpcomingSessions[index].amount?.toInt()}",
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                AppText(
-                                  listOfUpcomingSessions[index].sessionType ==
-                                          "long"
-                                      ? "/ ${getSessionTypeWithSlotType(SlotType.long)}"
-                                      : "/ ${getSessionTypeWithSlotType(SlotType.short)}",
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ],
-                            ),
-                            getScheduleLeftTime(index),
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () => getLeftTimeInSeconds(
-                                      listOfUpcomingSessions[index].startDate ??
-                                          DateTime.now()) <
-                                  1801
-                              ? onJoinNowTap(index)
-                              : null,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            height: 52,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: getLeftTimeInSeconds(
-                                            listOfUpcomingSessions[index]
-                                                    .startDate ??
-                                                DateTime.now()) <
-                                        1801
-                                    ? AppColors.cyanBlue
-                                    : AppColors.grey55),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                AppText(
-                                  "JOIN NOW",
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.whiteColor,
-                                ),
-                              ],
-                            ),
+              child: Center(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              AppText(
+                                "₹ ${listOfUpcomingSessions[index].amount?.toInt()}",
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              AppText(
+                                listOfUpcomingSessions[index].sessionType ==
+                                        "long"
+                                    ? "/ ${getSessionTypeWithSlotType(SlotType.long)}"
+                                    : "/ ${getSessionTypeWithSlotType(SlotType.short)}",
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ],
                           ),
-                        )
-                      ],
-                    ),
+                          getScheduleLeftTime(index),
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () => getLeftTimeInSeconds(
+                                    listOfUpcomingSessions[index].startDate ??
+                                        DateTime.now()) <
+                                1801
+                            ? onJoinNowTap(index)
+                            : null,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          height: 52,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: getLeftTimeInSeconds(
+                                          listOfUpcomingSessions[index]
+                                                  .startDate ??
+                                              DateTime.now()) <
+                                      1801
+                                  ? AppColors.cyanBlue
+                                  : AppColors.grey55),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              AppText(
+                                "JOIN NOW",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.whiteColor,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
-              )
-            ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -361,8 +302,7 @@ class _StudentUpcomingSessionScreenState
   onJoinNowTap(int index) {
     Navigator.of(context).pushNamed(AppRoutes.roomPageRoute,
         arguments: RoomArguments(
-            sessionDetails: listOfUpcomingSessions[index],
-            forStudents: true));
+            sessionDetails: listOfUpcomingSessions[index], forStudents: true));
   }
 
   int getLeftTimeInSeconds(DateTime dateTime) {

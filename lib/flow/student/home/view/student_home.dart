@@ -8,6 +8,7 @@ import 'package:newversity/flow/student/home/model/session_details.dart';
 import 'package:newversity/flow/student/profile_dashboard/data/model/student_details_model.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/student_session_argument.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
+import 'package:newversity/flow/teacher/profile/model/tags_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_with_teacher_id_request_model.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/room/model/room_argument.dart';
@@ -16,7 +17,6 @@ import 'package:newversity/themes/strings.dart';
 import 'package:newversity/utils/date_time_utils.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 import '../../../../resources/images.dart';
 import '../../../../utils/enums.dart';
 
@@ -449,7 +449,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
 
   Widget getNearbyMentorList() {
     return SizedBox(
-      height: 220,
+      height: 175,
       child: BlocBuilder<StudentHomeBloc, StudentHomeStates>(
         buildWhen: (previous, current) {
           return current is FetchingMentorsWithTagState ||
@@ -491,8 +491,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
 
   String assignTeacherTagForSession(int index) {
     String tagList = "";
-    for (String element in lisOfTeachersDetails[index].tags!) {
-      tagList = "$tagList$element,";
+    for (TagsResponseModel element in lisOfTeachersDetails[index].tags!) {
+      tagList = "$tagList${element.tagName},";
     }
     return tagList;
   }

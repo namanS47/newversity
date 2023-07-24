@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:newversity/common/mentor_personal_detail_card.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/student_session_argument.dart';
 import 'package:newversity/flow/student/student_session/my_session/model/session_detail_response_model.dart';
 import 'package:newversity/flow/student/student_session/student_session_detail/bloc/student_session_detail_bloc.dart';
@@ -125,7 +126,7 @@ class _StudentSessionDetailScreenState
                                       const SizedBox(
                                         height: 20,
                                       ),
-                                      getMentorDetails(),
+                                      getMentorPersonalDetailsCard(),
                                       const SizedBox(
                                         height: 20,
                                       ),
@@ -163,87 +164,25 @@ class _StudentSessionDetailScreenState
     );
   }
 
-  Widget getMentorsProfileImage() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-        height: 92,
-        width: 70,
-        child:
-            sessionDetailResponseModel?.teacherDetail?.profilePictureUrl == null
-                ? const AppImage(
-                    image: ImageAsset.blueAvatar,
-                  )
-                : ClipRRect(
-                    borderRadius:
-                        const BorderRadius.only(topLeft: Radius.circular(18)),
-                    child: Image.network(
-                      sessionDetailResponseModel
-                              ?.teacherDetail?.profilePictureUrl ??
-                          "",
-                      fit: BoxFit.cover,
-                      height: 132,
-                      errorBuilder: (BuildContext context, Object exception,
-                          StackTrace? stackTrace) {
-                        return const Center(
-                          child: AppImage(
-                            image: ImageAsset.blueAvatar,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-      ),
-    );
-  }
-
-  Widget getMentorDetails() {
-    return GestureDetector(
-      onTap: () =>
-          !widget.sessionDetailArguments.isPrevious ? onMentorDetailsTap() : {},
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
-            border: Border.all(width: 1, color: AppColors.grey32)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            getMentorsProfileImage(),
-            const SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  AppText(
-                    sessionDetailResponseModel?.teacherDetail?.name ?? "",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  AppText(
-                    sessionDetailResponseModel?.teacherDetail?.info ?? "",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-          ],
-        ),
-      ),
-    );
+  Widget getMentorPersonalDetailsCard() {
+    if(sessionDetailResponseModel
+        ?.teacherDetail !=
+        null) {
+       return Container(
+         decoration: BoxDecoration(
+           border: Border.all(width: 1, color: AppColors.grey32),
+           borderRadius: BorderRadius.circular(18),
+         ),
+         child: ClipRRect(
+           borderRadius: BorderRadius.circular(18),
+           child: MentorPersonalDetailCard(
+               mentorDetail:
+               sessionDetailResponseModel!
+                   .teacherDetail!),
+         ),
+       );
+    }
+    return Container();
   }
 
   Widget getRaiseAnIssueWidget() {
@@ -253,8 +192,9 @@ class _StudentSessionDetailScreenState
         onTap: () => {
           Navigator.of(context).pushNamed(AppRoutes.raiseIssueRoute,
               arguments: SessionDetailArguments(
-                sessionDetails: sessionDetailResponseModel!,
-                  id: widget.sessionDetailArguments.id, isPrevious: true))
+                  sessionDetails: sessionDetailResponseModel!,
+                  id: widget.sessionDetailArguments.id,
+                  isPrevious: true))
         },
         child: const AppText(
           "Raise an issue",

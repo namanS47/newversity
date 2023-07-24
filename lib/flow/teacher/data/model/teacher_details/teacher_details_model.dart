@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../../profile/model/tags_response_model.dart';
+
 part 'teacher_details_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
@@ -24,7 +26,7 @@ class TeacherDetailsModel {
     return 'TeacherDetails{teacherId: $teacherId, name: $name, mobileNumber: $mobileNumber, introVideoUrl: $introVideoUrl, location: $location, title: $title, info: $info, profileUrl: $profileUrl, profilePictureUrl: $profilePictureUrl, language: $language, email: $email, gender: $gender, uploadedDocuments: $uploadedDocuments, tags: $tags, education: $education, designation: $designation, sessionPricing: $sessionPricing, isNew: $isNew , nextAvailability: $nextAvailable}';
   }
 
-  List<String>? tags;
+  List<TagsResponseModel>? tags;
   String? education;
   String? designation;
   Map<String, double>? sessionPricing;
