@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/common/mentor_detail_card.dart';
 import 'package:newversity/flow/student/home/bloc/student_home_bloc.dart';
@@ -47,9 +48,6 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          Container(
-            color: AppColors.lightCyan,
-          ),
           BlocConsumer<StudentHomeBloc, StudentHomeStates>(
             listener: (context, state) {
               if (state is FetchedStudentDetailsState) {
@@ -71,9 +69,11 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
               return RefreshIndicator(
                 onRefresh: () {
                   return Future.delayed(const Duration(seconds: 1), () {
-                    BlocProvider.of<StudentHomeBloc>(context).add(FetchStudentDetailEvent());
-                    BlocProvider.of<StudentHomeBloc>(context).add(FetchUpcomingSessionEvent(
-                        sessionType: getSessionType(SessionType.upcoming)));
+                    BlocProvider.of<StudentHomeBloc>(context).add(
+                        FetchStudentDetailEvent());
+                    BlocProvider.of<StudentHomeBloc>(context).add(
+                        FetchUpcomingSessionEvent(
+                            sessionType: getSessionType(SessionType.upcoming)));
                   });
                 },
                 child: SafeArea(
@@ -93,9 +93,10 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                             const SizedBox(
                               height: 20,
                             ),
+                            connectWithExpertWidget(),
                             getFindMentorHeader(),
                             const SizedBox(
-                              height: 10,
+                              height: 16,
                             ),
                             getFindMentorSearchWidget(),
                             const SizedBox(
@@ -107,9 +108,12 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                       Expanded(
                         child: SingleChildScrollView(
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
+                            padding: const EdgeInsets.only(top: 0.0),
                             child: Container(
-                              width: MediaQuery.of(context).size.width,
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width,
                               decoration: const BoxDecoration(
                                   color: AppColors.whiteColor,
                                   borderRadius: BorderRadius.only(
@@ -119,9 +123,9 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   context
-                                          .read<StudentHomeBloc>()
-                                          .listOfUpcomingSessions
-                                          .isNotEmpty
+                                      .read<StudentHomeBloc>()
+                                      .listOfUpcomingSessions
+                                      .isNotEmpty
                                       ? getNextSessionCarousel()
                                       : Container(),
                                   const SizedBox(
@@ -171,6 +175,26 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
     );
   }
 
+  Widget connectWithExpertWidget() {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Connect with expert", style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: AppColors.cyanBlue
+          ),),
+          Text("Buddies !", style: TextStyle(
+              fontSize: 35,
+              fontWeight: FontWeight.bold,
+              color: AppColors.mainlyGreen
+          ),),
+        ],
+      ),
+    );
+  }
+
   Widget getInviteContainer() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -214,8 +238,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
               ),
               const Expanded(
                   child: AppImage(
-                image: ImageAsset.invite,
-              ))
+                    image: ImageAsset.invite,
+                  ))
             ],
           ),
         ),
@@ -251,7 +275,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         scrollDirection: Axis.horizontal,
         itemCount: listOfStudentReview.length,
         itemBuilder: (context, index) => getStudentReviewView(index),
-        separatorBuilder: (BuildContext context, int index) => const SizedBox(
+        separatorBuilder: (BuildContext context, int index) =>
+        const SizedBox(
           width: 6,
         ),
       ),
@@ -271,8 +296,14 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(18),
                   child: Container(
-                    height: MediaQuery.of(context).size.height - 30,
-                    width: MediaQuery.of(context).size.width - 70,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height - 30,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width - 70,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(18),
                         color: index % 2 == 0
@@ -322,12 +353,12 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
           child: CircleAvatar(
             foregroundImage: listOfStudentReview[index].profileImageUrl != null
                 ? NetworkImage(listOfStudentReview[index].profileImageUrl ?? "",
-                    scale: 1)
+                scale: 1)
                 : null,
             child: listOfStudentReview[index].profileImageUrl == null
                 ? const AppImage(
-                    image: ImageAsset.blueAvatar,
-                  )
+              image: ImageAsset.blueAvatar,
+            )
                 : CommonWidgets.getCircularProgressIndicator(),
           ),
         ),
@@ -358,7 +389,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         scrollDirection: Axis.horizontal,
         itemCount: listOfMentorsReview.length,
         itemBuilder: (context, index) => getMentorsReviewView(index),
-        separatorBuilder: (BuildContext context, int index) => const SizedBox(
+        separatorBuilder: (BuildContext context, int index) =>
+        const SizedBox(
           width: 6,
         ),
       ),
@@ -371,8 +403,14 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
         child: Container(
-          height: MediaQuery.of(context).size.height - 30,
-          width: MediaQuery.of(context).size.width - 70,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height - 30,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width - 70,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(18),
               color: index % 2 == 0
@@ -428,8 +466,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
               : null,
           child: listOfMentorsReview[index].profileImageUrl == null
               ? const AppImage(
-                  image: ImageAsset.blueAvatar,
-                )
+            image: ImageAsset.blueAvatar,
+          )
               : CommonWidgets.getCircularProgressIndicator(),
         ),
       ),
@@ -469,11 +507,12 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               itemCount: lisOfTeachersDetails.length,
-              itemBuilder: (context, index) => MentorDetailCard(
-                mentorDetail: lisOfTeachersDetails[index],
-              ),
+              itemBuilder: (context, index) =>
+                  MentorDetailCard(
+                    mentorDetail: lisOfTeachersDetails[index],
+                  ),
               separatorBuilder: (BuildContext context, int index) =>
-                  const SizedBox(
+              const SizedBox(
                 width: 0,
               ),
             );
@@ -504,7 +543,10 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(18),
         child: Container(
-          width: MediaQuery.of(context).size.width - 70,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width - 70,
           decoration: BoxDecoration(
             border: Border.all(width: 1, color: AppColors.grey32),
             borderRadius: BorderRadius.circular(18),
@@ -547,7 +589,10 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                               fontWeight: FontWeight.w500,
                             ),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width,
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width,
                               child: AppText(
                                 sessionTags,
                                 fontSize: 12,
@@ -562,7 +607,10 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                 ),
               ),
               Container(
-                width: MediaQuery.of(context).size.width,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
                 decoration: const BoxDecoration(
                   color: AppColors.mentorsAmountColor,
                 ),
@@ -578,7 +626,9 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                             Row(
                               children: [
                                 AppText(
-                                  "₹ ${lisOfTeachersDetails[index].sessionPricing?[SlotType.short.toString().split(".")[1]]}",
+                                  "₹ ${lisOfTeachersDetails[index]
+                                      .sessionPricing?[SlotType.short.toString()
+                                      .split(".")[1]]}",
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -595,7 +645,9 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                             Row(
                               children: [
                                 AppText(
-                                  "₹ ${lisOfTeachersDetails[index].sessionPricing?[SlotType.long.toString().split(".")[1]]}",
+                                  "₹ ${lisOfTeachersDetails[index]
+                                      .sessionPricing?[SlotType.long.toString()
+                                      .split(".")[1]]}",
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -618,7 +670,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                                 color: AppColors.cyanBlue),
                             child: Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              const EdgeInsets.symmetric(horizontal: 8.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: const [
@@ -664,32 +716,35 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
 
   Widget getMentorsProfileImage(int index) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height,
+      height: MediaQuery
+          .of(context)
+          .size
+          .height,
       width: 100,
       child: lisOfTeachersDetails[index].profilePictureUrl == null
           ? const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Center(
-                child: AppImage(
-                  image: ImageAsset.blueAvatar,
-                ),
-              ),
-            )
+        padding: EdgeInsets.all(8.0),
+        child: Center(
+          child: AppImage(
+            image: ImageAsset.blueAvatar,
+          ),
+        ),
+      )
           : Image.network(
-              lisOfTeachersDetails[index].profilePictureUrl ?? "",
-              errorBuilder: (BuildContext context, Object exception,
-                  StackTrace? stackTrace) {
-                return const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Center(
-                    child: AppImage(
-                      image: ImageAsset.blueAvatar,
-                    ),
-                  ),
-                );
-              },
-              fit: BoxFit.fill,
+        lisOfTeachersDetails[index].profilePictureUrl ?? "",
+        errorBuilder: (BuildContext context, Object exception,
+            StackTrace? stackTrace) {
+          return const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Center(
+              child: AppImage(
+                image: ImageAsset.blueAvatar,
+              ),
             ),
+          );
+        },
+        fit: BoxFit.fill,
+      ),
     );
   }
 
@@ -725,12 +780,15 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       children: [
         CarouselSlider.builder(
           itemCount:
-              context.read<StudentHomeBloc>().listOfUpcomingSessions.length > 3
-                  ? 2
-                  : context
-                      .read<StudentHomeBloc>()
-                      .listOfUpcomingSessions
-                      .length,
+          context
+              .read<StudentHomeBloc>()
+              .listOfUpcomingSessions
+              .length > 3
+              ? 2
+              : context
+              .read<StudentHomeBloc>()
+              .listOfUpcomingSessions
+              .length,
           itemBuilder: (context, index, realIndex) {
             return getNextSessionView(index);
           },
@@ -747,9 +805,14 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         Center(
           child: AnimatedSmoothIndicator(
             activeIndex:
-                context.read<StudentHomeBloc>().currentNextSessionIndex,
+            context
+                .read<StudentHomeBloc>()
+                .currentNextSessionIndex,
             count:
-                context.read<StudentHomeBloc>().listOfUpcomingSessions.length,
+            context
+                .read<StudentHomeBloc>()
+                .listOfUpcomingSessions
+                .length,
             onDotClicked: (dotIndex) {
               BlocProvider.of<StudentHomeBloc>(context)
                   .add(UpdatedNextSessionIndexEvent(nextIndex: dotIndex));
@@ -774,21 +837,24 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: Container(
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
             decoration: const BoxDecoration(
               color: AppColors.strongCyan,
             ),
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
+              const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppText(
                     context
-                            .read<StudentHomeBloc>()
-                            .listOfUpcomingSessions[index]
-                            .agenda ??
+                        .read<StudentHomeBloc>()
+                        .listOfUpcomingSessions[index]
+                        .agenda ??
                         "This is Agenda Section",
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -800,7 +866,10 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                     height: 8,
                   ),
                   AppText(
-                    "Next session with ${context.read<StudentHomeBloc>().listOfUpcomingSessions[index].teacherDetail?.name ?? ""}",
+                    "Next session with ${context
+                        .read<StudentHomeBloc>()
+                        .listOfUpcomingSessions[index].teacherDetail?.name ??
+                        ""}",
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
@@ -813,7 +882,14 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                     children: [
                       Flexible(
                         child: AppText(
-                          "${DateTimeUtils.getBirthFormattedDateTime(context.read<StudentHomeBloc>().listOfUpcomingSessions[index].startDate ?? DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(context.read<StudentHomeBloc>().listOfUpcomingSessions[index].startDate ?? DateTime.now())}",
+                          "${DateTimeUtils.getBirthFormattedDateTime(context
+                              .read<StudentHomeBloc>()
+                              .listOfUpcomingSessions[index].startDate ??
+                              DateTime.now())} ${DateTimeUtils.getTimeInAMOrPM(
+                              context
+                                  .read<StudentHomeBloc>()
+                                  .listOfUpcomingSessions[index].startDate ??
+                                  DateTime.now())}",
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
@@ -888,23 +964,24 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         decoration: BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius: BorderRadius.circular(25),
+          border: Border.all(color: AppColors.grayishBlue)
         ),
         child: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               children: const [
-                AppImage(image: ImageAsset.search),
+                AppImage(image: ImageAsset.search, width: 28, height: 28,),
                 SizedBox(
                   height: 13,
                 ),
                 Expanded(
                     child: AppText(
-                  "Search ’EXAM NAME’",
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.grey55,
-                ))
+                      "Search ’EXAM NAME’",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.grey55,
+                    ))
               ],
             ),
           ),
@@ -916,8 +993,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   Widget getFindMentorHeader() {
     return const AppText(
       AppStrings.findMentor,
-      fontSize: 18,
-      fontWeight: FontWeight.w700,
+      fontSize: 14,
+      color: AppColors.blackMerlin,
     );
   }
 
@@ -925,29 +1002,19 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
     return Row(
       children: [
         getProfileImage(),
-        const SizedBox(
-          width: 10,
+        const Spacer(),
+        Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: SvgPicture.asset(
+            ImageAsset.newversityLogo, width: 108, height: 26,),
         ),
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  getStudentName(),
-                  getLocation(),
-                ],
-              ),
-              InkWell(
-                  onTap: () {
-                    Navigator.of(context)
-                        .pushNamed(AppRoutes.notificationRoute);
-                  },
-                  child: const AppImage(image: ImageAsset.notification)),
-            ],
-          ),
-        )
+        const Spacer(),
+        InkWell(
+            onTap: () {
+              Navigator.of(context)
+                  .pushNamed(AppRoutes.notificationRoute);
+            },
+            child: const AppImage(image: ImageAsset.notification)),
       ],
     );
   }
@@ -1001,8 +1068,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                 : null,
             child: studentDetail?.profilePictureUrl == null
                 ? const AppImage(
-                    image: ImageAsset.blueAvatar,
-                  )
+              image: ImageAsset.blueAvatar,
+            )
                 : CommonWidgets.getCircularProgressIndicator(),
           ),
         ),
@@ -1012,9 +1079,9 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
 
   Widget getScheduleLeftTime(int index) {
     int timeLeftInSeconds = getLeftTimeInSeconds(context
-            .read<StudentHomeBloc>()
-            .listOfUpcomingSessions[index]
-            .startDate ??
+        .read<StudentHomeBloc>()
+        .listOfUpcomingSessions[index]
+        .startDate ??
         DateTime.now());
     return SlideCountdown(
       duration: Duration(seconds: timeLeftInSeconds),
@@ -1041,20 +1108,21 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   }
 
   int getLeftTimeInSeconds(DateTime dateTime) {
-    return (dateTime.difference(DateTime.now()).inSeconds);
+    return (dateTime
+        .difference(DateTime.now())
+        .inSeconds);
   }
 
   void assignListOfTags() {}
 }
 
 class CoachMarker extends StatefulWidget {
-  const CoachMarker(
-      {super.key,
-      required this.text,
-      this.next = "Next",
-      this.skip = "Skip",
-      this.onNext,
-      this.onSkip});
+  const CoachMarker({super.key,
+    required this.text,
+    this.next = "Next",
+    this.skip = "Skip",
+    this.onNext,
+    this.onSkip});
 
   final String text;
   final String skip;
@@ -1077,7 +1145,10 @@ class _CoachMarkerState extends State<CoachMarker> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width - 185,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width - 185,
               child: const AppText(
                 "Find a best mentor for you by searching with a exam name",
                 fontSize: 20,
@@ -1104,14 +1175,16 @@ class _CoachMarkerState extends State<CoachMarker> {
   }
 
   int getLeftTimeInSeconds(DateTime dateTime) {
-    return (dateTime.difference(DateTime.now()).inSeconds);
+    return (dateTime
+        .difference(DateTime.now())
+        .inSeconds);
   }
 
   Widget getScheduleLeftTime(int index) {
     int timeLeftInSeconds = getLeftTimeInSeconds(context
-            .read<StudentHomeBloc>()
-            .listOfUpcomingSessions[index]
-            .startDate ??
+        .read<StudentHomeBloc>()
+        .listOfUpcomingSessions[index]
+        .startDate ??
         DateTime.now());
     return SlideCountdown(
       duration: Duration(seconds: timeLeftInSeconds),
@@ -1131,7 +1204,7 @@ class _CoachMarkerState extends State<CoachMarker> {
         fontWeight: FontWeight.w400,
       ),
       separatorStyle:
-          const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+      const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
     );
   }
 
@@ -1147,13 +1220,13 @@ class _CoachMarkerState extends State<CoachMarker> {
         ),
         child: const Center(
             child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: AppText(
-            "Got it",
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        )),
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: AppText(
+                "Got it",
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            )),
       ),
     );
   }
@@ -1176,11 +1249,11 @@ class _CoachMarkerState extends State<CoachMarker> {
               ),
               Expanded(
                   child: AppText(
-                "Search mentors by exam name",
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: AppColors.grey55,
-              ))
+                    "Search mentors by exam name",
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.grey55,
+                  ))
             ],
           ),
         ),
