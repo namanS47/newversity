@@ -78,4 +78,5 @@ class ImageAsset {
   static const mentorLoginBanner = '${_pngPath}mentor_login_banner.png';
   static const cameraIcon = '${_pngPath}camera.png';
   static const galleryIcon = '${_pngPath}gallery.png';
+  static String tagIcon(int number) => "${_pngPath}tag_icon_$number.png";
 }
