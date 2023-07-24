@@ -14,6 +14,8 @@ class ImageAsset {
   static const String uploadProfilePic = '${_svgPath}upload.svg';
   static const String experience = '${_svgPath}experience.svg';
   static const String education = '${_svgPath}education.svg';
+  static const String educationFilled = '${_svgPath}education_filled.svg';
+  static const String messages = "${_svgPath}messages.svg";
   static const String dateImage = '${_svgPath}date.svg';
   static const String home = '${_svgPath}home.svg';
   static const String notification = '${_svgPath}notification.svg';
@@ -32,6 +34,7 @@ class ImageAsset {
   static const String bookings = '${_svgPath}bookings.svg';
   static const String star = '${_svgPath}star.svg';
   static const String session = '${_svgPath}session.svg';
+  static const String clockCircle = '${_svgPath}clock_circle.svg';
   static const String campus = '${_svgPath}campus.svg';
   static const String invite = '${_svgPath}invite.svg';
   static const String detailDesign = '${_svgPath}detail_design.svg';
