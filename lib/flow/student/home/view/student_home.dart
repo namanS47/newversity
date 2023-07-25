@@ -176,22 +176,20 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   }
 
   Widget connectWithExpertWidget() {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Connect with expert", style: TextStyle(
-            fontSize: 24,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        Text("Connect with expert", style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: AppColors.cyanBlue
+        ),),
+        Text("Buddies !", style: TextStyle(
+            fontSize: 35,
             fontWeight: FontWeight.bold,
-            color: AppColors.cyanBlue
-          ),),
-          Text("Buddies !", style: TextStyle(
-              fontSize: 35,
-              fontWeight: FontWeight.bold,
-              color: AppColors.mainlyGreen
-          ),),
-        ],
-      ),
+            color: AppColors.mainlyGreen
+        ),),
+      ],
     );
   }
 
