@@ -232,6 +232,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                                           height: 12,
                                         ),
                                         getLanguagePreferences(),
+                                        getEmail(),
                                         const SizedBox(
                                           height: 12,
                                         ),
@@ -395,7 +396,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
     );
   }
 
-  Widget getLocationTagView(String tagName) {
+  Widget getLocationTagAndEmailView(String tagName, String icon) {
     return Container(
       height: 27,
       decoration: BoxDecoration(
@@ -408,8 +409,8 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const AppImage(
-              image: ImageAsset.location,
+            AppImage(
+              image: icon,
               color: AppColors.blackMerlin,
             ),
             const SizedBox(
@@ -442,13 +443,40 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
             const SizedBox(
               height: 8,
             ),
-            getLocationTagView(studentDetail != null
+            getLocationTagAndEmailView(studentDetail != null
                 ? studentDetail?.location ?? "Mumbai"
-                : "Invalid Teacher Data"),
+                : "Invalid Teacher Data", ImageAsset.location),
           ],
         ),
       ),
     );
+  }
+
+  Widget getEmail() {
+    if(studentDetail?.email?.isNotEmpty == true) {
+      return Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.only(top: 14),
+        decoration: BoxDecoration(
+          color: AppColors.whiteColor,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              getHeader("Email"),
+              const SizedBox(
+                height: 8,
+              ),
+              getLocationTagAndEmailView(studentDetail!.email!, ImageAsset.mail),
+            ],
+          ),
+        ),
+      );
+    }
+    return Container();
   }
 
   Widget getExpertise() {

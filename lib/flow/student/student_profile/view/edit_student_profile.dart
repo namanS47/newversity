@@ -64,7 +64,9 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
   onPictureUploadButtonTap(BuildContext context) async {
     bool isCameraPermissionGranted = await askCameraPermission();
     if (isCameraPermissionGranted) {
-      upLoadPic(context);
+      if(context.mounted){
+        upLoadPic(context);
+      }
     } else {
       await askCameraPermission();
     }
@@ -84,7 +86,9 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
             );
             if (image != null) {
               file = image;
-              Navigator.pop(context);
+              if(context.mounted) {
+                Navigator.pop(context);
+              }
             }
           },
           onGalleryClick: () async {
@@ -94,7 +98,9 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
             );
             if (image != null) {
               file = image;
-              Navigator.pop(context);
+              if(context.mounted) {
+                Navigator.pop(context);
+              }
             }
           },
         );
@@ -282,6 +288,7 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
                   if (state is FetchedStudentState) {
                     studentDetail = state.studentDetail;
                     _nameController.text = studentDetail?.name ?? "";
+                    _emailIdController.text = studentDetail?.email ?? "";
                     _mobileNumberController.text =
                         studentDetail?.mobileNumber ?? "";
                     _homeTownController.text = studentDetail?.location ?? "";
