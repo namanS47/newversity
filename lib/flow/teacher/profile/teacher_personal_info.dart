@@ -34,6 +34,8 @@ class _TeacherPersonalInformationState
     extends State<TeacherPersonalInformation> {
   final TextEditingController _nameController = TextEditingController();
 
+  final TextEditingController _emailController = TextEditingController();
+
   final TextEditingController _titleController = TextEditingController();
 
   final TextEditingController _infoController = TextEditingController();
@@ -53,6 +55,7 @@ class _TeacherPersonalInformationState
   void dispose() {
     super.dispose();
     _nameController.dispose();
+    _emailController.dispose();
     _titleController.dispose();
     _infoController.dispose();
     _locationController.dispose();
@@ -87,6 +90,7 @@ class _TeacherPersonalInformationState
         TeacherDetailsModel? details =
             context.read<TeacherDetailsBloc>().teacherDetails;
         _nameController.text = details?.name ?? "";
+        _emailController.text = details?.email ?? "";
         _titleController.text = details?.title ?? "";
         _infoController.text = details?.info ?? "";
         _locationController.text = details?.location ?? "";
@@ -134,6 +138,14 @@ class _TeacherPersonalInformationState
                             height: 10,
                           ),
                           getYourNameTextField(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getYourEmailHeader(),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          getYourEmailTextField(),
                           const SizedBox(
                             height: 20,
                           ),
@@ -433,6 +445,15 @@ class _TeacherPersonalInformationState
     );
   }
 
+  Widget getYourEmailTextField() {
+    return AppTextFormField(
+      hintText: "email",
+      keyboardType: TextInputType.text,
+      controller: _emailController,
+      isDense: true,
+    );
+  }
+
   Widget getYourDesignation() {
     return AppTextFormField(
       hintText: "Your designation",
@@ -549,6 +570,13 @@ class _TeacherPersonalInformationState
     );
   }
 
+  Widget getYourEmailHeader() {
+    return const Text(
+      AppStrings.email,
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+    );
+  }
+
   onTapContinueButton(BuildContext context) async {
     if (isFormValid()) {
       setState(() {
@@ -560,6 +588,7 @@ class _TeacherPersonalInformationState
           teacherDetails: TeacherDetailsModel(
             teacherId: CommonUtils().getLoggedInUser(),
             name: _nameController.text,
+            email: _emailController.text,
             location: _locationController.text,
             language: languageSelected,
             title: _titleController.text,

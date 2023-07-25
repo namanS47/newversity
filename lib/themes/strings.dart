@@ -81,6 +81,7 @@ class AppStrings {
   static const findMentor = "Find a best mentor for you !";
   static const addingDetailsInst =
       "Add some details and personalize your experience. Complete it now and start enjoying our app!";
+  static const email = "Email";
 
   // payment
 
