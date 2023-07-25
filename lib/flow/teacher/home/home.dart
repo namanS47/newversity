@@ -505,7 +505,7 @@ class _HomeState extends State<Home> {
               child: GestureDetector(
                 onTap: () {
                   EventsBroadcast.get()
-                      .send(ChangeMentorPageIndexEvent(index: 1));
+                      .send(ChangeHomePageIndexEvent(index: 1));
                 },
                 child: getDetailsContainer(
                   AppColors.lightGreen,
@@ -530,7 +530,7 @@ class _HomeState extends State<Home> {
     return GestureDetector(
       onTap: () {
         if (profileCompletionPercentageResponse?.completePercentage == 100.0) {
-          EventsBroadcast.get().send(ChangeMentorPageIndexEvent(index: 2));
+          EventsBroadcast.get().send(ChangeHomePageIndexEvent(index: 2));
         } else {
           const snackBar = SnackBar(
             content: Text('Please complete your profile'),

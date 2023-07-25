@@ -5,6 +5,7 @@ import 'package:newversity/flow/teacher/availability/date_slot_availability_rout
 import '../../../common/common_widgets.dart';
 import '../../../resources/images.dart';
 import '../../../themes/colors.dart';
+import '../../../utils/event_broadcast.dart';
 import 'availability_bloc/availability_bloc.dart';
 import 'date_wise_calender_availability.dart';
 
@@ -20,53 +21,59 @@ class _AvailabilityState extends State<Availability> {
   Widget build(BuildContext context) {
     return BlocBuilder<AvailabilityBloc, AvailabilityState>(
       builder: (context, state) {
-        return Scaffold(
-          floatingActionButton: context.read<AvailabilityBloc>().isCalenderView
-              ? Container()
-              : FloatingActionButton(
-                  onPressed: () {
-                    context
-                        .read<AvailabilityBloc>()
-                        .add(UpdateAvailabilityPageEvent());
-                  },
-                  backgroundColor: AppColors.cyanBlue,
-                  child: const Icon(
-                    Icons.add,
-                    color: AppColors.whiteColor,
+        return WillPopScope(
+          onWillPop: () {
+            EventsBroadcast.get().send(ChangeHomePageIndexEvent(index: 0));
+            return Future.value(false);
+          },
+          child: Scaffold(
+            floatingActionButton: context.read<AvailabilityBloc>().isCalenderView
+                ? Container()
+                : FloatingActionButton(
+                    onPressed: () {
+                      context
+                          .read<AvailabilityBloc>()
+                          .add(UpdateAvailabilityPageEvent());
+                    },
+                    backgroundColor: AppColors.cyanBlue,
+                    child: const Icon(
+                      Icons.add,
+                      color: AppColors.whiteColor,
+                    ),
                   ),
-                ),
-          body: SafeArea(
-            child: Stack(
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  decoration: const BoxDecoration(color: AppColors.whiteColor),
-                ),
-                Column(
-                  children: [
-                    getAppHeader(),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        primary: true,
-                        child: BlocConsumer<AvailabilityBloc, AvailabilityState>(
-                          listener: (context, state) {},
-                          builder: (context, state) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                context.read<AvailabilityBloc>().isCalenderView
-                                    ?  const DateWiseCalenderAvailabilityScreen()
-                                    : const DateWiseAvailabilityRoute(),
-                              ],
-                            );
-                          },
+            body: SafeArea(
+              child: Stack(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height,
+                    decoration: const BoxDecoration(color: AppColors.whiteColor),
+                  ),
+                  Column(
+                    children: [
+                      getAppHeader(),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          primary: true,
+                          child: BlocConsumer<AvailabilityBloc, AvailabilityState>(
+                            listener: (context, state) {},
+                            builder: (context, state) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  context.read<AvailabilityBloc>().isCalenderView
+                                      ?  const DateWiseCalenderAvailabilityScreen()
+                                      : const DateWiseAvailabilityRoute(),
+                                ],
+                              );
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );

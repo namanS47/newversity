@@ -23,7 +23,7 @@ class _IndexPageState extends State<IndexPage> {
     super.initState();
 
     EventsBroadcast.get().on().listen((event) {
-      if(event is ChangeMentorPageIndexEvent) {
+      if(event is ChangeHomePageIndexEvent) {
         context.read<IndexBloc>().add(IndexPageUpdateEvent(index: event.index));
       }
     });

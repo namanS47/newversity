@@ -23,7 +23,7 @@ class EventsBroadcast {
   }
 }
 
-class ChangeMentorPageIndexEvent {
-  ChangeMentorPageIndexEvent({required this.index});
+class ChangeHomePageIndexEvent {
+  ChangeHomePageIndexEvent({required this.index});
   int index;
 }

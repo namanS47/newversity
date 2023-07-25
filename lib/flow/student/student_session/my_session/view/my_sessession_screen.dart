@@ -9,6 +9,7 @@ import 'package:newversity/flow/student/student_session/upcoming_session/view/st
 
 import '../../../../../themes/colors.dart';
 import '../../../../../themes/strings.dart';
+import '../../../../../utils/event_broadcast.dart';
 
 class MySessionScreen extends StatefulWidget {
   const MySessionScreen({Key? key}) : super(key: key);
@@ -25,64 +26,70 @@ class _MySessionScreenState extends State<MySessionScreen> {
         // TODO: implement listener
       },
       builder: (context, state) {
-        return Stack(
-          children: [
-            getTopBanner(),
-            SafeArea(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(18.0),
-                    child: AppText(
-                      AppStrings.mySessions,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
+        return WillPopScope(
+          onWillPop: () {
+            EventsBroadcast.get().send(ChangeHomePageIndexEvent(index: 0));
+            return Future.value(false);
+          },
+          child: Stack(
+            children: [
+              getTopBanner(),
+              SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20))),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(
-                          children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            getCategoryTab(),
-                            context.read<MySessionBloc>().selectedIndex == 0
-                                ? BlocProvider<StudentUpcomingSessionBloc>(
-                                    create: (context) =>
-                                        StudentUpcomingSessionBloc(),
-                                    child: const Expanded(
-                                        child:
-                                            StudentUpcomingSessionScreen()))
-                                : BlocProvider<StudentPreviousSessionBloc>(
-                                    create: (context) =>
-                                        StudentPreviousSessionBloc(),
-                                    child: Expanded(
-                                        child:
-                                            const StudentPreviousSessionScreen())),
-                          ],
-                        ),
+                    const Padding(
+                      padding: EdgeInsets.all(18.0),
+                      child: AppText(
+                        AppStrings.mySessions,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-                  )
-                ],
-              ),
-            )
-          ],
+                    Expanded(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: const BoxDecoration(
+                            color: AppColors.whiteColor,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20))),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Column(
+                            children: [
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              getCategoryTab(),
+                              context.read<MySessionBloc>().selectedIndex == 0
+                                  ? BlocProvider<StudentUpcomingSessionBloc>(
+                                      create: (context) =>
+                                          StudentUpcomingSessionBloc(),
+                                      child: const Expanded(
+                                          child:
+                                              StudentUpcomingSessionScreen()))
+                                  : BlocProvider<StudentPreviousSessionBloc>(
+                                      create: (context) =>
+                                          StudentPreviousSessionBloc(),
+                                      child: Expanded(
+                                          child:
+                                              const StudentPreviousSessionScreen())),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         );
       },
     );
