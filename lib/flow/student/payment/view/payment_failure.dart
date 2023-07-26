@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newversity/navigation/app_routes.dart';
 
 import '../../../../common/common_widgets.dart';
 import '../../../../resources/images.dart';
@@ -71,5 +72,9 @@ class _PaymentFailureScreenState extends State<PaymentFailureScreen> {
     );
   }
 
-  goToHome() {}
+  goToHome() {
+    Navigator.pop(context);
+    Navigator.pop(context);
+    // Navigator.popUntil(context, ModalRoute.withName(AppRoutes.teacherHomePageRoute));
+  }
 }

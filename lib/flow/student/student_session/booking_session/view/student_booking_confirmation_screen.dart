@@ -137,13 +137,7 @@ class _StudentBookingConfirmationScreenState
                 merchantTransactionId: paymentResult.merchantTransactionId),
           ));
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                "Something went wrong",
-              ),
-            ),
-          );
+          Navigator.of(context).pushReplacementNamed(AppRoutes.paymentError);
         }
       }
     } else {
