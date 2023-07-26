@@ -975,7 +975,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                 ),
                 Expanded(
                     child: AppText(
-                      "Search ’EXAM NAME’",
+                      "Search by Exam, career or person name..",
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       color: AppColors.grey55,
