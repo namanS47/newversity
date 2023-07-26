@@ -35,6 +35,7 @@ class _HomeState extends State<Home> {
   List<SessionDetailResponseModel>? listOfSessionDetailResponse = [];
   SessionDetailResponseModel? nearestStartSession;
   ProfileCompletionPercentageResponse? profileCompletionPercentageResponse;
+  int totalSessionCount = 0;
 
   @override
   void initState() {
@@ -44,6 +45,7 @@ class _HomeState extends State<Home> {
     BlocProvider.of<HomeSessionBloc>(context).add(FetchTeacherDetailsEvent());
     BlocProvider.of<HomeSessionBloc>(context).add(
         FetchSessionDetailEvent(type: getSessionType(SessionType.upcoming)));
+    BlocProvider.of<HomeSessionBloc>(context).add(FetchTeacherSessionCountEvent());
   }
 
   Future<void> assignNearestSessionDetail() async {
@@ -83,6 +85,9 @@ class _HomeState extends State<Home> {
         }
         if (state is FetchedProfileCompletionInfoState) {
           profileCompletionPercentageResponse = state.percentageResponse;
+        }
+        if(state is FetchTeacherSessionCountSuccessState) {
+          totalSessionCount = state.sessionCountResponseModel.totalSessionCount ?? 0;
         }
       },
       builder: (context, state) {
@@ -490,7 +495,7 @@ class _HomeState extends State<Home> {
                 AppColors.lightRedColorShadow400,
                 ImageAsset.bookings,
                 AppColors.totalBookingsColor,
-                "00",
+                getSessionCount(totalSessionCount),
                 "Total Bookings",
               ),
             ),
@@ -511,7 +516,7 @@ class _HomeState extends State<Home> {
                   AppColors.lightGreen,
                   ImageAsset.upcoming,
                   AppColors.upcomingScheduleColor,
-                  "00",
+                  getSessionCount(listOfSessionDetailResponse?.length ?? 0),
                   "Upcoming Schedule",
                 ),
               ),
@@ -567,7 +572,7 @@ class _HomeState extends State<Home> {
                       height: 10,
                     ),
                     getSetAvailabilityCTA(),
-                    getSessionDateAndTime(),
+                    // getSessionDateAndTime(),
                     const SizedBox(
                       height: 10,
                     ),
@@ -768,8 +773,8 @@ class _HomeState extends State<Home> {
                 Padding(
                   padding: const EdgeInsets.only(right: 100.0),
                   child: AppText(
-                    "Next session with"
-                    "${nearestStartSession?.studentId ?? " "}",
+                    "Next session with "
+                    "${nearestStartSession?.studentDetail?.name ?? " "}",
                     fontSize: 14,
                     color: AppColors.whiteColor,
                     fontWeight: FontWeight.w500,
@@ -980,6 +985,14 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  String getSessionCount(int count) {
+    if(count < 10) {
+      return "0$count";
+    } else {
+      return count.toString();
+    }
   }
 }
 

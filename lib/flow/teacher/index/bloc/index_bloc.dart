@@ -34,20 +34,7 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
 
   var userId = CommonUtils().getLoggedInUser();
   int selectedIndex = 0;
-  List<Widget> indexPages = <Widget>[
-    BlocProvider(
-      create: (context) => HomeSessionBloc(),
-      child: const Home(),
-    ),
-    BlocProvider(
-      create: (context) => TeacherBookingsBloc(),
-      child: const Bookings(),
-    ),
-    BlocProvider<AvailabilityBloc>(
-      create: (context) => AvailabilityBloc(),
-      child: const Availability(),
-    )
-  ];
+  List<Widget> indexPages = <Widget>[];
 
   List<bool> indexPageLoadedList = [true, false, false];
 
@@ -123,6 +110,21 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
       indexPageLoadedList[2] ? BlocProvider<StudentCampusBloc>(
         create: (context) => StudentCampusBloc(),
         child: const StudentCampusScreen(),
+      ) : Container()
+    ];
+
+    indexPages = [
+      BlocProvider(
+        create: (context) => HomeSessionBloc(),
+        child: const Home(),
+      ),
+      indexPageLoadedList[1] ? BlocProvider(
+        create: (context) => TeacherBookingsBloc(),
+        child: const Bookings(),
+      ) : Container(),
+      indexPageLoadedList[2] ?BlocProvider<AvailabilityBloc>(
+        create: (context) => AvailabilityBloc(),
+        child: const Availability(),
       ) : Container()
     ];
   }

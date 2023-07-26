@@ -7,6 +7,7 @@ import 'package:newversity/network/webservice/exception.dart';
 
 import '../../../../../common/common_utils.dart';
 import '../../../../../di/di_initializer.dart';
+import '../../../../model/session_count_response_model.dart';
 import '../../../../student/student_session/my_session/model/session_detail_response_model.dart';
 import '../../../../student/webservice/student_base_repository.dart';
 import '../../../profile/model/profile_completion_percentage_response.dart';
@@ -42,6 +43,17 @@ class HomeSessionBloc extends Bloc<HomeSessionDetailEvents, HomeSessionStates> {
     on<FetchProfilePercentageInfoEvent>((event, emit) async {
       teacherId = CommonUtils().getLoggedInUser();
       await getProfileCompletionInfo(event, emit);
+    });
+
+    on<FetchTeacherSessionCountEvent>((event, emit) async {
+      teacherId = CommonUtils().getLoggedInUser();
+      try{
+        emit(FetchTeacherSessionCountLoadingState());
+        final response = await _teacherBaseRepository.fetchTeacherSessionCount(teacherId);
+        emit(FetchTeacherSessionCountSuccessState(sessionCountResponseModel: response));
+      } catch(exception) {
+        emit(FetchTeacherSessionCountFailureState());
+      }
     });
   }
 

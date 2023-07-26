@@ -19,4 +19,6 @@ class FetchTeacherDetailsEvent extends HomeSessionDetailEvents {
 
 class FetchProfilePercentageInfoEvent extends HomeSessionDetailEvents {}
 
+class FetchTeacherSessionCountEvent extends HomeSessionDetailEvents {}
+
 

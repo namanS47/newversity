@@ -9,6 +9,7 @@ import '../bloc/index_bloc.dart';
 
 class IndexPage extends StatefulWidget {
   final bool isStudent;
+
   const IndexPage({Key? key, required this.isStudent}) : super(key: key);
 
   @override
@@ -23,7 +24,7 @@ class _IndexPageState extends State<IndexPage> {
     super.initState();
 
     EventsBroadcast.get().on().listen((event) {
-      if(event is ChangeHomePageIndexEvent) {
+      if (event is ChangeHomePageIndexEvent) {
         context.read<IndexBloc>().add(IndexPageUpdateEvent(index: event.index));
       }
     });
@@ -45,25 +46,25 @@ class _IndexPageState extends State<IndexPage> {
       },
       builder: (context, state) {
         return Scaffold(
-          resizeToAvoidBottomInset: true,
-          bottomNavigationBar: Row(
-            children: List.generate(
-              widget.isStudent
-                  ? context.read<IndexBloc>().studentIndexPage.length
-                  : context.read<IndexBloc>().indexPages.length,
-              (index) => getBottomNavigationBarItems(index),
+            resizeToAvoidBottomInset: true,
+            bottomNavigationBar: Row(
+              children: List.generate(
+                widget.isStudent
+                    ? context.read<IndexBloc>().studentIndexPage.length
+                    : context.read<IndexBloc>().indexPages.length,
+                (index) => getBottomNavigationBarItems(index),
+              ),
             ),
-          ),
-          body: widget.isStudent
-              ? IndexedStack(
-                  index: context.read<IndexBloc>().selectedIndex,
-                  children: context.read<IndexBloc>().studentIndexPage,
-                )
-              : context
-                  .read<IndexBloc>()
-                  .indexPages
-                  .elementAt(context.read<IndexBloc>().selectedIndex),
-        );
+            body: widget.isStudent
+                ? IndexedStack(
+                    index: context.read<IndexBloc>().selectedIndex,
+                    children: context.read<IndexBloc>().studentIndexPage,
+                  )
+                : IndexedStack(
+                    index: context.read<IndexBloc>().selectedIndex,
+                    children: context.read<IndexBloc>().indexPages,
+                  )
+            );
       },
     );
   }

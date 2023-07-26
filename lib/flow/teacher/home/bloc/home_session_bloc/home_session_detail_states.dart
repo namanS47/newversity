@@ -52,3 +52,12 @@ class FetchingTeacherDetailFailureState extends HomeSessionStates {
   final String message;
   FetchingTeacherDetailFailureState({required this.message});
 }
+
+class FetchTeacherSessionCountLoadingState extends HomeSessionStates {}
+
+class FetchTeacherSessionCountSuccessState extends HomeSessionStates {
+  FetchTeacherSessionCountSuccessState({required this.sessionCountResponseModel});
+  final SessionCountResponseModel sessionCountResponseModel;
+}
+
+class FetchTeacherSessionCountFailureState extends HomeSessionStates {}

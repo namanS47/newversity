@@ -16,6 +16,7 @@ import 'package:newversity/network/api/teacher_api.dart';
 import 'package:newversity/network/webservice/exception.dart';
 
 import '../../../network/webservice/base_repository.dart';
+import '../../model/session_count_response_model.dart';
 import '../../student/student_session/my_session/model/session_detail_response_model.dart';
 import '../home/model/session_request_model.dart';
 import '../home/model/session_response_model.dart';
@@ -194,5 +195,14 @@ class TeacherBaseRepository extends BaseRepository {
       AppException.forException(exception.response);
       return null;
     }
+  }
+
+  Future<SessionCountResponseModel> fetchTeacherSessionCount(String teacherId) async {
+    try {
+      return await _teacherApi.fetchTeacherSessionCount(teacherId);
+    } on DioError catch (exception) {
+      AppException.forException(exception.response);
+    }
+    return SessionCountResponseModel();
   }
 }

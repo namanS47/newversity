@@ -15,6 +15,7 @@ import 'package:newversity/flow/teacher/profile/model/tags_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_with_teacher_id_request_model.dart';
 import 'package:retrofit/http.dart';
 
+import '../../flow/model/session_count_response_model.dart';
 import '../../flow/student/student_session/my_session/model/session_detail_response_model.dart';
 import '../../flow/teacher/availability/data/model/add_availability_request_model.dart';
 import '../../flow/teacher/data/model/teacher_details/teacher_details_model.dart';
@@ -122,4 +123,7 @@ abstract class TeacherApi {
   @MultiPart()
   Future<TeacherDetailsModel?> uploadProfilePicture(
       @Part() File file, @Part() String teacherId);
+
+  @GET("/session/count")
+  Future<SessionCountResponseModel> fetchTeacherSessionCount(@Query("teacherId") String teacherId);
 }
