@@ -44,8 +44,6 @@ class _TeacherPersonalInformationState
 
   final TextEditingController _languageController = TextEditingController();
 
-  late final FocusNode _languageFocusNode;
-
   bool showErrorText = false;
   bool isLoading = false;
 
@@ -60,13 +58,10 @@ class _TeacherPersonalInformationState
     _infoController.dispose();
     _locationController.dispose();
     _languageController.dispose();
-
-    _languageFocusNode.dispose();
   }
 
   @override
   void initState() {
-    _languageFocusNode = FocusNode();
     context.read<TeacherDetailsBloc>().add(FetchTeacherDetailEvent());
     super.initState();
   }
@@ -269,14 +264,13 @@ class _TeacherPersonalInformationState
   Widget getYourLanguage() {
     return InkWell(
       onTap: () {
-        _languageFocusNode.requestFocus();
+        FocusManager.instance.primaryFocus?.unfocus();
         _openLanguagePickerDialog();
       },
       child: AppTextFormField(
         isEnable: false,
         hintText: "Add Language",
         controller: _languageController,
-        focusNode: _languageFocusNode,
       ),
     );
   }
