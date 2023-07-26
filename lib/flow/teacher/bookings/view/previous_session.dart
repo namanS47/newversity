@@ -43,19 +43,28 @@ class _PreviousSessionsState extends State<PreviousSessions> {
         if (state is FetchingPreviousSessionState) {
           return getProgressIndicator();
         }
-        return SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 30,
-              ), // getTimeFilter(),
-              // const SizedBox(
-              //   height: 10,
-              // ),
-              getListOfPreviousSessions(),
-            ],
+        return RefreshIndicator(
+          onRefresh: () {
+            return Future.delayed(const Duration(milliseconds: 200),() {
+              BlocProvider.of<PreviousSessionBloc>(context).add(
+                  FetchAllPreviousSessionsEvent(
+                      type: getSessionType(SessionType.previous)));
+            });
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 30,
+                ), // getTimeFilter(),
+                // const SizedBox(
+                //   height: 10,
+                // ),
+                getListOfPreviousSessions(),
+              ],
+            ),
           ),
         );
       },
@@ -134,29 +143,13 @@ class _PreviousSessionsState extends State<PreviousSessions> {
   Widget getStudentProfilePic(String? profileUrl) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
-      child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-        height: 66,
-        width: 66,
-        child: profileUrl == null
-            ? const AppImage(
-                image: ImageAsset.blueAvatar,
-              )
-            : Image.network(
-                profileUrl,
-                errorBuilder: (BuildContext context, Object exception,
-                    StackTrace? stackTrace) {
-                  return const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(
-                      child: AppImage(
-                        image: ImageAsset.blueAvatar,
-                      ),
-                    ),
-                  );
-                },
-                fit: BoxFit.fill,
-              ),
+      child: profileUrl == null
+          ? const AppImage(
+        image: ImageAsset.blueAvatar,
+      )
+          : CircleAvatar(
+        radius: 33,
+        backgroundImage: NetworkImage(profileUrl),
       ),
     );
   }

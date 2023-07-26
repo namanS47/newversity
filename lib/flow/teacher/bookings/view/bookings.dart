@@ -29,6 +29,18 @@ Widget getTopBanner() {
 }
 
 class _BookingsState extends State<Bookings> {
+  List<Widget> bookingPages = [];
+
+  @override
+  void initState() {
+    bookingPages = [
+      BlocProvider<UpcomingSessionBloc>(
+          create: (context) => UpcomingSessionBloc(),
+          child: const UpcomingSessions()),
+    ];
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<TeacherBookingsBloc, TeacherBookingStates>(
@@ -75,16 +87,12 @@ class _BookingsState extends State<Bookings> {
                                 height: 10,
                               ),
                               getCategoryTab(),
-                              context.read<TeacherBookingsBloc>().selectedIndex ==
-                                      0
-                                  ? BlocProvider<UpcomingSessionBloc>(
-                                      create: (context) => UpcomingSessionBloc(),
-                                      child: const Expanded(
-                                          child: UpcomingSessions()))
-                                  : BlocProvider<PreviousSessionBloc>(
-                                      create: (context) => PreviousSessionBloc(),
-                                      child: const Expanded(
-                                          child: PreviousSessions())),
+                              Expanded(
+                                child: IndexedStack(
+                                  index: context.read<TeacherBookingsBloc>().selectedIndex,
+                                  children: bookingPages,
+                                ),
+                              )
                             ],
                           ),
                         ),
@@ -137,6 +145,14 @@ class _BookingsState extends State<Bookings> {
   }
 
   onTabTap(int index) {
+    bookingPages = [
+      BlocProvider<UpcomingSessionBloc>(
+          create: (context) => UpcomingSessionBloc(),
+          child: const UpcomingSessions()),
+      BlocProvider<PreviousSessionBloc>(
+          create: (context) => PreviousSessionBloc(),
+          child: const PreviousSessions())
+    ];
     context
         .read<TeacherBookingsBloc>()
         .add(ChangeSessionTabEvent(index: index));
