@@ -100,10 +100,6 @@ class _ExamsCrackedState extends State<ExamsCracked> {
                         const SizedBox(
                           height: 20,
                         ),
-                        selectExamNames(),
-                        const SizedBox(
-                          height: 20,
-                        ),
                         getExamsLayout(),
                         const SizedBox(
                           height: 8,
@@ -310,18 +306,8 @@ class _ExamsCrackedState extends State<ExamsCracked> {
 
   Widget getExamCrackedHeader() {
     return const Text(
-      AppStrings.examsCracked,
+      AppStrings.areaOfInterest,
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-    );
-  }
-
-  Widget selectExamNames() {
-    return const Text(
-      AppStrings.selectExamsInfo,
-      style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-          color: AppColors.blackMerlin),
     );
   }
 }

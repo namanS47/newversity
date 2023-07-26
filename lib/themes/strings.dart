@@ -43,6 +43,7 @@ class AppStrings {
   static const employmentType = "Employment Type";
   static const locationType = "Location Type";
   static const homeTown = "Home Town";
+  static const areaOfInterest = "Please select your area of Interest for Mentorship";
   static const aboutYourSelf = "About Yourself";
   static const language = "Language";
   static const uploadProfilePic = "Upload Profile Picture";
