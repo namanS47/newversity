@@ -163,7 +163,7 @@ class _ExamsCrackedState extends State<ExamsCracked> {
         SizedBox(
           width: _screenSize.width/2+16,
           child: AppTextFormField(
-            hintText: "Exam",
+            hintText: "Expertise",
             controller: _specifyController,
             isDense: true,
           ),
