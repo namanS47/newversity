@@ -23,7 +23,7 @@ class AvailabilityBloc extends Bloc<AvailabilityEvent, AvailabilityState> {
   List<AvailabilityArguments> availabilityList = [];
   List<AvailabilityArguments> alreadyAvailableList = [];
   Map<String, List<AvailabilityModel>> dateTimeMap = {};
-  SlotType? sessionType = SlotType.both;
+  SlotType? sessionType = SlotType.long;
   DateTime selectedDate = DateTime.now();
   bool showUpdateAvailabilityWidget = false;
   bool isCalenderView = false;

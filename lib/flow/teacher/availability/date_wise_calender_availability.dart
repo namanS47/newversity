@@ -365,10 +365,10 @@ class _DateWiseCalenderAvailabilityScreenState
               ),
             ),
           ),
-          const SizedBox(
-            height: 12,
-          ),
-          slotSelectionWidget(),
+          // const SizedBox(
+          //   height: 12,
+          // ),
+          // slotSelectionWidget(),
           const SizedBox(
             height: 20,
           ),

@@ -267,56 +267,56 @@ class _AvailabilityTimingWidgetState extends State<AvailabilityTimingWidget> {
     );
   }
 
-  bool switchEnable = false;
+  bool switchEnable = true;
 
   Widget getAvailableTimeHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Text(
+      children: const [
+        Text(
           AppStrings.availableTime,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
-        Row(
-          children: [
-            Text(
-              AppStrings.fifteenMin,
-              style: TextStyle(
-                  color:
-                      switchEnable ? AppColors.grey32 : AppColors.blackMerlin,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            Transform.scale(
-              scale: 0.8,
-              child: CupertinoSwitch(
-                  value: switchEnable,
-                  trackColor: AppColors.grey35,
-                  thumbColor: AppColors.blackMerlin,
-                  activeColor: AppColors.grey35,
-                  onChanged: (val) {
-                    switchEnable = val;
-                    context.read<StudentSessionBloc>().sessionType =
-                        switchEnable ? "long" : "short";
-                    setState(() {});
-                  }),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            Text(
-              AppStrings.thirtyMin,
-              style: TextStyle(
-                  color:
-                      switchEnable ? AppColors.blackMerlin : AppColors.grey32,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
+        // Row(
+        //   children: [
+        //     Text(
+        //       AppStrings.fifteenMin,
+        //       style: TextStyle(
+        //           color:
+        //               switchEnable ? AppColors.grey32 : AppColors.blackMerlin,
+        //           fontSize: 14,
+        //           fontWeight: FontWeight.w600),
+        //     ),
+        //     const SizedBox(
+        //       width: 5,
+        //     ),
+        //     Transform.scale(
+        //       scale: 0.8,
+        //       child: CupertinoSwitch(
+        //           value: switchEnable,
+        //           trackColor: AppColors.grey35,
+        //           thumbColor: AppColors.blackMerlin,
+        //           activeColor: AppColors.grey35,
+        //           onChanged: (val) {
+        //             switchEnable = val;
+        //             context.read<StudentSessionBloc>().sessionType =
+        //                 switchEnable ? "long" : "short";
+        //             setState(() {});
+        //           }),
+        //     ),
+        //     const SizedBox(
+        //       width: 5,
+        //     ),
+        //     Text(
+        //       AppStrings.thirtyMin,
+        //       style: TextStyle(
+        //           color:
+        //               switchEnable ? AppColors.blackMerlin : AppColors.grey32,
+        //           fontSize: 14,
+        //           fontWeight: FontWeight.w600),
+        //     ),
+        //   ],
+        // ),
       ],
     );
   }

@@ -244,13 +244,13 @@ class _ProfileOverviewState extends State<ProfileOverview> {
           ),
           Row(
             children: [
-              Expanded(
-                  child: getSessionContainer(
-                      teacherDetails?.sessionPricing?[SlotType.short.toString().split(".")[1]] ?? 0,
-                      15)),
-              const SizedBox(
-                width: 10,
-              ),
+              // Expanded(
+              //     child: getSessionContainer(
+              //         teacherDetails?.sessionPricing?[SlotType.short.toString().split(".")[1]] ?? 0,
+              //         15)),
+              // const SizedBox(
+              //   width: 10,
+              // ),
               Expanded(
                   child: getSessionContainer(
                       teacherDetails?.sessionPricing?[SlotType.long.toString().split(".")[1]] ?? 0,

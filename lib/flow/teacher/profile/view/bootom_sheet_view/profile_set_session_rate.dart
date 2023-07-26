@@ -150,9 +150,10 @@ class _ProfileEditSessionRateState extends State<ProfileEditSessionRate> {
       spacing: 30,
       runSpacing: 12,
       children: List.generate(
-        listOfSession.length,
+        // listOfSession.length,
+        1,
         (curIndex) {
-          return sessionEditView(curIndex);
+          return sessionEditView(1);
         },
       ),
     );
