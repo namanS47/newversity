@@ -64,6 +64,7 @@ import '../flow/login/presentation/otp_route.dart';
 import '../flow/student/payment/view/payment_failure.dart';
 import '../flow/student/payment/view/payment_processing.dart';
 import '../flow/student/payment/view/payment_scuccessfull.dart';
+import '../flow/student/profile_dashboard/view/preparing_for_exam.dart';
 import '../flow/student/student_session/booking_session/bloc/student_session_bloc.dart';
 import '../flow/student/student_session/booking_session/view/student_session.dart';
 import '../flow/student/student_session/my_session/model/session_detail_response_model.dart';
@@ -124,7 +125,8 @@ class AppRouter {
     }
 
     if (route.toString() == AppRoutes.notificationRoute) {
-      return const StudentNotificationScreen();
+      // return const StudentNotificationScreen();
+      return ExamsPreparingFor();
     }
 
     if (route.toString() == AppRoutes.viewAllSlots) {
@@ -172,8 +174,14 @@ class AppRouter {
     }
 
     if (route.toString() == AppRoutes.studentProfileDashboardRoute) {
+      final bool? navigateToInterestSection = params as bool?;
       return BlocProvider<ProfileDashboardBloc>(
-          create: (context) => ProfileDashboardBloc(),
+          create: (context) {
+            if(navigateToInterestSection == true) {
+              return ProfileDashboardBloc()..add(ChangeStudentProfileCardIndexEvent());
+            }
+            return ProfileDashboardBloc();
+          },
           child: const StudentProfileDashboard());
     }
 

@@ -38,7 +38,7 @@ class _StudentProfileLocationState extends State<StudentProfileLocation> {
           isLoading = false;
           context
               .read<ProfileDashboardBloc>()
-              .add(ChangeProfileCardIndexEvent());
+              .add(ChangeStudentProfileCardIndexEvent());
         }
       },
     );

@@ -68,7 +68,7 @@ class _StudentProfileDashboardState extends State<StudentProfileDashboard> {
                                     .currentProfileStep >
                                 1) {
                               context.read<ProfileDashboardBloc>().add(
-                                  ChangeProfileCardIndexEvent(isBack: true));
+                                  ChangeStudentProfileCardIndexEvent(isBack: true));
                             } else {
                               Navigator.pop(context);
                             }

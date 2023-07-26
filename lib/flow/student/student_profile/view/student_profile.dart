@@ -278,22 +278,19 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
   }
 
   Widget getEditLayout() {
-    return GestureDetector(
-      onTap: () => onEditTap(),
-      child: Row(
-        children: const [
-          AppText(
-            "Edit",
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: AppColors.primaryColor,
-          ),
-          SizedBox(
-            width: 5,
-          ),
-          AppImage(image: ImageAsset.edit),
-        ],
-      ),
+    return Row(
+      children: const [
+        AppText(
+          "Edit",
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: AppColors.primaryColor,
+        ),
+        SizedBox(
+          width: 5,
+        ),
+        AppImage(image: ImageAsset.edit),
+      ],
     );
   }
 
@@ -342,7 +339,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
               )
             ],
           ),
-          getEditLayout()
+          GestureDetector(onTap: () => onEditTap(), child: getEditLayout())
         ],
       ),
     );
@@ -439,9 +436,11 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
             const SizedBox(
               height: 8,
             ),
-            getLocationTagAndEmailView(studentDetail != null
-                ? studentDetail?.location ?? "Mumbai"
-                : "Invalid Teacher Data", ImageAsset.location),
+            getLocationTagAndEmailView(
+                studentDetail != null
+                    ? studentDetail?.location ?? ""
+                    : "Invalid Teacher Data",
+                ImageAsset.location),
           ],
         ),
       ),
@@ -449,7 +448,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
   }
 
   Widget getEmail() {
-    if(studentDetail?.email?.isNotEmpty == true) {
+    if (studentDetail?.email?.isNotEmpty == true) {
       return Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.only(top: 14),
@@ -466,7 +465,8 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
               const SizedBox(
                 height: 8,
               ),
-              getLocationTagAndEmailView(studentDetail!.email!, ImageAsset.mail),
+              getLocationTagAndEmailView(
+                  studentDetail!.email!, ImageAsset.mail),
             ],
           ),
         ),
@@ -487,7 +487,18 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            getHeader("Target exam"),
+            Row(
+              children: [
+                getHeader("My Interests"),
+                const Spacer(),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushNamed(AppRoutes.studentProfileDashboardRoute, arguments: true);
+                    },
+                    child: getEditLayout()),
+              ],
+            ),
             const SizedBox(
               height: 5,
             ),

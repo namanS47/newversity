@@ -33,7 +33,7 @@ class ProfileDashboardBloc
   List<Widget> profileCardList = <Widget>[];
 
   ProfileDashboardBloc() : super(ProfileDashboardInitialState()) {
-    on<ChangeProfileCardIndexEvent>((event, emit) async {
+    on<ChangeStudentProfileCardIndexEvent>((event, emit) async {
       await changeIndex(isBack: event.isBack);
       emit(ProfileDashboardCardChangedState());
     });

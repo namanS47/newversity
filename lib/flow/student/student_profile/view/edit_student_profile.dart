@@ -340,12 +340,12 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
                                               height: 20,
                                             ),
                                             getEmailIdLayout(),
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                            targetExams.isNotEmpty
-                                                ? getTargetExamLayout()
-                                                : Container(),
+                                            // const SizedBox(
+                                            //   height: 20,
+                                            // ),
+                                            // targetExams.isNotEmpty
+                                            //     ? getTargetExamLayout()
+                                            //     : Container(),
                                             const SizedBox(
                                               height: 20,
                                             ),

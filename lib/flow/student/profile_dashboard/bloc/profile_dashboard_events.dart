@@ -3,10 +3,10 @@ part of 'profile_dahsbord_bloc.dart';
 @immutable
 abstract class ProfileDashboardEvents {}
 
-class ChangeProfileCardIndexEvent extends ProfileDashboardEvents {
+class ChangeStudentProfileCardIndexEvent extends ProfileDashboardEvents {
   final bool isBack;
 
-  ChangeProfileCardIndexEvent({this.isBack = false});
+  ChangeStudentProfileCardIndexEvent({this.isBack = false});
 }
 
 class ChangeProfileTab extends ProfileDashboardEvents {
