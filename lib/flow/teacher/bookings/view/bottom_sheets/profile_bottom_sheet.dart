@@ -18,7 +18,7 @@ class ProfileBottomSheet extends StatefulWidget {
 class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
   List<String> communicationLanguageList = ["English", "Hindi", "Sanskrit"];
   List<String> listOfTargetExam = ["Neet"];
-  List<String> listOfAcademicInformation = ["+2 Passed"];
+  // List<String> listOfAcademicInformation = ["+2 Passed"];
 
   StudentDetail? studentDetail;
 
@@ -81,10 +81,6 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    getAcademicInformation(),
                     const SizedBox(
                       height: 20,
                     ),
@@ -225,57 +221,6 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                   const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16),
               child: AppText(
                 studentDetail?.tags?[index] ?? "",
-                fontSize: 12,
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget getAcademicInformation() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const AppText(
-          "Academic Information",
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Wrap(
-          spacing: 15,
-          runSpacing: 12,
-          children: List.generate(
-            listOfAcademicInformation.length,
-            (curIndex) {
-              return academicView(curIndex);
-            },
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget academicView(int index) {
-    return Container(
-      decoration: BoxDecoration(
-          color: AppColors.primaryColor,
-          borderRadius: BorderRadius.circular(100)),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Center(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16),
-              child: AppText(
-                listOfAcademicInformation[index],
                 fontSize: 12,
                 color: Colors.white,
                 fontWeight: FontWeight.w500,

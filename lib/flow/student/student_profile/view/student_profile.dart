@@ -223,10 +223,6 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                                         const SizedBox(
                                           height: 12,
                                         ),
-                                        getAcademicInformation(),
-                                        const SizedBox(
-                                          height: 12,
-                                        ),
                                         getExpertise(),
                                         const SizedBox(
                                           height: 12,
