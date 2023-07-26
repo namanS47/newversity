@@ -7,6 +7,7 @@ import 'package:newversity/flow/student/profile_dashboard/data/model/add_tag_req
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/utils/enums.dart';
 
+import '../../../../navigation/app_routes.dart';
 import '../../../../themes/strings.dart';
 import '../../../teacher/profile/model/tags_response_model.dart';
 import '../data/model/student_detail_saving_request_model.dart';
@@ -28,7 +29,6 @@ class _ExamsPreparingForState extends State<ExamsPreparingFor> {
   bool isLoading = false;
   bool showErrorText = false;
   bool showSpecify = false;
-  final _nameController = TextEditingController();
   StudentDetail? studentDetail;
 
   @override
@@ -86,10 +86,9 @@ class _ExamsPreparingForState extends State<ExamsPreparingFor> {
                   AddTagRequestModel(tagModelList: allNewTags)));
         }
         if (state is AddedTagState) {
-          isLoading = false;
-          context
-              .read<ProfileDashboardBloc>()
-              .add(ChangeProfileCardIndexEvent());
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              AppRoutes.studentHome, (route) => false,
+              arguments: true);
         } else if (state is StudentDetailsSavingFailureState) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -106,14 +105,6 @@ class _ExamsPreparingForState extends State<ExamsPreparingFor> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              getNameHeader(),
-              const SizedBox(
-                height: 10,
-              ),
-              getNameTextField(),
-              const SizedBox(
-                height: 20,
-              ),
               getExamCrackedHeader(),
               const SizedBox(
                 height: 20,
@@ -161,12 +152,6 @@ class _ExamsPreparingForState extends State<ExamsPreparingFor> {
     );
   }
 
-  Widget getNameTextField() {
-    return AppTextFormField(
-      hintText: "Enter your name",
-      controller: _nameController,
-    );
-  }
 
   Widget getTitleHeader() {
     return const AppText(
@@ -184,12 +169,8 @@ class _ExamsPreparingForState extends State<ExamsPreparingFor> {
     );
   }
 
-  isFormValid() {
-    return _nameController.text.isNotEmpty;
-  }
-
   onProceedTap(BuildContext context) {
-    if (isFormValid()) {
+    if (allSelectedTags.isNotEmpty || allRequestedTags.isNotEmpty) {
       allSelectedTags.addAll(allRequestedTags);
       if (allSelectedTags.isNotEmpty) {
         isLoading = true;
@@ -198,7 +179,6 @@ class _ExamsPreparingForState extends State<ExamsPreparingFor> {
                 studentDetailSavingRequestModel:
                     StudentDetailSavingRequestModel(
           studentId: CommonUtils().getLoggedInUser(),
-          name: _nameController.text,
           tags: allSelectedTags,
         )));
       } else {
@@ -313,13 +293,6 @@ class _ExamsPreparingForState extends State<ExamsPreparingFor> {
   Widget getExamCrackedHeader() {
     return const Text(
       AppStrings.whatAreYouPreparingFor,
-      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-    );
-  }
-
-  Widget getNameHeader() {
-    return const Text(
-      AppStrings.yourName,
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
     );
   }

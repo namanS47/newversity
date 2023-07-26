@@ -40,8 +40,8 @@ class _StudentProfileDashboardState extends State<StudentProfileDashboard> {
         builder: (context, state) {
           if (state is ProfileDashboardInitialState) {
             context.read<ProfileDashboardBloc>().profileCardList = [
-              ExamsPreparingFor(),
-              StudentProfileLocation()
+              const StudentProfileLocation(),
+              const ExamsPreparingFor(),
             ];
           }
           return SafeArea(

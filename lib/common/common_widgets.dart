@@ -341,7 +341,9 @@ class AppTextFormField extends StatefulWidget {
       this.isEnable = true,
       this.contentPadding,
       this.textInputAction,
-      this.focusNode})
+      this.focusNode,
+      this.prefixIcon,
+      this.prefixIconConstraints})
       : super(key: key);
 
   final TextEditingController? controller;
@@ -364,6 +366,8 @@ class AppTextFormField extends StatefulWidget {
   final EdgeInsetsGeometry? contentPadding;
   final TextInputAction? textInputAction;
   final FocusNode? focusNode;
+  final Widget? prefixIcon;
+  final BoxConstraints? prefixIconConstraints;
 
   @override
   State<AppTextFormField> createState() => _AppTextFormFieldState();
@@ -407,6 +411,10 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       },
       decoration: widget.decoration ??
           InputDecoration(
+            prefixIcon: widget.prefixIcon,
+            prefixIconConstraints: widget.prefixIconConstraints,
+            iconColor: widget.fillColor ?? AppColors.grey35
+              ..withOpacity(0.83),
             contentPadding: widget.contentPadding ??
                 const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             filled: true,
@@ -662,8 +670,14 @@ class _ImagePickerOptionBottomSheetState
                   onTap: widget.onCameraClick,
                   child: Column(
                     children: [
-                      Image.asset(ImageAsset.cameraIcon, width: 50, height: 50,),
-                      const SizedBox(height: 8,),
+                      Image.asset(
+                        ImageAsset.cameraIcon,
+                        width: 50,
+                        height: 50,
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
                       const Text(
                         "Camera",
                         style: TextStyle(fontWeight: FontWeight.w600),
@@ -676,8 +690,14 @@ class _ImagePickerOptionBottomSheetState
                   onTap: widget.onGalleryClick,
                   child: Column(
                     children: [
-                      Image.asset(ImageAsset.galleryIcon, width: 50, height: 50,),
-                      const SizedBox(height: 8,),
+                      Image.asset(
+                        ImageAsset.galleryIcon,
+                        width: 50,
+                        height: 50,
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
                       const Text(
                         "Gallery",
                         style: TextStyle(fontWeight: FontWeight.w600),
@@ -702,7 +722,8 @@ class CommonWidgets {
       EdgeInsetsGeometry? padding,
       required String text}) {
     return Container(
-      padding: padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      padding:
+          padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
           color: isSelected
               ? selectedColor ?? Colors.grey
