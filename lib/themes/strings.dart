@@ -35,6 +35,7 @@ class AppStrings {
   static const selectAtLeastOneInfo = "Select any 1 of these";
   static const examsCracked = "Exams that you have cracked";
   static const whatAreYouPreparingFor = "What are you preparing for?";
+  static const selectInterest = "Please select your Interest";
   static const examsSelectionHeader = "Talk to me about";
   static const experienceAndEducation = "Experience & Qualification";
   static const title = "Title";

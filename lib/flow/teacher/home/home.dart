@@ -108,6 +108,7 @@ class _HomeState extends State<Home> {
                           BlocProvider.of<HomeSessionBloc>(context).add(FetchTeacherDetailsEvent());
                           BlocProvider.of<HomeSessionBloc>(context).add(
                               FetchSessionDetailEvent(type: getSessionType(SessionType.upcoming)));
+                          BlocProvider.of<HomeSessionBloc>(context).add(FetchTeacherSessionCountEvent());
                         });
                       },
                       child: SingleChildScrollView(

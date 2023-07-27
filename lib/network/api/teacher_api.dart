@@ -125,5 +125,6 @@ abstract class TeacherApi {
       @Part() File file, @Part() String teacherId);
 
   @GET("/session/count")
-  Future<SessionCountResponseModel> fetchTeacherSessionCount(@Query("teacherId") String teacherId);
+  @NoBody()
+  Future<SessionCountResponseModel> fetchTeacherSessionCount(@Header("teacherId") String teacherId);
 }

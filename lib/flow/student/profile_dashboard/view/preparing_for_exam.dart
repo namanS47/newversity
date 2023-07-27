@@ -118,17 +118,17 @@ class _ExamsPreparingForState extends State<ExamsPreparingFor> {
                 height: 8,
               ),
               getRequestedTagWidget(),
-              const SizedBox(
-                height: 20,
-              ),
-              showSpecify ? getTitleHeader() : Container(),
-              const SizedBox(
-                height: 20,
-              ),
-              showSpecify ? getYourDesignation() : Container(),
-              const SizedBox(
-                height: 10,
-              ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
+              // showSpecify ? getTitleHeader() : Container(),
+              // const SizedBox(
+              //   height: 20,
+              // ),
+              // showSpecify ? getYourDesignation() : Container(),
+              // const SizedBox(
+              //   height: 10,
+              // ),
               showErrorText
                   ? const AppText(
                       "Please select at least one",
@@ -138,7 +138,7 @@ class _ExamsPreparingForState extends State<ExamsPreparingFor> {
                     )
                   : Container(),
               const SizedBox(
-                height: 50,
+                height: 12,
               ),
               AppCta(
                 isLoading: isLoading,
@@ -258,9 +258,7 @@ class _ExamsPreparingForState extends State<ExamsPreparingFor> {
   }
 
   onSelectedSession(int index) {
-    if (index == allExamsTags.length - 1) {
-      showSpecify = !showSpecify;
-    } else if (allSelectedTags.contains(allExamsTags[index].tagName)) {
+    if (allSelectedTags.contains(allExamsTags[index].tagName)) {
       allSelectedTags.remove(allExamsTags[index].tagName);
     } else {
       allSelectedTags.add(allExamsTags[index].tagName!);

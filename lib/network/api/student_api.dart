@@ -90,6 +90,7 @@ abstract class StudentApi {
       @Body() PhonePeCallbackUrlRequestModel request);
 
   @GET("/phonePeTransactionStatus")
+  @NoBody()
   Future<PhonePeTransactionStatusResponseModel> getPhonePeTransactionStatus(
-      @Query("merchantTransactionId") String merchantTransactionId);
+      @Header("merchantTransactionId") String merchantTransactionId);
 }

@@ -5,6 +5,7 @@ import 'package:newversity/common/common_widgets.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/strings.dart';
+import 'package:newversity/utils/enums.dart';
 
 import '../../../../../themes/colors.dart';
 import '../../../../../utils/date_time_utils.dart';
@@ -73,6 +74,10 @@ class _AboutSessionState extends State<AboutSession> {
                   teacherDetails?.info != null
                       ? getAboutInfo()
                       : const Center(child: AppText("Not Added yet!")),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  getExpertiseContainer(),
                   const SizedBox(
                     height: 20,
                   ),
@@ -151,19 +156,48 @@ class _AboutSessionState extends State<AboutSession> {
     );
   }
 
-  Widget getTalkToMeContainer() {
+  Widget getExpertiseContainer() {
+    List<String?> expertiseTags = teacherDetails?.tags
+        ?.where((tag) =>
+    tag.tagCategory == TagCategory.expertise.toString().split(".")[1])
+        .map((tag) => tag.tagName)
+        .toList() ??
+        [];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        getHeader("Talk me about"),
+        getHeader("Expertise"),
         const SizedBox(
           height: 8,
         ),
         teacherDetails != null
             ? teacherDetails?.tags != null
                 ? teacherDetails!.tags!.isNotEmpty
-                    ? getTargetExamViewList()
+                    ? getTargetExamViewList(expertiseTags)
                     : noDataFound(40)
+                : noDataFound(40)
+            : getProgressIndicator(40),
+      ],
+    );
+  }
+
+  Widget getTalkToMeContainer() {
+    List<String?> scopeTags = teacherDetails?.tags
+            ?.where((tag) =>
+                tag.tagCategory == TagCategory.scope.toString().split(".")[1])
+            .map((tag) => tag.tagName)
+            .toList() ??
+        [];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        getHeader("Talks about"),
+        const SizedBox(
+          height: 8,
+        ),
+        teacherDetails != null
+            ? scopeTags.isNotEmpty ?
+                getTargetExamViewList(scopeTags)
                 : noDataFound(40)
             : getProgressIndicator(40),
       ],
@@ -206,14 +240,14 @@ class _AboutSessionState extends State<AboutSession> {
     );
   }
 
-  Widget getTargetExamViewList() {
+  Widget getTargetExamViewList(List<String?> tags) {
     return Wrap(
       spacing: 15,
       runSpacing: 12,
       children: List.generate(
-        teacherDetails?.tags?.length ?? 0,
+        tags.length,
         (curIndex) {
-          return getTagView(teacherDetails?.tags?[curIndex].tagName ?? "");
+          return getTagView(tags[curIndex] ?? "");
         },
       ),
     );
