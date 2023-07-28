@@ -20,7 +20,7 @@ part 'student_session_states.dart';
 class StudentSessionBloc
     extends Bloc<StudentSessionEvents, StudentSessionStates> {
   double? amount = 0;
-  String? sessionType = "short";
+  String? sessionType = "long";
   DateTime selectedDate = DateTime.now();
   int selectedDateIndex = 0;
   String? availabilityId;

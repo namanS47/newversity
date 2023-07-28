@@ -29,8 +29,7 @@ class _ProfileEditSessionRateState extends State<ProfileEditSessionRate> {
   onTapContinueButton(BuildContext context) async {}
 
   bool isFormValid() {
-    return session15minController.text.isNotEmpty &&
-        session30minController.text.isNotEmpty;
+    return session30minController.text.isNotEmpty;
   }
 
   @override
