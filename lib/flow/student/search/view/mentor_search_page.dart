@@ -121,7 +121,7 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             AppText(
@@ -152,30 +152,39 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
   }
 
   Widget getSearchSuggestionWidget() {
+    if(context.read<MentorSearchBloc>().resultedTags.isEmpty) {
+      return Container();
+    }
+
     return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Expertise",
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.blackRussian),
+      child: SingleChildScrollView(
+        child: SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Expertise",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.blackRussian),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                Wrap(
+                  runSpacing: 12,
+                  spacing: 10,
+                  children: List.generate(
+                      context.read<MentorSearchBloc>().resultedTags.length,
+                      (index) => getTagContainerWithIconWidget(index, context.read<MentorSearchBloc>().resultedTags[index]!)),
+                ),
+              ],
             ),
-            const SizedBox(
-              height: 16,
-            ),
-            Wrap(
-              runSpacing: 12,
-              spacing: 10,
-              children: List.generate(
-                  context.read<MentorSearchBloc>().resultedTags.length,
-                  (index) => getTagContainerWithIconWidget(index, context.read<MentorSearchBloc>().resultedTags[index]!)),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -210,29 +219,6 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
             const SizedBox(width: 6,),
             Text(context.read<MentorSearchBloc>().resultedTags[index] ?? "", style:
               const TextStyle(fontWeight: FontWeight.w500, color: AppColors.cyanBlue),)
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget getTopSearchedWidget() {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          physics: const BouncingScrollPhysics(),
-          children: [
-            const AppText(
-              "Top searches",
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            getSearchSuggestionWidget(),
           ],
         ),
       ),
@@ -275,6 +261,7 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
                 border: InputBorder.none,
               ),
               onFieldSubmitted: (value) {
+                getTagsBySearchKeywordEventTimer?.cancel();
                 context.read<MentorSearchBloc>().add(
                     FetchTeacherListByTagNameEvent(
                         tagName: value.toString().toLowerCase()));
