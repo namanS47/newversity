@@ -66,8 +66,8 @@ class CommonUtils {
     }
   }
 
-  Future<String> getAppVersion() {
-    return PackageInfo.fromPlatform()
+  Future<String> getAppVersion() async {
+    return await PackageInfo.fromPlatform()
         .then((info) => info.version);
   }
 

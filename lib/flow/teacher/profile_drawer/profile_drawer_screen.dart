@@ -7,6 +7,7 @@ import 'package:newversity/resources/images.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/themes/strings.dart';
 
+import '../../../common/common_utils.dart';
 import '../../../config/app_config.dart';
 
 class ProfileDrawerScreen extends StatefulWidget {
@@ -95,6 +96,16 @@ class _ProfileDrawerScreenState extends State<ProfileDrawerScreen> {
                     const SizedBox(height: 40),
                   ],
                 ),
+              ),
+              FutureBuilder<String>(
+                future: CommonUtils().getAppVersion(),
+                builder:
+                    (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 20, bottom: 8),
+                    child: Text("App Version ${snapshot.data}", style: const TextStyle(fontSize: 16),),
+                  );
+                },
               ),
               GestureDetector(
                 onTap: () => onLogout(),

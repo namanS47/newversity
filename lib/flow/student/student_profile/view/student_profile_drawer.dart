@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newversity/common/common_utils.dart';
 import 'package:newversity/flow/student/student_profile/bloc/student_profile_bloc.dart';
 
 import '../../../../common/common_widgets.dart';
@@ -96,6 +97,16 @@ class _StudentProfileDrawerScreenState
                   ],
                 ),
               ),
+              FutureBuilder<String>(
+                future: CommonUtils().getAppVersion(),
+                builder:
+                    (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 20, bottom: 8),
+                    child: Text("App Version ${snapshot.data}", style: const TextStyle(fontSize: 16),),
+                  );
+                },
+              ),
               GestureDetector(
                 onTap: () => onLogout(),
                 child: Container(
@@ -154,10 +165,12 @@ class _StudentProfileDrawerScreenState
       //   Navigator.of(context).pushNamed(AppRoutes.settings);
       //   break;
       case 0:
-        Navigator.of(context).pushNamed(AppRoutes.webViewRoute, arguments: AppConfig.instance.config.privacyPolicyUrl);
+        Navigator.of(context).pushNamed(AppRoutes.webViewRoute,
+            arguments: AppConfig.instance.config.privacyPolicyUrl);
         break;
       case 1:
-        Navigator.of(context).pushNamed(AppRoutes.webViewRoute, arguments: AppConfig.instance.config.termsAndConditionsUrl);
+        Navigator.of(context).pushNamed(AppRoutes.webViewRoute,
+            arguments: AppConfig.instance.config.termsAndConditionsUrl);
         break;
       case 2:
         Navigator.of(context).pushNamed(AppRoutes.helpAndSupport);
