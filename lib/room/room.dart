@@ -270,9 +270,7 @@ class _MeetingPageState extends State<MeetingPage>
     return WillPopScope(
       // Used to call "leave room" upon clicking back button [in android]
       onWillPop: () async {
-        hmsSDK.leave();
-        Navigator.pop(context);
-        return true;
+        return false;
       },
       child: SafeArea(
         child: Scaffold(
@@ -372,5 +370,10 @@ class _MeetingPageState extends State<MeetingPage>
         }
         break;
     }
+  }
+
+  @override
+  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
+
   }
 }
