@@ -565,50 +565,7 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
     );
   }
 
-  Widget getTargetExamLayout() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            getHeaderText("Target exam"),
-            const SizedBox(
-              width: 10,
-            ),
-            getCompulsuryWidget()
-          ],
-        ),
-        const SizedBox(
-          height: 12,
-        ),
-        getTargetDropDown()
-      ],
-    );
-  }
-
   final List<String> allExamTags = ['Salaried', 'Self Employed'];
-
-  Widget getTargetDropDown() {
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-        color: AppColors.grey35,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: AppDropdownButton(
-            hint: allSelectedTag.isNotEmpty
-                ? "${allSelectedTag}select more target exams.."
-                : '-Select-',
-            value: targetExam,
-            dropdownItems: targetExams,
-            onChanged: (value) => selectTargetExamTag(value ?? ""),
-          ),
-        ),
-      ),
-    );
-  }
 
   void selectTargetExamTag(String value) {
     if (!allSelectedTag.contains(value)) {

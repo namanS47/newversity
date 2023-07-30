@@ -110,38 +110,52 @@ class AppDropdownButton extends StatelessWidget {
                   .toList(),
           onChanged: onChanged,
           selectedItemBuilder: selectedItemBuilder,
-          icon: Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: icon ?? const Icon(Icons.expand_more),
+          iconStyleData: IconStyleData(
+            icon: Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: icon ?? const Icon(Icons.expand_more),
+            ),
+            iconSize: iconSize ?? 22,
+            iconEnabledColor: iconEnabledColor,
+            iconDisabledColor: iconDisabledColor,
           ),
-          iconSize: iconSize ?? 22,
-          iconEnabledColor: iconEnabledColor,
-          iconDisabledColor: iconDisabledColor,
-          buttonHeight: buttonHeight ?? 50,
-          buttonWidth: buttonWidth,
-          buttonPadding: buttonPadding ?? EdgeInsets.zero,
-          buttonDecoration: buttonDecoration ??
-              BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-              ),
-          buttonElevation: buttonElevation,
-          itemHeight: itemHeight ?? 52,
-          itemPadding:
-              itemPadding ?? const EdgeInsets.only(left: 14, right: 14),
-          dropdownMaxHeight: dropdownHeight ?? 200,
-          dropdownWidth: dropdownWidth ?? 290,
-          dropdownPadding: dropdownPadding,
-          dropdownDecoration: dropdownDecoration ??
-              BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: AppColors.whiteColor,
-              ),
-          dropdownElevation: dropdownElevation ?? 8,
-          scrollbarRadius: scrollbarRadius ?? const Radius.circular(40),
-          scrollbarThickness: scrollbarThickness,
-          scrollbarAlwaysShow: scrollbarAlwaysShow,
-          offset: offset,
-          dropdownOverButton: false,
+          buttonStyleData: ButtonStyleData(
+            height: buttonHeight ?? 50,
+            width: buttonWidth,
+            padding: buttonPadding ?? EdgeInsets.zero,
+            decoration: buttonDecoration ??
+                BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+            elevation: buttonElevation,
+          ),
+
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: dropdownHeight ?? 200,
+            width: dropdownWidth ?? 290,
+            padding: dropdownPadding,
+            decoration: dropdownDecoration ??
+                BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: AppColors.whiteColor,
+                ),
+            elevation: dropdownElevation ?? 8,
+            scrollbarTheme: ScrollbarThemeData(
+              radius: scrollbarRadius ?? const Radius.circular(40),
+              thickness: scrollbarThickness != null
+                  ? MaterialStateProperty.all<double>(scrollbarThickness!)
+                  : null,
+              thumbVisibility: scrollbarAlwaysShow != null
+                  ? MaterialStateProperty.all<bool>(scrollbarAlwaysShow!)
+                  : null,
+            ),
+            isOverButton: false
+          ),
+          menuItemStyleData: MenuItemStyleData(
+            height: itemHeight ?? 52,
+            padding:
+            itemPadding ?? const EdgeInsets.only(left: 14, right: 14),
+          ),
         ),
       ),
     );
