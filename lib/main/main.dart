@@ -20,13 +20,13 @@ defaultMain() async {
   final firebaseMessagingService = FirebaseMessagingService();
   await firebaseMessagingService.initialize();
   setupLocator();
-  BlocOverrides.runZoned(
-    () async {
-      runApp(const MyApp());
-    },
-    blocObserver: AppBlocObserver(),
-  );
-  // runApp(const MyApp());
+  // BlocOverrides.runZoned(
+  //   () async {
+  //     runApp(const MyApp());
+  //   },
+  //   blocObserver: AppBlocObserver(),
+  // );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

@@ -72,12 +72,12 @@ class _StudentUpcomingSessionScreenState
                     ),
                   );
                 } else if (state is UpcomingDataNotFoundState) {
-                  return SizedBox(
+                  return const SizedBox(
                     height: 400,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
+                      children: [
                         Center(
                           child: AppText(
                             "No Upcoming Session Found",
@@ -275,9 +275,9 @@ class _StudentUpcomingSessionScreenState
                                       1801
                                   ? AppColors.cyanBlue
                                   : AppColors.grey55),
-                          child: Column(
+                          child: const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               AppText(
                                 "JOIN NOW",
                                 fontSize: 14,

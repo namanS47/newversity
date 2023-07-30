@@ -96,11 +96,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget studentNameAndIntroWidget() {
-    return SizedBox(
+    return const SizedBox(
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Text(
             AppStrings.hiStudent,
             style: TextStyle(
@@ -124,11 +124,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget teacherNameAndIntroWidget() {
-    return SizedBox(
+    return const SizedBox(
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Text(
             AppStrings.hiMentor,
             style: TextStyle(
@@ -320,9 +320,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget changeUserTypeWidget() {
     if (userType == UserType.teacher) {
-      return Row(
+      return const Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Text(
             AppStrings.notMentor,
             style: TextStyle(
@@ -340,9 +340,9 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       );
     } else {
-      return Row(
+      return const Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Text(
             AppStrings.notStudent,
             style: TextStyle(
