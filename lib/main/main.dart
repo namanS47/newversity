@@ -20,12 +20,7 @@ defaultMain() async {
   final firebaseMessagingService = FirebaseMessagingService();
   await firebaseMessagingService.initialize();
   setupLocator();
-  // BlocOverrides.runZoned(
-  //   () async {
-  //     runApp(const MyApp());
-  //   },
-  //   blocObserver: AppBlocObserver(),
-  // );
+  Bloc.observer = AppBlocObserver();
   runApp(const MyApp());
 }
 

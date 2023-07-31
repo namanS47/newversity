@@ -44,7 +44,7 @@ class _StudentUpcomingSessionScreenState
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () {
-        return Future.delayed(Duration(seconds: 0), () {
+        return Future.delayed(const Duration(seconds: 0), () {
           BlocProvider.of<StudentUpcomingSessionBloc>(context).add(
               FetchStudentUpcomingSessionEvent(
                   sessionType: getSessionType(SessionType.upcoming)));
