@@ -305,7 +305,7 @@ class _AddEducationState extends State<AddEducation> {
       firstDate: DateTime(1988),
       lastDate: DateTime.now(),
       initialDate: DateTime.now().subtract(const Duration(days: 1)),
-      helpText: "Date of Birthdate",
+      helpText: "Select Start Date",
       confirmText: "Okay",
       cancelText: "Cancel",
       builder: (context, child) {
@@ -341,7 +341,7 @@ class _AddEducationState extends State<AddEducation> {
       firstDate: DateTime(1988),
       lastDate: DateTime.now(),
       initialDate: DateTime.now().subtract(const Duration(days: 1)),
-      helpText: "Date of Birthdate",
+      helpText: "Select End Date",
       confirmText: "Okay",
       cancelText: "Cancel",
       builder: (context, child) {

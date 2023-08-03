@@ -323,14 +323,18 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
 
   onAddingEducation(BuildContext context) async {
     await Navigator.of(context).pushNamed(AppRoutes.addEducation);
-    BlocProvider.of<ProfileBloc>(context).add(FetchTeachersExperienceEvent());
-    BlocProvider.of<ProfileBloc>(context).add(FetchTeachersEducationEvents());
+    if(context.mounted) {
+      BlocProvider.of<ProfileBloc>(context).add(FetchTeachersExperienceEvent());
+      BlocProvider.of<ProfileBloc>(context).add(FetchTeachersEducationEvents());
+    }
   }
 
   onAddingExperience(BuildContext context) async {
     await Navigator.of(context).pushNamed(AppRoutes.addExperience);
-    BlocProvider.of<ProfileBloc>(context).add(FetchTeachersExperienceEvent());
-    BlocProvider.of<ProfileBloc>(context).add(FetchTeachersEducationEvents());
+    if(context.mounted) {
+      BlocProvider.of<ProfileBloc>(context).add(FetchTeachersExperienceEvent());
+      BlocProvider.of<ProfileBloc>(context).add(FetchTeachersEducationEvents());
+    }
   }
 
   Widget getContainerHeaderLayout(String headerName, context) {
