@@ -26,15 +26,19 @@ class _DateWiseCalenderAvailabilityScreenState
   @override
   void initState() {
     super.initState();
-    currentDateTime = context.read<AvailabilityBloc>().selectedDate;
-    todayDate =  DateTime.now();
+    currentDateTime = context
+        .read<AvailabilityBloc>()
+        .selectedDate;
+    todayDate = DateTime.now();
     context.read<AvailabilityBloc>().add(FetchAvailabilityArgumentEvent(
         date: currentDateTime ?? DateTime.now()));
   }
 
   @override
   Widget build(BuildContext context) {
-    size = MediaQuery.of(context).size;
+    size = MediaQuery
+        .of(context)
+        .size;
     return BlocConsumer<AvailabilityBloc, AvailabilityState>(
       listener: (context, state) {
         // TODO: implement listener
@@ -50,8 +54,13 @@ class _DateWiseCalenderAvailabilityScreenState
                   height: 24,
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width,
-                  color: context.read<AvailabilityBloc>().isCalenderView
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  color: context
+                      .read<AvailabilityBloc>()
+                      .isCalenderView
                       ? AppColors.whiteColor
                       : AppColors.lightCyan,
                   child: updateAvailabilityWidget(),
@@ -73,9 +82,10 @@ class _DateWiseCalenderAvailabilityScreenState
         ),
         const Spacer(),
         InkWell(
-          onTap: () => context
-              .read<AvailabilityBloc>()
-              .add(AddAvailabilityArgumentsEvent()),
+          onTap: () =>
+              context
+                  .read<AvailabilityBloc>()
+                  .add(AddAvailabilityArgumentsEvent()),
           child: const Icon(
             Icons.add,
             color: AppColors.cyanBlue,
@@ -87,17 +97,23 @@ class _DateWiseCalenderAvailabilityScreenState
 
   Widget addAvailabilityWidget() {
     return Visibility(
-      visible: !context.read<AvailabilityBloc>().showUpdateAvailabilityWidget &&
-          context.read<AvailabilityBloc>().alreadyAvailableList.isEmpty,
+      visible: !context
+          .read<AvailabilityBloc>()
+          .showUpdateAvailabilityWidget &&
+          context
+              .read<AvailabilityBloc>()
+              .alreadyAvailableList
+              .isEmpty,
       child: Container(
         height: 102,
         margin: const EdgeInsets.only(top: 12),
         decoration: BoxDecoration(
             color: AppColors.grey35, borderRadius: BorderRadius.circular(20)),
         child: InkWell(
-          onTap: () => context
-              .read<AvailabilityBloc>()
-              .add(AddAvailabilityArgumentsEvent()),
+          onTap: () =>
+              context
+                  .read<AvailabilityBloc>()
+                  .add(AddAvailabilityArgumentsEvent()),
           child: Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -135,7 +151,9 @@ class _DateWiseCalenderAvailabilityScreenState
           ),
           Text(
             DateTimeUtils.getBirthFormattedDateTime(
-                context.read<AvailabilityBloc>().selectedDate),
+                context
+                    .read<AvailabilityBloc>()
+                    .selectedDate),
             style: const TextStyle(fontSize: 16, color: AppColors.blackRussian),
           )
         ],
@@ -155,9 +173,12 @@ class _DateWiseCalenderAvailabilityScreenState
           getAvailabilityListWidget(),
           Visibility(
             visible: context
+                .read<AvailabilityBloc>()
+                .showUpdateAvailabilityWidget &&
+                context
                     .read<AvailabilityBloc>()
-                    .showUpdateAvailabilityWidget &&
-                context.read<AvailabilityBloc>().availabilityList.isNotEmpty,
+                    .availabilityList
+                    .isNotEmpty,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -204,9 +225,13 @@ class _DateWiseCalenderAvailabilityScreenState
           CommonWidgets.snackBarWidget(context, state.message);
         }
         if (state is SaveAvailabilitySuccessSate) {
-          context.read<AvailabilityBloc>().showUpdateAvailabilityWidget = false;
+          context
+              .read<AvailabilityBloc>()
+              .showUpdateAvailabilityWidget = false;
           context.read<AvailabilityBloc>().add(FetchAvailabilityArgumentEvent(
-              date: context.read<AvailabilityBloc>().selectedDate));
+              date: context
+                  .read<AvailabilityBloc>()
+                  .selectedDate));
         }
       },
       builder: (context, state) {
@@ -221,7 +246,10 @@ class _DateWiseCalenderAvailabilityScreenState
           isLoading: isLoading,
           width: (size.width - 32 - 16) / 2,
           onTap: () {
-            if (context.read<AvailabilityBloc>().availabilityList.isEmpty ||
+            if (context
+                .read<AvailabilityBloc>()
+                .availabilityList
+                .isEmpty ||
                 !context.read<AvailabilityBloc>().isAddedAvailabilityValid()) {
               CommonWidgets.snackBarWidget(context, "Please add availability");
             } else {
@@ -237,22 +265,29 @@ class _DateWiseCalenderAvailabilityScreenState
   Widget getAvailabilityListWidget() {
     return BlocBuilder<AvailabilityBloc, AvailabilityState>(
         builder: (context, AvailabilityState state) {
-      return Visibility(
-        visible: context.read<AvailabilityBloc>().showUpdateAvailabilityWidget,
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: context.read<AvailabilityBloc>().availabilityList.length,
-          itemBuilder: (context, index) {
-            return SelectSlotDuration(
-              arguments:
-                  context.read<AvailabilityBloc>().availabilityList[index],
-              index: index,
-            );
-          },
-        ),
-      );
-    });
+          return Visibility(
+            visible: context
+                .read<AvailabilityBloc>()
+                .showUpdateAvailabilityWidget,
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: context
+                  .read<AvailabilityBloc>()
+                  .availabilityList
+                  .length,
+              itemBuilder: (context, index) {
+                return SelectSlotDuration(
+                  arguments:
+                  context
+                      .read<AvailabilityBloc>()
+                      .availabilityList[index],
+                  index: index,
+                );
+              },
+            ),
+          );
+        });
   }
 
   Widget getCancelUpdateCta() {
@@ -260,10 +295,17 @@ class _DateWiseCalenderAvailabilityScreenState
       text: "Cancel",
       width: (size.width - 32 - 16) / 2,
       onTap: () {
-        context.read<AvailabilityBloc>().showUpdateAvailabilityWidget = false;
-        context.read<AvailabilityBloc>().availabilityList.clear();
+        context
+            .read<AvailabilityBloc>()
+            .showUpdateAvailabilityWidget = false;
+        context
+            .read<AvailabilityBloc>()
+            .availabilityList
+            .clear();
         context.read<AvailabilityBloc>().add(FetchAvailabilityArgumentEvent(
-            date: context.read<AvailabilityBloc>().selectedDate));
+            date: context
+                .read<AvailabilityBloc>()
+                .selectedDate));
       },
     );
   }
@@ -298,10 +340,10 @@ class _DateWiseCalenderAvailabilityScreenState
                         width: 27,
                         decoration: BoxDecoration(
                             color: compareDate(
-                                    context
-                                        .read<AvailabilityBloc>()
-                                        .selectedDate,
-                                    details.date)
+                                context
+                                    .read<AvailabilityBloc>()
+                                    .selectedDate,
+                                details.date)
                                 ? AppColors.strongCyan
                                 : AppColors.whiteColor,
                             shape: BoxShape.circle),
@@ -310,16 +352,16 @@ class _DateWiseCalenderAvailabilityScreenState
                             details.date.day.toString(),
                             style: TextStyle(
                               color: compareDate(
-                                      context
-                                          .read<AvailabilityBloc>()
-                                          .selectedDate,
-                                      details.date)
+                                  context
+                                      .read<AvailabilityBloc>()
+                                      .selectedDate,
+                                  details.date)
                                   ? AppColors.whiteColor
                                   : todayDate.compareTo(details.date) < 0 ||
-                                          DateUtils.isSameDay(
-                                              todayDate, details.date)
-                                      ? AppColors.cyanBlue
-                                      : AppColors.grey55,
+                                  DateUtils.isSameDay(
+                                      todayDate, details.date)
+                                  ? AppColors.cyanBlue
+                                  : AppColors.grey55,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -329,7 +371,9 @@ class _DateWiseCalenderAvailabilityScreenState
                   },
                   onTap: (val) {
                     setState(() {
-                      context.read<AvailabilityBloc>().selectedDate =
+                      context
+                          .read<AvailabilityBloc>()
+                          .selectedDate =
                           val.date ?? todayDate;
                       context.read<AvailabilityBloc>().add(
                           FetchAvailabilityArgumentEvent(
@@ -414,7 +458,9 @@ class _DateWiseCalenderAvailabilityScreenState
   }
 
   Widget slotTypeWidget(SlotType slotType) {
-    bool isSelected = slotType == context.read<AvailabilityBloc>().sessionType;
+    bool isSelected = slotType == context
+        .read<AvailabilityBloc>()
+        .sessionType;
     String slotString = "";
     switch (slotType) {
       case SlotType.short:
@@ -427,20 +473,23 @@ class _DateWiseCalenderAvailabilityScreenState
         slotString = "Both";
     }
     return InkWell(
-      onTap: () => setState(() {
-        context.read<AvailabilityBloc>().sessionType = slotType;
-      }),
+      onTap: () =>
+          setState(() {
+            context
+                .read<AvailabilityBloc>()
+                .sessionType = slotType;
+          }),
       child: Row(
         children: [
           isSelected
               ? const Icon(
-                  Icons.radio_button_checked,
-                  color: AppColors.cyanBlue,
-                )
+            Icons.radio_button_checked,
+            color: AppColors.cyanBlue,
+          )
               : const Icon(
-                  Icons.radio_button_off,
-                  color: AppColors.grey60,
-                ),
+            Icons.radio_button_off,
+            color: AppColors.grey60,
+          ),
           const SizedBox(
             width: 10,
           ),
@@ -470,13 +519,17 @@ class AvailableSlotDuration extends StatefulWidget {
 
 class _AvailableSlotDurationState extends State<AvailableSlotDuration> {
   final List<TimeOfDay> allTimes = DateTimeUtils.getAllAvailableTime();
+  final List<TimeOfDay> allTimesToday = DateTimeUtils.getSelectedAvailableTime(
+      TimeOfDay.now(), 30, true);
   int start = 0;
   int end = 1;
   late Size size;
 
   @override
   Widget build(BuildContext context) {
-    size = MediaQuery.of(context).size;
+    size = MediaQuery
+        .of(context)
+        .size;
     return BlocConsumer<AvailabilityBloc, AvailabilityState>(
       listener: (context, state) {
         // TODO: implement listener
@@ -549,7 +602,7 @@ class _AvailableSlotDurationState extends State<AvailableSlotDuration> {
                         child: Icon(
                           Icons.delete,
                           color: widget.arguments.selectedStartTime != null &&
-                                  widget.arguments.selectedEndTime != null
+                              widget.arguments.selectedEndTime != null
                               ? AppColors.lightRed
                               : AppColors.grey60,
                           size: 20,
@@ -562,38 +615,43 @@ class _AvailableSlotDurationState extends State<AvailableSlotDuration> {
               const SizedBox(
                 height: 10,
               ),
-              context.read<AvailabilityBloc>().editedSlotIndex == widget.index
+              context
+                  .read<AvailabilityBloc>()
+                  .editedSlotIndex == widget.index
                   ? Container(
-                    color: AppColors.whiteColor,
-                    child: Row(
-                      children: [
-                        getCancelUpdateCta(),
-                        const Spacer(),
-                        getUpdateCta(),
-                      ],
-                    ),
-                  )
+                color: AppColors.whiteColor,
+                child: Row(
+                  children: [
+                    getCancelUpdateCta(),
+                    const Spacer(),
+                    getUpdateCta(),
+                  ],
+                ),
+              )
                   : GestureDetector(
-                      onTap: () {
-                        context
-                            .read<AvailabilityBloc>()
-                            .add(UpdateEditedSlotEvent(index: widget.index));
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        decoration: const BoxDecoration(
-                            color: AppColors.lightCyan,
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(20),
-                                bottomRight: Radius.circular(20))),
-                        child: const Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 5.0),
-                            child: AppText("Edit slot"),
-                          ),
-                        ),
-                      ),
-                    )
+                onTap: () {
+                  context
+                      .read<AvailabilityBloc>()
+                      .add(UpdateEditedSlotEvent(index: widget.index));
+                },
+                child: Container(
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
+                  decoration: const BoxDecoration(
+                      color: AppColors.lightCyan,
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20))),
+                  child: const Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5.0),
+                      child: AppText("Edit slot"),
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         );
@@ -612,14 +670,20 @@ class _AvailableSlotDurationState extends State<AvailableSlotDuration> {
           updateLoading = false;
           CommonWidgets.snackBarWidget(
               context, "Updated Availability interval!");
-          context.read<AvailabilityBloc>().editedSlotIndex = -1;
+          context
+              .read<AvailabilityBloc>()
+              .editedSlotIndex = -1;
           context.read<AvailabilityBloc>().add(FetchAvailabilityArgumentEvent(
-              date: context.read<AvailabilityBloc>().selectedDate));
+              date: context
+                  .read<AvailabilityBloc>()
+                  .selectedDate));
         }
       },
       builder: (context, state) {
         return Visibility(
-          visible: context.read<AvailabilityBloc>().editedSlotIndex != -1,
+          visible: context
+              .read<AvailabilityBloc>()
+              .editedSlotIndex != -1,
           child: AppCta(
             width: (size.width - 32 - 16) / 2,
             onTap: () => onUpdateTap(),
@@ -635,7 +699,10 @@ class _AvailableSlotDurationState extends State<AvailableSlotDuration> {
 
   onUpdateTap() {
     updateLoading = true;
-    if (context.read<AvailabilityBloc>().alreadyAvailableList.isEmpty ||
+    if (context
+        .read<AvailabilityBloc>()
+        .alreadyAvailableList
+        .isEmpty ||
         !context.read<AvailabilityBloc>().isAddedAlreadyAvailabilityValid()) {
       CommonWidgets.snackBarWidget(context, "Please add availability");
     } else {
@@ -656,6 +723,10 @@ class _AvailableSlotDurationState extends State<AvailableSlotDuration> {
   }
 
   Widget selectStartTimeWidget() {
+    List<TimeOfDay> availableTimesForToday = DateTimeUtils().isDaySame(
+        DateTime.now(), context
+        .read<AvailabilityBloc>()
+        .selectedDate) ? allTimesToday : allTimes;
     return SizedBox(
       height: 40,
       width: 115,
@@ -669,7 +740,7 @@ class _AvailableSlotDurationState extends State<AvailableSlotDuration> {
                         widget.arguments.selectedStartTime!, context)
                     : null
                 : null,
-        dropdownItems: allTimes
+        dropdownItems: availableTimesForToday
             .map((e) => DateTimeUtils.getTimeFormat(e, context))
             .toList(),
         onChanged: (value) =>
@@ -699,30 +770,34 @@ class _AvailableSlotDurationState extends State<AvailableSlotDuration> {
 
   Widget selectEndTimeWidget() {
     final List<TimeOfDay> availableTimes =
-        DateTimeUtils.getSelectedAvailableTime(
-            widget.arguments.selectedStartTime ?? allTimes[0], 30);
+    DateTimeUtils.getSelectedAvailableTime(
+        widget.arguments.selectedStartTime ?? allTimes[0], 30, false);
     return SizedBox(
       height: 40,
       width: 115,
       child: AppDropdownButton(
         hint: DateTimeUtils.getTimeFormat(
             widget.arguments.selectedEndTime!, context),
-        value: context.read<AvailabilityBloc>().editedSlotIndex == widget.index
+        value: context
+            .read<AvailabilityBloc>()
+            .editedSlotIndex == widget.index
             ? widget.arguments.selectedEndTime != null
-                ? DateTimeUtils.getTimeFormat(
-                    widget.arguments.selectedEndTime!, context)
-                : null
+            ? DateTimeUtils.getTimeFormat(
+            widget.arguments.selectedEndTime!, context)
+            : null
             : null,
         dropdownItems: availableTimes
             .map((e) => DateTimeUtils.getTimeFormat(e, context))
             .toList(),
         onChanged: (value) =>
-            context.read<AvailabilityBloc>().editedSlotIndex == widget.index
-                ? setState(() {
-                    widget.arguments.selectedEndTime =
-                        DateTimeUtils.stringToTimeOfDay(value!);
-                  })
-                : null,
+        context
+            .read<AvailabilityBloc>()
+            .editedSlotIndex == widget.index
+            ? setState(() {
+          widget.arguments.selectedEndTime =
+              DateTimeUtils.stringToTimeOfDay(value!);
+        })
+            : null,
         buttonPadding: const EdgeInsets.only(left: 8),
         dropdownWidth: 115,
         buttonDecoration: BoxDecoration(
@@ -749,6 +824,8 @@ class SelectSlotDuration extends StatefulWidget {
 
 class _SelectSlotDurationState extends State<SelectSlotDuration> {
   final List<TimeOfDay> allTimes = DateTimeUtils.getAllAvailableTime();
+  final List<TimeOfDay> allTimesToday = DateTimeUtils.getSelectedAvailableTime(
+      TimeOfDay.now(), 30, true);
   int start = 0;
   int end = 1;
 
@@ -817,7 +894,7 @@ class _SelectSlotDurationState extends State<SelectSlotDuration> {
               child: Icon(
                 Icons.delete,
                 color: widget.arguments.selectedStartTime != null &&
-                        widget.arguments.selectedEndTime != null
+                    widget.arguments.selectedEndTime != null
                     ? AppColors.lightRed
                     : AppColors.grey60,
                 size: 20,
@@ -830,6 +907,10 @@ class _SelectSlotDurationState extends State<SelectSlotDuration> {
   }
 
   Widget selectStartTimeWidget() {
+    List<TimeOfDay> availableTimesForToday = DateTimeUtils().isDaySame(
+        DateTime.now(), context
+        .read<AvailabilityBloc>()
+        .selectedDate) ? allTimesToday : allTimes;
     return SizedBox(
       height: 40,
       width: 115,
@@ -837,21 +918,22 @@ class _SelectSlotDurationState extends State<SelectSlotDuration> {
         hint: "Enter",
         value: widget.arguments.selectedStartTime != null
             ? DateTimeUtils.getTimeFormat(
-                widget.arguments.selectedStartTime!, context)
+            widget.arguments.selectedStartTime!, context)
             : null,
-        dropdownItems: allTimes
+        dropdownItems: availableTimesForToday
             .map((e) => DateTimeUtils.getTimeFormat(e, context))
             .toList(),
-        onChanged: (val) => setState(() {
-          final timeOFDay = DateTimeUtils.stringToTimeOfDay(val!);
-          if (widget.arguments.selectedEndTime != null &&
-              timeOFDay.hour * 60 + timeOFDay.minute >=
-                  widget.arguments.selectedEndTime!.hour * 60 +
-                      widget.arguments.selectedEndTime!.minute) {
-            widget.arguments.selectedEndTime = null;
-          }
-          widget.arguments.selectedStartTime = timeOFDay;
-        }),
+        onChanged: (val) =>
+            setState(() {
+              final timeOFDay = DateTimeUtils.stringToTimeOfDay(val!);
+              if (widget.arguments.selectedEndTime != null &&
+                  timeOFDay.hour * 60 + timeOFDay.minute >=
+                      widget.arguments.selectedEndTime!.hour * 60 +
+                          widget.arguments.selectedEndTime!.minute) {
+                widget.arguments.selectedEndTime = null;
+              }
+              widget.arguments.selectedStartTime = timeOFDay;
+            }),
         buttonPadding: const EdgeInsets.only(left: 8),
         dropdownWidth: 115,
         buttonDecoration: BoxDecoration(
@@ -866,8 +948,8 @@ class _SelectSlotDurationState extends State<SelectSlotDuration> {
 
   Widget selectEndTimeWidget() {
     final List<TimeOfDay> availableTimes =
-        DateTimeUtils.getSelectedAvailableTime(
-            widget.arguments.selectedStartTime ?? allTimes[0], 30);
+    DateTimeUtils.getSelectedAvailableTime(
+        widget.arguments.selectedStartTime ?? allTimes[0], 30, false);
     return SizedBox(
       height: 40,
       width: 115,
@@ -875,15 +957,16 @@ class _SelectSlotDurationState extends State<SelectSlotDuration> {
         hint: "Enter",
         value: widget.arguments.selectedEndTime != null
             ? DateTimeUtils.getTimeFormat(
-                widget.arguments.selectedEndTime!, context)
+            widget.arguments.selectedEndTime!, context)
             : null,
         dropdownItems: availableTimes
             .map((e) => DateTimeUtils.getTimeFormat(e, context))
             .toList(),
-        onChanged: (val) => setState(() {
-          widget.arguments.selectedEndTime =
-              DateTimeUtils.stringToTimeOfDay(val!);
-        }),
+        onChanged: (val) =>
+            setState(() {
+              widget.arguments.selectedEndTime =
+                  DateTimeUtils.stringToTimeOfDay(val!);
+            }),
         buttonPadding: const EdgeInsets.only(left: 8),
         dropdownWidth: 115,
         buttonDecoration: BoxDecoration(

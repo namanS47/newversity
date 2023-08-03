@@ -63,9 +63,14 @@ class DateTimeUtils {
   }
 
   static List<TimeOfDay> getSelectedAvailableTime(
-      TimeOfDay startTime, int minuteInterval) {
+      TimeOfDay startTime, int minuteInterval, bool forStartTime) {
+
+    TimeOfDay now = TimeOfDay.now();
+    int minuteNow = now.hour*60 + now.minute;
+    int minutes = forStartTime ? (minuteNow~/30)*30 + 30 : startTime.hour * 60 + startTime.minute + minuteInterval;
+
+
     List<TimeOfDay> allTimes = [];
-    int minutes = startTime.hour * 60 + startTime.minute + minuteInterval;
     while (minutes < 1440) {
       TimeOfDay timeOfDay =
           TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60);
