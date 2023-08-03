@@ -87,7 +87,6 @@ class _MeetingPageState extends State<MeetingPage>
   HMSPeer? localPeer, remotePeer;
   HMSVideoTrack? localPeerVideoTrack, remotePeerVideoTrack;
   bool remoteProminent = true;
-  String? userName;
 
   // Initialize variables and join room
   @override
@@ -98,7 +97,7 @@ class _MeetingPageState extends State<MeetingPage>
   }
 
   void initHMSSDK() async {
-    userName = widget.roomArguments.forStudents == true
+    String? userName = widget.roomArguments.forStudents == true
         ? widget.roomArguments.sessionDetails.studentDetail?.name
         : widget.roomArguments.sessionDetails.teacherDetail?.name;
     hmsSDK = HMSSDK();
@@ -250,6 +249,9 @@ class _MeetingPageState extends State<MeetingPage>
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {}
 
   Widget smallPeerTile(Key key, HMSVideoTrack? videoTrack, HMSPeer? peer) {
+    String? userName = widget.roomArguments.forStudents == true
+        ? widget.roomArguments.sessionDetails.studentDetail?.name
+        : widget.roomArguments.sessionDetails.teacherDetail?.name;
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(20)),
       child: Container(
@@ -292,6 +294,9 @@ class _MeetingPageState extends State<MeetingPage>
 
   // Widget to render a single video tile
   Widget peerTile(Key key, HMSVideoTrack? videoTrack, HMSPeer? peer) {
+    String? userName = widget.roomArguments.forStudents == true
+        ? widget.roomArguments.sessionDetails.teacherDetail?.name
+        : widget.roomArguments.sessionDetails.studentDetail?.name;
     return Container(
       key: key,
       child: (videoTrack != null && !(videoTrack.isMute))
