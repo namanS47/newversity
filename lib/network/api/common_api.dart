@@ -3,6 +3,7 @@ import 'package:newversity/flow/initial_route/model/common_details_model.dart';
 import 'package:retrofit/http.dart';
 
 import '../../config/app_config.dart';
+import '../../flow/model/app_version_config_model.dart';
 
 part 'common_api.g.dart';
 
@@ -19,4 +20,7 @@ abstract class CommonApi {
 
   @POST("/fcmToken")
   Future<void> sendFcmToken(@Body() CommonDetailsModel commonDetailsModel);
+
+  @GET("/app/android/version")
+  Future<AppVersionConfigModel?> fetchAppVersionDetails();
 }

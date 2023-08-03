@@ -89,7 +89,7 @@ class AppRouter {
   _navigation(route, {dynamic params}) {
     if (route.toString() == AppRoutes.initialRoute) {
       return BlocProvider<AppBloc>(
-        create: (context) => AppBloc()..add(FetchInitialRouteEvent()),
+        create: (context) => AppBloc(),
         child: const InitialRoute(),
       );
     }
