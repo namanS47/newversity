@@ -49,6 +49,7 @@ import 'package:newversity/flow/teacher/index/view/terms_and_condition.dart';
 import 'package:newversity/flow/teacher/profile/add_education.dart';
 import 'package:newversity/flow/teacher/profile/add_experience.dart';
 import 'package:newversity/flow/teacher/profile/model/education_response_model.dart';
+import 'package:newversity/flow/teacher/profile/model/experience_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
 import 'package:newversity/flow/teacher/profile/teacher_profile_dashboard.dart';
 import 'package:newversity/flow/teacher/profile/view/profile.dart';
@@ -327,8 +328,13 @@ class AppRouter {
     }
 
     if (route.toString() == AppRoutes.addExperience) {
+      final ExperienceDetailsModel? experienceDetails =
+          params as ExperienceDetailsModel?;
       return BlocProvider<ProfileBloc>(
-          create: (context) => ProfileBloc(), child: AddExperience());
+          create: (context) => ProfileBloc(),
+          child: AddExperience(
+            experienceDetails: experienceDetails,
+          ));
     }
 
     if (route.toString() == AppRoutes.addEducation) {

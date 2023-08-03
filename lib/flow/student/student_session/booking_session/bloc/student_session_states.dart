@@ -22,7 +22,7 @@ class FetchingTeacherDetailsFailureState extends StudentSessionStates {
 class FetchingTeacherExperienceState extends StudentSessionStates {}
 
 class FetchedTeacherExperienceState extends StudentSessionStates {
-  final List<ExperienceResponseModel> listOfTeacherExperience;
+  final List<ExperienceDetailsModel> listOfTeacherExperience;
   FetchedTeacherExperienceState({required this.listOfTeacherExperience});
 }
 

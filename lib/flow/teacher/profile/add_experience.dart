@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:newversity/flow/teacher/profile/bloc/profile_bloc/profile_bloc.dart';
-import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/utils/date_time_utils.dart';
 import 'package:newversity/utils/string_extensions.dart';
@@ -11,9 +10,12 @@ import '../../../common/common_utils.dart';
 import '../../../common/common_widgets.dart';
 import '../../../resources/images.dart';
 import '../../../themes/strings.dart';
+import 'model/experience_response_model.dart';
 
 class AddExperience extends StatefulWidget {
-  const AddExperience({Key? key}) : super(key: key);
+  final ExperienceDetailsModel? experienceDetails;
+
+  const AddExperience({Key? key, this.experienceDetails}) : super(key: key);
 
   @override
   State<AddExperience> createState() => _AddExperienceState();
@@ -35,6 +37,27 @@ class _AddExperienceState extends State<AddExperience> {
   DateTime? selectedEndDate;
 
   @override
+  void initState() {
+    if (widget.experienceDetails != null) {
+      _titleController.text = widget.experienceDetails?.title ?? "";
+      employmentTypeValue = widget.experienceDetails?.employmentType;
+      _companyController.text = widget.experienceDetails?.companyName ?? "";
+      _startDateController.text = DateTimeUtils.getBirthFormattedDateTime(
+              widget.experienceDetails!.startDate!)
+          .toLowerCase();
+      isCurrentlyWorkingHere =
+          widget.experienceDetails?.currentlyWorkingHere ?? false;
+      selectedStartDate = widget.experienceDetails?.startDate;
+      if (!isCurrentlyWorkingHere) {
+        _endDateController.text = DateTimeUtils.getBirthFormattedDateTime(
+            widget.experienceDetails!.endDate!);
+        selectedEndDate = widget.experienceDetails?.endDate;
+      }
+    }
+    super.initState();
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _titleController.dispose();
@@ -46,7 +69,9 @@ class _AddExperienceState extends State<AddExperience> {
   bool isRebuildWidgetState(ProfileStates state) {
     return state is SavingTeacherExperienceState ||
         state is SavedTeacherExperienceState ||
-        state is SavingFailureTeacherExperienceState;
+        state is SavingFailureTeacherExperienceState ||
+        state is DeleteTeacherExperienceSuccessState ||
+        state is DeleteTeacherExperienceFailureState;
   }
 
   @override
@@ -57,16 +82,45 @@ class _AddExperienceState extends State<AddExperience> {
         if (state is SavedTeacherExperienceState) {
           isLoading = false;
           Navigator.pop(context);
+        } else if (state is DeleteTeacherExperienceFailureState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Could not delete, something went wrong",
+              ),
+            ),
+          );
+        } else if (state is DeleteTeacherExperienceSuccessState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Deleted Successfully",
+              ),
+            ),
+          );
+          Navigator.pop(context);
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          body: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                    child: Padding(
+        if(state is DeleteTeacherExperienceLoadingState) {
+          return Scaffold(
+            body: CommonWidgets.getCircularProgressIndicator(
+                color: AppColors.colorBlack),
+          );
+        }
+        return _screenContent();
+      },
+    );
+  }
+
+  Widget _screenContent() {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+                child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: ListView(
                     shrinkWrap: true,
@@ -134,18 +188,16 @@ class _AddExperienceState extends State<AddExperience> {
                     ],
                   ),
                 )),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: AppCta(
-                      onTap: () => onAddingExperiences(context),
-                      text: AppStrings.addExperience,
-                      isLoading: isLoading),
-                )
-              ],
-            ),
-          ),
-        );
-      },
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AppCta(
+                  onTap: () => onAddingExperiences(context),
+                  text: AppStrings.addExperience,
+                  isLoading: isLoading),
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -167,7 +219,8 @@ class _AddExperienceState extends State<AddExperience> {
       });
       BlocProvider.of<ProfileBloc>(context).add(
         SaveTeacherExperienceEvent(
-          experienceRequestModel: ExperienceRequestModel(
+          experienceRequestModel: ExperienceDetailsModel(
+            id: widget.experienceDetails?.id,
             teacherId: CommonUtils().getLoggedInUser(),
             title: _titleController.text,
             employmentType: employmentTypeValue,
@@ -397,9 +450,20 @@ class _AddExperienceState extends State<AddExperience> {
           width: 10,
         ),
         getExperienceHeader(),
-        const SizedBox(
-          height: 20,
-        ),
+        const Spacer(),
+        if (widget.experienceDetails != null)
+          TextButton(
+            onPressed: () {
+              context.read<ProfileBloc>().add(DeleteTeacherExperienceEvent(
+                  id: widget.experienceDetails!.id!));
+            },
+            child: const AppText(
+              "Delete",
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppColors.lightRed,
+            ),
+          )
       ],
     );
   }

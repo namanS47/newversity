@@ -6,7 +6,6 @@ import 'package:newversity/flow/teacher/bank_account/model/bank_request_model.da
 import 'package:newversity/flow/teacher/bank_account/model/bank_response_model.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_response_model.dart';
-import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_response_model.dart';
@@ -70,7 +69,7 @@ class TeacherBaseRepository extends BaseRepository {
   }
 
   Future<void> saveTeachersExperience(
-      ExperienceRequestModel experienceRequestModel, String teacherId) async {
+      ExperienceDetailsModel experienceRequestModel, String teacherId) async {
     try {
       await _teacherApi.saveTeacherExperience(
           experienceRequestModel, teacherId);
@@ -91,6 +90,14 @@ class TeacherBaseRepository extends BaseRepository {
   Future<void> deleteEducationDetails(String id) async {
     try{
       await _teacherApi.deleteTeacherEducationDetails(id);
+    } on DioException catch (exception) {
+      throw AppException.forException(exception.response);
+    }
+  }
+
+  Future<void> deleteExperienceDetails(String id) async {
+    try{
+      await _teacherApi.deleteTeacherExperienceDetails(id);
     } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
@@ -127,9 +134,9 @@ class TeacherBaseRepository extends BaseRepository {
     return listOfTags;
   }
 
-  Future<List<ExperienceResponseModel>?> fetchAllExperiencesWithTeacherId(
+  Future<List<ExperienceDetailsModel>?> fetchAllExperiencesWithTeacherId(
       String teacherId) async {
-    List<ExperienceResponseModel>? listOfExperiences = [];
+    List<ExperienceDetailsModel>? listOfExperiences = [];
     try {
       listOfExperiences =
           await _teacherApi.getExperiencesWithTeacherId(teacherId);

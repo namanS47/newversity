@@ -24,7 +24,7 @@ class ExperienceAndEducation extends StatefulWidget {
 }
 
 class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
-  List<ExperienceResponseModel> lisOfExperienceModel = [];
+  List<ExperienceDetailsModel> lisOfExperienceModel = [];
   List<EducationDetailsModel> listOfEducationModel = [];
 
   @override
@@ -219,41 +219,55 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
   }
 
   Widget getExperienceView(int index) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const CircleAvatar(
-          radius: 25,
-          backgroundColor: AppColors.lightCyan,
-          child: AppImage(image: ImageAsset.experience),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              getDesignation(index),
-              const SizedBox(
-                height: 5,
-              ),
-              getInstitute(index),
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
-                children: [
-                  getDuration(index),
-                ],
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-            ],
+    return InkWell(
+      onTap: () => onAddingExperience(index: index),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const CircleAvatar(
+            radius: 25,
+            backgroundColor: AppColors.lightCyan,
+            child: AppImage(image: ImageAsset.experience),
           ),
-        ),
-      ],
+          const SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    getDesignation(index),
+                    const Spacer(),
+                    const AppText(
+                      "Edit",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primaryColor,
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                getInstitute(index),
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  children: [
+                    getDuration(index),
+                  ],
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -343,8 +357,9 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
     }
   }
 
-  onAddingExperience() async {
-    await Navigator.of(context).pushNamed(AppRoutes.addExperience);
+  onAddingExperience({int? index}) async {
+    await Navigator.of(context).pushNamed(AppRoutes.addExperience,
+        arguments: index != null ? lisOfExperienceModel[index] : null);
     if (context.mounted) {
       BlocProvider.of<ProfileBloc>(context).add(FetchTeachersExperienceEvent());
       BlocProvider.of<ProfileBloc>(context).add(FetchTeachersEducationEvents());

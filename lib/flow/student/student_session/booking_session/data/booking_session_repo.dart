@@ -22,13 +22,12 @@ class SessionBookingRepository extends StudentBaseRepository {
     }
   }
 
-  Future<List<ExperienceResponseModel>?> fetchAllExperiencesWithTeacherId(
+  Future<List<ExperienceDetailsModel>?> fetchAllExperiencesWithTeacherId(
       String teacherId) async {
-    List<ExperienceResponseModel>? listOfExperiences = [];
+    List<ExperienceDetailsModel>? listOfExperiences = [];
     try {
       listOfExperiences =
           await _teacherApi.getExperiencesWithTeacherId(teacherId);
-      print("---- $listOfExperiences");
     } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }

@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_response_model.dart';
-import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_response_model.dart';
@@ -22,9 +21,6 @@ part 'profile_events.dart';
 part 'profile_states.dart';
 
 class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
-
-
-
   int currentProfileStep = 1;
   double sliderWidth = 195.0;
   double sliderPadding = 0.0;
@@ -118,8 +114,18 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
       try {
         await _teacherBaseRepository.deleteEducationDetails(event.id);
         emit(DeleteTeacherEducationSuccessState());
-      } catch(exception) {
+      } catch (exception) {
         emit(DeleteTeacherEducationFailureState());
+      }
+    });
+
+    on<DeleteTeacherExperienceEvent>((event, emit) async {
+      emit(DeleteTeacherExperienceLoadingState());
+      try {
+        await _teacherBaseRepository.deleteExperienceDetails(event.id);
+        emit(DeleteTeacherExperienceSuccessState());
+      } catch (exception) {
+        emit(DeleteTeacherExperienceFailureState());
       }
     });
   }
@@ -265,10 +271,8 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
       emit(FetchingTeachersExperiencesState());
       final response = await _teacherBaseRepository
           .fetchAllExperiencesWithTeacherId(teacherId);
-      if (response != null) {
-        emit(
-            FetchedTeachersExperiencesState(listOfTeacherExperience: response));
-      }
+      emit(FetchedTeachersExperiencesState(
+          listOfTeacherExperience: response ?? []));
     } catch (exception) {
       if (exception is BadRequestException) {
         emit(FetchingTagsFailure(msg: exception.message.toString()));
@@ -284,8 +288,8 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
       final response = await _teacherBaseRepository
           .fetchAllEducationWithTeacherId(teacherId);
 
-        emit(FetchedTeacherEducationState(listOfTeacherEducation: response ?? []));
-
+      emit(
+          FetchedTeacherEducationState(listOfTeacherEducation: response ?? []));
     } catch (exception) {
       if (exception is BadRequestException) {
         emit(FetchingTeacherEducationFailureState(

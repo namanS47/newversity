@@ -58,7 +58,7 @@ class FetchingTeachersExperiencesState extends ProfileStates {}
 class FetchingTeachersEducationState extends ProfileStates {}
 
 class FetchedTeachersExperiencesState extends ProfileStates {
-  final List<ExperienceResponseModel> listOfTeacherExperience;
+  final List<ExperienceDetailsModel> listOfTeacherExperience;
   FetchedTeachersExperiencesState({required this.listOfTeacherExperience});
 }
 
@@ -153,3 +153,9 @@ class DeleteTeacherEducationLoadingState extends ProfileStates {}
 class DeleteTeacherEducationSuccessState extends ProfileStates {}
 
 class DeleteTeacherEducationFailureState extends ProfileStates {}
+
+class DeleteTeacherExperienceLoadingState extends ProfileStates {}
+
+class DeleteTeacherExperienceSuccessState extends ProfileStates {}
+
+class DeleteTeacherExperienceFailureState extends ProfileStates {}

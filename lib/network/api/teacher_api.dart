@@ -7,7 +7,6 @@ import 'package:newversity/flow/teacher/bank_account/model/bank_request_model.da
 import 'package:newversity/flow/teacher/bank_account/model/bank_response_model.dart';
 import 'package:newversity/flow/teacher/home/model/session_request_model.dart';
 import 'package:newversity/flow/teacher/home/model/session_response_model.dart';
-import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import 'package:newversity/flow/teacher/profile/model/tags_response_model.dart';
@@ -46,7 +45,7 @@ abstract class TeacherApi {
 
   @POST("/teacher/experience")
   Future<void> saveTeacherExperience(
-      @Body() ExperienceRequestModel experienceRequestModel,
+      @Body() ExperienceDetailsModel experienceRequestModel,
       @Header("teacherId") String teacherId);
 
   @GET("/tags")
@@ -60,8 +59,11 @@ abstract class TeacherApi {
 
   @GET("/teacher/experience")
   @NoBody()
-  Future<List<ExperienceResponseModel>?> getExperiencesWithTeacherId(
+  Future<List<ExperienceDetailsModel>?> getExperiencesWithTeacherId(
       @Header("teacherId") String teacherId);
+
+  @DELETE("/teacher/experience")
+  Future<void> deleteTeacherExperienceDetails(@Header("id") String id);
 
   @GET("/teacher/completion")
   @NoBody()
