@@ -34,7 +34,7 @@ class _ProfileOverviewState extends State<ProfileOverview> {
   List<TagsResponseModel> allExpertise = [];
   List<TagsResponseModel> allMentorship = [];
   List<ExperienceResponseModel> lisOfExperienceModel = [];
-  List<EducationResponseModel> listOfEducationModel = [];
+  List<EducationDetailsModel> listOfEducationModel = [];
   TeacherDetailsModel? teacherDetails;
 
   @override

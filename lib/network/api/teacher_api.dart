@@ -7,7 +7,6 @@ import 'package:newversity/flow/teacher/bank_account/model/bank_request_model.da
 import 'package:newversity/flow/teacher/bank_account/model/bank_response_model.dart';
 import 'package:newversity/flow/teacher/home/model/session_request_model.dart';
 import 'package:newversity/flow/teacher/home/model/session_response_model.dart';
-import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_completion_percentage_response.dart';
@@ -71,8 +70,13 @@ abstract class TeacherApi {
 
   @POST("/teacher/education")
   Future<void> saveTeacherEducation(
-    @Body() EducationRequestModel educationRequestModel,
+    @Body() EducationDetailsModel educationRequestModel,
   );
+
+  @DELETE("/teacher/education")
+  Future<void> deleteTeacherEducationDetails(
+      @Header("educationDetailId") String educationDetailsId
+      );
 
   @POST("/teacher/tags")
   Future<void> saveListOfTags(@Query("category") String category,
@@ -80,7 +84,7 @@ abstract class TeacherApi {
 
   @GET("/teacher/education")
   @NoBody()
-  Future<List<EducationResponseModel>?> getEducationsWithTeacherId(
+  Future<List<EducationDetailsModel>?> getEducationsWithTeacherId(
       @Header("teacherId") String teacherId);
 
   @POST("/teacher/availability")

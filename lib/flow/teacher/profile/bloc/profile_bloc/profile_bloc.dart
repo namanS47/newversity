@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
-import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_response_model.dart';
@@ -112,6 +111,16 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
     on<SaveProfileDetailsEvent>((event, emit) async {
       teacherId = CommonUtils().getLoggedInUser();
       await saveProfileDetails(event, emit);
+    });
+
+    on<DeleteTeacherEducationEvent>((event, emit) async {
+      emit(DeleteTeacherEducationLoadingState());
+      try {
+        await _teacherBaseRepository.deleteEducationDetails(event.id);
+        emit(DeleteTeacherEducationSuccessState());
+      } catch(exception) {
+        emit(DeleteTeacherEducationFailureState());
+      }
     });
   }
 
@@ -274,9 +283,9 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
       emit(FetchingTeachersEducationState());
       final response = await _teacherBaseRepository
           .fetchAllEducationWithTeacherId(teacherId);
-      if (response != null) {
-        emit(FetchedTeacherEducationState(listOfTeacherEducation: response));
-      }
+
+        emit(FetchedTeacherEducationState(listOfTeacherEducation: response ?? []));
+
     } catch (exception) {
       if (exception is BadRequestException) {
         emit(FetchingTeacherEducationFailureState(
@@ -310,7 +319,7 @@ class ProfileBloc extends Bloc<ProfileEvents, ProfileStates> {
       emit(SavingTeacherEducationState());
       if (event is SaveTeacherEducationEvents) {
         await _teacherBaseRepository.saveTeachersEducation(
-            event.educationRequestModel, teacherId);
+            event.educationDetailsModel, teacherId);
       }
       emit(SavedTeacherEducationState());
     } catch (exception) {

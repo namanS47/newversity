@@ -47,8 +47,13 @@ class SaveTeacherExperienceEvent extends ProfileEvents {
 }
 
 class SaveTeacherEducationEvents extends ProfileEvents {
-  final EducationRequestModel educationRequestModel;
-  SaveTeacherEducationEvents({required this.educationRequestModel});
+  final EducationDetailsModel educationDetailsModel;
+  SaveTeacherEducationEvents({required this.educationDetailsModel});
+}
+
+class DeleteTeacherEducationEvent extends ProfileEvents {
+  DeleteTeacherEducationEvent({required this.id});
+  final String id;
 }
 
 class FetchTeacherDetailsEvent extends ProfileEvents {}

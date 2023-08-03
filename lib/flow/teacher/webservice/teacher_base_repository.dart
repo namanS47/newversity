@@ -5,7 +5,6 @@ import 'package:newversity/di/di_initializer.dart';
 import 'package:newversity/flow/teacher/bank_account/model/bank_request_model.dart';
 import 'package:newversity/flow/teacher/bank_account/model/bank_response_model.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
-import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/education_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_request_model.dart';
 import 'package:newversity/flow/teacher/profile/model/experience_response_model.dart';
@@ -28,7 +27,7 @@ class TeacherBaseRepository extends BaseRepository {
       TeacherDetailsModel teacherDetails, String teacherId) async {
     try {
       return await _teacherApi.sendTeacherDetails(teacherDetails, teacherId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
   }
@@ -36,7 +35,7 @@ class TeacherBaseRepository extends BaseRepository {
   Future<BankResponseModel?> getBankDetails(String teacherId) async {
     try {
       return await _teacherApi.getBankAccount(teacherId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
   }
@@ -45,7 +44,7 @@ class TeacherBaseRepository extends BaseRepository {
       String teacherId, AddBankRequestModel bankRequestModel) async {
     try {
       return await _teacherApi.addBankAccount(teacherId, bankRequestModel);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
   }
@@ -56,7 +55,7 @@ class TeacherBaseRepository extends BaseRepository {
     try {
       listOfSessionDetails =
           await _teacherApi.getSessionDetails(teacherId, type);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
     return listOfSessionDetails;
@@ -65,7 +64,7 @@ class TeacherBaseRepository extends BaseRepository {
   Future<void> saveSessionDetail(SessionSaveRequest sessionSaveRequest) async {
     try {
       await _teacherApi.addSessionDetail(sessionSaveRequest);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
   }
@@ -75,16 +74,24 @@ class TeacherBaseRepository extends BaseRepository {
     try {
       await _teacherApi.saveTeacherExperience(
           experienceRequestModel, teacherId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
   }
 
   Future<void> saveTeachersEducation(
-      EducationRequestModel educationRequestModel, String teacherId) async {
+      EducationDetailsModel educationRequestModel, String teacherId) async {
     try {
       await _teacherApi.saveTeacherEducation(educationRequestModel);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
+      throw AppException.forException(exception.response);
+    }
+  }
+  
+  Future<void> deleteEducationDetails(String id) async {
+    try{
+      await _teacherApi.deleteTeacherEducationDetails(id);
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
   }
@@ -94,7 +101,7 @@ class TeacherBaseRepository extends BaseRepository {
     try {
       await _teacherApi.saveListOfTags(
           category, TagRequestModel(tagModelList: listOfTags), teacherId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
   }
@@ -103,7 +110,7 @@ class TeacherBaseRepository extends BaseRepository {
     List<TagsResponseModel>? listOfTags = [];
     try {
       listOfTags = await _teacherApi.getTags();
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
     return listOfTags;
@@ -114,7 +121,7 @@ class TeacherBaseRepository extends BaseRepository {
     List<TagsResponseModel>? listOfTags = [];
     try {
       listOfTags = await _teacherApi.getAllTagsByTeacherId(teacherId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       AppException.forException(exception.response);
     }
     return listOfTags;
@@ -127,18 +134,18 @@ class TeacherBaseRepository extends BaseRepository {
       listOfExperiences =
           await _teacherApi.getExperiencesWithTeacherId(teacherId);
       print("---- $listOfExperiences");
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
     return listOfExperiences;
   }
 
-  Future<List<EducationResponseModel>?> fetchAllEducationWithTeacherId(
+  Future<List<EducationDetailsModel>?> fetchAllEducationWithTeacherId(
       String teacherId) async {
-    List<EducationResponseModel>? listOfEducation = [];
+    List<EducationDetailsModel>? listOfEducation = [];
     try {
       listOfEducation = await _teacherApi.getEducationsWithTeacherId(teacherId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
     return listOfEducation;
@@ -148,7 +155,7 @@ class TeacherBaseRepository extends BaseRepository {
     TeacherDetailsModel? response = TeacherDetailsModel();
     try {
       response = await _teacherApi.getTeacherDetails(teacherId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       AppException.forException(exception.response);
     }
     return response;
@@ -160,7 +167,7 @@ class TeacherBaseRepository extends BaseRepository {
         ProfileCompletionPercentageResponse();
     try {
       response = await _teacherApi.getProfileCompletionInfo(teacherId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       AppException.forException(exception.response);
     }
     return response;
@@ -172,7 +179,7 @@ class TeacherBaseRepository extends BaseRepository {
     try {
       sessionDetailsResponse =
           await _teacherApi.getSessionDetailById(sessionId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       AppException.forException(exception.response);
     }
     return sessionDetailsResponse;
@@ -182,7 +189,7 @@ class TeacherBaseRepository extends BaseRepository {
       File file, String teacherId, String tagName) async {
     try {
       await _teacherApi.uploadTagDocument(file, teacherId, tagName);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       AppException.forException(exception.response);
     }
   }
@@ -191,7 +198,7 @@ class TeacherBaseRepository extends BaseRepository {
       File file, String teacherId) async {
     try {
       return await _teacherApi.uploadProfilePicture(file, teacherId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       AppException.forException(exception.response);
       return null;
     }
@@ -200,7 +207,7 @@ class TeacherBaseRepository extends BaseRepository {
   Future<SessionCountResponseModel> fetchTeacherSessionCount(String teacherId) async {
     try {
       return await _teacherApi.fetchTeacherSessionCount(teacherId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       AppException.forException(exception.response);
     }
     return SessionCountResponseModel();

@@ -63,7 +63,7 @@ class FetchedTeachersExperiencesState extends ProfileStates {
 }
 
 class FetchedTeacherEducationState extends ProfileStates {
-  final List<EducationResponseModel> listOfTeacherEducation;
+  final List<EducationDetailsModel> listOfTeacherEducation;
   FetchedTeacherEducationState({required this.listOfTeacherEducation});
 }
 
@@ -147,3 +147,9 @@ class ProfileDetailsSavingFailureState extends ProfileStates {
   final String msg;
   ProfileDetailsSavingFailureState({required this.msg});
 }
+
+class DeleteTeacherEducationLoadingState extends ProfileStates {}
+
+class DeleteTeacherEducationSuccessState extends ProfileStates {}
+
+class DeleteTeacherEducationFailureState extends ProfileStates {}

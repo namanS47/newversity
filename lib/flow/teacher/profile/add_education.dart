@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:newversity/flow/teacher/profile/bloc/profile_bloc/profile_bloc.dart';
-import 'package:newversity/flow/teacher/profile/model/education_request_model.dart';
 
 import '../../../common/common_utils.dart';
 import '../../../common/common_widgets.dart';
@@ -10,9 +9,11 @@ import '../../../resources/images.dart';
 import '../../../themes/colors.dart';
 import '../../../themes/strings.dart';
 import '../../../utils/date_time_utils.dart';
+import 'model/education_response_model.dart';
 
 class AddEducation extends StatefulWidget {
-  const AddEducation({Key? key}) : super(key: key);
+  const AddEducation({Key? key, this.educationDetails}) : super(key: key);
+  final EducationDetailsModel? educationDetails;
 
   @override
   State<AddEducation> createState() => _AddEducationState();
@@ -30,10 +31,34 @@ class _AddEducationState extends State<AddEducation> {
   DateTime? selectedStartDate;
   DateTime? selectedEndDate;
 
+  @override
+  void initState() {
+    if (widget.educationDetails != null) {
+      _schoolController.text = widget.educationDetails?.name ?? "";
+      _degreeController.text = widget.educationDetails?.degree ?? "";
+      _startDateController.text = DateTimeUtils.getBirthFormattedDateTime(
+              widget.educationDetails!.startDate!)
+          .toLowerCase();
+      isCurrentlyWorkingHere =
+          widget.educationDetails?.currentlyWorkingHere ?? false;
+      selectedStartDate = widget.educationDetails?.startDate;
+      if (!isCurrentlyWorkingHere) {
+        _endDateController.text = DateTimeUtils.getBirthFormattedDateTime(
+                widget.educationDetails!.endDate!)
+            .toLowerCase();
+        selectedEndDate = widget.educationDetails?.endDate;
+      }
+      _gradeController.text = widget.educationDetails?.grade ?? "";
+    }
+    super.initState();
+  }
+
   bool isRebuildWidgetState(ProfileStates state) {
     return state is SavingTeacherEducationState ||
         state is SavedTeacherEducationState ||
-        state is SavingFailureTeacherEducationState;
+        state is SavingFailureTeacherEducationState ||
+        state is DeleteTeacherEducationFailureState ||
+        state is DeleteTeacherEducationSuccessState;
   }
 
   @override
@@ -61,108 +86,135 @@ class _AddEducationState extends State<AddEducation> {
           );
           Navigator.pop(context);
           // Navigator.of(context).pushNamed(AppRoutes.teacherProfileDashBoard);
+        } else if (state is DeleteTeacherEducationFailureState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Could not delete, something went wrong",
+              ),
+            ),
+          );
+        } else if (state is DeleteTeacherEducationSuccessState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Deleted Successfully",
+              ),
+            ),
+          );
+          Navigator.pop(context);
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          body: SafeArea(
-            child: Stack(
+        if (state is DeleteTeacherEducationLoadingState) {
+          return Scaffold(
+            body: CommonWidgets.getCircularProgressIndicator(
+                color: AppColors.colorBlack),
+          );
+        }
+        return _screenContent();
+      },
+    );
+  }
+
+  Widget _screenContent() {
+    return Scaffold(
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: ListView(
-                        shrinkWrap: true,
-                        children: [
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          getEducationLayout(),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          getSchoolHeader(),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          getYourSchool(),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          getDegreeNameHeader(),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          getYourDegreeName(),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          getStartDateHeader(),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          getStartDate(),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Visibility(
-                            visible: !(isCurrentlyWorkingHere),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                getEndDateHeader(),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                getEndDate(),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                              ],
-                            ),
-                          ),
-                          getCurrentlyWorkingLayout(),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          getCgpaHeader(),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          getGradeTextField(),
-                          const SizedBox(
-                            height: 120,
-                          ),
-                          getErrorText(),
-                        ],
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      const SizedBox(
+                        height: 20,
                       ),
-                    )),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Expanded(child: Container()),
-                    Container(
-                      color: AppColors.whiteColor,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: AppCta(
-                          onTap: () => onAddingEducation(context),
-                          text: AppStrings.addEducation,
-                          isLoading: isLoading,
+                      getEducationLayout(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      getSchoolHeader(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      getYourSchool(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      getDegreeNameHeader(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      getYourDegreeName(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      getStartDateHeader(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      getStartDate(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Visibility(
+                        visible: !(isCurrentlyWorkingHere),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            getEndDateHeader(),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            getEndDate(),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
                         ),
                       ),
-                    )
-                  ],
-                )
+                      getCurrentlyWorkingLayout(),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      getCgpaHeader(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      getGradeTextField(),
+                      const SizedBox(
+                        height: 120,
+                      ),
+                      getErrorText(),
+                    ],
+                  ),
+                )),
               ],
             ),
-          ),
-        );
-      },
+            Column(
+              children: [
+                Expanded(child: Container()),
+                Container(
+                  color: AppColors.whiteColor,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppCta(
+                      onTap: () => onAddingEducation(context),
+                      text: AppStrings.addEducation,
+                      isLoading: isLoading,
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -184,7 +236,8 @@ class _AddEducationState extends State<AddEducation> {
       });
       BlocProvider.of<ProfileBloc>(context).add(
         SaveTeacherEducationEvents(
-          educationRequestModel: EducationRequestModel(
+          educationDetailsModel: EducationDetailsModel(
+              id: widget.educationDetails?.id,
               teacherId: CommonUtils().getLoggedInUser(),
               name: _schoolController.text,
               degree: _degreeController.text,
@@ -386,9 +439,20 @@ class _AddEducationState extends State<AddEducation> {
           width: 10,
         ),
         getEducation(),
-        const SizedBox(
-          height: 20,
-        ),
+        const Spacer(),
+        if (widget.educationDetails != null)
+          TextButton(
+            onPressed: () {
+              context.read<ProfileBloc>().add(DeleteTeacherEducationEvent(
+                  id: widget.educationDetails!.id!));
+            },
+            child: const AppText(
+              "Delete",
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppColors.lightRed,
+            ),
+          )
       ],
     );
   }

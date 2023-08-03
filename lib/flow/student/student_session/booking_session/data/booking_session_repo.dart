@@ -17,7 +17,7 @@ class SessionBookingRepository extends StudentBaseRepository {
       FetchAvailabilityRequestModel request) async {
     try {
       return await _teacherApi.fetchAvailability(request.teacherId!, request.date);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
   }
@@ -29,18 +29,18 @@ class SessionBookingRepository extends StudentBaseRepository {
       listOfExperiences =
           await _teacherApi.getExperiencesWithTeacherId(teacherId);
       print("---- $listOfExperiences");
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
     return listOfExperiences;
   }
 
-  Future<List<EducationResponseModel>?> fetchAllEducationWithTeacherId(
+  Future<List<EducationDetailsModel>?> fetchAllEducationWithTeacherId(
       String teacherId) async {
-    List<EducationResponseModel>? listOfEducation = [];
+    List<EducationDetailsModel>? listOfEducation = [];
     try {
       listOfEducation = await _teacherApi.getEducationsWithTeacherId(teacherId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
     return listOfEducation;
@@ -50,7 +50,7 @@ class SessionBookingRepository extends StudentBaseRepository {
     TeacherDetailsModel? response;
     try {
       response = await _teacherApi.getTeacherDetails(teacherId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       AppException.forException(exception.response);
     }
     return response;

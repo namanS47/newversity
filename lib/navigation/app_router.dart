@@ -48,6 +48,7 @@ import 'package:newversity/flow/teacher/index/view/share.dart';
 import 'package:newversity/flow/teacher/index/view/terms_and_condition.dart';
 import 'package:newversity/flow/teacher/profile/add_education.dart';
 import 'package:newversity/flow/teacher/profile/add_experience.dart';
+import 'package:newversity/flow/teacher/profile/model/education_response_model.dart';
 import 'package:newversity/flow/teacher/profile/model/profile_dashboard_arguments.dart';
 import 'package:newversity/flow/teacher/profile/teacher_profile_dashboard.dart';
 import 'package:newversity/flow/teacher/profile/view/profile.dart';
@@ -177,8 +178,9 @@ class AppRouter {
       final bool? navigateToInterestSection = params as bool?;
       return BlocProvider<ProfileDashboardBloc>(
           create: (context) {
-            if(navigateToInterestSection == true) {
-              return ProfileDashboardBloc()..add(ChangeStudentProfileCardIndexEvent());
+            if (navigateToInterestSection == true) {
+              return ProfileDashboardBloc()
+                ..add(ChangeStudentProfileCardIndexEvent());
             }
             return ProfileDashboardBloc();
           },
@@ -268,7 +270,7 @@ class AppRouter {
       );
     }
 
-    if(route.toString() == AppRoutes.webViewRoute) {
+    if (route.toString() == AppRoutes.webViewRoute) {
       String webUrl = params as String;
       return WebViewRoute(webUrl: webUrl);
     }
@@ -330,8 +332,13 @@ class AppRouter {
     }
 
     if (route.toString() == AppRoutes.addEducation) {
+      final EducationDetailsModel? educationDetails =
+          params as EducationDetailsModel?;
       return BlocProvider<ProfileBloc>(
-          create: (context) => ProfileBloc(), child: const AddEducation());
+          create: (context) => ProfileBloc(),
+          child: AddEducation(
+            educationDetails: educationDetails,
+          ));
     }
 
     if (route.toString() == AppRoutes.roomPageRoute) {
@@ -372,7 +379,7 @@ class AppRouter {
         child: PaymentRoute(paymentArgument: params as PaymentArgument),
       );
     }
-    if(route.toString() == AppRoutes.phonePePaymentRoute) {
+    if (route.toString() == AppRoutes.phonePePaymentRoute) {
       return BlocProvider<PaymentBloc>(
         create: (context) => PaymentBloc(),
         child: PhonePePaymentRoute(paymentArgument: params as PaymentArgument),

@@ -34,7 +34,7 @@ class FetchingTeacherExperienceFailureState extends StudentSessionStates {
 class FetchingTeacherEducationState extends StudentSessionStates {}
 
 class FetchedTeacherEducationState extends StudentSessionStates {
-  final List<EducationResponseModel> listOfTeacherEducation;
+  final List<EducationDetailsModel> listOfTeacherEducation;
   FetchedTeacherEducationState({required this.listOfTeacherEducation});
 }
 

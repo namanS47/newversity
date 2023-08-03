@@ -14,6 +14,7 @@ import 'model/education_response_model.dart';
 
 class ExperienceAndEducation extends StatefulWidget {
   final ProfileDashboardArguments profileDashboardArguments;
+
   const ExperienceAndEducation(
       {Key? key, required this.profileDashboardArguments})
       : super(key: key);
@@ -24,7 +25,7 @@ class ExperienceAndEducation extends StatefulWidget {
 
 class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
   List<ExperienceResponseModel> lisOfExperienceModel = [];
-  List<EducationResponseModel> listOfEducationModel = [];
+  List<EducationDetailsModel> listOfEducationModel = [];
 
   @override
   void initState() {
@@ -79,8 +80,7 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
                         const SizedBox(
                           height: 20,
                         ),
-                        getContainerHeaderLayout(
-                            AppStrings.experience, context),
+                        getContainerHeaderLayout(AppStrings.experience),
                         const SizedBox(
                           height: 10,
                         ),
@@ -90,8 +90,7 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
                         const SizedBox(
                           height: 20,
                         ),
-                        getEducationContainerLayout(
-                            AppStrings.education, context),
+                        getEducationContainerLayout(AppStrings.education),
                         const SizedBox(
                           height: 10,
                         ),
@@ -149,43 +148,57 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
   }
 
   Widget getEducationView(int index) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const CircleAvatar(
-          radius: 25,
-          backgroundColor: AppColors.lightCyan,
-          child: AppImage(image: ImageAsset.education),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              getEducationalInstitute(index),
-              const SizedBox(
-                height: 5,
-              ),
-              getStream(index),
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  getEducationalDuration(index),
-                  getCGPA(index),
-                ],
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-            ],
+    return InkWell(
+      onTap: () => onAddingEducation(index: index),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const CircleAvatar(
+            radius: 25,
+            backgroundColor: AppColors.lightCyan,
+            child: AppImage(image: ImageAsset.education),
           ),
-        ),
-      ],
+          const SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    getEducationalInstitute(index),
+                    const Spacer(),
+                    const AppText(
+                      "Edit",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primaryColor,
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                getStream(index),
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    getEducationalDuration(index),
+                    getCGPA(index),
+                  ],
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -321,23 +334,24 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
     );
   }
 
-  onAddingEducation(BuildContext context) async {
-    await Navigator.of(context).pushNamed(AppRoutes.addEducation);
-    if(context.mounted) {
+  onAddingEducation({int? index}) async {
+    await Navigator.of(context).pushNamed(AppRoutes.addEducation,
+        arguments: index != null ? listOfEducationModel[index] : null);
+    if (context.mounted) {
       BlocProvider.of<ProfileBloc>(context).add(FetchTeachersExperienceEvent());
       BlocProvider.of<ProfileBloc>(context).add(FetchTeachersEducationEvents());
     }
   }
 
-  onAddingExperience(BuildContext context) async {
+  onAddingExperience() async {
     await Navigator.of(context).pushNamed(AppRoutes.addExperience);
-    if(context.mounted) {
+    if (context.mounted) {
       BlocProvider.of<ProfileBloc>(context).add(FetchTeachersExperienceEvent());
       BlocProvider.of<ProfileBloc>(context).add(FetchTeachersEducationEvents());
     }
   }
 
-  Widget getContainerHeaderLayout(String headerName, context) {
+  Widget getContainerHeaderLayout(String headerName) {
     return Container(
       height: 50,
       decoration: BoxDecoration(
@@ -351,7 +365,7 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
             children: [
               getContainerHeader(headerName),
               InkWell(
-                onTap: () => onAddingExperience(context),
+                onTap: () => onAddingExperience(),
                 child: Icon(
                   Icons.add,
                   color: AppColors.blackMerlin.withOpacity(0.73),
@@ -365,7 +379,7 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
     );
   }
 
-  Widget getEducationContainerLayout(String headerName, context) {
+  Widget getEducationContainerLayout(String headerName) {
     return Container(
       height: 50,
       decoration: BoxDecoration(
@@ -379,7 +393,7 @@ class _ExperienceAndEducationState extends State<ExperienceAndEducation> {
             children: [
               getContainerHeader(headerName),
               InkWell(
-                onTap: () => onAddingEducation(context),
+                onTap: () => onAddingEducation(),
                 child: Icon(
                   Icons.add,
                   color: AppColors.blackMerlin.withOpacity(0.73),
