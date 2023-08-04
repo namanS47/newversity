@@ -22,5 +22,6 @@ abstract class CommonApi {
   Future<void> sendFcmToken(@Body() CommonDetailsModel commonDetailsModel);
 
   @GET("/app/android/version")
+  @NoBody()
   Future<AppVersionConfigModel?> fetchAppVersionDetails();
 }

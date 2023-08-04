@@ -70,6 +70,13 @@ class MentorsReview {
             "\"Newversity is a much-needed breakthrough catering to young aspiring minds to be informed and Inspired for their career & academic success.\""),
     MentorsReview(
         profileImageUrl:
+        "https://newversity.s3.ap-south-1.amazonaws.com/WhatsApp+Image+2023-08-04+at+19.31.07.jpeg",
+        mentorName: "Nitin Choudhary",
+        title: "IPS 2023, Rank 451-UPSC CSE 2022",
+        review:
+        "\"Direction and guidance at key junctures of a students life to make decision making easy and fruitful is highly critical and newversity aims to solve it by connecting them with experts.\""),
+    MentorsReview(
+        profileImageUrl:
             "https://newversity.s3.amazonaws.com/20230729181532149701LrVzNgg1UMQkEJJLRrrSocQEqga2.jpg",
         mentorName: "Onkar Shaligram",
         title: "IIT Bombay & IIM Alumus",
@@ -95,7 +102,7 @@ class StudentReview {
     StudentReview(
         profileImageUrl:
             "https://media.istockphoto.com/id/1309328823/photo/headshot-portrait-of-smiling-male-employee-in-office.jpg?b=1&s=612x612&w=0&k=20&c=eU56mZTN4ZXYDJ2SR2DFcQahxEnIl3CiqpP3SOQVbbI=",
-        name: "Krishna (College Student)",
+        name: "Deepak (Jee Aspirant)",
         review:
             "“I was always confused about career options in my stream, Newversity enabled me to conenct with right expert and have real insights from him\""),
     StudentReview(

@@ -370,7 +370,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
     return const Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: AppText(
-        "Real stories from real students",
+        "Stories from Aspirants",
         fontSize: 18,
         fontWeight: FontWeight.w700,
       ),
@@ -484,7 +484,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
     return const Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: AppText(
-        "What our mentors saying",
+        "What experts say",
         fontSize: 18,
         fontWeight: FontWeight.w700,
       ),
@@ -1017,9 +1017,6 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       fontWeight: FontWeight.w600,
     );
   }
-
-  String profileImage =
-      "https://media.istockphoto.com/id/1309328823/photo/headshot-portrait-of-smiling-male-employee-in-office.jpg?b=1&s=612x612&w=0&k=20&c=eU56mZTN4ZXYDJ2SR2DFcQahxEnIl3CiqpP3SOQVbbI=";
 
   onProfileTap() {
     Navigator.of(context).pushNamed(AppRoutes.studentProfile);
