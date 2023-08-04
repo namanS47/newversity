@@ -64,6 +64,7 @@ class AppStrings {
   static const nextAvailable = "Next Available in 30 M:00 S";
   static const notificationChecker = "Notify me when new slots are added";
   static const currentlyWorkingHere = "Currently Working Here.";
+  static const currentlyStudyingHere = "Currently Studying Here.";
   static const seeAll = "See all";
   static const fifteenMin = "15 mins";
   static const thirtyMin = "30 mins";

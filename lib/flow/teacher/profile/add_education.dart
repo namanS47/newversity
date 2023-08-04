@@ -277,7 +277,7 @@ class _AddEducationState extends State<AddEducation> {
           width: 10,
         ),
         const Text(
-          AppStrings.currentlyWorkingHere,
+          AppStrings.currentlyStudyingHere,
           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
         )
       ],
