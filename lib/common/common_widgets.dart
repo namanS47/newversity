@@ -216,27 +216,30 @@ class NoResultFoundScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const SizedBox(
-          height: 30,
-        ),
-        SvgPicture.asset(ImageAsset.nothingFoundIcon),
-        const Padding(
-          padding: EdgeInsets.only(top: 40, bottom: 20),
-          child: Text(
-            "No result found",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(
+            height: 30,
           ),
-        ),
-        Text(
-          message,
-          style: const TextStyle(fontWeight: FontWeight.w500),
-          textAlign: TextAlign.center,
-        )
-      ],
+          SvgPicture.asset(ImageAsset.nothingFoundIcon),
+          const Padding(
+            padding: EdgeInsets.only(top: 40, bottom: 20),
+            child: Text(
+              "No result found",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+          ),
+          Text(
+            message,
+            style: const TextStyle(fontWeight: FontWeight.w500),
+            textAlign: TextAlign.center,
+          )
+        ],
+      ),
     );
   }
 }

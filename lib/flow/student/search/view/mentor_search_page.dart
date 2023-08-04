@@ -87,7 +87,7 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
                     return const Center(
                       child: NoResultFoundScreen(
                           message:
-                              "No teacher is available for this tag, please try a different tag"),
+                              "No mentor is available for this tag, please try a different tag"),
                     );
                   }
                 }
@@ -99,7 +99,7 @@ class _MentorSearchScreenState extends State<MentorSearchScreen> {
                     return const Center(
                       child: NoResultFoundScreen(
                           message:
-                              "No teacher is available for this tag, please try a different tag"),
+                              "No mentor is available for this tag, please try a different tag"),
                     );
                   }
                 }

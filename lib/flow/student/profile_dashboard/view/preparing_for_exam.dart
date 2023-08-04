@@ -109,10 +109,6 @@ class _ExamsPreparingForState extends State<ExamsPreparingFor> {
               const SizedBox(
                 height: 20,
               ),
-              selectExamNames(),
-              const SizedBox(
-                height: 20,
-              ),
               getExamsLayout(),
               const SizedBox(
                 height: 8,
@@ -290,18 +286,8 @@ class _ExamsPreparingForState extends State<ExamsPreparingFor> {
 
   Widget getExamCrackedHeader() {
     return const Text(
-      AppStrings.whatAreYouPreparingFor,
+      AppStrings.selectInterest,
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-    );
-  }
-
-  Widget selectExamNames() {
-    return const Text(
-      AppStrings.selectAtLeastOneInfo,
-      style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-          color: AppColors.blackMerlin),
     );
   }
 }
