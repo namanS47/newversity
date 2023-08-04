@@ -10,7 +10,9 @@ import '../../../data/bloc/teacher_details/teacher_details_bloc.dart';
 import '../../../data/model/teacher_details/teacher_details_model.dart';
 
 class ProfileEditSessionRate extends StatefulWidget {
-  const ProfileEditSessionRate({Key? key, this.longSessionFee, this.shortSessionFee}) : super(key: key);
+  const ProfileEditSessionRate(
+      {Key? key, this.longSessionFee, this.shortSessionFee})
+      : super(key: key);
   final double? longSessionFee;
   final double? shortSessionFee;
 
@@ -34,10 +36,10 @@ class _ProfileEditSessionRateState extends State<ProfileEditSessionRate> {
 
   @override
   void initState() {
-    if(widget.shortSessionFee != null) {
+    if (widget.shortSessionFee != null) {
       session15minController.text = widget.shortSessionFee.toString();
     }
-    if(widget.longSessionFee != null) {
+    if (widget.longSessionFee != null) {
       session30minController.text = widget.longSessionFee.toString();
     }
     super.initState();
@@ -103,6 +105,10 @@ class _ProfileEditSessionRateState extends State<ProfileEditSessionRate> {
                         ],
                       ),
                     ),
+                    const AppText(
+                      "Note : We charge 30% Platform fee (Min INR 99) on each session booking",
+                      fontWeight: FontWeight.bold,
+                    ),
                     getUpdateCTA(),
                   ],
                 ),
@@ -121,8 +127,10 @@ class _ProfileEditSessionRateState extends State<ProfileEditSessionRate> {
         showErrorText = false;
       });
       Map<String, double> sessionPrice = {
-        SlotType.short.toString().split(".")[1]: session15minController.text.toDouble,
-        SlotType.long.toString().split(".")[1]: session30minController.text.toDouble,
+        SlotType.short.toString().split(".")[1]:
+            session15minController.text.toDouble,
+        SlotType.long.toString().split(".")[1]:
+            session30minController.text.toDouble,
       };
       BlocProvider.of<TeacherDetailsBloc>(context).add(
         SaveTeacherDetailsEvent(
