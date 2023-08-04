@@ -81,10 +81,13 @@ class MentorPersonalDetailCard extends StatelessWidget {
                             const SizedBox(
                               width: 4,
                             ),
-                            AppText(
-                              mentorDetail.title ?? "",
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
+                            Expanded(
+                              child: AppText(
+                                mentorDetail.title ?? "",
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),
