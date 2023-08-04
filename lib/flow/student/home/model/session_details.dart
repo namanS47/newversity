@@ -49,46 +49,32 @@ class MentorsReview {
   String? profileImageUrl;
   String? mentorName;
   String? review;
+  String? title;
 
-  MentorsReview({this.profileImageUrl, this.mentorName, this.review});
+  MentorsReview({this.profileImageUrl, this.mentorName, this.review, this.title});
 
   static List<MentorsReview> listOfMentorsReview = [
     MentorsReview(
         profileImageUrl:
-            "https://media.istockphoto.com/id/1309328823/photo/headshot-portrait-of-smiling-male-employee-in-office.jpg?b=1&s=612x612&w=0&k=20&c=eU56mZTN4ZXYDJ2SR2DFcQahxEnIl3CiqpP3SOQVbbI=",
-        mentorName: "Akshat Kamesra",
+            "https://newversity.s3.ap-south-1.amazonaws.com/WhatsApp+Image+2023-08-04+at+16.19.10.jpeg",
+        mentorName: "Aprajit Lohan",
+        title: "IPS 2020, Rank 174, UPSC CSE 2019",
         review:
-            "\"Newversity is a game-changer for academic success. Its user-friendly interface and helpful features make studying more manageable and efficient.\""),
+            "\"Newversity is the heartbeat of knowledge exchange, where mentors and students thrive. Inspiring the next generation of leaders on Newversity is an honor that fuels my passion.\""),
     MentorsReview(
         profileImageUrl:
-            "https://media.istockphoto.com/id/1309328823/photo/headshot-portrait-of-smiling-male-employee-in-office.jpg?b=1&s=612x612&w=0&k=20&c=eU56mZTN4ZXYDJ2SR2DFcQahxEnIl3CiqpP3SOQVbbI=",
-        mentorName: "Akshat Kamesra",
+            "https://newversity.s3.amazonaws.com/20230730162717985474z1visWaXKEMqFzsgoGjqxt53CUY2.jpg",
+        mentorName: "Rohit MR",
+        title: "NIT & IIM Alumus, Ex- Global business head ",
         review:
-            "\"Newversity is a game-changer for academic success. Its user-friendly interface and helpful features make studying more manageable and efficient.\""),
+            "\"Newversity is a much-needed breakthrough catering to young aspiring minds to be informed and Inspired for their career & academic success.\""),
     MentorsReview(
         profileImageUrl:
-            "https://media.istockphoto.com/id/1309328823/photo/headshot-portrait-of-smiling-male-employee-in-office.jpg?b=1&s=612x612&w=0&k=20&c=eU56mZTN4ZXYDJ2SR2DFcQahxEnIl3CiqpP3SOQVbbI=",
-        mentorName: "Akshat Kamesra",
+            "https://newversity.s3.amazonaws.com/20230729181532149701LrVzNgg1UMQkEJJLRrrSocQEqga2.jpg",
+        mentorName: "Onkar Shaligram",
+        title: "IIT Bombay & IIM Alumus",
         review:
-            "\"Newversity is a game-changer for academic success. Its user-friendly interface and helpful features make studying more manageable and efficient.\""),
-    MentorsReview(
-        profileImageUrl:
-            "https://media.istockphoto.com/id/1309328823/photo/headshot-portrait-of-smiling-male-employee-in-office.jpg?b=1&s=612x612&w=0&k=20&c=eU56mZTN4ZXYDJ2SR2DFcQahxEnIl3CiqpP3SOQVbbI=",
-        mentorName: "Akshat Kamesra",
-        review:
-            "\"Newversity is a game-changer for academic success. Its user-friendly interface and helpful features make studying more manageable and efficient.\""),
-    MentorsReview(
-        profileImageUrl:
-            "https://media.istockphoto.com/id/1309328823/photo/headshot-portrait-of-smiling-male-employee-in-office.jpg?b=1&s=612x612&w=0&k=20&c=eU56mZTN4ZXYDJ2SR2DFcQahxEnIl3CiqpP3SOQVbbI=",
-        mentorName: "Akshat Kamesra",
-        review:
-            "\"Newversity is a game-changer for academic success. Its user-friendly interface and helpful features make studying more manageable and efficient.\""),
-    MentorsReview(
-        profileImageUrl:
-            "https://media.istockphoto.com/id/1309328823/photo/headshot-portrait-of-smiling-male-employee-in-office.jpg?b=1&s=612x612&w=0&k=20&c=eU56mZTN4ZXYDJ2SR2DFcQahxEnIl3CiqpP3SOQVbbI=",
-        mentorName: "Akshat Kamesra",
-        review:
-            "\"Newversity is a game-changer for academic success. Its user-friendly interface and helpful features make studying more manageable and efficient.\""),
+            "\"Newversity is a great platform that allows students to connect with mentors with similar interests and backgrounds with an easy-to-use app.\""),
   ];
 }
 
