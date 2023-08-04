@@ -81,34 +81,28 @@ class MentorsReview {
 class StudentReview {
   String? profileImageUrl;
   String? review;
+  String? name;
 
-  StudentReview({this.profileImageUrl, this.review});
+  StudentReview({this.profileImageUrl, this.review, this.name});
 
   static List<StudentReview> listOfStudentReview = [
     StudentReview(
         profileImageUrl:
             "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZmlsZSUyMGltYWdlfGVufDB8fDB8fA%3D%3D&w=1000&q=80",
+        name: "Anuradha Soni (UPSC Aspirant)",
         review:
-            "\“Newversity is an excellent tool for anyone seeking guidance and support. The resources and advice provided are invaluable.\""),
+            "“Career guidance & decision making is one of the key challenge in every student's life. Newversity has made it very easy to connect with the right person & learn from their experience\""),
+    StudentReview(
+        profileImageUrl:
+            "https://media.istockphoto.com/id/1309328823/photo/headshot-portrait-of-smiling-male-employee-in-office.jpg?b=1&s=612x612&w=0&k=20&c=eU56mZTN4ZXYDJ2SR2DFcQahxEnIl3CiqpP3SOQVbbI=",
+        name: "Krishna (College Student)",
+        review:
+            "“I was always confused about career options in my stream, Newversity enabled me to conenct with right expert and have real insights from him\""),
     StudentReview(
         profileImageUrl:
             "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZmlsZSUyMGltYWdlfGVufDB8fDB8fA%3D%3D&w=1000&q=80",
+        name: "Anuskha (College Student)",
         review:
-            "\“Newversity is an excellent tool for anyone seeking guidance and support. The resources and advice provided are invaluable.\""),
-    StudentReview(
-        profileImageUrl:
-            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZmlsZSUyMGltYWdlfGVufDB8fDB8fA%3D%3D&w=1000&q=80",
-        review:
-            "\“Newversity is an excellent tool for anyone seeking guidance and support. The resources and advice provided are invaluable.\""),
-    StudentReview(
-        profileImageUrl:
-            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZmlsZSUyMGltYWdlfGVufDB8fDB8fA%3D%3D&w=1000&q=80",
-        review:
-            "\“Newversity is an excellent tool for anyone seeking guidance and support. The resources and advice provided are invaluable.\""),
-    StudentReview(
-        profileImageUrl:
-            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZmlsZSUyMGltYWdlfGVufDB8fDB8fA%3D%3D&w=1000&q=80",
-        review:
-            "\“Newversity is an excellent tool for anyone seeking guidance and support. The resources and advice provided are invaluable.\""),
+            "“Thanks to newversity, I connected with an industry expert who provided invaluable guidance, helping me navigate my career path with confidence and clarity.\""),
   ];
 }

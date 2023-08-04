@@ -288,9 +288,9 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         children: [
           Center(
             child: SizedBox(
-              height: 170,
+              height: 200,
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                padding: const EdgeInsets.symmetric(vertical: 30.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(18),
                   child: Container(
@@ -309,6 +309,14 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                         children: [
                           AppText(
                             listOfStudentReview[index].review ?? "",
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            textAlign: TextAlign.center,
+                            letterSpacing: 1,
+                          ),
+                          const Spacer(),
+                          AppText(
+                            listOfStudentReview[index].name ?? "",
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             textAlign: TextAlign.center,
