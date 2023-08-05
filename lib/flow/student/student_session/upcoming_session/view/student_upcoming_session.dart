@@ -8,7 +8,6 @@ import 'package:slide_countdown/slide_countdown.dart';
 
 import '../../../../../common/common_widgets.dart';
 import '../../../../../common/mentor_personal_detail_card.dart';
-import '../../../../../resources/images.dart';
 import '../../../../../themes/colors.dart';
 import '../../../../../utils/enums.dart';
 import '../../my_session/model/session_detail_response_model.dart';
@@ -44,7 +43,7 @@ class _StudentUpcomingSessionScreenState
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () {
-        return Future.delayed(Duration(seconds: 0), () {
+        return Future.delayed(const Duration(seconds: 0), () {
           BlocProvider.of<StudentUpcomingSessionBloc>(context).add(
               FetchStudentUpcomingSessionEvent(
                   sessionType: getSessionType(SessionType.upcoming)));
@@ -72,12 +71,12 @@ class _StudentUpcomingSessionScreenState
                     ),
                   );
                 } else if (state is UpcomingDataNotFoundState) {
-                  return SizedBox(
+                  return const SizedBox(
                     height: 400,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
+                      children: [
                         Center(
                           child: AppText(
                             "No Upcoming Session Found",
@@ -124,47 +123,9 @@ class _StudentUpcomingSessionScreenState
       children: List.generate(
         listOfUpcomingSessions.length,
         (curIndex) {
-          return getMentorDetailsView(curIndex);
+          return UpcomingSessionCard(sessionDetails: listOfUpcomingSessions[curIndex],);
         },
       ),
-    );
-  }
-
-  Widget getMentorsProfileImage(int index) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      width: 100,
-      child: listOfUpcomingSessions[index].teacherDetail?.profilePictureUrl ==
-                  null ||
-              listOfUpcomingSessions[index]
-                      .teacherDetail
-                      ?.profilePictureUrl
-                      ?.contains("https") ==
-                  false
-          ? const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Center(
-                child: AppImage(
-                  image: ImageAsset.blueAvatar,
-                ),
-              ),
-            )
-          : Image.network(
-              listOfUpcomingSessions[index].teacherDetail?.profilePictureUrl ??
-                  "",
-              fit: BoxFit.fill,
-              errorBuilder: (BuildContext context, Object exception,
-                  StackTrace? stackTrace) {
-                return const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Center(
-                    child: AppImage(
-                      image: ImageAsset.blueAvatar,
-                    ),
-                  ),
-                );
-              },
-            ),
     );
   }
 
@@ -194,16 +155,28 @@ class _StudentUpcomingSessionScreenState
       ),
     );
   }
+}
 
-  onSessionTap(int index) {
-    Navigator.of(context).pushNamed(AppRoutes.studentSessionDetailRoute,
-        arguments: SessionDetailArguments(
-            id: listOfUpcomingSessions[index].id.toString(),
-            isPrevious: false,
-            sessionDetails: listOfUpcomingSessions[index]));
+class UpcomingSessionCard extends StatefulWidget {
+  const UpcomingSessionCard({Key? key, required this.sessionDetails})
+      : super(key: key);
+  final SessionDetailResponseModel sessionDetails;
+
+  @override
+  State<UpcomingSessionCard> createState() => _UpcomingSessionCardState();
+}
+
+class _UpcomingSessionCardState extends State<UpcomingSessionCard> {
+  late bool enableJoinButton;
+
+  @override
+  void initState() {
+    enableJoinButton = getLeftTimeInSeconds(widget.sessionDetails.startDate ?? DateTime.now()) <= 0;
+    super.initState();
   }
 
-  Widget getMentorDetailsView(int index) {
+  @override
+  Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(width: 1, color: AppColors.grey32),
@@ -212,11 +185,11 @@ class _StudentUpcomingSessionScreenState
       child: Column(
         children: [
           MentorPersonalDetailCard(
-            mentorDetail: listOfUpcomingSessions[index].teacherDetail!,
-            onCardTap: () => onSessionTap(index),
+            mentorDetail: widget.sessionDetails.teacherDetail!,
+            onCardTap: () => onSessionTap(),
           ),
           GestureDetector(
-            onTap: () => onSessionTap(index),
+            onTap: () => onSessionTap(),
             child: Container(
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
@@ -228,8 +201,8 @@ class _StudentUpcomingSessionScreenState
               ),
               child: Center(
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0, vertical: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -239,13 +212,12 @@ class _StudentUpcomingSessionScreenState
                           Row(
                             children: [
                               AppText(
-                                "₹ ${listOfUpcomingSessions[index].amount?.toInt()}",
+                                "₹ ${widget.sessionDetails.amount?.toInt()}",
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
                               ),
                               AppText(
-                                listOfUpcomingSessions[index].sessionType ==
-                                        "long"
+                                widget.sessionDetails.sessionType == "long"
                                     ? "/ ${getSessionTypeWithSlotType(SlotType.long)}"
                                     : "/ ${getSessionTypeWithSlotType(SlotType.short)}",
                                 fontSize: 12,
@@ -253,31 +225,23 @@ class _StudentUpcomingSessionScreenState
                               ),
                             ],
                           ),
-                          getScheduleLeftTime(index),
+                          getScheduleLeftTime(),
                         ],
                       ),
                       GestureDetector(
-                        onTap: () => getLeftTimeInSeconds(
-                                    listOfUpcomingSessions[index].startDate ??
-                                        DateTime.now()) <
-                                1801
-                            ? onJoinNowTap(index)
-                            : null,
+                        onTap: () =>
+                            enableJoinButton ? onJoinNowTap() : null,
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           height: 52,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: getLeftTimeInSeconds(
-                                          listOfUpcomingSessions[index]
-                                                  .startDate ??
-                                              DateTime.now()) <
-                                      1801
+                              color: enableJoinButton
                                   ? AppColors.cyanBlue
                                   : AppColors.grey55),
-                          child: Column(
+                          child: const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
+                            children: [
                               AppText(
                                 "JOIN NOW",
                                 fontSize: 14,
@@ -299,20 +263,24 @@ class _StudentUpcomingSessionScreenState
     );
   }
 
-  onJoinNowTap(int index) {
-    Navigator.of(context).pushNamed(AppRoutes.roomPageRoute,
-        arguments: RoomArguments(
-            sessionDetails: listOfUpcomingSessions[index], forStudents: true));
+  onSessionTap() {
+    Navigator.of(context).pushNamed(
+      AppRoutes.studentSessionDetailRoute,
+      arguments: SessionDetailArguments(
+        id: widget.sessionDetails.id.toString(),
+        isPrevious: false,
+        sessionDetails: widget.sessionDetails,
+      ),
+    );
   }
 
-  int getLeftTimeInSeconds(DateTime dateTime) {
-    return (dateTime.difference(DateTime.now()).inSeconds);
-  }
-
-  Widget getScheduleLeftTime(int index) {
+  Widget getScheduleLeftTime() {
     int timeLeftInSeconds = getLeftTimeInSeconds(
-        listOfUpcomingSessions[index].startDate ?? DateTime.now());
+        widget.sessionDetails.startDate ?? DateTime.now());
     return SlideCountdown(
+      onDone: () => setState(() {
+        enableJoinButton = true;
+      }),
       duration: Duration(seconds: timeLeftInSeconds),
       decoration: const BoxDecoration(
         color: Colors.transparent,
@@ -325,7 +293,17 @@ class _StudentUpcomingSessionScreenState
         fontWeight: FontWeight.w400,
       ),
       separatorStyle:
-          const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+      const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
     );
+  }
+
+  int getLeftTimeInSeconds(DateTime dateTime) {
+    return (dateTime.difference(DateTime.now()).inSeconds);
+  }
+
+  onJoinNowTap() {
+    Navigator.of(context).pushNamed(AppRoutes.roomPageRoute,
+        arguments: RoomArguments(
+            sessionDetails: widget.sessionDetails, forStudents: true));
   }
 }

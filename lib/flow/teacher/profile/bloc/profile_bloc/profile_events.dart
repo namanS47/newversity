@@ -42,13 +42,23 @@ class FetchMentorshipTag extends ProfileEvents {
 }
 
 class SaveTeacherExperienceEvent extends ProfileEvents {
-  final ExperienceRequestModel experienceRequestModel;
+  final ExperienceDetailsModel experienceRequestModel;
   SaveTeacherExperienceEvent({required this.experienceRequestModel});
 }
 
 class SaveTeacherEducationEvents extends ProfileEvents {
-  final EducationRequestModel educationRequestModel;
-  SaveTeacherEducationEvents({required this.educationRequestModel});
+  final EducationDetailsModel educationDetailsModel;
+  SaveTeacherEducationEvents({required this.educationDetailsModel});
+}
+
+class DeleteTeacherEducationEvent extends ProfileEvents {
+  DeleteTeacherEducationEvent({required this.id});
+  final String id;
+}
+
+class DeleteTeacherExperienceEvent extends ProfileEvents {
+  DeleteTeacherExperienceEvent({required this.id});
+  final String id;
 }
 
 class FetchTeacherDetailsEvent extends ProfileEvents {}

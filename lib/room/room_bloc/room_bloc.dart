@@ -8,8 +8,8 @@ part 'room_event.dart';
 part 'room_state.dart';
 
 class RoomBloc extends Bloc<RoomEvent, RoomState> {
-  bool isAudioOn = true;
-  bool isVideoOn = true;
+  bool isAudioOn = false;
+  bool isVideoOn = false;
   bool isScreenShareActive = false;
 
   RoomBloc() : super(RoomInitial()) {

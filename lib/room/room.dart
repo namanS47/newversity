@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hmssdk_flutter/hmssdk_flutter.dart';
+import 'package:newversity/common/common_utils.dart';
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/room/model/room_argument.dart';
 import 'package:newversity/room/room_bloc/room_bloc.dart';
+import 'package:newversity/themes/colors.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:wakelock/wakelock.dart';
 
 class RoomPage extends StatelessWidget {
   final RoomArguments roomArguments;
@@ -45,10 +48,8 @@ class RoomPage extends StatelessWidget {
               await getPermissions();
               if (context.mounted) {
                 Navigator.pushReplacementNamed(
-                  context,
-                  AppRoutes.meetingPageRoute,
-                  arguments: roomArguments
-                );
+                    context, AppRoutes.meetingPageRoute,
+                    arguments: roomArguments);
               }
             },
             child: const Padding(
@@ -80,14 +81,17 @@ class _MeetingPageState extends State<MeetingPage>
     implements HMSUpdateListener {
   //SDK
   late HMSSDK hmsSDK;
+  late Size _screenSize;
 
   // Variables required for rendering video and peer info
   HMSPeer? localPeer, remotePeer;
   HMSVideoTrack? localPeerVideoTrack, remotePeerVideoTrack;
+  bool remoteProminent = true;
 
   // Initialize variables and join room
   @override
   void initState() {
+    Wakelock.enable();
     super.initState();
     initHMSSDK();
   }
@@ -127,8 +131,16 @@ class _MeetingPageState extends State<MeetingPage>
         if (mounted) {
           setState(() {});
         }
+      } else {
+        if (peer.customerUserId == CommonUtils().getLoggedInUser()) {
+          hmsSDK.removePeer(peer: peer, reason: "Duplicate peers");
+        }
       }
     });
+  }
+
+  Future<bool> isAllowedToRemovePeer() async {
+    return (await hmsSDK.getLocalPeer())!.role.permissions.removeOthers!;
   }
 
   // Called when there's a peer update - use to update local & remote peer variables
@@ -136,7 +148,8 @@ class _MeetingPageState extends State<MeetingPage>
   void onPeerUpdate({required HMSPeer peer, required HMSPeerUpdate update}) {
     switch (update) {
       case HMSPeerUpdate.peerJoined:
-        if (!peer.isLocal) {
+        if (!peer.isLocal &&
+            peer.customerUserId != CommonUtils().getLoggedInUser()) {
           if (mounted) {
             setState(() {
               remotePeer = peer;
@@ -145,7 +158,8 @@ class _MeetingPageState extends State<MeetingPage>
         }
         break;
       case HMSPeerUpdate.peerLeft:
-        if (!peer.isLocal) {
+        if (!peer.isLocal &&
+            peer.customerUserId != CommonUtils().getLoggedInUser()) {
           if (mounted) {
             setState(() {
               remotePeer = null;
@@ -175,18 +189,24 @@ class _MeetingPageState extends State<MeetingPage>
         case HMSTrackUpdate.trackRemoved:
           if (mounted) {
             setState(() {
-              peer.isLocal
-                  ? localPeerVideoTrack = null
-                  : remotePeerVideoTrack = null;
+              if (peer.isLocal) {
+                localPeerVideoTrack = null;
+              } else if (peer.customerUserId !=
+                  CommonUtils().getLoggedInUser()) {
+                remotePeerVideoTrack = null;
+              }
             });
           }
           return;
         default:
           if (mounted) {
             setState(() {
-              peer.isLocal
-                  ? localPeerVideoTrack = track as HMSVideoTrack
-                  : remotePeerVideoTrack = track as HMSVideoTrack;
+              if (peer.isLocal) {
+                localPeerVideoTrack = track as HMSVideoTrack;
+              } else if (peer.customerUserId !=
+                  CommonUtils().getLoggedInUser()) {
+                remotePeerVideoTrack = track as HMSVideoTrack;
+              }
             });
           }
       }
@@ -228,8 +248,55 @@ class _MeetingPageState extends State<MeetingPage>
   @override
   void onUpdateSpeakers({required List<HMSSpeaker> updateSpeakers}) {}
 
+  Widget smallPeerTile(Key key, HMSVideoTrack? videoTrack, HMSPeer? peer) {
+    String? userName = widget.roomArguments.forStudents == true
+        ? widget.roomArguments.sessionDetails.studentDetail?.name
+        : widget.roomArguments.sessionDetails.teacherDetail?.name;
+    return ClipRRect(
+      borderRadius: const BorderRadius.all(Radius.circular(20)),
+      child: Container(
+        width: 130,
+        height: 180,
+        color: AppColors.colorBlack,
+        key: key,
+        child: (videoTrack != null && !(videoTrack.isMute))
+            // Actual widget to render video
+            ? HMSVideoView(
+                track: videoTrack,
+                setMirror: true,
+                scaleType: ScaleType.SCALE_ASPECT_FILL,
+              )
+            : Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withAlpha(4),
+                    shape: BoxShape.circle,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.blue,
+                        blurRadius: 20.0,
+                        spreadRadius: 5.0,
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    userName ?? "D",
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+      ),
+    );
+  }
+
   // Widget to render a single video tile
   Widget peerTile(Key key, HMSVideoTrack? videoTrack, HMSPeer? peer) {
+    String? userName = widget.roomArguments.forStudents == true
+        ? widget.roomArguments.sessionDetails.teacherDetail?.name
+        : widget.roomArguments.sessionDetails.studentDetail?.name;
     return Container(
       key: key,
       child: (videoTrack != null && !(videoTrack.isMute))
@@ -237,7 +304,7 @@ class _MeetingPageState extends State<MeetingPage>
           ? HMSVideoView(
               track: videoTrack,
               setMirror: true,
-              matchParent: true,
+              scaleType: ScaleType.SCALE_ASPECT_FILL,
             )
           : Center(
               child: Container(
@@ -253,7 +320,7 @@ class _MeetingPageState extends State<MeetingPage>
                   ],
                 ),
                 child: Text(
-                  peer?.name.substring(0, 1) ?? "D",
+                  userName ?? "D",
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -267,72 +334,125 @@ class _MeetingPageState extends State<MeetingPage>
   // Widget to render grid of peer tiles and a end button
   @override
   Widget build(BuildContext context) {
+    _screenSize = MediaQuery.of(context).size;
+
     return WillPopScope(
       // Used to call "leave room" upon clicking back button [in android]
       onWillPop: () async {
-        return false;
+        return true;
       },
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.black,
           body: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: GridView(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisExtent: (remotePeerVideoTrack == null)
-                      ? MediaQuery.of(context).size.height
-                      : MediaQuery.of(context).size.height / 2,
-                  crossAxisCount: 1),
-              children: [
-                if (remotePeerVideoTrack != null && remotePeer != null)
-                  peerTile(Key(remotePeerVideoTrack?.trackId ?? "" "mainVideo"),
-                      remotePeerVideoTrack, remotePeer),
-                peerTile(Key(localPeerVideoTrack?.trackId ?? "" "mainVideo"),
-                    localPeerVideoTrack, localPeer)
-              ],
-            ),
-          ),
-          bottomNavigationBar: BlocBuilder<RoomBloc, RoomState>(
-            builder: (context, state) {
-              return BottomNavigationBar(
-                type: BottomNavigationBarType.fixed,
-                backgroundColor: Colors.black,
-                selectedItemColor: Colors.grey,
-                unselectedItemColor: Colors.grey,
-                items: <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: Icon(context.read<RoomBloc>().isAudioOn
-                        ? Icons.mic_off
-                        : Icons.mic),
-                    label: 'Mic',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(context.read<RoomBloc>().isVideoOn
-                        ? Icons.videocam_off
-                        : Icons.videocam),
-                    label: 'Camera',
-                  ),
-                  BottomNavigationBarItem(
-                      icon: Icon(
-                        Icons.screen_share,
-                        color: context.read<RoomBloc>().isScreenShareActive
-                            ? Colors.green
-                            : Colors.grey,
-                      ),
-                      label: "ScreenShare"),
-                  const BottomNavigationBarItem(
-                    icon: Icon(Icons.cancel),
-                    label: 'Leave Meeting',
-                  ),
-                ],
-
-                //New
-                onTap: (index) => _onItemTapped(index, context),
-              );
-            },
+            height: MediaQuery.of(context).size.height -
+                MediaQuery.of(context).padding.top -
+                MediaQuery.of(context).padding.bottom,
+            child: getScreenContent(),
           ),
         ),
       ),
+    );
+  }
+
+  Widget getScreenContent() {
+    if (remoteProminent && remotePeerVideoTrack != null && remotePeer != null) {
+      return Stack(
+        children: [
+          peerTile(Key(remotePeerVideoTrack?.trackId ?? "" "mainVideo"),
+              remotePeerVideoTrack, remotePeer),
+          Positioned(
+            bottom: 60,
+            right: 20,
+            child: smallPeerTile(
+                Key(localPeerVideoTrack?.trackId ?? "" "mainVideo"),
+                localPeerVideoTrack,
+                localPeer),
+          ),
+          Positioned(
+            bottom: 0,
+            child: Visibility(child: bottomItemsWidget()),
+          )
+        ],
+      );
+    }
+    return Stack(
+      children: [
+        peerTile(Key(localPeerVideoTrack?.trackId ?? "" "mainVideo"),
+            localPeerVideoTrack, localPeer),
+        if (remotePeerVideoTrack != null && remotePeer != null)
+          Positioned(
+            bottom: 40,
+            right: 20,
+            child: smallPeerTile(
+                Key(remotePeerVideoTrack?.trackId ?? "" "mainVideo"),
+                remotePeerVideoTrack,
+                remotePeer),
+          ),
+        Positioned(
+          bottom: 0,
+          child: Visibility(child: bottomItemsWidget()),
+        )
+      ],
+    );
+  }
+
+  Widget bottomItemsWidget() {
+    return BlocBuilder<RoomBloc, RoomState>(
+      builder: (context, state) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
+          width: _screenSize.width,
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CircleAvatar(
+                radius: 26,
+                backgroundColor: AppColors.whiteColor,
+                child: IconButton(
+                  iconSize: 30,
+                  color: AppColors.colorBlack,
+                  onPressed: () {
+                    context
+                        .read<RoomBloc>()
+                        .add(RoomOverviewLocalPeerAudioToggled(hmsSDK: hmsSDK));
+                  },
+                  icon: Icon(
+                    context.read<RoomBloc>().isAudioOn ? Icons.mic_off : Icons.mic,
+                  ),
+                ),
+              ),
+              CircleAvatar(
+                radius: 26,
+                backgroundColor: AppColors.whiteColor,
+                child: IconButton(
+                  iconSize: 30,
+                  onPressed: () => _onItemTapped(1, context),
+                  color: AppColors.colorBlack,
+                  icon: Icon(
+                    context.read<RoomBloc>().isVideoOn
+                        ? Icons.videocam_off
+                        : Icons.videocam,
+                  ),
+                ),
+              ),
+              CircleAvatar(
+                radius: 26,
+                backgroundColor: AppColors.strongRed,
+                child: IconButton(
+                  iconSize: 30,
+                  color: AppColors.whiteColor,
+                  onPressed: () => _onItemTapped(2, context),
+                  icon: const Icon(
+                    Icons.call_end,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -347,18 +467,18 @@ class _MeetingPageState extends State<MeetingPage>
       case 1:
         context
             .read<RoomBloc>()
-
             .add(RoomOverviewLocalPeerVideoToggled(hmsSDK: hmsSDK));
         break;
 
-      case 2:
-        context
-            .read<RoomBloc>()
-            .add(RoomOverviewLocalPeerScreenShareToggled(hmsSDK: hmsSDK));
-        break;
+      // case 2:
+      //   context
+      //       .read<RoomBloc>()
+      //       .add(RoomOverviewLocalPeerScreenShareToggled(hmsSDK: hmsSDK));
+      //   break;
 
-      case 3:
+      case 2:
         hmsSDK.leave();
+        Wakelock.disable();
         if (widget.roomArguments.forStudents) {
           Navigator.of(context).pushReplacementNamed(
               AppRoutes.congratulationFeedback,
@@ -373,7 +493,5 @@ class _MeetingPageState extends State<MeetingPage>
   }
 
   @override
-  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {
-
-  }
+  void onSessionStoreAvailable({HMSSessionStore? hmsSessionStore}) {}
 }

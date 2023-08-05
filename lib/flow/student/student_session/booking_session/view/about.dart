@@ -26,8 +26,8 @@ class AboutSession extends StatefulWidget {
 
 class _AboutSessionState extends State<AboutSession> {
   TeacherDetailsModel? teacherDetails;
-  List<ExperienceResponseModel> lisOfExperienceModel = [];
-  List<EducationResponseModel> listOfEducationModel = [];
+  List<ExperienceDetailsModel> lisOfExperienceModel = [];
+  List<EducationDetailsModel> listOfEducationModel = [];
 
   @override
   void initState() {

@@ -84,7 +84,7 @@ class _AvailabilityTimingWidgetState extends State<AvailabilityTimingWidget> {
         child: Padding(
           padding: EdgeInsets.only(left: 12.0, right: 19, top: 11, bottom: 11),
           child: AppText(
-            "Note : You cannot book/cancel/reschedule your session within 2 hours before the session time.",
+            "Note : You cannot cancel/reschedule your session once booked.",
             fontSize: 12,
             fontWeight: FontWeight.w600,
           ),

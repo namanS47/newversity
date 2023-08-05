@@ -28,7 +28,7 @@ class FirebaseMessagingService {
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(_channel);
 
-    initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    GlobalConstants.initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 
     FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
         alert: true, badge: true, sound: true);

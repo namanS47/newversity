@@ -4,3 +4,5 @@ part of 'app_bloc.dart';
 abstract class AppEvent {}
 
 class FetchInitialRouteEvent extends AppEvent {}
+
+class CheckForAppUpdateEvent extends AppEvent {}

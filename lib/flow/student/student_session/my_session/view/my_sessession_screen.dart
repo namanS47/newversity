@@ -19,6 +19,18 @@ class MySessionScreen extends StatefulWidget {
 }
 
 class _MySessionScreenState extends State<MySessionScreen> {
+  List<Widget> bookingPages = [];
+
+  @override
+  void initState() {
+    bookingPages = [
+      BlocProvider<StudentUpcomingSessionBloc>(
+          create: (context) => StudentUpcomingSessionBloc(),
+          child: const StudentUpcomingSessionScreen())
+    ];
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MySessionBloc, MySessionStates>(
@@ -67,19 +79,26 @@ class _MySessionScreenState extends State<MySessionScreen> {
                                 height: 10,
                               ),
                               getCategoryTab(),
-                              context.read<MySessionBloc>().selectedIndex == 0
-                                  ? BlocProvider<StudentUpcomingSessionBloc>(
-                                      create: (context) =>
-                                          StudentUpcomingSessionBloc(),
-                                      child: const Expanded(
-                                          child:
-                                              StudentUpcomingSessionScreen()))
-                                  : BlocProvider<StudentPreviousSessionBloc>(
-                                      create: (context) =>
-                                          StudentPreviousSessionBloc(),
-                                      child: Expanded(
-                                          child:
-                                              const StudentPreviousSessionScreen())),
+                              Expanded(
+                                child: IndexedStack(
+                                  index:
+                                  context.read<MySessionBloc>().selectedIndex,
+                                  children: bookingPages,
+                                ),
+                              )
+                              // context.read<MySessionBloc>().selectedIndex == 0
+                              //     ? BlocProvider<StudentUpcomingSessionBloc>(
+                              //         create: (context) =>
+                              //             StudentUpcomingSessionBloc(),
+                              //         child: const Expanded(
+                              //             child:
+                              //                 StudentUpcomingSessionScreen()))
+                              //     : BlocProvider<StudentPreviousSessionBloc>(
+                              //         create: (context) =>
+                              //             StudentPreviousSessionBloc(),
+                              //         child: const Expanded(
+                              //             child:
+                              //                 StudentPreviousSessionScreen())),
                             ],
                           ),
                         ),
@@ -96,6 +115,17 @@ class _MySessionScreenState extends State<MySessionScreen> {
   }
 
   onTabTap(int index) {
+    bookingPages = [
+      BlocProvider<StudentUpcomingSessionBloc>(
+          create: (context) =>
+              StudentUpcomingSessionBloc(),
+          child: const StudentUpcomingSessionScreen()),
+      BlocProvider<StudentPreviousSessionBloc>(
+          create: (context) =>
+              StudentPreviousSessionBloc(),
+          child: const StudentPreviousSessionScreen()),
+
+    ];
     context.read<MySessionBloc>().add(ChangeMySessionTabEvent(index: index));
   }
 

@@ -33,8 +33,8 @@ class ProfileOverview extends StatefulWidget {
 class _ProfileOverviewState extends State<ProfileOverview> {
   List<TagsResponseModel> allExpertise = [];
   List<TagsResponseModel> allMentorship = [];
-  List<ExperienceResponseModel> lisOfExperienceModel = [];
-  List<EducationResponseModel> listOfEducationModel = [];
+  List<ExperienceDetailsModel> lisOfExperienceModel = [];
+  List<EducationDetailsModel> listOfEducationModel = [];
   TeacherDetailsModel? teacherDetails;
 
   @override

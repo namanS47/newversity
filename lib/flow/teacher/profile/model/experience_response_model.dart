@@ -1,11 +1,9 @@
-import 'dart:ffi';
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'experience_response_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class ExperienceResponseModel {
+class ExperienceDetailsModel {
   String? id;
   String? teacherId;
   String? title;
@@ -16,7 +14,7 @@ class ExperienceResponseModel {
   DateTime? endDate;
   bool? currentlyWorkingHere;
 
-  ExperienceResponseModel(
+  ExperienceDetailsModel(
       {this.id,
       this.teacherId,
       this.title,
@@ -27,8 +25,8 @@ class ExperienceResponseModel {
       this.endDate,
       this.currentlyWorkingHere});
 
-  factory ExperienceResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$ExperienceResponseModelFromJson(json);
+  factory ExperienceDetailsModel.fromJson(Map<String, dynamic> json) =>
+      _$ExperienceDetailsModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ExperienceResponseModelToJson(this);
+  Map<String, dynamic> toJson() => _$ExperienceDetailsModelToJson(this);
 }

@@ -8,4 +8,7 @@ class AppConstants {
 ///Global variables
 
 //This is notification message when tap on notification in terminated state
-RemoteMessage? initialMessage;
+class GlobalConstants {
+  static RemoteMessage? initialMessage;
+  static bool isCheckedForAppUpdate = false;
+}

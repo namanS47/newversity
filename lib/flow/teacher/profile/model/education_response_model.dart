@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'education_response_model.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class EducationResponseModel {
+class EducationDetailsModel {
   String? id;
   String? teacherId;
   String? name;
@@ -13,7 +13,7 @@ class EducationResponseModel {
   bool? currentlyWorkingHere;
   String? grade;
 
-  EducationResponseModel(
+  EducationDetailsModel(
       {this.id,
       this.teacherId,
       this.name,
@@ -23,8 +23,8 @@ class EducationResponseModel {
       this.currentlyWorkingHere,
       this.grade});
 
-  factory EducationResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$EducationResponseModelFromJson(json);
+  factory EducationDetailsModel.fromJson(Map<String, dynamic> json) =>
+      _$EducationDetailsModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$EducationResponseModelToJson(this);
+  Map<String, dynamic> toJson() => _$EducationDetailsModelToJson(this);
 }

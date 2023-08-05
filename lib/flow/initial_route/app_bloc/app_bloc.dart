@@ -21,6 +21,10 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   final CommonApi _commonApi = DI.inject<CommonApi>();
 
   AppBloc() : super(AppInitial()) {
+    on<CheckForAppUpdateEvent>((event, emit) async {
+      await checkForUpdateEvent(emit);
+    });
+
     on<FetchInitialRouteEvent>((event, emit) async {
       emit(FetchingInitialRouteLoadingState());
       await fetchInitialRoute(emit);
@@ -34,8 +38,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     }
 
     //TODO: Naman
-    if (initialMessage != null) {
-      print("naman--- initial fcm message ${initialMessage?.data}");
+    if (GlobalConstants.initialMessage != null) {
+      print("naman--- initial fcm message ${GlobalConstants.initialMessage?.data}");
     }
 
     sendFcmToken();
@@ -77,5 +81,30 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       firebaseUserId: CommonUtils().getLoggedInUser(),
       fcmToken: fcmToken,
     ));
+  }
+
+  compareVersionForUpdate(String availableVersion, String currentVersion) {
+    int currentVersionNumber = double.parse(currentVersion.trim().replaceAll(".", "")).toInt();
+    int availableVersionNumber = double.parse(availableVersion.trim().replaceAll(".", "")).toInt();
+    return currentVersionNumber < availableVersionNumber;
+  }
+
+  checkForUpdateEvent(Emitter<AppState> emit ) async {
+    GlobalConstants.isCheckedForAppUpdate = true;
+    final response = await _commonApi.fetchAppVersionDetails();
+    if (response != null && response.version != null) {
+      String version = response.version!;
+      String appVersion = await CommonUtils().getAppVersion();
+      if (compareVersionForUpdate(version, appVersion)) {
+        return emit(ShowAppUpdateDialogue(
+          mandatory: response.mandatory!,
+            availableVersion: version,
+            currentVersion: appVersion));
+      } else {
+        emit(CheckingAppUpdateFlowComplete());
+      }
+    } else {
+      emit(CheckingAppUpdateFlowComplete());
+    }
   }
 }
