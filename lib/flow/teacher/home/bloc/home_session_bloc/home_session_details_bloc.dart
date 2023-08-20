@@ -2,9 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:newversity/flow/student/profile_dashboard/data/model/student_details_model.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
-import 'package:newversity/flow/teacher/home/model/session_response_model.dart';
 import 'package:newversity/network/webservice/exception.dart';
-
 import '../../../../../common/common_utils.dart';
 import '../../../../../di/di_initializer.dart';
 import '../../../../model/session_count_response_model.dart';
@@ -128,4 +126,18 @@ class HomeSessionBloc extends Bloc<HomeSessionDetailEvents, HomeSessionStates> {
       }
     }
   }
+
+  // handleDeepLink() {
+  //   late String action;
+  //   print("naman---20 ${GlobalConstants.initialMessage?.data["action"]}");
+  //   print(GlobalConstants.initialMessage?.data["action"] == NotificationAction.addAvailability.toString().split(".")[1]);
+  //
+  //   if(GlobalConstants.initialMessage?.data.containsKey("action") == true) {
+  //     action = GlobalConstants.initialMessage?.data["action"];
+  //
+  //     if(action == NotificationAction.addAvailability.toString().split(".")[1]) {
+  //       EventsBroadcast.get().send(ChangeHomePageIndexEvent(index: 2));
+  //     }
+  //   }
+  // }
 }

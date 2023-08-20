@@ -897,6 +897,10 @@ class _HomeState extends State<Home> {
           !completionStageStatus[
               ProfileCompletionStage.Profile.toString().split(".")[1]]!) {
         directedIndex = 1;
+      } else if (completionStageStatus.containsKey(ProfileCompletionStage.ProfilePicture.toString().split(".")[1]) &&
+          !completionStageStatus[
+          ProfileCompletionStage.ProfilePicture.toString().split(".")[1]]!) {
+        directedIndex = 1;
       } else if (completionStageStatus.containsKey(ProfileCompletionStage.Education.toString().split(".")[1]) &&
           !completionStageStatus[
               ProfileCompletionStage.Education.toString().split(".")[1]]!) {

@@ -37,11 +37,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       return emit(RedirectToLoginRoute());
     }
 
-    //TODO: Naman
-    if (GlobalConstants.initialMessage != null) {
-      print("naman--- initial fcm message ${GlobalConstants.initialMessage?.data}");
-    }
-
     sendFcmToken();
 
     final isStudent = await CommonUtils().isUserStudent();
