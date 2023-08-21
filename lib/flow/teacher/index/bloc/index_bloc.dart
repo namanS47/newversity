@@ -50,7 +50,7 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
       <Map<String, String>>[
     {'image': ImageAsset.home, 'name': 'Home'},
     {'image': ImageAsset.session, 'name': 'My Session'},
-    {'image': ImageAsset.campus, 'name': 'Campus'},
+    // {'image': ImageAsset.campus, 'name': 'Campus'},
   ];
 
   IndexBloc() : super(IndexInitialState()) {
@@ -107,10 +107,10 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
         create: (context) => MySessionBloc(),
         child: const MySessionScreen(),
       ) : Container(),
-      indexPageLoadedList[2] ? BlocProvider<StudentCampusBloc>(
-        create: (context) => StudentCampusBloc(),
-        child: const StudentCampusScreen(),
-      ) : Container()
+      // indexPageLoadedList[2] ? BlocProvider<StudentCampusBloc>(
+      //   create: (context) => StudentCampusBloc(),
+      //   child: const StudentCampusScreen(),
+      // ) : Container()
     ];
 
     indexPages = [
