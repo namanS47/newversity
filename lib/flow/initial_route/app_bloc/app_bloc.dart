@@ -10,6 +10,7 @@ import 'package:newversity/storage/app_constants.dart';
 import 'package:newversity/storage/preferences.dart';
 
 import '../../../network/api/teacher_api.dart';
+import '../../teacher/profile/model/profile_completion_percentage_response.dart';
 
 part 'app_event.dart';
 
@@ -44,10 +45,15 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       final studentId = CommonUtils().getLoggedInUser();
       try {
         final response = await _studentApi.getProfileCompletionInfo(studentId);
-        if (response != null && response.completePercentage != 0) {
-          return emit(RedirectToStudentHome());
+        final completionStageStatus =
+            response?.profileCompletionStageStatus;
+        if (response != null && response.completePercentage == 0) {
+          return emit(RedirectToStudentProfileDashboardRoute(index: 0));
+        } else if(response != null && !completionStageStatus![
+        ProfileCompletionStage.SelectTags.toString().split(".")[1]]!) {
+          return emit(RedirectToStudentProfileDashboardRoute(index: 1));
         } else {
-          return emit(RedirectToStudentProfileDashboardRoute());
+          return emit(RedirectToStudentHome());
         }
       } on AppException {
         return emit(SomethingWentWrongState());

@@ -56,65 +56,51 @@ class _StudentProfileDashboardState extends State<StudentProfileDashboard> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Visibility(
-                        visible: !(context
+                      if((context
+                          .read<ProfileDashboardBloc>()
+                          .currentProfileStep !=
+                          1)) GestureDetector(
+                        onTap: () async {
+                          if (context
+                                  .read<ProfileDashboardBloc>()
+                                  .currentProfileStep >
+                              1) {
+                            context.read<ProfileDashboardBloc>().add(
+                                ChangeStudentProfileCardIndexEvent(isBack: true));
+                          } else {
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          padding: const EdgeInsets.only(left: 33),
+                          child: SvgPicture.asset(ImageAsset.arrowBack),
+                        ),
+                      ),
+                      if (context
+                          .read<ProfileDashboardBloc>()
+                          .profileCardList
+                          .isNotEmpty) ...[
+                        SizedBox(
+                          height: 32,
+                          width: context
+                              .read<ProfileDashboardBloc>()
+                              .sliderWidth,
+                          child: StepProgressIndicator(
+                            totalSteps: context
                                 .read<ProfileDashboardBloc>()
-                                .currentProfileStep ==
-                            1),
-                        child: GestureDetector(
-                          onTap: () async {
-                            if (context
-                                    .read<ProfileDashboardBloc>()
-                                    .currentProfileStep >
-                                1) {
-                              context.read<ProfileDashboardBloc>().add(
-                                  ChangeStudentProfileCardIndexEvent(isBack: true));
-                            } else {
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            padding: const EdgeInsets.only(left: 33),
-                            child: SvgPicture.asset(ImageAsset.arrowBack),
+                                .profileCardList
+                                .length,
+                            currentStep: context
+                                .read<ProfileDashboardBloc>()
+                                .currentProfileStep,
+                            padding: 0,
+                            selectedColor: AppColors.primaryColor,
+                            unselectedColor: AppColors.grey32,
+                            roundedEdges: const Radius.circular(100),
                           ),
                         ),
-                      ),
-                      Stack(
-                        alignment: Alignment.centerLeft,
-                        children: [
-                          if (context
-                              .read<ProfileDashboardBloc>()
-                              .profileCardList
-                              .isNotEmpty) ...[
-                            SizedBox(
-                              width: context
-                                  .read<ProfileDashboardBloc>()
-                                  .sliderWidth,
-                              child: StepProgressIndicator(
-                                totalSteps: context
-                                    .read<ProfileDashboardBloc>()
-                                    .profileCardList
-                                    .length,
-                                currentStep: context
-                                    .read<ProfileDashboardBloc>()
-                                    .currentProfileStep,
-                                padding: 0,
-                                selectedColor: AppColors.primaryColor,
-                                unselectedColor: AppColors.grey32,
-                                roundedEdges: const Radius.circular(100),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          onTap: () => onSkipTap(),
-                          child: const Text("Skip"),
-                        ),
-                      )
+                      ],
                     ],
                   ),
                 ),

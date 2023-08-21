@@ -51,8 +51,9 @@ class _InitialRouteState extends State<InitialRoute> {
           Navigator.pushReplacementNamed(context, AppRoutes.studentHome,
               arguments: true);
         } else if (state is RedirectToStudentProfileDashboardRoute) {
+          bool index = state.index == 1;
           Navigator.pushReplacementNamed(
-              context, AppRoutes.studentProfileDashboardRoute);
+              context, AppRoutes.studentProfileDashboardRoute, arguments: index);
         } else if (state is SomethingWentWrongState) {
           Navigator.pushReplacementNamed(
               context, AppRoutes.somethingWentWrongRoute);

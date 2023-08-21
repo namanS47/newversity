@@ -32,7 +32,10 @@ class RedirectToLoginRoute extends AppInitial {}
 
 class RedirectToStudentHome extends AppInitial {}
 
-class RedirectToStudentProfileDashboardRoute extends AppInitial {}
+class RedirectToStudentProfileDashboardRoute extends AppInitial {
+  RedirectToStudentProfileDashboardRoute({required this.index});
+  final int index;
+}
 
 class RedirectToTeacherPersonalInformationRoute extends AppInitial {}
 
