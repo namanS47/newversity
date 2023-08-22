@@ -15,6 +15,7 @@ import '../../flow/student/payment/data/model/create_order_response_model.dart';
 import '../../flow/student/payment/data/model/phonepe/phone_pe_callback_url_request_model.dart';
 import '../../flow/student/payment/data/model/phonepe/phone_pe_callback_url_response_model.dart';
 import '../../flow/student/payment/data/model/phonepe/phone_pe_transaction_status_response_model.dart';
+import '../../flow/student/student_session/booking_session/model/promo_code_details_response_model.dart';
 import '../../flow/teacher/home/model/session_request_model.dart';
 import '../../flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import '../../flow/teacher/profile/model/tags_response_model.dart';
@@ -93,4 +94,8 @@ abstract class StudentApi {
   @NoBody()
   Future<PhonePeTransactionStatusResponseModel> getPhonePeTransactionStatus(
       @Header("merchantTransactionId") String merchantTransactionId);
+
+  @GET("/promoCode")
+  @NoBody()
+  Future<PromoCodeDetailsResponseModel?> fetchPromoCodeDetails(@Query("promoCode") String promoCode);
 }

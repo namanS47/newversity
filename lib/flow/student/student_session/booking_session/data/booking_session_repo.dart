@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:newversity/flow/student/webservice/student_base_repository.dart';
+import 'package:newversity/network/api/student_api.dart';
 
 import '../../../../../di/di_initializer.dart';
 import '../../../../../network/api/teacher_api.dart';
@@ -9,9 +10,11 @@ import '../../../../teacher/availability/data/model/fetch_availability_request_m
 import '../../../../teacher/data/model/teacher_details/teacher_details_model.dart';
 import '../../../../teacher/profile/model/education_response_model.dart';
 import '../../../../teacher/profile/model/experience_response_model.dart';
+import '../model/promo_code_details_response_model.dart';
 
 class SessionBookingRepository extends StudentBaseRepository {
   final TeacherApi _teacherApi = DI.inject<TeacherApi>();
+  final StudentApi _studentApi = DI.inject<StudentApi>();
 
   Future<List<AvailabilityModel>?> fetchAvailability(
       FetchAvailabilityRequestModel request) async {
@@ -50,8 +53,17 @@ class SessionBookingRepository extends StudentBaseRepository {
     try {
       response = await _teacherApi.getTeacherDetails(teacherId);
     } on DioException catch (exception) {
-      AppException.forException(exception.response);
+      throw AppException.forException(exception.response);
     }
     return response;
+  }
+
+  Future<PromoCodeDetailsResponseModel?> fetchPromoCodeDetails(String promoCode) async {
+    try{
+      final response = await _studentApi.fetchPromoCodeDetails(promoCode);
+      return response;
+    } on DioException catch (exception) {
+      throw AppException.forException(exception.response);
+    }
   }
 }

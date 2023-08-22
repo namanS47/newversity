@@ -92,7 +92,8 @@ class AppDropdownButton extends StatelessWidget {
           items: itemBuilder ??
               dropdownItems
                   .map(
-                    (item) => DropdownMenuItem<String>(
+                    (item) =>
+                    DropdownMenuItem<String>(
                       value: item,
                       child: Container(
                         width: double.infinity,
@@ -106,7 +107,7 @@ class AppDropdownButton extends StatelessWidget {
                         ),
                       ),
                     ),
-                  )
+              )
                   .toList(),
           onChanged: onChanged,
           selectedItemBuilder: selectedItemBuilder,
@@ -131,25 +132,25 @@ class AppDropdownButton extends StatelessWidget {
           ),
 
           dropdownStyleData: DropdownStyleData(
-            maxHeight: dropdownHeight ?? 200,
-            width: dropdownWidth ?? 290,
-            padding: dropdownPadding,
-            decoration: dropdownDecoration ??
-                BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: AppColors.whiteColor,
-                ),
-            elevation: dropdownElevation ?? 8,
-            scrollbarTheme: ScrollbarThemeData(
-              radius: scrollbarRadius ?? const Radius.circular(40),
-              thickness: scrollbarThickness != null
-                  ? MaterialStateProperty.all<double>(scrollbarThickness!)
-                  : null,
-              thumbVisibility: scrollbarAlwaysShow != null
-                  ? MaterialStateProperty.all<bool>(scrollbarAlwaysShow!)
-                  : null,
-            ),
-            isOverButton: false
+              maxHeight: dropdownHeight ?? 200,
+              width: dropdownWidth ?? 290,
+              padding: dropdownPadding,
+              decoration: dropdownDecoration ??
+                  BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: AppColors.whiteColor,
+                  ),
+              elevation: dropdownElevation ?? 8,
+              scrollbarTheme: ScrollbarThemeData(
+                radius: scrollbarRadius ?? const Radius.circular(40),
+                thickness: scrollbarThickness != null
+                    ? MaterialStateProperty.all<double>(scrollbarThickness!)
+                    : null,
+                thumbVisibility: scrollbarAlwaysShow != null
+                    ? MaterialStateProperty.all<bool>(scrollbarAlwaysShow!)
+                    : null,
+              ),
+              isOverButton: false
           ),
           menuItemStyleData: MenuItemStyleData(
             height: itemHeight ?? 52,
@@ -167,11 +168,10 @@ class AppAnimatedBottomSheet extends StatelessWidget {
   final Widget bottomSheetWidget;
   final Widget? bottomNavBarWidget;
 
-  const AppAnimatedBottomSheet(
-      {Key? key,
-      required this.bottomSheetWidget,
-      this.bottomNavBarWidget,
-      this.showDivider = true})
+  const AppAnimatedBottomSheet({Key? key,
+    required this.bottomSheetWidget,
+    this.bottomNavBarWidget,
+    this.showDivider = true})
       : super(key: key);
 
   @override
@@ -270,43 +270,45 @@ class AppImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return image.startsWith('http')
         ? CachedNetworkImage(
-            imageUrl: image,
-            height: webHeight,
-            width: webWidth,
-            fit: webFit ?? BoxFit.cover,
-            placeholder: (context, url) =>
-                CommonWidgets.getCircularProgressIndicator(),
-            errorWidget: (context, url, error) =>
-                const Icon(Icons.error, color: Colors.red),
-          )
+      imageUrl: image,
+      height: webHeight,
+      width: webWidth,
+      fit: webFit ?? BoxFit.cover,
+      placeholder: (context, url) =>
+          CommonWidgets.getCircularProgressIndicator(),
+      errorWidget: (context, url, error) =>
+      const Icon(Icons.error, color: Colors.red),
+    )
         : !image.contains('.')
-            ? Image.network(image,
-                height: webHeight, width: webWidth, fit: webFit ?? BoxFit.cover,
-                errorBuilder: (BuildContext context, Object exception,
-                    StackTrace? stackTrace) {
-                return const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Center(
-                    child: AppImage(
-                      image: ImageAsset.blueAvatar,
-                    ),
-                  ),
-                );
-              })
-            : image.split('.').last != 'svg'
-                ? Image.asset(
-                    image,
-                    fit: fit,
-                    height: height,
-                    width: width,
-                    color: color,
-                  )
-                : SvgPicture.asset(
-                    image,
-                    height: height,
-                    width: width,
-                    color: color,
-                  );
+        ? Image.network(image,
+        height: webHeight, width: webWidth, fit: webFit ?? BoxFit.cover,
+        errorBuilder: (BuildContext context, Object exception,
+            StackTrace? stackTrace) {
+          return const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Center(
+              child: AppImage(
+                image: ImageAsset.blueAvatar,
+              ),
+            ),
+          );
+        })
+        : image
+        .split('.')
+        .last != 'svg'
+        ? Image.asset(
+      image,
+      fit: fit,
+      height: height,
+      width: width,
+      color: color,
+    )
+        : SvgPicture.asset(
+      image,
+      height: height,
+      width: width,
+      color: color,
+    );
   }
 }
 
@@ -337,30 +339,31 @@ class ShimmerEffectView extends StatelessWidget {
 }
 
 class AppTextFormField extends StatefulWidget {
-  const AppTextFormField(
-      {Key? key,
-      this.controller,
-      this.keyboardType,
-      this.inputFormatters,
-      this.validator,
-      this.decoration,
-      this.onSave,
-      this.hintText,
-      this.errorText,
-      this.isDense,
-      this.maxLines,
-      this.onChange,
-      this.onEditingComplete,
-      this.onFieldSubmitted,
-      this.hintTextStyle,
-      this.fillColor,
-      this.autofocus,
-      this.isEnable = true,
-      this.contentPadding,
-      this.textInputAction,
-      this.focusNode,
-      this.prefixIcon,
-      this.prefixIconConstraints})
+  const AppTextFormField({Key? key,
+    this.controller,
+    this.keyboardType,
+    this.inputFormatters,
+    this.validator,
+    this.decoration,
+    this.onSave,
+    this.hintText,
+    this.errorText,
+    this.isDense,
+    this.maxLines,
+    this.onChange,
+    this.onEditingComplete,
+    this.onFieldSubmitted,
+    this.hintTextStyle,
+    this.fillColor,
+    this.autofocus,
+    this.isEnable = true,
+    this.contentPadding,
+    this.textInputAction,
+    this.focusNode,
+    this.prefixIcon,
+    this.suffix,
+    this.suffixIcon,
+    this.prefixIconConstraints})
       : super(key: key);
 
   final TextEditingController? controller;
@@ -384,6 +387,8 @@ class AppTextFormField extends StatefulWidget {
   final TextInputAction? textInputAction;
   final FocusNode? focusNode;
   final Widget? prefixIcon;
+  final Widget? suffix;
+  final Widget? suffixIcon;
   final BoxConstraints? prefixIconConstraints;
 
   @override
@@ -414,8 +419,8 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       autofocus: widget.autofocus ?? false,
       validator: widget.validator != null
           ? (value) {
-              return widget.validator!(value);
-            }
+        return widget.validator!(value);
+      }
           : null,
       maxLines: widget.maxLines,
       onChanged: (v) {
@@ -429,6 +434,9 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       decoration: widget.decoration ??
           InputDecoration(
             prefixIcon: widget.prefixIcon,
+            suffix: widget.suffix,
+            suffixIcon: widget.suffixIcon,
+            floatingLabelBehavior: FloatingLabelBehavior.always,
             prefixIconConstraints: widget.prefixIconConstraints,
             iconColor: widget.fillColor ?? AppColors.grey35
               ..withOpacity(0.83),
@@ -479,8 +487,7 @@ class AppText extends StatelessWidget {
   final TextDecoration? decoration;
   final double? letterSpacing;
 
-  const AppText(
-    this.title, {
+  const AppText(this.title, {
     Key? key,
     this.color,
     this.fontWeight,
@@ -631,14 +638,14 @@ class AppCta extends StatelessWidget {
           ),
           child: !isLoading
               ? Center(
-                  child: Text(
-                    text,
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: textColor ?? Colors.white,
-                        fontWeight: FontWeight.w600),
-                  ),
-                )
+            child: Text(
+              text,
+              style: TextStyle(
+                  fontSize: 16,
+                  color: textColor ?? Colors.white,
+                  fontWeight: FontWeight.w600),
+            ),
+          )
               : CommonWidgets.getCircularProgressIndicator(),
         ),
       ),
@@ -732,15 +739,14 @@ class _ImagePickerOptionBottomSheetState
 }
 
 class CommonWidgets {
-  static Container getRoundedBoxWithText(
-      {bool isSelected = false,
-      Color? selectedColor,
-      Color? color,
-      EdgeInsetsGeometry? padding,
-      required String text}) {
+  static Container getRoundedBoxWithText({bool isSelected = false,
+    Color? selectedColor,
+    Color? color,
+    EdgeInsetsGeometry? padding,
+    required String text}) {
     return Container(
       padding:
-          padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
           color: isSelected
               ? selectedColor ?? Colors.grey
@@ -762,8 +768,7 @@ class CommonWidgets {
     );
   }
 
-  static showProfileIncompletenessBottomSheet(
-      BuildContext context,
+  static showProfileIncompletenessBottomSheet(BuildContext context,
       ProfileCompletionPercentageResponse profileCompletionPercentageResponse,
       bool isStudent) {
     showModalBottomSheet<dynamic>(
@@ -777,12 +782,14 @@ class CommonWidgets {
         isScrollControlled: true,
         builder: (_) {
           return Padding(
-            padding: MediaQuery.of(context).viewInsets,
+            padding: MediaQuery
+                .of(context)
+                .viewInsets,
             child: AppAnimatedBottomSheet(
                 bottomSheetWidget: ProfileCompletenessBottomSheet(
-              reason: profileCompletionPercentageResponse.suggestion ?? "",
-              isStudent: isStudent,
-            )),
+                  reason: profileCompletionPercentageResponse.suggestion ?? "",
+                  isStudent: isStudent,
+                )),
           );
           // your stateful widget
         });

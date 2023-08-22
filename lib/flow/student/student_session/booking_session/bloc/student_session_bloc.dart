@@ -12,6 +12,7 @@ import '../../../../teacher/home/model/session_request_model.dart';
 import '../../../../teacher/profile/model/education_response_model.dart';
 import '../../../../teacher/profile/model/experience_response_model.dart';
 import '../data/booking_session_repo.dart';
+import '../model/promo_code_details_response_model.dart';
 
 part 'student_session_events.dart';
 
@@ -68,6 +69,22 @@ class StudentSessionBloc
 
     on<SessionAddingEvent>((event, emit) async {
       await saveSessionDetail(event, emit);
+    });
+
+    on<FetchPromoCodeDetailsEvent> ((event, emit) async {
+      emit(FetchPromoCodeDetailsLoadingState());
+      try{
+        final response = await _studentBookingRepo.fetchPromoCodeDetails(event.promoCode);
+        if(response != null) {
+          emit(FetchPromoCodeDetailsSuccessState(promoCodeDetails: response));
+        }
+      } catch (exception) {
+        if(exception is BadRequestException) {
+          emit(FetchPromoCodeDetailsFailureState(message: exception.message));
+        } else {
+          emit(FetchPromoCodeDetailsFailureState(message: "Something went wrong"));
+        }
+      }
     });
   }
 

@@ -48,3 +48,8 @@ class SessionAddingEvent extends StudentSessionEvents {
   final SessionSaveRequest sessionSaveRequest;
   SessionAddingEvent({required this.sessionSaveRequest});
 }
+
+class FetchPromoCodeDetailsEvent extends StudentSessionEvents {
+  FetchPromoCodeDetailsEvent({required this.promoCode});
+  final String promoCode;
+}

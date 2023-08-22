@@ -83,3 +83,15 @@ class BookingSessionFailureState extends StudentSessionStates {
   final String msg;
   BookingSessionFailureState({required this.msg});
 }
+
+class FetchPromoCodeDetailsLoadingState extends StudentSessionStates {}
+
+class FetchPromoCodeDetailsSuccessState extends StudentSessionStates {
+  FetchPromoCodeDetailsSuccessState({required this.promoCodeDetails});
+  final PromoCodeDetailsResponseModel promoCodeDetails;
+}
+
+class FetchPromoCodeDetailsFailureState extends StudentSessionStates {
+  FetchPromoCodeDetailsFailureState({this.message});
+  final String? message;
+}
