@@ -379,8 +379,8 @@ class _EditStudentProfileState extends State<EditStudentProfile> {
                                           height: MediaQuery.of(context)
                                               .size
                                               .height,
-                                          child: Column(
-                                            children: const [
+                                          child: const Column(
+                                            children: [
                                               Center(
                                                 child:
                                                     CircularProgressIndicator(
