@@ -54,6 +54,23 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
       listener: (context, state) {
         if (state is FetchedTeacherDetailsState) {
           teacherDetails = state.teacherDetails;
+        } else if (state is RequestSessionSuccessState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Request Sent to mentor",
+              ),
+            ),
+          );
+          Navigator.of(context).pop();
+        } else if (state is RequestSessionFailureState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                state.message ?? "something went wrong",
+              ),
+            ),
+          );
         }
       },
       buildWhen: (previous, current) => _isRebuildWidgetState(current),
@@ -80,8 +97,7 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
       child: SafeArea(
         child: Padding(
           // padding: const EdgeInsets.all(8.0),
-          padding:
-          const EdgeInsets.symmetric(horizontal: 18.0, vertical: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 18),
           child: Column(
             children: [
               Row(
@@ -97,7 +113,9 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
                   // ),
                 ],
               ),
-              const SizedBox(height: 18,),
+              const SizedBox(
+                height: 18,
+              ),
               if (teacherDetails != null)
                 ClipRRect(
                     borderRadius: const BorderRadius.only(
@@ -224,34 +242,53 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
             ),
           ],
         ),
-        Column(
-          children: [
-            Expanded(child: Container()),
-            Container(
-              color: AppColors.whiteColor,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: AppCta(
-                  onTap: () => onConfirmationTap(),
-                  color:
-                      context.read<StudentSessionBloc>().selectedTabIndex != 1
-                          ? AppColors.cyanBlue
-                          : context
-                                      .read<StudentSessionBloc>()
-                                      .selectedDateTimeModel !=
-                                  null
-                              ? AppColors.cyanBlue
-                              : AppColors.grey32,
-                  text: context.read<StudentSessionBloc>().selectedTabIndex == 1
-                      ? AppStrings.confirm
-                      : AppStrings.bookSession,
+        BlocBuilder<StudentSessionBloc, StudentSessionStates>(builder: (context, state) {
+          return Column(
+            children: [
+              Expanded(child: Container()),
+              Container(
+                color: AppColors.whiteColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: AppCta(
+                    onTap: () => onConfirmationTap(),
+                    isLoading: state is RequestSessionLoadingState,
+                    color: _getCtaColor(),
+                    text: _getCtaText(),
+                  ),
                 ),
-              ),
-            )
-          ],
-        )
+              )
+            ],
+          );
+        })
       ],
     );
+  }
+
+  Color _getCtaColor() {
+    if (context.read<StudentSessionBloc>().selectedTabIndex == 1) {
+      if (context.read<StudentSessionBloc>().noSlotsAvailable) {
+        return AppColors.cyanBlue;
+      } else {
+        return context.read<StudentSessionBloc>().selectedDateTimeModel != null
+            ? AppColors.cyanBlue
+            : AppColors.grey32;
+      }
+    } else {
+      return AppColors.cyanBlue;
+    }
+  }
+
+  String _getCtaText() {
+    if (context.read<StudentSessionBloc>().selectedTabIndex == 1) {
+      if (context.read<StudentSessionBloc>().noSlotsAvailable) {
+        return "Request Session";
+      } else {
+        return AppStrings.confirm;
+      }
+    } else {
+      return AppStrings.bookSession;
+    }
   }
 
   Widget getCategoryTab() {
@@ -300,6 +337,8 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
               context.read<StudentSessionBloc>().sessionType ?? "",
               context.read<StudentSessionBloc>().amount ?? 0,
               context.read<StudentSessionBloc>().availabilityId ?? ""));
+    } else if (context.read<StudentSessionBloc>().noSlotsAvailable) {
+      context.read<StudentSessionBloc>().add(RequestSessionEvent());
     }
   }
 }

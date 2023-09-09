@@ -95,3 +95,12 @@ class FetchPromoCodeDetailsFailureState extends StudentSessionStates {
   FetchPromoCodeDetailsFailureState({this.message});
   final String? message;
 }
+
+class RequestSessionLoadingState extends StudentSessionStates {}
+
+class RequestSessionSuccessState extends StudentSessionStates {}
+
+class RequestSessionFailureState extends StudentSessionStates {
+  RequestSessionFailureState({this.message});
+  final String? message;
+}

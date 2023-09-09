@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:newversity/common/common_utils.dart';
+import 'package:newversity/flow/student/student_session/booking_session/model/request_session_request_model.dart';
 import 'package:newversity/flow/student/student_session/booking_session/model/selected_datetime_model.dart';
 import 'package:newversity/flow/teacher/availability/data/model/fetch_availability_request_model.dart';
 import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_details_model.dart';
@@ -31,6 +33,10 @@ class StudentSessionBloc
   int selectedTabIndex = 0;
   final SessionBookingRepository _studentBookingRepo =
       DI.inject<SessionBookingRepository>();
+  bool noSlotsAvailable = false;
+  String agenda = "";
+  TeacherDetailsModel? teacherDetails;
+  late String studentId;
 
   List<String> sessionCategory = ["About", "Availability", "Reviews"];
 
@@ -71,18 +77,44 @@ class StudentSessionBloc
       await saveSessionDetail(event, emit);
     });
 
-    on<FetchPromoCodeDetailsEvent> ((event, emit) async {
+    on<RequestSessionEvent>((event, emit) async {
+      if(agenda.isEmpty) {
+        emit(RequestSessionFailureState(message: "Please add agenda"));
+      } else {
+        emit(RequestSessionLoadingState());
+        try {
+          studentId = CommonUtils().getLoggedInUser();
+          await _studentBookingRepo
+              .raiseSessionRequest(RequestSessionRequestModel(
+              teacherId: teacherDetails?.teacherId,
+              studentId: studentId,
+              agenda: agenda
+          ));
+          emit(RequestSessionSuccessState());
+        } catch (exception) {
+          if (exception is BadRequestException) {
+            emit(RequestSessionFailureState(message: exception.message));
+          } else {
+            emit(RequestSessionFailureState(message: "Something went wrong"));
+          }
+        }
+      }
+    });
+
+    on<FetchPromoCodeDetailsEvent>((event, emit) async {
       emit(FetchPromoCodeDetailsLoadingState());
-      try{
-        final response = await _studentBookingRepo.fetchPromoCodeDetails(event.promoCode);
-        if(response != null) {
+      try {
+        final response =
+            await _studentBookingRepo.fetchPromoCodeDetails(event.promoCode);
+        if (response != null) {
           emit(FetchPromoCodeDetailsSuccessState(promoCodeDetails: response));
         }
       } catch (exception) {
-        if(exception is BadRequestException) {
+        if (exception is BadRequestException) {
           emit(FetchPromoCodeDetailsFailureState(message: exception.message));
         } else {
-          emit(FetchPromoCodeDetailsFailureState(message: "Something went wrong"));
+          emit(FetchPromoCodeDetailsFailureState(
+              message: "Something went wrong"));
         }
       }
     });
@@ -113,7 +145,7 @@ class StudentSessionBloc
       Emitter<StudentSessionStates> emit) async {
     emit(FetchingTeacherDetailsState());
     try {
-      final teacherDetails =
+      teacherDetails =
           await _studentBookingRepo.getTeachersDetail(event.teacherId);
       emit(FetchedTeacherDetailsState(teacherDetails: teacherDetails));
     } catch (exception) {
@@ -197,6 +229,7 @@ class StudentSessionBloc
         dateTimeMap = Map.fromEntries(listOfEntries);
         emit(FetchedTeacherAvailabilityState(availabilityList: dateTimeMap));
       } else {
+        noSlotsAvailable = true;
         emit(NotTeacherSlotFoundState());
       }
     } catch (exception) {

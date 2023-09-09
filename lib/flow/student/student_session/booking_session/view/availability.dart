@@ -7,8 +7,6 @@ import 'package:newversity/flow/teacher/data/model/teacher_details/teacher_detai
 import 'package:newversity/navigation/app_routes.dart';
 import 'package:newversity/themes/colors.dart';
 import 'package:newversity/utils/date_time_utils.dart';
-
-import '../../../../../resources/images.dart';
 import '../../../../../themes/strings.dart';
 import '../../../../teacher/availability/data/model/fetch_availability_request_model.dart';
 import '../model/student_session_argument.dart';
@@ -58,10 +56,10 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
           if (state is FetchingTeacherAvailabilityState ||
               state is UpdatedTabBarState ||
               state is StudentSessionInitialState) {
-            return Column(
+            return const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
+              children: [
                 SizedBox(
                   height: 150,
                 ),
@@ -109,38 +107,40 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
             );
           }
           if (state is NotTeacherSlotFoundState) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                SizedBox(
-                  height: 70,
-                ),
-                Center(
-                  child: AppImage(
-                    image: ImageAsset.paymentError,
-                  ),
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                Center(
-                  child: AppText(
-                    "No teacher slot available right now! \n please contact to admin",
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.grey55,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            );
+            // return Container();
+            return getAgendaContainer();
+            // return const Column(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   crossAxisAlignment: CrossAxisAlignment.center,
+            //   children: [
+            //     SizedBox(
+            //       height: 70,
+            //     ),
+            //     Center(
+            //       child: AppImage(
+            //         image: ImageAsset.paymentError,
+            //       ),
+            //     ),
+            //     SizedBox(
+            //       height: 25,
+            //     ),
+            //     Center(
+            //       child: AppText(
+            //         "No teacher slot available right now! \n please contact to admin",
+            //         fontSize: 14,
+            //         fontWeight: FontWeight.w400,
+            //         color: AppColors.grey55,
+            //         textAlign: TextAlign.center,
+            //       ),
+            //     ),
+            //   ],
+            // );
           }
           if (state is FetchingTeacherAvailabilityFailureState) {
-            return Column(
+            return const Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
+              children: [
                 SizedBox(
                   height: 150,
                 ),
@@ -153,6 +153,46 @@ class _SessionAvailabilityState extends State<SessionAvailability> {
             throw ArgumentError("unsupported state");
           }
         });
+  }
+
+  Widget getAgendaContainer() {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 20),
+      width: MediaQuery.of(context).size.width,
+      height: 156,
+      decoration: BoxDecoration(
+        color: AppColors.grey35,
+        border: Border.all(width: 0.9, color: AppColors.grey32),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AppText(
+              "Agenda",
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: AppTextFormField(
+                hintText: "Specify your agenda here",
+                keyboardType: TextInputType.text,
+                onChange: (value) => {
+                  context.read<StudentSessionBloc>().agenda = value
+                },
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   Widget getAvailableSlotLayout() {

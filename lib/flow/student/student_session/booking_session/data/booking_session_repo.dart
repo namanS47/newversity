@@ -11,6 +11,7 @@ import '../../../../teacher/data/model/teacher_details/teacher_details_model.dar
 import '../../../../teacher/profile/model/education_response_model.dart';
 import '../../../../teacher/profile/model/experience_response_model.dart';
 import '../model/promo_code_details_response_model.dart';
+import '../model/request_session_request_model.dart';
 
 class SessionBookingRepository extends StudentBaseRepository {
   final TeacherApi _teacherApi = DI.inject<TeacherApi>();
@@ -62,6 +63,14 @@ class SessionBookingRepository extends StudentBaseRepository {
     try{
       final response = await _studentApi.fetchPromoCodeDetails(promoCode);
       return response;
+    } on DioException catch (exception) {
+      throw AppException.forException(exception.response);
+    }
+  }
+
+  Future<void> raiseSessionRequest(RequestSessionRequestModel request) async {
+    try{
+      await _studentApi.raiseSessionRequest(request);
     } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }

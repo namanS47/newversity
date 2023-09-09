@@ -53,3 +53,5 @@ class FetchPromoCodeDetailsEvent extends StudentSessionEvents {
   FetchPromoCodeDetailsEvent({required this.promoCode});
   final String promoCode;
 }
+
+class RequestSessionEvent extends StudentSessionEvents {}
