@@ -40,7 +40,10 @@ class _MentorCardState extends State<MentorDetailCard> {
       ),
       child: Column(
         children: [
-          MentorPersonalDetailCard(mentorDetail: widget.mentorDetail, showScopeTags: true,),
+          MentorPersonalDetailCard(
+            mentorDetail: widget.mentorDetail,
+            showScopeTags: true,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             child: SizedBox(
@@ -51,7 +54,10 @@ class _MentorCardState extends State<MentorDetailCard> {
                     color: AppColors.peacefulGreen,
                     child: widget.mentorDetail.nextAvailable != null
                         ? getNextAvailabilityWidget()
-                        : Container(),
+                        : const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          child: Text("Request Slot", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),),
+                        ),
                   ),
                   const Spacer(),
                   getBookSlotCta()
@@ -65,18 +71,20 @@ class _MentorCardState extends State<MentorDetailCard> {
   }
 
   Widget getBookSlotCta() {
+    bool forRequest = widget.mentorDetail.nextAvailable == null ||
+        widget.mentorDetail
+                .sessionPricing?[SlotType.long.toString().split(".")[1]] ==
+            0;
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed(AppRoutes.bookSession,
             arguments: StudentSessionArgument(
-                teacherId: widget.mentorDetail.teacherId,
-                pageIndex: 1));
+                teacherId: widget.mentorDetail.teacherId, pageIndex: 1));
       },
       child: Container(
         height: 52,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: AppColors.cyanBlue),
+            borderRadius: BorderRadius.circular(10), color: AppColors.cyanBlue),
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -89,22 +97,25 @@ class _MentorCardState extends State<MentorDetailCard> {
                   style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
-                      color: AppColors.whiteColor
-                  ),
+                      color: AppColors.whiteColor),
                 ),
                 const Text(
                   "per session",
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 8,
-                      color: AppColors.whiteColor
-                  ),
+                      color: AppColors.whiteColor),
                 ),
               ],
             ),
-            const VerticalDivider(color: AppColors.whiteColor, indent: 16, endIndent: 16, thickness: 2,),
-            const AppText(
-              "Book a Slot",
+            const VerticalDivider(
+              color: AppColors.whiteColor,
+              indent: 16,
+              endIndent: 16,
+              thickness: 2,
+            ),
+            AppText(
+              forRequest ? "Connect" : "Book a Slot",
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: AppColors.whiteColor,
@@ -117,7 +128,8 @@ class _MentorCardState extends State<MentorDetailCard> {
 
   Widget getNextAvailabilityWidget() {
     String weekday = "";
-    if (!DateTimeUtils().isDaySame(widget.mentorDetail.nextAvailable!, DateTime.now())) {
+    if (!DateTimeUtils()
+        .isDaySame(widget.mentorDetail.nextAvailable!, DateTime.now())) {
       weekday = DateFormat('dd MMM').format(widget.mentorDetail.nextAvailable!);
     }
     return Padding(
@@ -130,19 +142,18 @@ class _MentorCardState extends State<MentorDetailCard> {
           ),
           RichText(
               text: const TextSpan(children: [
-                TextSpan(
-                    text: "Available - ",
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.blackRussian,
-                    ))
-              ])),
+            TextSpan(
+                text: "Available - ",
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.blackRussian,
+                ))
+          ])),
           AppText(
             weekday.isNotEmpty
                 ? "$weekday  "
-                : "${DateTimeUtils.getTimeInAMOrPM(
-                widget.mentorDetail.nextAvailable!)}  ",
+                : "${DateTimeUtils.getTimeInAMOrPM(widget.mentorDetail.nextAvailable!)}  ",
             fontSize: 12,
             fontWeight: FontWeight.w600,
             color: AppColors.blackRussian,
