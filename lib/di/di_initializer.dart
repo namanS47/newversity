@@ -2,6 +2,7 @@ import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:newversity/flow/student/payment/data/payment_repository.dart';
 import 'package:newversity/flow/student/profile_dashboard/data/repo/profile_dashboard_repository.dart';
 import 'package:newversity/flow/student/search/data/search_repository.dart';
+import 'package:newversity/flow/student/webinar/data/webinar_repository.dart';
 import 'package:newversity/flow/teacher/webservice/teacher_base_repository.dart';
 import 'package:newversity/network/api/common_api.dart';
 import 'package:newversity/network/api/dio_client.dart';
@@ -28,6 +29,7 @@ class DI {
     addDependency(AvailabilityRepository(), true);
     addDependency(SearchRepository(), true);
     addDependency(PaymentRepository(), true);
+    addDependency(WebinarRepository(), true);
 
     return DI();
   }

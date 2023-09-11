@@ -17,6 +17,7 @@ import '../../flow/student/payment/data/model/phonepe/phone_pe_callback_url_resp
 import '../../flow/student/payment/data/model/phonepe/phone_pe_transaction_status_response_model.dart';
 import '../../flow/student/student_session/booking_session/model/promo_code_details_response_model.dart';
 import '../../flow/student/student_session/booking_session/model/request_session_request_model.dart';
+import '../../flow/student/webinar/data/model/webinar_details_response_model.dart';
 import '../../flow/teacher/home/model/session_request_model.dart';
 import '../../flow/teacher/profile/model/profile_completion_percentage_response.dart';
 import '../../flow/teacher/profile/model/tags_response_model.dart';
@@ -102,4 +103,11 @@ abstract class StudentApi {
   
   @POST("/requestSession")
   Future<void> raiseSessionRequest(RequestSessionRequestModel request);
+  
+  @GET("/webinar/all")
+  @NoBody()
+  Future<List<WebinarDetailsResponseModel>> fetchWebinarList();
+  
+  @POST("/webinar/register")
+  Future<void> registerForWebinar(@Header("webinarId") String webinarId, @Body() StudentsInfoList studentDetails);
 }

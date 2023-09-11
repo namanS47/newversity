@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:newversity/flow/student/campus/bloc/campus_bloc/campus_bloc.dart';
-import 'package:newversity/flow/student/campus/view/student_campus.dart';
 import 'package:newversity/flow/student/home/bloc/student_home_bloc.dart';
 import 'package:newversity/flow/student/home/view/student_home.dart';
 import 'package:newversity/flow/student/student_session/my_session/bloc/my_session_bloc.dart';
 import 'package:newversity/flow/student/student_session/my_session/view/my_sessession_screen.dart';
+import 'package:newversity/flow/student/webinar/bloc/webinar_bloc.dart';
+import 'package:newversity/flow/student/webinar/ui/webinar_route.dart';
 import 'package:newversity/flow/teacher/availability/availabality.dart';
 import 'package:newversity/flow/teacher/bookings/bloc/teacher_bookings_bloc.dart';
 import 'package:newversity/flow/teacher/bookings/view/bookings.dart';
@@ -50,7 +50,7 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
       <Map<String, String>>[
     {'image': ImageAsset.home, 'name': 'Home'},
     {'image': ImageAsset.session, 'name': 'My Session'},
-    // {'image': ImageAsset.campus, 'name': 'Campus'},
+    {'image': ImageAsset.campus, 'name': 'Campus'},
   ];
 
   IndexBloc() : super(IndexInitialState()) {
@@ -103,14 +103,18 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
         create: (context) => StudentHomeBloc(),
         child: const StudentHomeScreen(),
       ),
-      indexPageLoadedList[1] ? BlocProvider<MySessionBloc>(
-        create: (context) => MySessionBloc(),
-        child: const MySessionScreen(),
-      ) : Container(),
-      // indexPageLoadedList[2] ? BlocProvider<StudentCampusBloc>(
-      //   create: (context) => StudentCampusBloc(),
-      //   child: const StudentCampusScreen(),
-      // ) : Container()
+      indexPageLoadedList[1]
+          ? BlocProvider<MySessionBloc>(
+              create: (context) => MySessionBloc(),
+              child: const MySessionScreen(),
+            )
+          : Container(),
+      indexPageLoadedList[2]
+          ? BlocProvider<WebinarBloc>(
+              create: (context) => WebinarBloc(),
+              child: const WebinarTab(),
+            )
+          : Container()
     ];
 
     indexPages = [
@@ -118,14 +122,18 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
         create: (context) => HomeSessionBloc(),
         child: const Home(),
       ),
-      indexPageLoadedList[1] ? BlocProvider(
-        create: (context) => TeacherBookingsBloc(),
-        child: const Bookings(),
-      ) : Container(),
-      indexPageLoadedList[2] ?BlocProvider<AvailabilityBloc>(
-        create: (context) => AvailabilityBloc(),
-        child: const Availability(),
-      ) : Container()
+      indexPageLoadedList[1]
+          ? BlocProvider(
+              create: (context) => TeacherBookingsBloc(),
+              child: const Bookings(),
+            )
+          : Container(),
+      indexPageLoadedList[2]
+          ? BlocProvider<AvailabilityBloc>(
+              create: (context) => AvailabilityBloc(),
+              child: const Availability(),
+            )
+          : Container()
     ];
   }
 }

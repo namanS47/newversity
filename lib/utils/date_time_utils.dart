@@ -50,6 +50,13 @@ class DateTimeUtils {
     return formatter.format(dateTime);
   }
 
+  static String getWebinarDateFormat(DateTime date) {
+    final DateFormat formatter = DateFormat('EEE, dd MMM @ ');
+    String dateString = formatter.format(date);
+    dateString+= DateFormat.jm().format(date);
+    return dateString;
+  }
+
   static List<TimeOfDay> getAllAvailableTime() {
     List<TimeOfDay> allTimes = [];
     int minutes = 0;

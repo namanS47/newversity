@@ -27,7 +27,7 @@ class StudentBaseRepository extends BaseRepository {
     try {
       return await _studentApi.saveStudentDetails(
           studentDetailSavingRequestModel, studentId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
   }
@@ -35,7 +35,7 @@ class StudentBaseRepository extends BaseRepository {
   Future<void> addTags(AddTagRequestModel addTagRequestModel) async {
     try {
       return await _studentApi.addListOfTags(addTagRequestModel);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
   }
@@ -47,7 +47,7 @@ class StudentBaseRepository extends BaseRepository {
         DI.inject<Preferences>().setStudentDetails(response);
       }
       return response;
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
   }
@@ -58,7 +58,7 @@ class StudentBaseRepository extends BaseRepository {
         ProfileCompletionPercentageResponse();
     try {
       response = await _studentApi.getProfileCompletionInfo(studentId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       AppException.forException(exception.response);
     }
     return response;
@@ -69,7 +69,7 @@ class StudentBaseRepository extends BaseRepository {
     SessionDetailResponseModel? response;
     try {
       response = await _studentApi.getSessionWithId(sessionId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       AppException.forException(exception.response);
     }
     return response;
@@ -81,7 +81,7 @@ class StudentBaseRepository extends BaseRepository {
     try {
       listOfSessionDetails =
           await _studentApi.getSessionsByType(studentId, type);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
     return listOfSessionDetails;
@@ -93,7 +93,7 @@ class StudentBaseRepository extends BaseRepository {
     try {
       listOfTeacherDetails =
           await _studentApi.getTeacherByTags(addTagRequestModel);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
     return listOfTeacherDetails;
@@ -103,7 +103,7 @@ class StudentBaseRepository extends BaseRepository {
       File file, String studentId) async {
     try {
       return await _studentApi.uploadStudentProleImage(file, studentId);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       AppException.forException(exception.response);
       return null;
     }
@@ -112,7 +112,7 @@ class StudentBaseRepository extends BaseRepository {
   Future<void> saveSessionDetail(SessionSaveRequest sessionSaveRequest) async {
     try {
       await _studentApi.addSessionDetail(sessionSaveRequest);
-    } on DioError catch (exception) {
+    } on DioException catch (exception) {
       throw AppException.forException(exception.response);
     }
   }
