@@ -15,6 +15,7 @@ import '../../../../../resources/images.dart';
 import '../bloc/student_session_bloc.dart';
 import 'about.dart';
 import 'availability.dart';
+import 'content.dart';
 
 class StudentSessionScreen extends StatefulWidget {
   final StudentSessionArgument studentSessionArgument;
@@ -235,7 +236,7 @@ class _StudentSessionScreenState extends State<StudentSessionScreen> {
                       ),
                     if (context.read<StudentSessionBloc>().selectedTabIndex ==
                         2)
-                      SessionReview()
+                      const SharedContentRoute()
                   ],
                 ),
               ),

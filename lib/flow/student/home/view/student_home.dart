@@ -146,15 +146,15 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                                   const SizedBox(
                                     height: 32,
                                   ),
-                                  getStudentReviewHeader(),
-                                  const SizedBox(
-                                    height: 18,
-                                  ),
-                                  getStudentReviewList(),
-                                  // getInviteContainer(),
-                                  const SizedBox(
-                                    height: 100,
-                                  ),
+                                  // getStudentReviewHeader(),
+                                  // const SizedBox(
+                                  //   height: 18,
+                                  // ),
+                                  // getStudentReviewList(),
+                                  // // getInviteContainer(),
+                                  // const SizedBox(
+                                  //   height: 100,
+                                  // ),
                                 ],
                               ),
                             ),

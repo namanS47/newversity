@@ -38,7 +38,7 @@ class StudentSessionBloc
   TeacherDetailsModel? teacherDetails;
   late String studentId;
 
-  List<String> sessionCategory = ["About", "Availability", "Reviews"];
+  List<String> sessionCategory = ["About", "Availability", "Content"];
 
   StudentSessionBloc() : super(StudentSessionInitialState()) {
     on<UpdateTabBarEvent>((event, emit) async {
