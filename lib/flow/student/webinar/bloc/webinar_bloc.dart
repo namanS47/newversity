@@ -14,6 +14,8 @@ part 'webinar_state.dart';
 
 class WebinarBloc extends Bloc<WebinarEvent, WebinarState> {
   final _webinarRepository = DI.inject<WebinarRepository>();
+  String studentId = CommonUtils().getLoggedInUser();
+
   WebinarBloc() : super(WebinarInitial()) {
     on<FetchWebinarListEvent>((event, emit) async {
       emit(FetchWebinarListLoadingState());
@@ -30,10 +32,9 @@ class WebinarBloc extends Bloc<WebinarEvent, WebinarState> {
     });
 
     on<RegisterForWebinarEvent>((event, emit) async {
-      String studentId = CommonUtils().getLoggedInUser();
       emit(RegisterForWebinarLoadingState(webinarId: event.webinarId));
       try{
-        _webinarRepository.registerForWebinar(event.webinarId, StudentsInfoList(studentId: studentId));
+        _webinarRepository.registerForWebinar(event.webinarId, StudentsInfoList(studentId: studentId, agenda: event.agenda));
         emit(RegisterForWebinarSuccessState(webinarId: event.webinarId));
       } catch(exception) {
         if(exception is RegisterForWebinarFailureState) {

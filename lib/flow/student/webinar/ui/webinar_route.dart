@@ -37,10 +37,10 @@ class _WebinarTabState extends State<WebinarTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
-              "Campus",
+              "Upcoming webinar",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
@@ -97,6 +97,13 @@ class WebinarCard extends StatefulWidget {
 
 class _WebinarCardState extends State<WebinarCard> {
   String studentId = CommonUtils().getLoggedInUser();
+  final TextEditingController _agendaController = TextEditingController();
+
+  @override
+  void dispose() {
+    _agendaController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -181,6 +188,7 @@ class _WebinarCardState extends State<WebinarCard> {
           });
           if (state is RegisterForWebinarSuccessState &&
               widget.webinarDetails.id == state.webinarId) {
+            widget.webinarDetails.studentsInfoList?.add(StudentsInfoList(studentId: CommonUtils().getLoggedInUser()));
             alreadyRegistered = true;
           }
           return AppCta(
@@ -190,13 +198,13 @@ class _WebinarCardState extends State<WebinarCard> {
                 widget.webinarDetails.id == state.webinarId,
             onTap: () {
               if (!alreadyRegistered) {
-                context.read<WebinarBloc>().add(RegisterForWebinarEvent(
-                    webinarId: widget.webinarDetails.id!));
+                askForAgenda();
               }
             },
             text: alreadyRegistered ? "Already Registered" : "Register Now",
           );
         }),
+
         const Spacer(),
         InkWell(
           onTap: () {
@@ -219,6 +227,67 @@ class _WebinarCardState extends State<WebinarCard> {
           ),
         )
       ],
+    );
+  }
+
+  Future<void> askForAgenda() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          insetPadding: const EdgeInsets.all(20),
+          child: getAgendaContainer(),
+        );
+      },
+    );
+  }
+
+  Widget getAgendaContainer() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 350,
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        border: Border.all(width: 0.9, color: AppColors.grey32),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppText(
+              "Please mention why you want to join this session by ${widget.webinarDetails.teacherName} ",
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 15.0, top: 20),
+              child: AppTextFormField(
+                autofocus: true,
+                hintText: "Agenda",
+                keyboardType: TextInputType.text,
+                fillColor: AppColors.grey35,
+                controller: _agendaController,
+                maxLines: 6,
+                // decoration: InputDecoration(
+                //   border: InputBorder.none,
+                // ),
+              ),
+            ),
+            AppCta(
+              text: "Submit",
+              onTap: () {
+                context.read<WebinarBloc>().add(RegisterForWebinarEvent(
+                    webinarId: widget.webinarDetails.id!,
+                    agenda: _agendaController.text));
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 

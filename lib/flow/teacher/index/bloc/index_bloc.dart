@@ -50,7 +50,7 @@ class IndexBloc extends Bloc<IndexEvents, IndexState> {
       <Map<String, String>>[
     {'image': ImageAsset.home, 'name': 'Home'},
     {'image': ImageAsset.session, 'name': 'My Session'},
-    {'image': ImageAsset.campus, 'name': 'Campus'},
+    {'image': ImageAsset.campus, 'name': 'Webinar'},
   ];
 
   IndexBloc() : super(IndexInitialState()) {

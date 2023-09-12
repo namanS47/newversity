@@ -6,6 +6,7 @@ abstract class WebinarEvent {}
 class FetchWebinarListEvent extends WebinarEvent {}
 
 class RegisterForWebinarEvent extends WebinarEvent {
-  RegisterForWebinarEvent({required this.webinarId});
+  RegisterForWebinarEvent({required this.webinarId, required this.agenda});
   final String webinarId;
+  final String agenda;
 }
