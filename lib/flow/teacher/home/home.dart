@@ -1055,7 +1055,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
       onTap: () {
         Navigator.of(context).pushNamed(AppRoutes.notificationRoute);
       },
-      child: const AppImage(image: ImageAsset.notification),
+      child: CommonWidgets.notificationWidget(),
     );
   }
 

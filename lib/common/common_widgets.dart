@@ -804,4 +804,23 @@ class CommonWidgets {
       ),
     );
   }
+
+  static notificationWidget() {
+    return Stack(
+      children: [
+        const AppImage(image: ImageAsset.notification),
+        Positioned(
+          right: 0,
+          child: Container(
+            width: 10,
+            height: 10,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.red,
+            ),
+          ),
+        )
+      ],
+    );
+  }
 }
