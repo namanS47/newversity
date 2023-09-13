@@ -5,6 +5,7 @@ import 'package:newversity/flow/error_routes/error_route.dart';
 import 'package:newversity/flow/initial_route/app_bloc/app_bloc.dart';
 import 'package:newversity/flow/initial_route/ui/initial_route.dart';
 import 'package:newversity/flow/initial_route/ui/on_boarding_screen.dart';
+import 'package:newversity/flow/student/notification/bloc/notification_bloc.dart';
 import 'package:newversity/flow/student/notification/view/student_notification.dart';
 import 'package:newversity/flow/student/payment/data/model/payment_argument.dart';
 import 'package:newversity/flow/student/payment/payment_bloc/payment_bloc.dart';
@@ -127,8 +128,10 @@ class AppRouter {
     }
 
     if (route.toString() == AppRoutes.notificationRoute) {
-      // return const StudentNotificationScreen();
-      return ExamsPreparingFor();
+      return BlocProvider<NotificationBloc>(
+        create: (context) => NotificationBloc(),
+        child: const StudentNotificationScreen(),
+      );
     }
 
     if (route.toString() == AppRoutes.viewAllSlots) {

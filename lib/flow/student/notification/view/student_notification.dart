@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newversity/common/common_widgets.dart';
-import 'package:newversity/flow/student/notification/model/notification_model.dart';
+import 'package:newversity/flow/student/notification/bloc/notification_bloc.dart';
 import 'package:newversity/resources/images.dart';
 import 'package:newversity/utils/date_time_utils.dart';
 
 import '../../../../themes/colors.dart';
+import '../data/model/notification_details_response_model.dart';
 
 class StudentNotificationScreen extends StatefulWidget {
   const StudentNotificationScreen({Key? key}) : super(key: key);
@@ -15,6 +17,13 @@ class StudentNotificationScreen extends StatefulWidget {
 }
 
 class _StudentNotificationScreenState extends State<StudentNotificationScreen> {
+  @override
+  void initState() {
+    BlocProvider.of<NotificationBloc>(context)
+        .add(FetchAllUserNotificationsEvent());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,9 +53,27 @@ class _StudentNotificationScreenState extends State<StudentNotificationScreen> {
                     const SizedBox(
                       height: 50,
                     ),
-                    listOfNotification.isNotEmpty
-                        ? getNotificationListLayout()
-                        : noNotificationWidget(),
+                    BlocBuilder<NotificationBloc, NotificationState>(
+                      builder: (context, state) {
+                        if (state is FetchAllUserNotificationLoadingState) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 50),
+                            child: Center(
+                              child: CommonWidgets.getCircularProgressIndicator(color: AppColors.cyanBlue),
+                            ),
+                          );
+                        } else if (state
+                            is FetchAllUserNotificationSuccessState) {
+                          if(state.notificationList.isNotEmpty) {
+                            return getNotificationListLayout(state.notificationList);
+                          } else {
+                            return noNotificationWidget();
+                          }
+                        } else {
+                          return noNotificationWidget();
+                        }
+                      },
+                    )
                   ],
                 ),
               ),
@@ -57,41 +84,29 @@ class _StudentNotificationScreenState extends State<StudentNotificationScreen> {
     );
   }
 
-  List<StudentNotificationModel> listOfNotification =
-      StudentNotificationModel.listOfStudentNotificationModel;
-
   Widget noNotificationWidget() {
     return Text("No Notification");
   }
 
-  Widget getNotificationListLayout() {
+  Widget getNotificationListLayout(
+      List<NotificationDetailsResponseModel> listOfNotification) {
     return Wrap(
       runSpacing: 14,
       spacing: 14,
       children: List.generate(
-          listOfNotification.length, (index) => getNotificationView(index)),
+          listOfNotification.length, (index) => getNotificationView(listOfNotification[index])),
     );
   }
 
-  Widget getSenderProfilePic(int index) {
-    return SizedBox(
+  Widget getSenderProfilePic() {
+    return const SizedBox(
       height: 40,
       width: 40,
-      child: CircleAvatar(
-        radius: 30.0,
-        foregroundImage: listOfNotification[index].senderProfilePicture != null
-            ? NetworkImage(listOfNotification[index].senderProfilePicture!)
-            : null,
-        child: listOfNotification[index].senderProfilePicture == null
-            ? const AppImage(
-                image: ImageAsset.blueAvatar,
-              )
-            : CommonWidgets.getCircularProgressIndicator(),
-      ),
+      child: AppImage(image: ImageAsset.appIcon,),
     );
   }
 
-  Widget getNotificationView(int index) {
+  Widget getNotificationView(NotificationDetailsResponseModel notification) {
     return Visibility(
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -107,7 +122,7 @@ class _StudentNotificationScreenState extends State<StudentNotificationScreen> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  getSenderProfilePic(index),
+                  getSenderProfilePic(),
                   const SizedBox(
                     width: 10,
                   ),
@@ -116,7 +131,7 @@ class _StudentNotificationScreenState extends State<StudentNotificationScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AppText(
-                          listOfNotification[index].msg ?? "",
+                          notification.body ?? "",
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
                         ),
@@ -125,7 +140,7 @@ class _StudentNotificationScreenState extends State<StudentNotificationScreen> {
                         ),
                         AppText(
                           DateTimeUtils.getTimeInAMOrPM(
-                              listOfNotification[index].msgDatetime ??
+                             notification.date ??
                                   DateTime.now()),
                           color: AppColors.grey55,
                           fontSize: 11,
@@ -134,7 +149,7 @@ class _StudentNotificationScreenState extends State<StudentNotificationScreen> {
                         const SizedBox(
                           height: 15,
                         ),
-                        getNotificationActionCTA(index),
+                        // getNotificationActionCTA(),
                       ],
                     ),
                   )
@@ -142,25 +157,6 @@ class _StudentNotificationScreenState extends State<StudentNotificationScreen> {
               )
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget getNotificationActionCTA(index) {
-    return Container(
-      width: 107,
-      height: 27,
-      decoration: BoxDecoration(
-        color: AppColors.cyanBlue,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Center(
-        child: AppText(
-          listOfNotification[index].action ?? "",
-          fontSize: 12,
-          color: AppColors.whiteColor,
-          fontWeight: FontWeight.w500,
         ),
       ),
     );

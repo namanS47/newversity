@@ -15,7 +15,7 @@ class PaymentRepository {
   Future<CreateOrderResponseModel?> createPaymentOrder(PaymentArgument paymentArgument) async {
     try {
       return await _studentApi.createPaymentOrder(paymentArgument);
-    } on DioError catch (exception){
+    } on DioException catch (exception){
       throw AppException.forException(exception.response);
     }
   }
@@ -23,7 +23,7 @@ class PaymentRepository {
   Future<PhonePeCallbackUrlResponseModel?> getPhonePePGUrl(PhonePeCallbackUrlRequestModel request) async {
     try{
       return await _studentApi.getPhonePePGUrl(request);
-    } on DioError catch (exception){
+    } on DioException catch (exception){
       throw AppException.forException(exception.response);
     }
   }
@@ -31,7 +31,7 @@ class PaymentRepository {
   Future<PhonePeTransactionStatusResponseModel?> getPhonePeTransactionStatus(String merchantTransactionId) async {
     try{
       return await _studentApi.getPhonePeTransactionStatus(merchantTransactionId);
-    } on DioError catch (exception){
+    } on DioException catch (exception){
       throw AppException.forException(exception.response);
     }
   }

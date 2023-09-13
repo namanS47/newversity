@@ -81,4 +81,5 @@ class ImageAsset {
   static const cameraIcon = '${_pngPath}camera.png';
   static const galleryIcon = '${_pngPath}gallery.png';
   static String tagIcon(int number) => "${_pngPath}tag_icon_$number.png";
+  static const appIcon = '${_pngPath}app_icon.png';
 }

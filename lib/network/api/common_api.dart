@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:newversity/flow/initial_route/model/common_details_model.dart';
+import 'package:newversity/flow/student/notification/data/model/notification_details_response_model.dart';
 import 'package:retrofit/http.dart';
 
 import '../../config/app_config.dart';
@@ -24,4 +25,8 @@ abstract class CommonApi {
   @GET("/app/android/version")
   @NoBody()
   Future<AppVersionConfigModel?> fetchAppVersionDetails();
+  
+  @GET("/notifications")
+  @NoBody()
+  Future<List<NotificationDetailsResponseModel>>? fetchAllNotificationList(@Header("userid") String userId);
 }
